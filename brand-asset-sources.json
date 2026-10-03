@@ -1,0 +1,92 @@
+[
+  {
+    "brand": "ttc",
+    "website": "https://www.ttc.ca/",
+    "source": "https://cdn.ttc.ca/-/media/Project/TTC/DevProto/Icons/TTC-LOGO.svg?h=80&iar=0&w=130&rev=20c8051f87974a4bb512bc194f617ed3&hash=8781C63BF2C55CCC84255EE6D350EB19",
+    "file": "ttc.svg",
+    "bytes": 2584
+  },
+  {
+    "brand": "yrt",
+    "website": "https://www.yrt.ca/",
+    "source": "https://www.yrt.ca/en/images/structure/yrt-logo.svg",
+    "file": "yrt.svg",
+    "bytes": 4397
+  },
+  {
+    "brand": "save-on-energy",
+    "website": "https://saveonenergy.ca/",
+    "source": "https://saveonenergy.ca/-/media/Images/SaveOnEnergy/Logo/soe-logo.svg?la=en&hash=F228D6EB70E30573E6E3CB31FE2A3406",
+    "file": "save-on-energy.svg",
+    "bytes": 16240
+  },
+  {
+    "brand": "aria-build",
+    "website": "https://ariabuild.ca/",
+    "source": "https://ariabuild.ca/wp-content/uploads/2024/04/logo-aria-build.png",
+    "file": "aria-build.png",
+    "bytes": 4527
+  },
+  {
+    "brand": "avery-dennison",
+    "website": "https://www.averydennison.com/",
+    "source": "https://www.averydennison.com/content/dam/avery_dennison/corporate-new/global/english/site-identity/AD_H1_Logo_Red_RGB.png",
+    "file": "avery-dennison.png",
+    "bytes": 61073
+  },
+  {
+    "brand": "mimaki",
+    "website": "https://mimaki.com/",
+    "source": "https://d2w577gk9zpoty.cloudfront.net/media_lib/logo.svg",
+    "file": "mimaki.svg",
+    "bytes": 5114
+  },
+  {
+    "brand": "orafol",
+    "website": "https://www.orafol.com/",
+    "source": "https://www.orafol.com/media/images/orafol-logo-dark.svg",
+    "file": "orafol.svg",
+    "bytes": 10433
+  },
+  {
+    "brand": "xpel",
+    "website": "https://www.xpel.com/",
+    "source": "https://www.xpel.com/ (official inline SVG header)",
+    "file": "xpel.svg"
+  },
+  {
+    "brand": "metrolinx",
+    "website": "https://www.metrolinx.com/",
+    "source": "https://assets.metrolinx.com/image/upload/v1650294787/brand%20assets/Metrolinx/Type_Standard_Brand_MX_State_Black_pqyldq.svg",
+    "file": "metrolinx.svg",
+    "bytes": 5091
+  },
+  {
+    "brand": "arlon",
+    "website": "https://pcc.arlon.com/anz",
+    "source": "https://pcc.arlon.com/hubfs/Arlon%20Sept%202025/Images/arlon-logo.webp",
+    "file": "arlon.webp",
+    "bytes": 6678
+  },
+  {
+    "brand": "3m",
+    "website": "https://news.3m.com/logos/",
+    "source": "https://news.3m.com/images/unicorn/Logo.svg",
+    "file": "3m.svg",
+    "bytes": 15434
+  },
+  {
+    "brand": "cancer-canada",
+    "website": "https://cancer.ca/en/",
+    "source": "https://cdn.cancer.ca/-/media/project/cancer/logos/ccs-logo-en.svg?iar=0&rev=1fa0095ea42c496c91d587aa21fdf5ea&hash=09020EA0BFCB4FD19946A1E2665F46E3",
+    "file": "cancer-canada.svg",
+    "bytes": 8212
+  },
+  {
+    "brand": "cea",
+    "website": "https://www.canadaenergyaudit.ca/",
+    "source": "https://images.squarespace-cdn.com/content/v1/66e98ef8f8d8555d71e8d9be/a2066e48-2f31-442e-8cc1-4b0aa5c58abb/CEA.png?format=1500w",
+    "file": "cea.png",
+    "bytes": 10286
+  }
+]

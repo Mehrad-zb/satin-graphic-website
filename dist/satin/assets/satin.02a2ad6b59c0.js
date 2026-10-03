@@ -2907,11 +2907,38 @@ function homeVideoStory() {
       ${quoteBtn("Start a quote", "Vehicle Wraps", "btn")}
     </div>
     <figure class="video-figure">
-      <div class="video-frame"><video data-scroll-video controls muted playsinline preload="none" width="910" height="512" poster="${HOME_VIDEO.poster}" aria-label="${esc(HOME_VIDEO.label)}"><source src="${HOME_VIDEO.src}" type="video/mp4">${esc(HOME_VIDEO.caption)}</video></div>
-      <figcaption><span>${esc(HOME_VIDEO.caption)}</span><button type="button" class="btn ghost sm" data-video-play aria-pressed="false">${esc(HOME_VIDEO.play)}</button></figcaption>
-      <label class="video-scrubber"><span>${esc(HOME_VIDEO.scrub)}</span><input type="range" min="0" max="1000" value="0" step="1" data-video-scrub aria-label="${esc(HOME_VIDEO.scrub)}"></label><div class="video-progress" aria-hidden="true"><span data-video-progress></span></div>
+      <div class="video-frame"><video data-scroll-video muted playsinline preload="none" disablepictureinpicture disableremoteplayback width="910" height="512" poster="${HOME_VIDEO.poster}" aria-label="${esc(HOME_VIDEO.label)}"><source src="${HOME_VIDEO.src}" type="video/mp4">${esc(HOME_VIDEO.caption)}</video></div>
     </figure>
   </div></section>`;
+}
+
+const HOME_REFRESH = {
+  en: {labels:['Projects completed','Projects in progress','Successful projects','Customer satisfaction','Years of experience'],reviewKicker:'The words that matter most',reviewTitle:'Five stars. From our customers.',reviewText:'Your trust is our strongest recommendation.',reviewLink:'Read our Google reviews',clients:'Brands we work with',clientTitle:'In good company.',materials:'Materials & technology',materialTitle:'Quality starts with what we use.',materialText:'Premium films, protection and print technology. Chosen for the finish. Built for the long run.'},
+  fr: {labels:['Projets réalisés','Projets en cours','Projets réussis','Satisfaction client','Années d’expérience'],reviewKicker:'La voix de nos clients',reviewTitle:'Cinq étoiles. Par nos clients.',reviewText:'Votre confiance est notre meilleure recommandation.',reviewLink:'Lire nos avis Google',clients:'Les marques avec lesquelles nous travaillons',clientTitle:'Bien entourés.',materials:'Matériaux et technologie',materialTitle:'La qualité commence par nos matériaux.',materialText:'Films haut de gamme, protection et technologie d’impression. Pour une finition durable.'},
+  es: {labels:['Proyectos completados','Proyectos en proceso','Proyectos exitosos','Satisfacción del cliente','Años de experiencia'],reviewKicker:'La voz de nuestros clientes',reviewTitle:'Cinco estrellas. De nuestros clientes.',reviewText:'Tu confianza es nuestra mejor recomendación.',reviewLink:'Leer nuestras reseñas en Google',clients:'Marcas con las que trabajamos',clientTitle:'En buena compañía.',materials:'Materiales y tecnología',materialTitle:'La calidad empieza con los materiales.',materialText:'Películas premium, protección y tecnología de impresión. Para un acabado duradero.'},
+  fa: {labels:['پروژه‌های انجام‌شده','پروژه‌های در حال انجام','پروژه‌های موفق','رضایت مشتریان','سال تجربه'],reviewKicker:'صدای مشتریان ما',reviewTitle:'پنج ستاره، از طرف مشتریان ما.',reviewText:'اعتماد شما، بهترین توصیه برای ماست.',reviewLink:'مشاهده نظرات در گوگل',clients:'برندهایی که با آن‌ها کار می‌کنیم',clientTitle:'در کنار برندهای معتبر.',materials:'متریال و تکنولوژی',materialTitle:'کیفیت از انتخاب متریال شروع می‌شود.',materialText:'فیلم‌های ممتاز، محافظت و تکنولوژی چاپ؛ برای کیفیتی که ماندگار باشد.'}
+};
+const HOME_CLIENT_LOGOS = [
+  ['TTC','ttc','https://www.ttc.ca/'],['Metrolinx','metrolinx','https://www.metrolinx.com/'],['YRT','yrt','https://www.yrt.ca/'],['Save on Energy','saveonenergy','https://saveonenergy.ca/'],['Aria Build','ariabuild','https://ariabuild.ca/'],['Canada Energy Audit','cea','https://www.canadaenergyaudit.ca/'],['Canadian Cancer Society','cancer','https://cancer.ca/en/']
+];
+const HOME_MATERIAL_LOGOS = [
+  ['3M','3m','https://www.3mcanada.ca/'],['Avery Dennison','avery','https://www.averydennison.com/'],['Arlon','arlon','https://www.arlon.com/'],['XPEL','xpel','https://www.xpel.com/'],['Mimaki','mimaki','https://mimaki.com/'],['ORAFOL / ORACAL','oracal','https://www.orafol.com/']
+];
+function homeCounters() {
+  const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
+  return `<section class="home-numbers" aria-label="${esc(c.labels.join(', '))}"><div class="wrap"><div class="counter-grid">${[[9753,0,''],[34,0,''],[100,0,'%'],[5,1,''],[11,0,'']].map(([v,d,s],i)=>`<div class="counter-item"><b data-count="${v}" data-decimals="${d}" data-suf="${s}">${v.toLocaleString('en-CA',{minimumFractionDigits:d,maximumFractionDigits:d})}${s}</b><span>${esc(c.labels[i])}</span></div>`).join('')}</div></div></section>`;
+}
+const HOME_LOGO_FILES = {"cea":"cea.png","cancer":"cancer-canada.svg","ttc": "ttc.svg", "metrolinx": "metrolinx.svg", "yrt": "yrt.svg", "saveonenergy": "save-on-energy.svg", "ariabuild": "aria-build.png", "3m": "3m.svg", "avery": "avery-dennison.png", "arlon": "arlon.webp", "xpel": "xpel.svg", "mimaki": "mimaki.svg", "oracal": "orafol.svg"};
+function homeLogoLinks(logos) {
+  return logos.map(([name,key,url])=>`<a class="brand-logo" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)}"><img src="${SITE.base}/img/brands/${HOME_LOGO_FILES[key]}" alt="${esc(name)}" loading="lazy" width="180" height="80"></a>`).join('');
+}
+function homeTrust() {
+  const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
+  return `<section class="home-reviews sec"><div class="wrap"><div class="google-review-layout"><div><span class="eyebrow">${esc(c.reviewKicker)}</span><h2 class="d2">${esc(c.reviewTitle)}</h2><p class="lede">${esc(c.reviewText)}</p><a class="review-link" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer">${esc(c.reviewLink)}</a></div><a class="google-rating" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer" aria-label="5.0 out of 5 on Google"><span class="google-word" aria-label="Google"><i>G</i><i>o</i><i>o</i><i>g</i><i>l</i><i>e</i></span><div class="rating-score">5.0<span>/ 5</span></div><span class="rating-stars" aria-label="5 stars">★★★★★</span><span class="rating-label">Google Reviews</span></a></div></div></section><section class="home-clients sec"><div class="wrap"><div class="sec-head"><span class="eyebrow">${esc(c.clients)}</span><h2 class="d2">${esc(c.clientTitle)}</h2></div><div class="logo-row">${homeLogoLinks(HOME_CLIENT_LOGOS)}</div></div></section>`;
+}
+function homeMaterials() {
+  const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
+  return `<section class="home-materials sec"><div class="wrap"><div class="sec-head"><span class="eyebrow">${esc(c.materials)}</span><h2 class="d2">${esc(c.materialTitle)}</h2><p class="lede">${esc(c.materialText)}</p></div><div class="logo-row materials-row">${homeLogoLinks(HOME_MATERIAL_LOGOS)}</div></div></section>`;
 }
 
 /* ---------- HOME ---------- */
@@ -2919,8 +2946,11 @@ PAGES.home = () => {
   const c=HOME_CONTENT.copy[LANG]||HOME_CONTENT.copy.en;
   return {title:c.seoTitle,html:`
   <section class="hhero"><div class="wrap"><div class="top"><div style="display:flex;flex-direction:column;gap:18px;min-width:0"><span class="eyebrow">${esc(c.kicker)}</span><h1 class="d1">${c.headline.map(h=>`<span>${esc(h)}</span>`).join('')}</h1></div><div style="display:flex;flex-direction:column;gap:18px;max-width:420px"><p class="lede">${esc(c.intro)}</p><div style="display:flex;gap:10px;flex-wrap:wrap">${quoteBtn(tr('Start a quote'))}${A('/about#selected-work',tr('See our work'),'btn ghost')}</div></div></div><div class="stats">${c.stats.map(([v,label])=>`<div><b>${esc(v)}</b><span>${esc(label)}</span></div>`).join('')}</div></div></section>
+  ${homeCounters()}
   ${homeVideoStory()}
-  ${sec(secHead(c.servicesKicker,c.servicesTitle,c.servicesIntro)+`<div class="svc">${HOME_CONTENT.services.map(s=>`<a href="${href(s.path)}"><span class="service-icon">${icon(s.icon,22)}</span><h3>${esc(tr(s.name))}</h3><p class="small">${esc(s.description[LANG]||s.description.en)}</p>${art(s.icon==='shirt'?'apparel':'photo',{photo:s.icon==='shirt'?null:s.photo,alt:tr(s.name)+' — Satin Graphic',tag:false})}<span class="link">${esc(tr('Explore'))} ${arrowSm()}</span></a>`).join('')}</div>`)}
+  ${homeTrust()}
+  ${sec(secHead(c.servicesKicker,c.servicesTitle,c.servicesIntro)+`<div class="svc home-services">${HOME_CONTENT.services.map(s=>`<a href="${href(s.path)}"><span class="service-icon">${icon(s.icon,22)}</span><h3>${esc(tr(s.name))}</h3><p class="small">${esc(s.description[LANG]||s.description.en)}</p>${art(s.icon==='shirt'?'apparel':'photo',{photo:s.icon==='shirt'?null:s.photo,alt:tr(s.name)+' — Satin Graphic',tag:false})}<span class="link">${esc(tr('Explore'))} ${arrowSm()}</span></a>`).join('')}</div>`)}
+  ${homeMaterials()}
   ${sec(secHead(c.workKicker,c.workTitle,c.workIntro)+`<div class="home-work">${HOME_CONTENT.work.map(w=>`<figure>${art('photo',{photo:w.photo,alt:w.title[LANG]||w.title.en,tag:false})}<figcaption>${esc(w.title[LANG]||w.title.en)}</figcaption></figure>`).join('')}</div>`,'alt')}
   ${sec(secHead(c.processKicker,c.processTitle)+`<div class="g3">${c.process.map(([h,d],i)=>`<article class="card"><span class="process-number">${String(i+1).padStart(2,'0')}</span><h3>${esc(h)}</h3><p class="small">${esc(d)}</p></article>`).join('')}</div>`)}
   ${ctaBand(c.ctaTitle,c.ctaText,tr('Start a quote'))}`};
@@ -3884,7 +3914,8 @@ function bindEffects(root) {
           const tick = time => {
             if (!el.isConnected) return;
             const p = Math.min(1, (time - start) / 1100);
-            el.textContent = Math.round(value * (1 - Math.pow(1 - p, 3))).toLocaleString("en-CA") + (el.dataset.suf || "");
+            const decimals=Number(el.dataset.decimals||0);
+            el.textContent = (value * (1 - Math.pow(1 - p, 3))).toLocaleString("en-CA",{minimumFractionDigits:decimals,maximumFractionDigits:decimals}) + (el.dataset.suf || "");
             if (p < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
@@ -3901,51 +3932,40 @@ function bindEffects(root) {
 }
 
 function bindVideoStory(root) {
-  const section = root.querySelector("[data-video-story]"); if (!section) return;
-  const video = section.querySelector("video"), button = section.querySelector("[data-video-play]"), slider=section.querySelector("[data-video-scrub]");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  video.controls=false; video.muted=true; video.defaultMuted=true; video.setAttribute("playsinline", "");
-  const load = () => { if(video.dataset.loaded)return; video.dataset.loaded="true";video.preload="auto";video.load(); };
-  const observer="IntersectionObserver" in window?new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){load();observer.disconnect();}}, {rootMargin:"600px 0px"}):null;
-  if(!reduced){if(observer)observer.observe(section);else load();}
-  video._targetTime=0;let manual=false,unlocking=false;
+  const section=root.querySelector('[data-video-story]');if(!section)return;
+  const video=section.querySelector('video');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  video.controls=false;video.muted=true;video.defaultMuted=true;
+  let targetProgress=0,unlocking=false;
+  const load=()=>{if(video.dataset.loaded)return;video.dataset.loaded='true';video.preload='auto';video.load();};
   const seek=()=>{
-    if(!video.isConnected||!video.paused||video.seeking||video.readyState<2||!Number.isFinite(video.duration)||unlocking)return;
-    const target=Math.min(Math.max(0,video._targetTime),Math.max(0,video.duration-.04));
-    if(Math.abs(video.currentTime-target)>.018){try{video.currentTime=target;}catch{}}
+    if(reduced||!video.isConnected||unlocking||video.seeking||video.readyState<2||!Number.isFinite(video.duration))return;
+    const target=targetProgress*Math.max(0,video.duration-.05);
+    if(Math.abs(video.currentTime-target)>.025){try{video.currentTime=target;}catch{}}
   };
-  // iOS can require a gesture before a paused video paints a sought frame.
   const unlock=()=>{
-    load();if(video.dataset.unlocked||unlocking)return;unlocking=true;
-    const result=video.play();
-    if(result&&result.then)result.then(()=>{video.pause();video.dataset.unlocked="true";unlocking=false;seek();}).catch(()=>{unlocking=false;seek();});
+    if(reduced||video.dataset.unlocked||unlocking)return;
+    load();unlocking=true;
+    const play=video.play();
+    if(play&&play.then)play.then(()=>{video.pause();video.dataset.unlocked='true';unlocking=false;seek();}).catch(()=>{unlocking=false;seek();});
     else{video.pause();unlocking=false;seek();}
   };
-  section.addEventListener("pointerdown",e=>{if(!e.target.closest("[data-video-play]"))unlock();},{passive:true});
-  video.addEventListener("loadedmetadata",()=>{if(!manual)videoStoryTick();});
-  video.addEventListener("loadeddata",()=>{if(!manual)videoStoryTick();seek();});
-  video.addEventListener("progress",seek);video.addEventListener("canplay",seek);video.addEventListener("seeked",seek);
-  video.addEventListener("timeupdate",()=>{if(!video.paused&&Number.isFinite(video.duration))slider.value=Math.round(video.currentTime/video.duration*1000);});
-  video.addEventListener("ended",()=>{button.textContent=tr(HOME_VIDEO.replay);button.setAttribute("aria-pressed","false");});
-  slider.addEventListener("input",()=>{manual=true;load();video.pause();button.textContent=tr(HOME_VIDEO.play);button.setAttribute("aria-pressed","false");if(Number.isFinite(video.duration))video._targetTime=Number(slider.value)/1000*video.duration;seek();});
-  video.addEventListener("loadedmetadata",()=>{if(manual){video._targetTime=Number(slider.value)/1000*video.duration;seek();}});
-  button.addEventListener("click",()=>{
-    load();manual=true;
-    if(video.paused){if(video.ended||video.currentTime>=video.duration-.1)video.currentTime=0;video.play().then(()=>{button.textContent=tr(HOME_VIDEO.pause);button.setAttribute("aria-pressed","true");}).catch(()=>{video.controls=true;});}
-    else{video.pause();button.textContent=tr(HOME_VIDEO.play);button.setAttribute("aria-pressed","false");}
-  });
-  const resumeScroll=()=>{manual=false;};
-  window.addEventListener('wheel',resumeScroll,{passive:true});window.addEventListener('touchmove',resumeScroll,{passive:true});
-  section._videoSeek=seek;section._scrollSeek=p=>{if(manual)return;slider.value=Math.round(p*1000);video._targetTime=p*video.duration;seek();};
-  section._cleanup=()=>{observer&&observer.disconnect();video.pause();window.removeEventListener('wheel',resumeScroll);window.removeEventListener('touchmove',resumeScroll);};
+  const observer='IntersectionObserver' in window?new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){load();observer.disconnect();}},{rootMargin:'600px 0px'}):null;
+  if(!reduced){if(observer)observer.observe(section);else load();}
+  const touchUnlock=()=>{if(section.getBoundingClientRect().top<innerHeight+600)unlock();};
+  window.addEventListener('touchstart',touchUnlock,{passive:true});
+  section.addEventListener('pointerdown',unlock,{passive:true});
+  section._scrollSeek=p=>{targetProgress=p;seek();};
+  ['loadedmetadata','loadeddata','canplay'].forEach(name=>video.addEventListener(name,()=>{videoStoryTick();seek();}));
+  video.addEventListener('seeked',seek);video.addEventListener('progress',seek);
+  section._cleanup=()=>{observer?.disconnect();video.pause();window.removeEventListener('touchstart',touchUnlock);};
 }
 function videoStoryTick() {
-  const section=document.querySelector("[data-video-story]");if(!section||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const video=section.querySelector("video"),r=section.getBoundingClientRect(),head=document.querySelector(".hdr")?.offsetHeight||68;
+  const section=document.querySelector('[data-video-story]');if(!section||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const r=section.getBoundingClientRect(),head=document.querySelector('.hdr')?.offsetHeight||68;
   const p=Math.max(0,Math.min(1,(head-r.top)/Math.max(1,r.height-(innerHeight-head))));
-  section.querySelectorAll("[data-video-step]").forEach((step,i)=>step.classList.toggle("active",i===Math.min(2,Math.floor(p*3))));
-  section.querySelector("[data-video-progress]").style.transform=`scaleX(${p})`;
-  if(Number.isFinite(video.duration))section._scrollSeek&&section._scrollSeek(p);
+  section.querySelectorAll('[data-video-step]').forEach((step,i)=>step.classList.toggle('active',i===Math.min(2,Math.floor(p*3))));
+  section._scrollSeek?.(p);
 }
 function revealTick() {
   videoStoryTick();
