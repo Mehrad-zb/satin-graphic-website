@@ -1,0 +1,53 @@
+# Install this file inside the existing /satin/ directory only.
+DirectoryIndex index.html
+ErrorDocument 404 /satin/404/
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /satin/
+  # Normalize explicit index.html URLs and preserve query strings.
+  RewriteCond %{THE_REQUEST} \s/+satin/(?:[^?\s]*/)?index\.html[?\s] [NC]
+  RewriteRule ^(.*)index\.html$ /satin/$1 [R=301,L]
+  # Only generated page directories receive a trailing slash. Unknown URLs stay 404.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_URI} !/$
+  RewriteRule ^(.+)$ /satin/$1/ [R=301,L]
+</IfModule>
+
+# Enable whichever compression module is available on the shared host.
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain application/javascript application/json image/svg+xml
+</IfModule>
+<IfModule !mod_brotli.c>
+  <IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml
+  </IfModule>
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType font/woff2 "access plus 365 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:jpg|jpeg|png|webp|svg|css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresByType video/mp4 "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "^satin\.[a-f0-9]{12}\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
