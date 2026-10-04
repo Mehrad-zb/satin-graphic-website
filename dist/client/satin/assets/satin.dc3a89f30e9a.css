@@ -724,3 +724,4 @@ html body,html body button,html body input,html body select,html body textarea,h
 
 .studio-entry{display:none}@media(max-width:1380px){.studio-entry{display:inline-flex;margin-inline-start:auto}.hdr .right{margin-inline-start:0}}@media(max-width:600px){.studio-entry{font-size:12px;padding:8px}.hdr .q-desk{display:none}.hdr .logo img{width:135px}.hdr .bar{gap:8px}}
 .request-trap{display:none!important}@media(max-width:600px){.hdr .bar{display:grid;grid-template-columns:1fr auto;gap:8px;padding-block:10px}.hdr .logo{grid-column:1;grid-row:1;min-width:0}.hdr .right{grid-column:2;grid-row:1;gap:4px}.studio-entry{grid-column:1/-1;grid-row:2;justify-content:center;width:100%;margin:0}.hdr .logo img{width:135px}.hdr .right .icon-btn{width:36px;height:36px}.language-control select{max-width:78px}.service-hero .d1{font-size:38px}}
+.brand-arlon:hover,.brand-arlon:focus-visible{background:#242424}.brand-arlon img{max-width:135px;image-rendering:auto}
