@@ -1,21 +1,67 @@
 {
-  "observed_date": "2026-10-03",
+  "observed_date": "2026-10-04",
   "source": "https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan",
-  "business": "SatinGraphic.ca",
   "rating": 5.0,
   "review_count": 204,
-  "excerpts": [
+  "reviews": [
     {
       "name": "M Fard",
-      "text": "professional, efficient, and detail-oriented."
+      "text": "professional, efficient, and detail-oriented.",
+      "kind": "excerpt",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmMT5a4QKAK7mU5_AgmuOR5xf10cKR00PFy8NO7CJ8WTRmxDzHUSLvCz3lpbwMFEgRbx6M1z3_-DKcA7okZWP7RoBLxM455Qdj7lEGnlZ46XNOaqsKYQxMh1vv49r9QkUFqpgDfbv6x0Rhzf=w375-h281-p-k-no"
     },
     {
-      "name": "Vahit Dinç",
-      "text": "my van looks even better than in my dreams."
+      "name": "Vahit DinÃ§",
+      "text": "my van looks even better than in my dreams.",
+      "kind": "excerpt"
     },
     {
       "name": "Swift Safe",
-      "text": "clean, sharp, and very professional."
+      "text": "clean, sharp, and very professional.",
+      "kind": "excerpt",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmPygUXhp8LtxChhZ0suxLvtB1R3i68IMfdB0HraURteSJG07TaMCN_RHZawYxOoHAyaZIxZ4IaKPosZCEJWjkg4vrzFz9dBqBa4F6VkRLqNCn7x1o5ZDf7kF_j-VKA2GpELQ5RHiLXodyQ=w375-h563-p-k-no"
+    },
+    {
+      "name": "babak Zamani",
+      "text": "Pleased with the vehicle work and the overall experience.",
+      "kind": "summary"
+    },
+    {
+      "name": "Last King Construction Inc.",
+      "text": "Praised the truck design, workmanship and helpful communication.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmPZnNjskwo8BTfAsz0PENE_FBH1aWG9Et3Rs14ftSO2OvcCqQk2X0kEZlfIdIEByiVNx20ivL5qa0iSb2Yt6l1OUa-5gzNU-kKxAZgX1s6LGjr4nFJCsILTu0RK2JmWVmSMzOisNHG-NbDJ=w375-h281-p-k-no"
+    },
+    {
+      "name": "moon tarar",
+      "text": "Happy with the company truck graphics and careful workmanship.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmPkQcopOvZ6t5cvTewLchud_l5XdIpLKnKmJt6DsBZgrfNpErHnAZYIX8303oexJFq65nPiyiANIbvN_75CFIxX5idJ_NuH5pcYK28vy07MMOK_SOmyjbBYmFBatCingPXNoc3yzA8QAq4=w375-h563-p-k-no"
+    },
+    {
+      "name": "Chris Keough",
+      "text": "The team realised a personal rear-window graphic concept others could not produce.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmMHwR9Zeq6Djvz4y61qb9A6Z0CUFOsNe_JkLesngPPjOBVLNvMg8c0LhHTmTuJtXTE-Y8uLOwHLjEMSTqOp6qt6dJ0qlzQ79viJslL5g4QMEdeFXv1wOW3CjzVHSR6bnJ_DHcMPvLK-Vpbc=w750-h563-p-k-no"
+    },
+    {
+      "name": "Sam Matin",
+      "text": "Highlighted creative support and strong care throughout the commercial vehicle project.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmPZ3TBcBXjjv79f98tP42t0sgx6_wK9_oCfeBDswI0reR8YRi4rtBOkNKhiLsswOelL9MuYYsa882u3uaoVrregxJmDORI-fUV_CxXIdPKWmO3shDhyFIJKKEFQhhjq9Ad5xONZ-uHo7G9o=w375-h563-p-k-no"
+    },
+    {
+      "name": "Brentt",
+      "text": "The van graphics surpassed expectations, with neat alignment and a crisp design.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmOX_qctp8RjB1ab4HxhYWOKLbn10QdnMyV3Lz26AZtWTPGUc0pmQpgclvuAEkB0Os88V2k-jfCVarfVNLadmfLvWFoM93kQIzTaTQlaf-TW6jQfPVPdOMtKBbCRWvM1pka9cc-A6ybVdT2W=w375-h563-p-k-no"
+    },
+    {
+      "name": "Amir Behnam",
+      "text": "Pleased with the matte protective film installation and the team's expertise.",
+      "kind": "summary",
+      "photo": "https://lh3.googleusercontent.com/grass-cs/ACvplmPRi-sqQTLH9HH_kqUYBqNChzHTNtIemgVJHb0bGQLviFKEzLftQGBLrG5nO7p0kDs9VZNVy5AfMeuT0o1C1yDn7D9F908kljWcMrn8Zs07bcfwvuN6UY3CbdwGJyPtQ7rXmuaIXwXHV2nR=w375-h563-p-k-no"
     }
-  ]
+  ],
+  "note": "Three short excerpts and seven editorial summaries; photos are those attached to the named reviews. Original full reviews linked on Google."
 }
