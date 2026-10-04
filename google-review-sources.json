@@ -1,0 +1,21 @@
+{
+  "observed_date": "2026-10-03",
+  "source": "https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan",
+  "business": "SatinGraphic.ca",
+  "rating": 5.0,
+  "review_count": 204,
+  "excerpts": [
+    {
+      "name": "M Fard",
+      "text": "professional, efficient, and detail-oriented."
+    },
+    {
+      "name": "Vahit Dinç",
+      "text": "my van looks even better than in my dreams."
+    },
+    {
+      "name": "Swift Safe",
+      "text": "clean, sharp, and very professional."
+    }
+  ]
+}

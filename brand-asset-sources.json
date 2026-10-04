@@ -88,5 +88,11 @@
     "source": "https://images.squarespace-cdn.com/content/v1/66e98ef8f8d8555d71e8d9be/a2066e48-2f31-442e-8cc1-4b0aa5c58abb/CEA.png?format=1500w",
     "file": "cea.png",
     "bytes": 10286
+  },
+  {
+    "brand": "tdsb",
+    "website": "https://www.tdsb.on.ca/",
+    "source": "https://www.tdsb.on.ca/images/tdsb/TDSB_logo_homepage.jpg?v=20251111",
+    "file": "tdsb.jpg"
   }
 ]

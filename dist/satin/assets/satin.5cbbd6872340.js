@@ -5,12 +5,12 @@ const SITE = {
   base: "/satin",
   origin: "https://satingraphic.ca",
   languages: [{ code: "en", locale: "en-CA", name: "English", dir: "ltr" }, { code: "fr", locale: "fr-CA", name: "Français", dir: "ltr" }, { code: "es", locale: "es", name: "Español", dir: "ltr" }, { code: "fa", locale: "fa", name: "فارسی", dir: "rtl" }],
-  address: "",
+  address: "50 Viceroy Rd, Unit 22–23",
   region: "ON",
   country: "CA",
   phone: "(905) 555-0148",
-  email: "quotes@satingraphic.ca",
-  city: "Vaughan, ON",
+  email: "info@satingraphic.ca",
+  city: "Vaughan, Ontario",
   area: "Serving the Greater Toronto Area — shop visits by appointment.",
   hours: [["Mon – Fri", "8:00 – 18:00"], ["Saturday", "9:00 – 15:00"], ["Sunday", "Closed"]],
 };
@@ -94,10 +94,10 @@ const PROCESS = {
 const FAQ = {
   general: { name: "General", items: [
     ["How do I get a quote?", "Use the estimator on any product page, add configured items to the quote cart, or hit “Get a Quote” anywhere on the site. Tell us what you need and we reply within one business day with a firm price."],
-    ["Where are you located and what are your hours?", "We are in Mississauga, Ontario, serving the Greater Toronto Area. Monday to Friday 8:00–18:00, Saturday 9:00–15:00, closed Sunday. Shop visits are by appointment so the right person is available."],
+    ["Where are you located and what are your hours?", "We are in Vaughan, Ontario, serving the Greater Toronto Area. Monday to Friday 8:00–18:00, Saturday 9:00–15:00, closed Sunday. Shop visits are by appointment so the right person is available."],
     ["Do you offer design services?", "Yes — an in-house team designs wraps, print, apparel, window graphics and websites. Design deposits are credited to production when you go ahead."],
     ["Can I pay online?", "Quotes are confirmed by email and paid by Interac e-Transfer, credit card or cheque. Online checkout is coming; for now every order is a quote so we can check the artwork first."],
-    ["Do you ship?", "Pickup in Mississauga is free; we ship print and apparel across Canada by courier and install wraps, tint, glass and wall graphics across the GTA."],
+    ["Do you ship?", "Pickup in Vaughan is free; we ship print and apparel across Canada by courier and install wraps, tint, glass and wall graphics across the GTA."],
     ["What warranty do you offer?", "Five years on wrap workmanship, ten on PPF film, lifetime on tint film, and reprints for any print job that doesn’t match its approved proof. The full terms are on the Warranty page."]]},
   wraps: { name: "Vehicle wraps", items: [
     ["How long does a van wrap last?", "With cast film and laminate, expect 5–7 years on vertical panels in Ontario weather. Horizontal surfaces (hood and roof) see more sun and typically run 3–5 years. Our workmanship warranty covers lifting and peeling for 5 years."],
@@ -130,7 +130,7 @@ const FAQ = {
     ["Will the colours match my screen?", "Screens are RGB and backlit; print is CMYK on paper, so bright blues and greens shift a little. Build your file in CMYK and, if a colour is critical, ask for a hard-copy proof or a Pantone match."],
     ["What if I don’t have a print-ready file?", "Send what you have — a logo, a Word document, a photo — and choose the design service option. We’ll lay it out, send a proof and only print once you approve it."],
     ["Can I see a sample before ordering?", "Yes. Drop by the shop to feel the stocks, or we can mail a sample pack of the papers you’re deciding between."],
-    ["Do you ship?", "Pickup in Mississauga is free. We ship across Canada by courier; shipping is quoted by weight and shown before you confirm."],
+    ["Do you ship?", "Pickup in Vaughan is free. We ship across Canada by courier; shipping is quoted by weight and shown before you confirm."],
     ["What’s your reprint policy?", "If a job doesn’t match the approved proof — wrong colour, trim, or a defect — we reprint it at no charge. Typos in the approved file are on the proof, so please check it carefully."]]},
   large: { name: "Large format", items: [
     ["How long will it last outside?", "Vinyl banners and coroplast signs are rated for 2–3 years outdoors. Flags see more wind stress and typically last 6–12 months in constant use. Roll-ups and X-frames are indoor products."],
@@ -344,7 +344,7 @@ const POLICIES = {
     ["Window graphics and wallpaper", ["Workmanship warranty: 2 years against lifting and peeling on properly prepared surfaces. Film durability per manufacturer rating (2–7 years by product). Not covered: surfaces we advised against (fresh paint, unprimed drywall, damaged glass), removal by the customer, or damage from cleaning with abrasives or ammonia."]],
     ["Print and apparel", ["Print orders are warranted to match the approved proof and to be free of manufacturing defects at delivery — see Defects and reprints on the Orders policy. Apparel decoration is warranted for 50 washes when the care label is followed (wash inside-out in cold water, no bleach, low heat or hang dry). Outdoor print products carry the durability ratings listed on their pages."]],
     ["Websites", ["Every website includes 30 days of post-launch fixes for defects in what we built. Ongoing updates, content changes and third-party service outages are covered by a care plan, not the warranty."]],
-    ["Making a claim", ["Email quotes@satingraphic.ca with your invoice number, photos of the issue and the date it appeared. Call (905) 555-0148 if it is urgent.", "We inspect within 10 business days (in person for vehicles and installations) and repair, replace or reprint the affected area at no charge if it is covered.", "Warranties are for the original purchaser and are not transferable unless stated on the manufacturer’s card."]]]},
+    ["Making a claim", ["Email info@satingraphic.ca with your invoice number, photos of the issue and the date it appeared. Call (905) 555-0148 if it is urgent.", "We inspect within 10 business days (in person for vehicles and installations) and repair, replace or reprint the affected area at no charge if it is covered.", "Warranties are for the original purchaser and are not transferable unless stated on the manufacturer’s card."]]]},
   "artwork-guidelines": { t: "Artwork Guidelines", k: "Help", d: "How to prepare files so your proof matches your screen and your print matches your proof.", s: [
     ["File formats we accept", ["*Best: print-ready PDF (PDF/X-1a or “High Quality Print”) with bleed and crop marks.", "*Vector: AI, EPS, SVG — required for cut vinyl, embroidery and any logo we scale up.", "*Raster: TIFF, PSD (flattened), PNG or JPG at the resolution listed for the product.", "*Layouts: InDesign packages (with links and fonts) are welcome. Word, PowerPoint, Canva and Publisher files are not print-ready; we can rebuild them as a design service."]],
     ["Resolution", ["*Offset print (cards, flyers, brochures): 300 DPI at final size.", "*Large format and wallpaper: 100–150 DPI at final size, or 25% scale at 4× that resolution.", "*Vehicle wraps: 72–100 DPI at full vehicle scale; vector wherever possible.", "*Apparel (DTF): 300 DPI at the printed size, PNG with a transparent background.", "Screenshots and web images (72 DPI) are almost never usable — ask before you build on one."]],
@@ -357,21 +357,21 @@ const POLICIES = {
   "refund-policy": { t: "Orders, Shipping & Returns", k: "Policy", d: "How orders are confirmed, when they ship, and what happens if something is wrong.", s: [
     ["When an order is confirmed", ["An order is confirmed when you approve the proof and payment (or the required deposit) is received. Turnaround times start from that moment, not from when the request was sent."]],
     ["Turnaround", ["*Offset print (cards, flyers, brochures): 2–4 business days.", "*Large format (banners, signs, flags): 2–3 business days.", "*Apparel: 5–7 business days.", "*Window graphics and wallpaper: 3–5 business days plus installation scheduling.", "*Vehicle wraps, PPF and tint: scheduled on booking; typically 1–3 days in the shop.", "Rush production is available on most print products for a surcharge — ask before you approve the proof."]],
-    ["Pickup and shipping", ["Pickup at our Mississauga, Ontario facility is free. We hold completed orders for 30 days; unclaimed orders after that may be recycled and are non-refundable.", "We ship across Canada by courier; the cost is quoted by weight and destination before you confirm. Orders over $500 within the GTA ship free.", "Risk passes to you when the courier collects the package. We pack to prevent damage; if a package arrives damaged, photograph it before opening and contact us within 48 hours so we can claim against the carrier and reprint."]],
+    ["Pickup and shipping", ["Pickup at our Vaughan, Ontario facility is free. We hold completed orders for 30 days; unclaimed orders after that may be recycled and are non-refundable.", "We ship across Canada by courier; the cost is quoted by weight and destination before you confirm. Orders over $500 within the GTA ship free.", "Risk passes to you when the courier collects the package. We pack to prevent damage; if a package arrives damaged, photograph it before opening and contact us within 48 hours so we can claim against the carrier and reprint."]],
     ["Custom-made goods", ["Everything we make is produced to your artwork and specifications, so it cannot be resold. For that reason we do not accept returns or offer refunds for change of mind, ordering the wrong size or quantity, or errors that were present in the proof you approved."]],
     ["Defects and reprints", ["If your order does not match the approved proof — wrong colour, size, stock, misregistration, trimming faults, or a manufacturing defect — tell us within 7 days of pickup or delivery. We will reprint the affected quantity at no charge, or refund it if a reprint is not practical. We may ask for photos or the return of the defective goods."]],
     ["Cancellations", ["*Before proof approval: cancel at any time at no charge; design deposits are not refundable once design work has started.", "*After proof approval, before production: we charge for materials ordered and time spent (typically 25%).", "*After production starts: custom-printed orders cannot be cancelled. Wrap and installation bookings cancelled with less than 48 hours’ notice forfeit 25% of the deposit."]],
     ["Materials and tools", ["Unopened, unused vinyl rolls, laminates and tools from the shop may be returned within 14 days for a refund less a 15% restocking fee. Cut lengths of film are custom and non-returnable."]],
-    ["How to reach us", ["Email quotes@satingraphic.ca with your order or quote reference, or call (905) 555-0148 during business hours. We reply within one business day."]]]},
+    ["How to reach us", ["Email info@satingraphic.ca with your order or quote reference, or call (905) 555-0148 during business hours. We reply within one business day."]]]},
   "privacy-policy": { t: "Privacy Policy", k: "Legal", d: "How Satin Graphic collects, uses and protects your personal information.", s: [
-    ["Who this covers", ["This policy applies to personal information collected by Satin Graphic (“we”, “us”) through this website, our quote and contact forms, our newsletter, phone and email, and in our Mississauga, Ontario facility. We comply with Canada’s Personal Information Protection and Electronic Documents Act (PIPEDA)."]],
+    ["Who this covers", ["This policy applies to personal information collected by Satin Graphic (“we”, “us”) through this website, our quote and contact forms, our newsletter, phone and email, and in our Vaughan, Ontario facility. We comply with Canada’s Personal Information Protection and Electronic Documents Act (PIPEDA)."]],
     ["What we collect", ["We collect only what we need to quote, produce and deliver your order, and to stay in touch about it:", "*Contact details — name, email, phone, business name and address.", "*Project details — the vehicle, product, quantities, measurements and options you configure, plus any artwork or photos you upload.", "*Order and payment records — invoices, deposits and payment confirmations (card numbers are processed by our payment provider and never stored by us).", "*Website usage — pages visited, device type and approximate location, collected through cookies and analytics.", "*Newsletter subscription — your email address, if you sign up."]],
     ["How we use it", ["*To prepare quotes, proofs and mockups, and to produce and deliver what you order.", "*To contact you about your project — proof approvals, scheduling, pickup and delivery.", "*To send project updates and occasional offers if you subscribed; every email includes an unsubscribe link.", "*To keep accounting and warranty records, which we retain for seven years as required by the Canada Revenue Agency.", "*To improve the website and our services using aggregated, de-identified analytics."]],
     ["Who we share it with", ["We do not sell or rent personal information. We share it only with service providers who need it to do their part of your job — our payment processor, courier and shipping partners, email delivery service, cloud hosting and analytics — each bound to protect it and use it only for us. We may also disclose information where the law requires it."]],
     ["Your artwork and files", ["Files you upload are stored on our servers and used only to produce your order. We keep them so reprints match exactly; ask us to delete them at any time after the job is complete. We may photograph finished work for our portfolio unless you tell us not to when you order."]],
     ["Cookies", ["This site uses a small number of cookies and local-storage entries: to remember the items in your quote cart, and for anonymous analytics that help us see which pages are useful. You can block cookies in your browser; the quote cart will then reset between visits."]],
     ["How we protect it", ["Data is transmitted over encrypted connections (HTTPS) and stored on access-controlled systems. Only staff who need it to complete your order can see it. No system is perfectly secure; if a breach affects your information we will notify you and the Office of the Privacy Commissioner as PIPEDA requires."]],
-    ["Your rights", ["You can ask to see the personal information we hold about you, correct it, withdraw consent to marketing, or have it deleted where we are not required to keep it. Email quotes@satingraphic.ca or call (905) 555-0148; we respond within 30 days. If you are not satisfied, you may contact the Office of the Privacy Commissioner of Canada."]],
+    ["Your rights", ["You can ask to see the personal information we hold about you, correct it, withdraw consent to marketing, or have it deleted where we are not required to keep it. Email info@satingraphic.ca or call (905) 555-0148; we respond within 30 days. If you are not satisfied, you may contact the Office of the Privacy Commissioner of Canada."]],
     ["Changes to this policy", ["We update this page when our practices change and note the date at the top. Continued use of the site after a change means you accept the updated policy."]]]},
   "terms-and-conditions": { t: "Terms & Conditions", k: "Legal", d: "The terms that apply to every quote, order and service from Satin Graphic.", s: [
     ["Agreement", ["By requesting a quote, approving a proof or placing an order with Satin Graphic you agree to these terms, our Privacy Policy and the Orders, Shipping & Returns policy. If you are ordering for a business you confirm you are authorized to bind it."]],
@@ -384,12 +384,12 @@ const POLICIES = {
     ["Warranty and liability", ["Our workmanship warranties are described on the Warranty page and are the only warranties we give. To the extent the law allows, our total liability for any order is limited to the amount you paid for it, and we are not liable for indirect or consequential loss such as lost business or downtime.", "Nothing in these terms limits rights you have under the Ontario Consumer Protection Act that cannot be waived."]],
     ["Intellectual property", ["Artwork we create is licensed to you for the project it was created for once paid in full; source files are provided on design-service packages that include them. Ready-made wrap designs are licensed per vehicle as described on their pages. We may show finished work in our portfolio unless you ask us not to in writing."]],
     ["Website use", ["The content of this site is ours or licensed to us. You may not scrape, copy or republish it. Prices and availability shown online may change without notice; obvious errors do not bind us."]],
-    ["Governing law", ["These terms are governed by the laws of Ontario and the federal laws of Canada applicable in Ontario. Disputes will be heard in the courts of Ontario. Questions: quotes@satingraphic.ca · (905) 555-0148."]]]},
-  "accessibility": { t: "Accessibility", k: "Legal", d: "Our commitment to making this website and our Mississauga, Ontario facility usable by everyone.", s: [
+    ["Governing law", ["These terms are governed by the laws of Ontario and the federal laws of Canada applicable in Ontario. Disputes will be heard in the courts of Ontario. Questions: info@satingraphic.ca · (905) 555-0148."]]]},
+  "accessibility": { t: "Accessibility", k: "Legal", d: "Our commitment to making this website and our Vaughan, Ontario facility usable by everyone.", s: [
     ["Our commitment", ["Satin Graphic is committed to providing goods, services and information in a way that respects the dignity and independence of people with disabilities, in accordance with the Accessibility for Ontarians with Disabilities Act (AODA) and the Integrated Accessibility Standards Regulation."]],
     ["This website", ["We aim to meet WCAG 2.1 Level AA. The site is built with semantic HTML, keyboard-operable menus and forms, visible focus states, text alternatives for images, sufficient colour contrast, and it respects reduced-motion preferences. Some product configurators are visual by nature; every one can also be completed by phone or email."]],
     ["Our facility", ["*Step-free entrance and accessible parking at the front of the building.", "*Service animals and support persons are welcome throughout customer areas.", "*Documents such as quotes and proofs can be provided in large print or by email on request.", "*Staff receive AODA customer-service training."]],
-    ["Feedback and requests", ["If you have difficulty using any part of this site or our services, or would like this information in another format, contact quotes@satingraphic.ca or (905) 555-0148. We respond within 5 business days and will work with you to provide what you need."]]]},
+    ["Feedback and requests", ["If you have difficulty using any part of this site or our services, or would like this information in another format, contact info@satingraphic.ca or (905) 555-0148. We respond within 5 business days and will work with you to provide what you need."]]]},
 };
 
 /* Quote wizard per service */
@@ -406,8 +406,8 @@ const QUOTE_DETAILS = {
 
 /* Home video: keep text and media configuration here. */
 const HOME_VIDEO = {
-  src: "/satin/video/home-wrap.mp4",
-  poster: "/satin/img/home-video-poster.jpg",
+  src: "/satin/video/home-white-v3.mp4",
+  poster: "/satin/img/home-white-v3.jpg",
   label: "Vehicle wrapping visual concept",
   eyebrow: "Scroll through the transformation",
   caption: "A visual look at the transformation. Your project starts with a custom design.",
@@ -2919,7 +2919,7 @@ const HOME_REFRESH = {
   fa: {labels:['پروژه‌های انجام‌شده','پروژه‌های در حال انجام','پروژه‌های موفق','رضایت مشتریان','سال تجربه'],reviewKicker:'صدای مشتریان ما',reviewTitle:'پنج ستاره، از طرف مشتریان ما.',reviewText:'اعتماد شما، بهترین توصیه برای ماست.',reviewLink:'مشاهده نظرات در گوگل',clients:'برندهایی که با آن‌ها کار می‌کنیم',clientTitle:'در کنار برندهای معتبر.',materials:'متریال و تکنولوژی',materialTitle:'کیفیت از انتخاب متریال شروع می‌شود.',materialText:'فیلم‌های ممتاز، محافظت و تکنولوژی چاپ؛ برای کیفیتی که ماندگار باشد.'}
 };
 const HOME_CLIENT_LOGOS = [
-  ['TTC','ttc','https://www.ttc.ca/'],['Metrolinx','metrolinx','https://www.metrolinx.com/'],['YRT','yrt','https://www.yrt.ca/'],['Save on Energy','saveonenergy','https://saveonenergy.ca/'],['Aria Build','ariabuild','https://ariabuild.ca/'],['Canada Energy Audit','cea','https://www.canadaenergyaudit.ca/'],['Canadian Cancer Society','cancer','https://cancer.ca/en/']
+  ['TTC','ttc','https://www.ttc.ca/'],['Metrolinx','metrolinx','https://www.metrolinx.com/'],['YRT','yrt','https://www.yrt.ca/'],['Save on Energy','saveonenergy','https://saveonenergy.ca/'],['Toronto District School Board','tdsb','https://www.tdsb.on.ca/'],['Canada Energy Audit','cea','https://www.canadaenergyaudit.ca/'],['Canadian Cancer Society','cancer','https://cancer.ca/en/']
 ];
 const HOME_MATERIAL_LOGOS = [
   ['3M','3m','https://www.3mcanada.ca/'],['Avery Dennison','avery','https://www.averydennison.com/'],['Arlon','arlon','https://www.arlon.com/'],['XPEL','xpel','https://www.xpel.com/'],['Mimaki','mimaki','https://mimaki.com/'],['ORAFOL / ORACAL','oracal','https://www.orafol.com/']
@@ -2928,13 +2928,69 @@ function homeCounters() {
   const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
   return `<section class="home-numbers" aria-label="${esc(c.labels.join(', '))}"><div class="wrap"><div class="counter-grid">${[[9753,0,''],[34,0,''],[100,0,'%'],[5,1,''],[11,0,'']].map(([v,d,s],i)=>`<div class="counter-item"><b data-count="${v}" data-decimals="${d}" data-suf="${s}">${v.toLocaleString('en-CA',{minimumFractionDigits:d,maximumFractionDigits:d})}${s}</b><span>${esc(c.labels[i])}</span></div>`).join('')}</div></div></section>`;
 }
-const HOME_LOGO_FILES = {"cea":"cea.png","cancer":"cancer-canada.svg","ttc": "ttc.svg", "metrolinx": "metrolinx.svg", "yrt": "yrt.svg", "saveonenergy": "save-on-energy.svg", "ariabuild": "aria-build.png", "3m": "3m.svg", "avery": "avery-dennison.png", "arlon": "arlon.webp", "xpel": "xpel.svg", "mimaki": "mimaki.svg", "oracal": "orafol.svg"};
+const HOME_LOGO_FILES = {"cea":"cea.png","cancer":"cancer-canada.svg","ttc": "ttc.svg", "metrolinx": "metrolinx.svg", "yrt": "yrt.svg", "saveonenergy": "save-on-energy.svg", "tdsb": "tdsb.jpg", "3m": "3m.svg", "avery": "avery-dennison.png", "arlon": "arlon.webp", "xpel": "xpel.svg", "mimaki": "mimaki.svg", "oracal": "orafol.svg"};
 function homeLogoLinks(logos) {
-  return logos.map(([name,key,url])=>`<a class="brand-logo" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)}"><img src="${SITE.base}/img/brands/${HOME_LOGO_FILES[key]}" alt="${esc(name)}" loading="lazy" width="180" height="80"></a>`).join('');
+  return logos.map(([name,key,url])=>`<a class="brand-logo brand-${key}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${esc(name)}"><img src="${SITE.base}/img/brands/${HOME_LOGO_FILES[key]}" alt="${esc(name)}" loading="lazy" width="180" height="80"></a>`).join('');
 }
+const HOME_GOOGLE_REVIEWS = [
+  {name:'M Fard',text:'professional, efficient, and detail-oriented.'},
+  {name:'Vahit Dinç',text:'my van looks even better than in my dreams.'},
+  {name:'Swift Safe',text:'clean, sharp, and very professional.'}
+];
+const GOOGLE_REVIEW_URL='https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan';
+function homeReviewCarousel(){
+  const labels={en:['Customer review excerpts','Pause slides','Next review'],fr:['Extraits d’avis clients','Mettre en pause','Avis suivant'],es:['Extractos de reseñas','Pausar','Siguiente reseña'],fa:['گزیدهٔ نظرات مشتریان','توقف اسلایدها','نظر بعدی']}[LANG]||['Customer review excerpts','Pause slides','Next review'];
+  return `<div class="review-carousel" data-review-carousel aria-roledescription="carousel" aria-label="${labels[0]}"><div class="review-slides">${HOME_GOOGLE_REVIEWS.map((r,i)=>`<article class="review-slide${i===0?' active':''}" data-review-slide aria-hidden="${i!==0}" lang="en" dir="ltr"><span class="rating-stars" aria-label="5 stars">★★★★★</span><blockquote>“${esc(r.text)}”</blockquote><div class="review-person"><span class="review-avatar" aria-hidden="true">${esc(r.name[0])}</span><div><b>${esc(r.name)}</b><span>Google review · excerpt</span></div></div><a href="${GOOGLE_REVIEW_URL}" target="_blank" rel="noopener noreferrer" ${i!==0?'tabindex="-1"':''}>Read on Google</a></article>`).join('')}</div><div class="review-controls"><div class="review-dots">${HOME_GOOGLE_REVIEWS.map((r,i)=>`<button type="button" data-review-go="${i}" aria-label="Review ${i+1}" aria-pressed="${i===0}"></button>`).join('')}</div><button type="button" class="review-pause" data-review-pause aria-pressed="false">${labels[1]}</button><button type="button" class="review-next" data-review-next aria-label="${labels[2]}">›</button></div></div>`;
+}
+const PROCESS_V3 = {
+  en:[['Tell us your idea','Call or email us. We’ll discuss your project, goals and the surface you want to transform.'],['Design it together','Our designer creates your artwork. You review the proof before we move forward.'],['Print with precision','We print and prepare your graphics using the right film and finish for your project.'],['Install the transformation','Our installers apply the vinyl, finish every edge and check the final result.']],
+  fa:[['ایده‌ات را با ما در میان بگذار','تماس بگیر یا ایمیل بفرست؛ دربارهٔ پروژه، هدفت و جزئیات کار صحبت می‌کنیم.'],['با هم طراحی می‌کنیم','طراح ما طرح را آماده می‌کند؛ پیش از تولید، نمونهٔ نهایی را بررسی و تأیید می‌کنی.'],['چاپ دقیق و حرفه‌ای','طرح با متریال و روکش مناسب چاپ و برای نصب آماده می‌شود.'],['تغییر را اجرا می‌کنیم','تیم ما وینیل را نصب می‌کند، لبه‌ها را پرداخت می‌کند و نتیجهٔ نهایی را بررسی می‌کند.']],
+  fr:[['Parlez-nous de votre idée','Appelez-nous ou envoyez un courriel pour discuter de votre projet.'],['Créons votre design','Notre designer prépare votre visuel. Vous approuvez la maquette avant la production.'],['Imprimons avec précision','Nous imprimons et préparons les graphismes avec les matériaux adaptés.'],['Installons la transformation','Notre équipe pose le vinyle, soigne les finitions et vérifie le résultat.']],
+  es:[['Cuéntanos tu idea','Llámanos o envíanos un correo para hablar de tu proyecto.'],['Diseñamos juntos','Nuestro diseñador prepara el arte. Apruebas la prueba antes de producir.'],['Imprimimos con precisión','Imprimimos y preparamos los gráficos con los materiales adecuados.'],['Instalamos el cambio','Nuestro equipo aplica el vinilo, termina los bordes y revisa el resultado.']]
+};
+function processVector(i){
+  const paths=[
+    '<circle cx="34" cy="23" r="10"/><path d="M14 77V62c0-13 9-22 20-22s20 9 20 22v15M25 55v22M43 55v22M54 47l9-7M66 14c-3 2-6 9-4 16s7 14 11 15l7-5-5-9-6 2-4-9 5-4-4-6z"/><path class="vector-accent" d="M76 14c7 5 10 12 10 21M79 7c10 6 15 16 15 28"/>',
+    '<circle cx="22" cy="21" r="9"/><path d="M7 77V55c0-11 7-19 15-19 9 0 16 7 16 17v6l12 5M17 50v16l15 9M40 77h48M52 67l-4 10"/><rect x="43" y="18" width="44" height="34" rx="4"/><path d="M65 52v10M55 62h20"/><path class="vector-accent" d="M52 29l8 7-8 7M65 43h12"/>',
+    '<path d="M27 28V10h42v18M21 64H12V34h72v30H74"/><rect x="26" y="48" width="44" height="36" rx="2"/><path d="M36 62h24M36 71h17"/><circle class="vector-accent" cx="72" cy="39" r="2"/>',
+    '<path d="M7 62V43l12-5 9-20h39l13 24 9 4v16M21 62h53M24 38h48M47 20v18"/><circle cx="21" cy="65" r="9"/><circle cx="75" cy="65" r="9"/><path class="vector-accent" d="M35 45h30v12H35zM65 45l8-7v14l-8 5M33 45l-5 12"/>'
+  ];
+  return `<svg viewBox="0 0 96 96" width="96" height="96" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[i]}</svg>`;
+}
+function homeScrollProcess(){
+  const steps=PROCESS_V3[LANG]||PROCESS_V3.en;
+  const c=HOME_CONTENT.copy[LANG]||HOME_CONTENT.copy.en;
+  return `<section class="process-story" data-process-story><div class="wrap process-stick"><div class="sec-head"><span class="eyebrow">${esc(c.processKicker)}</span><h2 class="d2">${esc(c.processTitle)}</h2></div><div class="process-layout"><div class="process-visual">${steps.map(([h,d],i)=>`<div class="process-vector${i===0?' active':''}" data-process-vector>${processVector(i)}</div>`).join('')}<div class="process-line"><span data-process-progress></span></div></div><div class="process-copy">${steps.map(([h,d],i)=>`<article class="process-step${i===0?' active':''}" data-process-step><span class="process-index">0${i+1} / 04</span><h3>${esc(h)}</h3><p class="lede" data-process-type>${esc(d)}</p></article>`).join('')}</div></div><div class="process-waypoints" aria-hidden="true">${steps.map(([h],i)=>`<span data-process-point="${i}" class="${i===0?'active':''}">${esc(h)}</span>`).join('')}</div></div></section>`;
+}
+function processStoryTick(){
+  const section=document.querySelector('[data-process-story]');if(!section||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const r=section.getBoundingClientRect(),head=document.querySelector('.hdr')?.offsetHeight||68;
+  const progress=Math.max(0,Math.min(.9999,(head-r.top)/Math.max(1,r.height-(innerHeight-head))));
+  const index=Math.floor(progress*4),phase=progress*4-index;
+  section.querySelectorAll('[data-process-step]').forEach((e,i)=>{e.classList.toggle('active',i===index);e.setAttribute('aria-hidden',i!==index);e.style.setProperty('--written',Math.min(1,phase*2.5));});
+  section.querySelectorAll('[data-process-vector]').forEach((e,i)=>e.classList.toggle('active',i===index));
+  section.querySelectorAll('[data-process-point]').forEach((e,i)=>e.classList.toggle('active',i===index));
+  section.querySelector('[data-process-progress]').style.transform=`scaleX(${progress})`;
+}
+function bindReviewCarousel(root){
+  const el=root.querySelector('[data-review-carousel]');if(!el)return;
+  const slides=[...el.querySelectorAll('[data-review-slide]')],dots=[...el.querySelectorAll('[data-review-go]')];
+  let current=0,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,visible=false,hover=false,focused=false;
+  const show=i=>{current=(i+slides.length)%slides.length;slides.forEach((s,n)=>{s.classList.toggle('active',n===current);s.setAttribute('aria-hidden',n!==current);s.querySelector('a').tabIndex=n===current?0:-1;});dots.forEach((d,n)=>d.setAttribute('aria-pressed',n===current));};
+  const pause=el.querySelector('[data-review-pause]');pause.setAttribute('aria-pressed',paused);
+  pause.addEventListener('click',()=>{paused=!paused;pause.setAttribute('aria-pressed',paused);pause.textContent=paused?({en:'Resume slides',fa:'ادامهٔ اسلایدها',fr:'Reprendre',es:'Continuar'}[LANG]):({en:'Pause slides',fa:'توقف اسلایدها',fr:'Mettre en pause',es:'Pausar'}[LANG]);});
+  dots.forEach(d=>d.addEventListener('click',()=>show(Number(d.dataset.reviewGo))));
+  el.querySelector('[data-review-next]').addEventListener('click',()=>show(current+1));
+  el.addEventListener('mouseenter',()=>hover=true);el.addEventListener('mouseleave',()=>hover=false);
+  el.addEventListener('focusin',()=>focused=true);el.addEventListener('focusout',e=>{focused=el.contains(e.relatedTarget);});
+  const observer=new IntersectionObserver(entries=>visible=entries.some(e=>e.isIntersecting));observer.observe(el);
+  const timer=setInterval(()=>{if(!el.isConnected){clearInterval(timer);observer.disconnect();return;}if(visible&&!paused&&!hover&&!focused&&!document.hidden)show(current+1);},5000);
+  el._cleanup=()=>{clearInterval(timer);observer.disconnect();};
+}
+
 function homeTrust() {
   const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
-  return `<section class="home-reviews sec"><div class="wrap"><div class="google-review-layout"><div><span class="eyebrow">${esc(c.reviewKicker)}</span><h2 class="d2">${esc(c.reviewTitle)}</h2><p class="lede">${esc(c.reviewText)}</p><a class="review-link" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer">${esc(c.reviewLink)}</a></div><a class="google-rating" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer" aria-label="5.0 out of 5 on Google"><span class="google-word" aria-label="Google"><i>G</i><i>o</i><i>o</i><i>g</i><i>l</i><i>e</i></span><div class="rating-score">5.0<span>/ 5</span></div><span class="rating-stars" aria-label="5 stars">★★★★★</span><span class="rating-label">Google Reviews</span></a></div></div></section><section class="home-clients sec"><div class="wrap"><div class="sec-head"><span class="eyebrow">${esc(c.clients)}</span><h2 class="d2">${esc(c.clientTitle)}</h2></div><div class="logo-row">${homeLogoLinks(HOME_CLIENT_LOGOS)}</div></div></section>`;
+  return `<section class="home-reviews sec"><div class="wrap"><div class="google-review-layout"><div><span class="eyebrow">${esc(c.reviewKicker)}</span><h2 class="d2">${esc(c.reviewTitle)}</h2><p class="lede">${esc(c.reviewText)}</p><a class="review-link" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer">${esc(c.reviewLink)}</a></div><a class="google-rating" href="https://www.google.com/maps/search/?api=1&query=SatinGraphic.ca+Vaughan" target="_blank" rel="noopener noreferrer" aria-label="5.0 out of 5 on Google"><span class="google-word" aria-label="Google"><i>G</i><i>o</i><i>o</i><i>g</i><i>l</i><i>e</i></span><div class="rating-score">5.0<span>/ 5</span></div><span class="rating-stars" aria-label="5 stars">★★★★★</span><span class="rating-label">Google Reviews · 204</span></a></div><div class="review-carousel-wrap">${homeReviewCarousel()}</div></div></section><section class="home-clients sec"><div class="wrap"><div class="sec-head"><span class="eyebrow">${esc(c.clients)}</span><h2 class="d2">${esc(c.clientTitle)}</h2></div><div class="logo-row">${homeLogoLinks(HOME_CLIENT_LOGOS)}</div></div></section>`;
 }
 function homeMaterials() {
   const c=HOME_REFRESH[LANG]||HOME_REFRESH.en;
@@ -2945,14 +3001,14 @@ function homeMaterials() {
 PAGES.home = () => {
   const c=HOME_CONTENT.copy[LANG]||HOME_CONTENT.copy.en;
   return {title:c.seoTitle,html:`
-  <section class="hhero"><div class="wrap"><div class="top"><div style="display:flex;flex-direction:column;gap:18px;min-width:0"><span class="eyebrow">${esc(c.kicker)}</span><h1 class="d1">${c.headline.map(h=>`<span>${esc(h)}</span>`).join('')}</h1></div><div style="display:flex;flex-direction:column;gap:18px;max-width:420px"><p class="lede">${esc(c.intro)}</p><div style="display:flex;gap:10px;flex-wrap:wrap">${quoteBtn(tr('Start a quote'))}${A('/about#selected-work',tr('See our work'),'btn ghost')}</div></div></div><div class="stats">${c.stats.map(([v,label])=>`<div><b>${esc(v)}</b><span>${esc(label)}</span></div>`).join('')}</div></div></section>
+  <section class="hhero"><div class="wrap"><div class="top"><div style="display:flex;flex-direction:column;gap:18px;min-width:0"><span class="eyebrow">${esc(c.kicker)}</span><h1 class="d1">${c.headline.map(h=>`<span>${esc(h)}</span>`).join('')}</h1></div><div style="display:flex;flex-direction:column;gap:18px;max-width:420px"><p class="lede">${esc(c.intro)}</p><div style="display:flex;gap:10px;flex-wrap:wrap">${quoteBtn(tr('Start a quote'))}${A('/about#selected-work',tr('See our work'),'btn ghost')}</div></div></div></div></section>
   ${homeCounters()}
   ${homeVideoStory()}
   ${homeTrust()}
   ${sec(secHead(c.servicesKicker,c.servicesTitle,c.servicesIntro)+`<div class="svc home-services">${HOME_CONTENT.services.map(s=>`<a href="${href(s.path)}"><span class="service-icon">${icon(s.icon,22)}</span><h3>${esc(tr(s.name))}</h3><p class="small">${esc(s.description[LANG]||s.description.en)}</p>${art(s.icon==='shirt'?'apparel':'photo',{photo:s.icon==='shirt'?null:s.photo,alt:tr(s.name)+' — Satin Graphic',tag:false})}<span class="link">${esc(tr('Explore'))} ${arrowSm()}</span></a>`).join('')}</div>`)}
   ${homeMaterials()}
   ${sec(secHead(c.workKicker,c.workTitle,c.workIntro)+`<div class="home-work">${HOME_CONTENT.work.map(w=>`<figure>${art('photo',{photo:w.photo,alt:w.title[LANG]||w.title.en,tag:false})}<figcaption>${esc(w.title[LANG]||w.title.en)}</figcaption></figure>`).join('')}</div>`,'alt')}
-  ${sec(secHead(c.processKicker,c.processTitle)+`<div class="g3">${c.process.map(([h,d],i)=>`<article class="card"><span class="process-number">${String(i+1).padStart(2,'0')}</span><h3>${esc(h)}</h3><p class="small">${esc(d)}</p></article>`).join('')}</div>`)}
+  ${homeScrollProcess()}
   ${ctaBand(c.ctaTitle,c.ctaText,tr('Start a quote'))}`};
 };
 
@@ -3610,8 +3666,8 @@ PAGES.contact = () => ({
   title: "Contact",
   html: hero({ kicker: "Contact", title: "Let’s spec the job.", lede: "Call, email or send a request below — most quotes go out within one business day.", crumbs: [["Home", "/"], ["Contact"]], art: art("fleet", { photo: "install-film" }) }) +
     sec(`<div class="split"><div style="display:flex;flex-direction:column;gap:14px">
-      ${[["phone", "Phone", SITE.phone], ["mail", "Email", SITE.email], ["pin", "Location", SITE.city], ["clock", "Hours", "Mon–Fri · 8am–6pm"]].map(([ic, l, v]) => `<div class="card" style="flex-direction:row;align-items:center;gap:14px;padding:16px 18px"><span class="ico">${icon(ic)}</span><span style="flex:1;min-width:0"><span class="tiny">${l}</span><b style="display:block;user-select:all">${esc(v)}</b></span>${ic === "phone" || ic === "mail" ? `<button class="btn ghost sm" data-copy="${esc(v)}">Copy</button>` : ""}</div>`).join("")}
-      <div class="card" style="gap:6px"><b>${esc(SITE.city)}</b><p class="small">${esc(SITE.area)}</p>${SITE.hours.map(([d, h]) => `<div style="display:flex;justify-content:space-between;font-size:14.5px;border-top:1px solid var(--line-soft);padding-top:6px"><span>${d}</span><span class="mono">${h}</span></div>`).join("")}</div></div>
+      ${[["phone", "Phone", SITE.phone], ["mail", "Email", SITE.email], ["pin", "Location", SITE.address+", "+SITE.city], ["clock", "Hours", "Mon–Fri · 8am–6pm"]].map(([ic, l, v]) => `<div class="card" style="flex-direction:row;align-items:center;gap:14px;padding:16px 18px"><span class="ico">${icon(ic)}</span><span style="flex:1;min-width:0"><span class="tiny">${l}</span><b style="display:block;user-select:all">${esc(v)}</b></span>${ic === "phone" || ic === "mail" ? `<button class="btn ghost sm" data-copy="${esc(v)}">Copy</button>` : ""}</div>`).join("")}
+      <div class="card" style="gap:6px"><b>${esc(SITE.address)}<br>${esc(SITE.city)}</b><p class="small">${esc(SITE.area)}</p>${SITE.hours.map(([d, h]) => `<div style="display:flex;justify-content:space-between;font-size:14.5px;border-top:1px solid var(--line-soft);padding-top:6px"><span>${d}</span><span class="mono">${h}</span></div>`).join("")}</div></div>
       <form class="card" style="padding:26px;gap:16px" data-form="contact" novalidate><h2 class="d3">Send a message</h2><div class="fields">
         ${field("Name", `<input class="inp" id="c-name" required autocomplete="name">`)}${field("Email", `<input class="inp" id="c-email" type="email" required autocomplete="email">`)}
         ${field("Phone", `<input class="inp" id="c-phone" type="tel" autocomplete="tel">`)}${field("Service", `<select class="inp" id="c-svc">${["Vehicle Wraps", "Print Shop", "Apparel", "Window Graphics", "Wallpaper", "Window Tint", "Something else"].map(s => `<option>${s}</option>`).join("")}</select>`)}
@@ -3772,7 +3828,7 @@ function footer() {
   const col = (h, links) => `<div class="col"><h2>${h}</h2>${links.map(([t, p]) => A(p, esc(t))).join("")}</div>`;
   return `<footer class="ftr"><div class="wrap"><div class="top">
     <div style="display:flex;flex-direction:column;gap:12px;max-width:340px"><img src="${LOGO}" alt="Satin Graphic" style="height:24px;width:auto;align-self:flex-start" class="flogo" width="483" height="78"><p class="small">${LANG==='en'?'Vehicle wraps, print shop, apparel, window graphics, wallpaper and window tint — one studio, one facility.':LANGUAGE_COPY[LANG].footer}</p>
-      <p class="small">${SITE.phone.includes('555-')?'':`<span style="user-select:all">${SITE.phone}</span> · `}<span style="user-select:all">${SITE.email}</span><br>${SITE.city}</p>
+      <p class="small">${SITE.phone.includes('555-')?'':`<span style="user-select:all">${SITE.phone}</span> · `}<span style="user-select:all">${SITE.email}</span><br><span dir="ltr">${SITE.address}<br>${SITE.city}</span></p>
       <form class="news" data-form="news" novalidate><input class="inp" type="email" id="nl-email" placeholder="Email for project tips" aria-label="Email for newsletter" required><button class="btn sm" type="submit">Subscribe</button></form></div>
     ${col("Services", [["Vehicle wraps", "/vehicle-wraps"], ["Commercial wraps", "/vehicle-wraps/commercial"], ["Color change", "/vehicle-wraps/color-change"], ["Paint protection film", "/vehicle-wraps/paint-protection-film"], ["Price estimator", "/vehicle-wraps/estimator"], ["Window tint", "/window-tint"]])}
     ${col("Print & more", [["Print shop", "/print-shop"], ["Offset printing", "/print-shop/offset"], ["Large format", "/print-shop/large-format"], ["Apparel", "/apparel"], ["Window graphics", "/window-graphics"], ["Wallpaper", "/wallpaper"], ["Website design", "/website-design"]])}
@@ -3936,12 +3992,12 @@ function bindVideoStory(root) {
   const video=section.querySelector('video');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   video.controls=false;video.muted=true;video.defaultMuted=true;
-  let targetProgress=0,unlocking=false;
+  let targetProgress=0,unlocking=false,lastSeekTarget=-1;
   const load=()=>{if(video.dataset.loaded)return;video.dataset.loaded='true';video.preload='auto';video.load();};
   const seek=()=>{
     if(reduced||!video.isConnected||unlocking||video.seeking||video.readyState<2||!Number.isFinite(video.duration))return;
     const target=targetProgress*Math.max(0,video.duration-.05);
-    if(Math.abs(video.currentTime-target)>.025){try{video.currentTime=target;}catch{}}
+    if(Math.abs(lastSeekTarget-target)>.025){try{lastSeekTarget=target;video.currentTime=target;}catch{lastSeekTarget=-1;}}
   };
   const unlock=()=>{
     if(reduced||video.dataset.unlocked||unlocking)return;
@@ -3969,6 +4025,7 @@ function videoStoryTick() {
 }
 function revealTick() {
   videoStoryTick();
+  processStoryTick();
   document.querySelectorAll("[data-reveal]").forEach(sec => {
     const r = sec.getBoundingClientRect(), stick = sec.querySelector(".stick"), vh = innerHeight;
     const sticky = getComputedStyle(stick).position === "sticky";
@@ -3993,12 +4050,12 @@ let current = null;
 function render(hydrate = false) {
   const oldLanguage=LANG;
   const { path, query, anchor, full } = parseLocation();
-  if(oldLanguage!==LANG){document.querySelector('[data-video-story]')?._cleanup?.();document.getElementById('app').innerHTML=appHTML();hydrate=false;Cart.save();bindForms(document.querySelector('.ftr'));}
+  if(oldLanguage!==LANG){document.querySelector('[data-review-carousel]')?._cleanup?.();document.querySelector('[data-video-story]')?._cleanup?.();document.getElementById('app').innerHTML=appHTML();hydrate=false;Cart.save();bindForms(document.querySelector('.ftr'));}
   const [fn, params] = match(path);
   let page = fn ? fn(params, query) : null; if (!page) page = PAGES.notFound();
   page=localizedPage(path,page);
   const main = document.getElementById("main");
-  if (!hydrate) main.querySelector("[data-video-story]")?._cleanup?.();
+  if (!hydrate) {main.querySelector("[data-video-story]")?._cleanup?.();main.querySelector("[data-review-carousel]")?._cleanup?.();}
   if (!hydrate) main.innerHTML = `<div class="page-enter">${imageHTML(page.html, path !== "/")}</div>`;
   main.classList.remove("x");
   updateSEO(path, page);
@@ -4006,7 +4063,7 @@ function render(hydrate = false) {
   closeMega(); document.querySelector("[data-drawer]").classList.remove("open");
   if (page.cfg) mountCfg(main, page.cfg);
   page.init && page.init(main);
-  bindDrops(main); bindForms(main); bindEffects(main); bindVideoStory(main);
+  bindDrops(main); bindForms(main); bindEffects(main); bindVideoStory(main); bindReviewCarousel(main);
   localizeDOM(main);
   document.documentElement.style.setProperty('--nav-h',(document.querySelector('.hdr')?.offsetHeight||76)+'px');
   current = page;
