@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /admin/
+Disallow: /*?cms=
 Sitemap: https://satin-graphic-website.mehrad-tr.chatgpt.site/satin/sitemap.xml

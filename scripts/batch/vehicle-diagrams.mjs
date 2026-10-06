@@ -1,0 +1,7 @@
+import fs from 'node:fs';
+const body={trailer:'M110 80L760 80L760 285L110 285Z', 'box-truck':'M210 55L790 55L790 285L70 285L70 205L120 120L210 120Z',bus:'M65 95Q65 60 100 60L805 60Q845 60 845 100L845 290L65 290Z'};
+for(const [kind,path] of Object.entries(body))for(const state of ['bare','decal','wrapped']){
+ const graphic=state==='bare'?'':state==='decal'?'<text x="390" y="175" font-family="sans-serif" font-size="44" fill="#c91c50" font-weight="bold">SATIN</text>':'<path d="M65 205L850 70L850 285L65 285Z" fill="#c91c50"/><path d="M65 265L850 130L850 175L65 305Z" fill="#b788d7"/>';
+ const windows=kind==='bus'?Array.from({length:8},(_,i)=>`<rect x="${95+i*85}" y="100" width="68" height="65" rx="5" fill="#abc4d2"/>`).join(''):kind==='box-truck'?'<path d="M92 196L132 140L195 140L195 196Z" fill="#abc4d2"/>':'';
+ fs.writeFileSync('dist/client/satin/img/'+kind+'-'+state+'.svg',`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360"><defs><clipPath id="body"><path d="${path}"/></clipPath></defs><path d="${path}" fill="#f5f6f7" stroke="#7a818c" stroke-width="4"/><g clip-path="url(#body)">${graphic}</g>${windows}${kind==='trailer'?'<path d="M110 270L35 298L110 298" fill="none" stroke="#777" stroke-width="7"/>':''}${[kind==='trailer'?560:190,kind==='trailer'?670:715].map(x=>`<circle cx="${x}" cy="290" r="45" fill="#252930"/><circle cx="${x}" cy="290" r="24" fill="#a8adb5"/>`).join('')}</svg>`);
+}

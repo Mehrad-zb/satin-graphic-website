@@ -1,4 +1,27 @@
-import { sqliteTable, text, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
 export const serviceRequests=sqliteTable('service_requests',{
  id:text('id').primaryKey(),type:text('type').notNull(),service:text('service').notNull(),name:text('name').notNull(),email:text('email').notNull(),phone:text('phone').notNull(),preferredDate:text('preferred_date').notNull(),preferredTime:text('preferred_time').notNull(),details:text('details').notNull(),status:text('status').notNull(),createdAt:text('created_at').notNull(),consentAt:text('consent_at').notNull()
 },table=>[index('idx_service_requests_email_created').on(table.email,table.createdAt),index('idx_service_requests_status_date').on(table.status,table.preferredDate)]);
+
+export const siteSettings=sqliteTable('site_settings',{key:text('key').primaryKey(),value:text('value').notNull(),updatedAt:text('updated_at').notNull()});
+export const businessDocuments=sqliteTable('business_documents',{id:text('id').primaryKey(),kind:text('kind').notNull(),status:text('status').notNull(),data:text('data').notNull(),updatedAt:text('updated_at').notNull()});
+export const siteVisitors=sqliteTable('site_visitors',{id:text('id').primaryKey(),path:text('path').notNull(),country:text('country').notNull(),city:text('city').notNull(),lastSeen:text('last_seen').notNull()},table=>[index('idx_visitors_last_seen').on(table.lastSeen)]);
+
+export const pricingRules=sqliteTable('pricing_rules',{id:text('id').primaryKey(),path:text('path').notNull(),config:text('config').notNull(),revision:integer('revision').notNull(),updatedAt:text('updated_at').notNull()},t=>[index('idx_pricing_path').on(t.path)]);
+export const studioSessions=sqliteTable('studio_sessions',{id:text('id').primaryKey(),tokenHash:text('token_hash').notNull(),createdAt:text('created_at').notNull(),expiresAt:text('expires_at').notNull()});
+export const studioLimits=sqliteTable('studio_limits',{key:text('key').primaryKey(),day:text('day').notNull(),count:integer('count').notNull()});
+export const studioFiles=sqliteTable('studio_files',{id:text('id').primaryKey(),sessionId:text('session_id').notNull(),designId:text('design_id'),objectKey:text('object_key').notNull(),name:text('name').notNull(),mime:text('mime').notNull(),size:integer('size').notNull(),role:text('role').notNull(),createdAt:text('created_at').notNull()},t=>[index('idx_studio_files_session').on(t.sessionId)]);
+export const studioDesigns=sqliteTable('studio_designs',{id:text('id').primaryKey(),sessionId:text('session_id').notNull(),design:text('design').notNull(),updatedAt:text('updated_at').notNull()});
+export const studioCartItems=sqliteTable('studio_cart_items',{id:text('id').primaryKey(),sessionId:text('session_id').notNull(),designId:text('design_id').notNull(),design:text('design').notNull(),price:text('price').notNull(),status:text('status').notNull(),orderId:text('order_id'),createdAt:text('created_at').notNull()},t=>[index('idx_studio_cart_session').on(t.sessionId)]);
+export const studioOrders=sqliteTable('studio_orders',{id:text('id').primaryKey(),sessionId:text('session_id').notNull(),customer:text('customer').notNull(),totals:text('totals').notNull(),status:text('status').notNull(),adminNotes:text('admin_notes').notNull(),createdAt:text('created_at').notNull()});
+
+export const customers=sqliteTable('customers',{id:text('id').primaryKey(),name:text('name').notNull(),email:text('email').notNull(),phone:text('phone').notNull(),business:text('business').notNull(),address:text('address').notNull(),notes:text('notes').notNull(),updatedAt:text('updated_at').notNull()},t=>[index('idx_customers_email').on(t.email)]);
+export const invoiceAccess=sqliteTable('invoice_access',{documentId:text('document_id').primaryKey(),token:text('token').notNull(),tokenHash:text('token_hash').notNull(),createdAt:text('created_at').notNull()});
+export const invoicePayments=sqliteTable('invoice_payments',{id:text('id').primaryKey(),documentId:text('document_id').notNull(),amount:integer('amount').notNull(),method:text('method').notNull(),reference:text('reference').notNull(),createdAt:text('created_at').notNull()},t=>[index('idx_invoice_payments_document').on(t.documentId)]);
+
+export const checkoutDrafts=sqliteTable('checkout_drafts',{sessionId:text('session_id').primaryKey(),data:text('data').notNull(),revision:integer('revision').notNull(),updatedAt:text('updated_at').notNull()});
+
+export const checkoutOrders=sqliteTable('checkout_orders',{id:text('id').primaryKey(),sessionId:text('session_id').notNull(),draftRevision:integer('draft_revision').notNull(),provider:text('provider').notNull(),providerOrderId:text('provider_order_id'),paymentURL:text('payment_url'),status:text('status').notNull(),snapshot:text('snapshot').notNull(),createdAt:text('created_at').notNull(),updatedAt:text('updated_at').notNull()},t=>[index('idx_checkout_orders_session').on(t.sessionId)]);
+
+export const productReviews=sqliteTable('product_reviews',{id:text('id').primaryKey(),productId:text('product_id').notNull(),userId:text('user_id').notNull(),name:text('name').notNull(),rating:integer('rating').notNull(),body:text('body').notNull(),createdAt:text('created_at').notNull()},t=>[index('product_reviews_product_idx').on(t.productId,t.createdAt)]);
+export const digitalFiles=sqliteTable('digital_files',{id:text('id').primaryKey(),ruleId:text('rule_id').notNull(),objectKey:text('object_key').notNull(),name:text('name').notNull(),createdAt:text('created_at').notNull()});

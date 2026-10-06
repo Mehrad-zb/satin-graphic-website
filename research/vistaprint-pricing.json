@@ -1,0 +1,664 @@
+{
+  "checked": "2026-10-05",
+  "currency": "CAD",
+  "taxShippingIncluded": false,
+  "notes": "Displayed public prices including promotions. Closest matches, interpolation and Satin allowances are disclosed in each rule. Zero prices indicate exact quote required.",
+  "tables": [
+    {
+      "product": "Regular card · 14pt Matte",
+      "url": "https://www.vistaprint.ca/business-cards/standard",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        26,
+        45,
+        95,
+        184
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "Luxury card · 16pt Soft Touch",
+      "url": "https://www.vistaprint.ca/business-cards/soft-touch",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        34.5,
+        61.5,
+        147,
+        307.5
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "5.5 × 8.5 · Premium",
+      "url": "https://www.vistaprint.ca/marketing-materials/flyers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        83.3,
+        121.55,
+        255.85,
+        435.2
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Premium",
+      "url": "https://www.vistaprint.ca/marketing-materials/flyers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        162.35,
+        223.55,
+        382.5,
+        683.4
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "Custom size · enter approved price",
+      "url": "https://www.vistaprint.ca/marketing-materials/flyers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "4 × 6 · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        65.45,
+        84.15,
+        140.25,
+        205.7
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "4 × 6 · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        59.5,
+        76.5,
+        127.5,
+        187
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "5 × 7 · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        93.5,
+        117.3,
+        205.7,
+        308.55
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "5 × 7 · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        85,
+        106.25,
+        187,
+        280.5
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "6 × 9 · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        136,
+        177.65,
+        308.55,
+        467.5
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "6 × 9 · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/standard-postcards",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        123.25,
+        161.5,
+        280.5,
+        425
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "3.5 × 8.5 · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/door-hangers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        88,
+        114.4,
+        211.2,
+        360.8
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "3.5 × 8.5 · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/door-hangers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        80,
+        104,
+        192,
+        328
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "4.25 × 11 · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/door-hangers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        96.8,
+        132,
+        246.4,
+        404.8
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "4.25 × 11 · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/door-hangers",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        88,
+        120,
+        224,
+        368
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Bi-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        269.09,
+        376.73,
+        726.56,
+        1076.39
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Bi-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        233.99,
+        327.59,
+        631.79,
+        935.99
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Tri-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        280.79,
+        393.11,
+        758.15,
+        1123.19
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Tri-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        245.69,
+        343.97,
+        663.38,
+        982.79
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Z-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        292.49,
+        409.49,
+        789.74,
+        1169.99
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 11 · Z-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        257.39,
+        360.35,
+        694.97,
+        1029.59
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 14 · Bi-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "8.5 × 14 · Bi-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "8.5 × 14 · Tri-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        377.9,
+        505.43,
+        985.13,
+        1444.94
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 14 · Tri-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        331.1,
+        442.25,
+        862.28,
+        1264.76
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "8.5 × 14 · Z-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "8.5 × 14 · Z-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "11 × 17 · Bi-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        538.19,
+        807.29,
+        1435.58,
+        2165.66
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "11 × 17 · Bi-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/bi-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        467.99,
+        701.99,
+        1248.38,
+        1883.69
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "11 × 17 · Tri-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "11 × 17 · Tri-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/tri-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "11 × 17 · Z-fold · Matte",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "11 × 17 · Z-fold · Gloss",
+      "url": "https://www.vistaprint.ca/marketing-materials/brochures/z-fold",
+      "quantity": [
+        500,
+        1000,
+        2500,
+        5000
+      ],
+      "prices": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceType": "unconfigured-exact-quote"
+    },
+    {
+      "product": "Roll Up Banner",
+      "url": "https://www.vistaprint.ca/signs-posters/retractable-banners",
+      "quantity": [
+        1,
+        2,
+        5,
+        10,
+        25
+      ],
+      "prices": [
+        148.74,
+        280.5,
+        701.25,
+        1402.5,
+        3506.25
+      ],
+      "sourceType": "observed-prices-with-derived-25-unit-tier"
+    },
+    {
+      "product": "X Frame Banner",
+      "url": "https://www.vistaprint.ca/signs-posters/x-banners",
+      "quantity": [
+        1,
+        2,
+        5,
+        10,
+        25
+      ],
+      "prices": [
+        139.99,
+        264.37,
+        637.49,
+        1259.37,
+        3125
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "Yard Signs",
+      "url": "https://www.vistaprint.ca/signs-posters/yard-signs",
+      "quantity": [
+        1,
+        2,
+        5,
+        10,
+        25
+      ],
+      "prices": [
+        19.99,
+        30.4,
+        73.6,
+        145.6,
+        280
+      ],
+      "sourceType": "observed-prices-with-derived-25-unit-tier"
+    },
+    {
+      "product": "Flags",
+      "url": "https://www.vistaprint.ca/signs-posters/flags/feather-flags",
+      "quantity": [
+        1,
+        2,
+        5,
+        10,
+        25
+      ],
+      "prices": [
+        149.99,
+        248.97,
+        545.91,
+        1040.81,
+        2525.51
+      ],
+      "sourceType": "observed-public-price"
+    },
+    {
+      "product": "A Frame Signs",
+      "url": "https://www.vistaprint.ca/signs-posters/signicade",
+      "quantity": [
+        1,
+        2,
+        5,
+        10,
+        25
+      ],
+      "prices": [
+        304.99,
+        581.1,
+        1409.44,
+        2790,
+        0
+      ],
+      "sourceType": "observed-public-price"
+    }
+  ]
+}
