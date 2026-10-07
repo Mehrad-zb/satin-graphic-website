@@ -15,7 +15,6 @@ import {managementRoutes} from './management.mjs';
 import {catalogRoutes,publicProducts} from './catalog.mjs';
 import {commerceRoutes} from './commerce.mjs';
 import {studioRoutes} from './studio.mjs';
-import {PRODUCTS as STUDIO_PRODUCTS} from './studio-model.mjs';
 const DEFAULT_PRICING={"bases": {"sedan": 2800.0, "suv": 3400.0, "pickup-truck": 3200.0, "minivan": 3600.0, "transit-van": 3950.0, "sprinter-van": 4300.0, "cargo-van": 4200.0, "box-truck": 5800.0, "trailer": 4800.0, "bus": 8500.0}, "roofMultiplier": 1.12, "designDeposit": 250};
 const ALLOWED = new Set(['Auto Detailing','Interior Detailing','Exterior Detailing','Paint Correction','Ceramic Coating','Social Media Services','Videography']);
 const OPTIONS = new Set(['Interior detailing','Exterior detailing','Paint correction','Ceramic coating','Pet hair removal','Upholstery cleaning','Social strategy','Post design','Short-form video','Content calendar','Publishing support','Campaign creative','Brand film','Product video','Social clips','Event coverage','Editing','Captions']);
@@ -24,8 +23,7 @@ const text=(v,max)=>typeof v==='string'?v.trim().slice(0,max):'';
 const app = {
  async fetch(request,env){
   const url=new URL(request.url);
-  if(request.method==='GET'&&/^\/satin(?:\/(?:fa|fr|es))?\/design-studio\/?$/.test(url.pathname)&&STUDIO_PRODUCTS.find(p=>p.id===url.searchParams.get('product'))?.garment?.category==='t-shirts')return Response.redirect('https://satingraphic-apparel-studio.mehrad-tr.chatgpt.site/',302);
-  const garmentImage=await apparelPhoto(request,url,env);if(garmentImage)return garmentImage;
+    const garmentImage=await apparelPhoto(request,url,env);if(garmentImage)return garmentImage;
   if(optimizedAssets[url.pathname]){
    const assetUrl=new URL(url);assetUrl.pathname=optimizedAssets[url.pathname];
    return env.ASSETS.fetch(new Request(assetUrl,request));
@@ -106,7 +104,7 @@ const app = {
   if(url.pathname.startsWith('/api/'))return json({error:'Not found'},404);
   if(url.searchParams.has('cms')&&url.pathname.startsWith('/satin')&&!isAdmin(request))return new Response('Owner sign-in required',{status:403,headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
   const customPath=url.pathname.replace(/^\/satin\/(fa|fr|es)(?=\/|$)/,'/satin').replace(/^\/satin/,'').replace(/\/$/,'');
-  if(['/print-shop/large-format/poly-bag-lawn-sign','/shop/dtf-transfers'].includes(customPath)||customPath.startsWith('/apparel')||customPath==='/wallpaper'||customPath.startsWith('/wallpaper/')||['/design-agreement','/installation-terms'].includes(customPath)||/\/paint-protection-film\/(partial|full)$/.test(customPath)){
+  if(['/print-shop/large-format/poly-bag-lawn-sign','/shop/dtf-transfers'].includes(customPath)||(customPath==='/apparel'||customPath.startsWith('/apparel/'))||customPath==='/wallpaper'||customPath.startsWith('/wallpaper/')||['/design-agreement','/installation-terms'].includes(customPath)||/\/paint-protection-film\/(partial|full)$/.test(customPath)){
    const page=customPage(customPath,await serviceSettings(env.DB),await publicProducts(env.DB));if(!page)return new Response('Not found',{status:404});
    const shell=await env.ASSETS.fetch(new Request(new URL('/satin/',url),request));let html=await shell.text();html=html.replace(/(<main\b[^>]*>)[\s\S]*?(<\/main>)/,(_,a,b)=>a+'<div class="page-enter">'+page.html+'</div>'+b).replace(/<title>[\s\S]*?<\/title>/,'<title>'+escapePage(page.title)+' | Satin Graphic</title>').replace(/data-prerender-path="[^"]*"/,'data-prerender-path="'+customPath+'"');
    html=html.replace(/(<link rel="canonical" href=")[^"]*/,(_,a)=>a+url.origin+url.pathname).replace(/(<meta property="og:url" content=")[^"]*/,(_,a)=>a+url.origin+url.pathname).replace(/(<meta (?:property="og:title"|name="twitter:title") content=")[^"]*/g,(_,a)=>a+escapePage(page.title)+' | Satin Graphic');

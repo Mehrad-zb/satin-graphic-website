@@ -741,3 +741,5 @@ main :is(.grid,.split,.in,.cfg,.row,.service-request)>*{min-width:0} main :is(h1
 .consent-banner{position:fixed;z-index:75;bottom:20px;inset-inline-end:20px;max-width:400px;padding:18px;background:white;color:#182333;border:1px solid #d9dde5;border-radius:14px;box-shadow:0 8px 35px #0002;display:grid;gap:12px;font-size:14px}.consent-banner div{display:flex;gap:10px}
 
 .vehstage,.reveal-story .ph,.art.photo,.portfolio-card-photo,.portfolio-project-photos img,.portfolio-project-hero figure>img,.managed-product-gallery{background:#fff!important}.vehstage picture{position:absolute;inset:0}.art.photo img[src$=".png"],.portfolio-card-photo img[src$=".png"]{object-fit:contain}
+
+.header-login{display:inline-flex;align-items:center;padding:8px;white-space:nowrap;font-size:14px;color:inherit}.header-login:hover{text-decoration:underline}

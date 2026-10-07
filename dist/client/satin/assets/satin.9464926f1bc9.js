@@ -3193,7 +3193,7 @@ PAGES.offsetItem = ({ slug }) => {
   return {
     title: p.name,
     html: hero({ kicker: "Print Shop · " + p.name, title: p.h, lede: p.d, crumbs: [["Home", "/"], ["Print Shop", "/print-shop"], ["Offset", "/print-shop/offset"], [p.name]], big: false, art: art("print", { photo: p.photo, alt: p.name }) }) +
-      sec(`<div class="grid g3 design-preview-gallery">${["van","pickup","box"].map(v=>`<article class="card">${vehicleSVG(v,{c:d.c,text:d.name.toUpperCase()})}<p>${v==='box'?'Box truck':v} · design illustration</p></article>`).join('')}</div>`) + sec(`<div class="cfg"><div class="opts"><span class="eyebrow plain">Make it yours</span>
+      sec(`<div class="cfg"><div class="opts"><span class="eyebrow plain">Make it yours</span>
         ${p.opts.map(([n, o]) => seg(n, o, 0, { key: n, cards: o.some(x => x[2]), showPrice: true })).join("")}
         ${seg("Quantity", p.q.map(q => q.toLocaleString("en-CA")), 0, { key: "qty" })}
         ${seg("Artwork", [["I have my design", 0, "Upload print-ready artwork."], ["I need design services", 100, "We design it for you."]], 0, { key: "art", cards: true, showPrice: true })}
@@ -3847,7 +3847,7 @@ function header() {
   return `<a class="sr" href="#main" data-skip>Skip to content</a><header class="hdr"><div class="wrap bar">
     <a class="logo" href="${href("/")}" aria-label="Satin Graphic home"><img src="${LOGO}" alt="Satin Graphic" width="483" height="78"></a>
     ${A("/design-studio", "Design Studio", "studio-nav studio-entry")}<nav class="nav" aria-label="Main">${managedNavigation?menuHTML(managedNavigation,false,(location.pathname.match(/^\/satin\/(fa|fr|es)(?:\/|$)/)?.[1]||'en')):`${Object.entries(MEGA).map(([k, m]) => `<button type="button" data-mega="${k}" aria-expanded="false">${m.label}<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button>`).join("")}${A("/portfolio", "Our Work", "studio-nav")}${A("/design-studio", "Design Studio", "studio-nav")}`}</nav>
-    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button><button class="icon-btn burger" data-burger aria-label="Open menu">${icon("menu")}</button></div></div>
+    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}${A("/login",tr("Log in"),"header-login")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button><button class="icon-btn burger" data-burger aria-label="Open menu">${icon("menu")}</button></div></div>
     <div class="mega" data-megapanel><div class="wrap in"></div></div></header>`;
 }
 function megaHTML(k) {
