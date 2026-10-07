@@ -1,5 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
 import {worker,env} from './checkout.test.mjs';
+test('direct static page loads include one login link immediately beside the cart',()=>{
+ const visit=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=new URL(entry.name+(entry.isDirectory()?'/':''),dir);if(entry.isDirectory())visit(file);else if(entry.name.endsWith('.html')){const html=fs.readFileSync(file,'utf8');if(!html.includes('<header class="hdr"'))continue;assert.match(html,/<a class="header-login"[^>]*>[^<]+<\/a><button[^>]*data-cart/,file.pathname);assert.equal((html.match(/class="header-login"/g)||[]).length,1,file.pathname);}}};
+ visit(new URL('../dist/client/',import.meta.url));
+});
 test('apparel JavaScript assets are never intercepted by apparel page routing',async()=>{
  for(const file of ['apparel-ui.mjs','apparel-colours.mjs','apparel-data.mjs']){const response=await worker.fetch(new Request('https://satin.test/'+file),env);assert.equal(response.status,200);assert.equal(await response.text(),fs.readFileSync(new URL('../dist/client/'+file,import.meta.url),'utf8'));}
 });
