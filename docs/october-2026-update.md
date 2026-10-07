@@ -26,3 +26,12 @@ Customer reviews require authenticated login. Five-star example text is explicit
 - Ontario front-window tint guidance is stricter than the requested “below 20%” warning. The UI warns for front-side choices below 70% VLT; a waiver is not shown as authorization for an unlawful installation.
 
 Validation: 15 automated test entries passed, including owner protection, persistent admin forms, checkout/private uploads, authoritative pricing, multiple files, supplier-price fallback, review login and vector-scale checks. All authored JavaScript parsed successfully and the production archive passed the packaging size check. Visual browser interaction has not been verified in this environment.
+
+
+## Resumed validation and fixes
+
+Public navigation no longer references an undefined DEFAULT_NAVIGATION. Opening an Our Work editor no longer runs unrelated promotion code. New Web Editor nodes receive unique IDs while existing IDs are preserved. Apparel category state is respected; Workwear filters relevant existing garments. Wallpaper accepts images only and provides a photographed foreground layer, room-specific wall mask, zoom down to 25%, dragging and reset. Promotion appearance/timing and partner video plan content persist through service settings. DTF includes transfer-by-size and gang-sheet formats. Vector preflight rejects raster-bearing SVG and PDF files without printable paths.
+
+The existing 15 checks and five regression checks passed. Browser interaction and full visual/mobile QA remain unverified because the required browser workflow skill is unavailable. Original supplier templates/custom prices, licensed digital assets, exact garment/embroidery previews and real payment/UPS activation remain dependencies rather than completed live integrations. Unverified Zeus package prices were replaced by quote-only, editable plan text.
+
+Flat Matte and Texture cards now use generated, unbranded material sample images. They are labelled illustrative and do not represent an exact supplier substrate.

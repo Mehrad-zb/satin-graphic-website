@@ -39,11 +39,11 @@ const SERVICES = [
 /* ---------- portfolio ---------- */
 const WORK = {
   home: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["Satin Slate Full Wrap — F-150", "Color Change"], ["Frosted Privacy Film, Corner Office", "Window Graphics"], ["Trade Show Booth & Collateral Set", "Print"], ["150-Piece Crew Uniform Rollout", "Apparel"], ["Reception Mural, Tech Startup HQ", "Wallpaper"]],
-  about: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["Satin Slate Full Wrap — F-150", "Color Change"], ["Frosted Privacy Film, Corner Office", "Window Graphics"], ["Trade Show Booth & Collateral Set", "Print"], ["150-Piece Crew Uniform Rollout", "Apparel"], ["Reception Mural, Tech Startup HQ", "Wallpaper"], ["Full-Vehicle PPF, GT Coupe", "PPF"], ["Ceramic Tint, Corporate Sedan Fleet", "Window Tint"], ["26-Unit Cargo Van Rebrand", "Fleet Wrap"]],
-  fleet: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["26-Unit Cargo Van Rebrand", "Fleet Wrap"], ["HVAC service fleet, full wrap", "Fleet Wrap"], ["Plumbing van, ¾ wrap + decals", "Fleet Wrap"], ["Landscaping crew trucks", "Fleet Wrap"], ["Electrical contractor, partial wrap", "Fleet Wrap"]],
+  about: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["Satin Slate Full Wrap — F-150", "Color Change"], ["Frosted Privacy Film, Corner Office", "Window Graphics"], ["Trade Show Booth & Collateral Set", "Print"], ["150-Piece Crew Uniform Rollout", "Apparel"], ["Reception Mural, Tech Startup HQ", "Wallpaper"], ["Full-Vehicle PPF, GT Coupe", "PPF"], ["Ceramic Tint, Corporate Sedan Fleet", "Window Tint"], ["26-Unit ProMaster Rebrand", "Fleet Wrap"]],
+  fleet: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["26-Unit ProMaster Rebrand", "Fleet Wrap"], ["HVAC service fleet, full wrap", "Fleet Wrap"], ["Plumbing van, ¾ wrap + decals", "Fleet Wrap"], ["Landscaping crew trucks", "Fleet Wrap"], ["Electrical contractor, partial wrap", "Fleet Wrap"]],
   color: [["Satin Slate Full Wrap — F-150", "Color Change"], ["Full-Vehicle PPF, GT Coupe", "PPF"], ["Satin dark grey, SUV", "Color Change"], ["Gloss midnight blue, sedan", "Color Change"], ["Colour-flip, coupe", "Color Change"], ["Matte black roof & hood", "Color Change"]],
   ppf: [["Satin Slate Full Wrap — F-150", "Color Change"], ["Full-Vehicle PPF, GT Coupe", "PPF"], ["Full-front PPF, new SUV", "PPF"], ["Track pack, sports sedan", "PPF"], ["Matte PPF full body", "PPF"], ["Headlight & mirror film", "PPF"]],
-  estimate: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["Satin Slate Full Wrap — F-150", "Color Change"], ["26-Unit Cargo Van Rebrand", "Fleet Wrap"], ["Satin black full wrap", "Color Change"], ["Contractor pickup, partial wrap", "Fleet Wrap"], ["Delivery van, full wrap", "Fleet Wrap"]],
+  estimate: [["12-Van Delivery Fleet Refresh", "Fleet Wrap"], ["Satin Slate Full Wrap — F-150", "Color Change"], ["26-Unit ProMaster Rebrand", "Fleet Wrap"], ["Satin black full wrap", "Color Change"], ["Contractor pickup, partial wrap", "Fleet Wrap"], ["Delivery van, full wrap", "Fleet Wrap"]],
   offset: [["Trade Show Booth & Collateral Set", "Print"], ["Soft-touch business cards, real estate", "Print"], ["Tri-fold brochures, dental clinic", "Print"], ["Event flyers, 5,000-piece run", "Print"], ["Postcards for a direct-mail campaign", "Print"], ["Door hangers, home services", "Print"]],
   large: [["Trade Show Booth & Collateral Set", "Print"], ["Trade show roll-ups, three-set", "Large Format"], ["Grand-opening vinyl banner", "Large Format"], ["Real estate yard signs, 200 pcs", "Large Format"], ["Feather flags, car dealership", "Large Format"], ["Café A-frame, double-sided", "Large Format"]],
   apparel: [["150-Piece Crew Uniform Rollout", "Apparel"], ["Embroidered polos, property management", "Apparel"], ["Screen-printed event tees, 500 pcs", "Apparel"], ["Safety-green workwear with reflective print", "Apparel"], ["Hoodies with DTF full-front", "Apparel"], ["Embroidered caps, landscaping crew", "Apparel"]],
@@ -211,7 +211,7 @@ const ESTIMATOR = [
   { slug: "minivan", photoKey: "minivan", name: "Minivan", veh: "minivan", base: 3600, d: "Passenger and delivery minivans.", q: [["Body style", [["Passenger", 1], ["Cargo", .96]]]] },
   { slug: "transit-van", photoKey: "van", name: "Transit Van", veh: "van", base: 3950, d: "Short or long wheelbase, low to high roof.", q: [["Transit size", [["Short Wheel", 1], ["Long Wheel", 1.1]]], ["Roof size", [["Low Roof", 1], ["Mid Roof", 1.06], ["High Roof", 1.12]]], ["Extended van", [["No", 1], ["Yes", 1.08]]]] },
   { slug: "sprinter-van", photoKey: "van", name: "Sprinter Van", veh: "van", base: 4300, d: "Choose wheelbase and roof height.", q: [["Wheelbase", [["Standard", 1], ["Long", 1.1], ["Extra Long", 1.18]]], ["Roof height", [["Low", 1], ["High", 1.1]]], ["Extended van", [["No", 1], ["Yes", 1.08]]]] },
-  { slug: "cargo-van", photoKey: "van", name: "Cargo Van", veh: "van", base: 4200, d: "Other cargo and delivery vans.", q: [["Wheelbase", [["Standard", 1], ["Long", 1.1]]], ["Roof height", [["Low", 1], ["Medium", 1.05], ["High", 1.1]]]] },
+  { slug: "cargo-van", photoKey: "van", name: "ProMaster", veh: "van", base: 4200, d: "Other cargo and delivery vans.", q: [["Wheelbase", [["Standard", 1], ["Long", 1.1]]], ["Roof height", [["Low", 1], ["Medium", 1.05], ["High", 1.1]]]] },
   { slug: "box-truck", name: "Box Truck", veh: "box", base: 5800, d: "Configure box dimensions and cab coverage.", q: [["Box dimensions", [["12–16 ft", 1], ["17–20 ft", 1.18], ["21–26 ft", 1.36]]], ["Coverage area", [["Box only", 1], ["Box + Cab", 1.22]]]] },
   { slug: "trailer", name: "Trailer", veh: "trailer", base: 4800, d: "Enclosed trailers of different lengths.", q: [["Trailer dimensions", [["12–24 ft", 1], ["25–40 ft", 1.4], ["40+ ft", 1.75]]], ["Front style", [["Flat", 1], ["V-nose", 1.06]]], ["Coverage area", [["Sides only", 1], ["Rear + Sides", 1.12], ["Front + Sides", 1.12]]]] },
   { slug: "bus", name: "Bus", veh: "bus", base: 8500, d: "School buses, shuttles and coaches.", q: [["Bus type", [["School", 1], ["Shuttle", .92], ["Coach", 1.12]]], ["Dimensions", [["20–30 ft", 1], ["30–40 ft", 1.25], ["40+ ft", 1.5]]], ["Window coverage", [["None", 1], ["Perforated graphics", 1.1]]]] },
@@ -397,7 +397,7 @@ const POLICIES = {
 /* Quote wizard per service */
 const QUOTE_SERVICES = ["Vehicle Wraps", "Print Shop", "Apparel", "Window Graphics", "Wallpaper", "Window Tint", "Shop / General"];
 const QUOTE_DETAILS = {
-  "Vehicle Wraps": [["Vehicle type", ["Sedan", "SUV", "Pickup Truck", "Minivan", "Transit Van", "Sprinter Van", "Cargo Van", "Box Truck", "Trailer", "Bus"]], ["Wrap type", ["Commercial", "Color change", "Paint protection"]], ["Coverage", ["Full Wrap", "Decals + Lettering", "Partial Wrap", "¾ Wrap"]], ["Finish", ["Gloss", "Matte", "Satin", "Satin Chrome / Colour-Flip"]]],
+  "Vehicle Wraps": [["Vehicle type", ["Sedan", "SUV", "Pickup Truck", "Minivan", "Transit Van", "Sprinter Van", "ProMaster", "Box Truck", "Trailer", "Bus"]], ["Wrap type", ["Commercial", "Color change", "Paint protection"]], ["Coverage", ["Full Wrap", "Decals + Lettering", "Partial Wrap", "¾ Wrap"]], ["Finish", ["Gloss", "Matte", "Satin", "Satin Chrome / Colour-Flip"]]],
   "Print Shop": [["Product", ["Business Cards", "Flyers", "Postcards", "Brochures", "Door Hangers", "Roll-Up Banner", "Vinyl Banners", "X-Frame Banner", "Yard Signs", "Flags", "A-Frame Signs"]], ["Quantity", ["1–10", "11–100", "101–500", "500–1,000", "1,000+"]], ["Artwork", ["I have print-ready files", "I need design services"]]],
   "Apparel": [["Garment", ["T-Shirts", "Hoodies", "Sweatshirts", "Hats & Caps", "Workwear"]], ["Decoration", ["Screen Print", "Embroidery", "DTF Transfer", "Vinyl (Heat Press)", "Not sure"]], ["Quantity", ["1–11", "12–23", "24–99", "100+"]]],
   "Window Graphics": [["Product", ["Window Decals", "Frosted Vinyl", "Perforated Vinyl", "Full Window Graphics"]], ["Material", ["Regular vinyl", "Blackout film · grey adhesive", "Clear film", "Perforated vinyl", "Single-colour calendered vinyl", "Full-colour digital print"]], ["Installation", ["Professional install", "Self-install (material only)"]], ["Number of panes", ["1", "2–4", "5–10", "10+"]]],
@@ -568,8 +568,8 @@ const SEO = {
     "noindex": false
   },
   "/vehicle-wraps/estimator/cargo-van": {
-    "title": "Cargo Van Wrap Cost Toronto | Satin Graphic",
-    "description": "Cargo Van in Vaughan and Toronto/GTA. Explore options, project details and estimates from Satin Graphic. Request a quote for your project.",
+    "title": "ProMaster Wrap Cost Toronto | Satin Graphic",
+    "description": "ProMaster in Vaughan and Toronto/GTA. Explore options, project details and estimates from Satin Graphic. Request a quote for your project.",
     "image": "sprinter-wrapped",
     "noindex": false
   },
@@ -1620,7 +1620,7 @@ const TRANSLATIONS = {
     "es": "Furgoneta Sprinter",
     "fa": "ون اسپرینتر"
   },
-  "Cargo Van": {
+  "ProMaster": {
     "fr": "Fourgonnette utilitaire",
     "es": "Furgoneta de carga",
     "fa": "ون باربری"

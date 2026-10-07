@@ -60,5 +60,5 @@ function previousUpgradeRule(original){
  r.updateVersion=3;return r;
 }
 
-export function upgradeRule(original){return original.updateVersion>=4?original:batchUpgrade(previousUpgradeRule(original));}
+export function upgradeRule(original){let r=original.updateVersion>=4?original:batchUpgrade(previousUpgradeRule(original));if(r.id==='dtf-transfers'&&!r.fields.some(f=>f.key==='layout')){r=structuredClone(r);r.fields.unshift(select('layout','Transfer format',[['Transfers by size',0],['Custom gang sheet',1]]));}return r;}
 EXTRA_RULES.push(...BATCH_RULES);
