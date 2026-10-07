@@ -1,5 +1,13 @@
 # Continue the Satin website
 
+## Requested selective restoration — October 6, 2026
+
+The owner requested Home as before the latest changes and the original version of the T-shirt designer, keeping the other sections. Home's core layout was identical in versions 28 and 29; its banner appearance/autoplay code was restored to version 28. The standalone Apparel Studio's saved version 1 was redeployed. Only products whose garment category is `t-shirts` route to that original studio, both from product design links and direct design-studio URLs. Other apparel and print/vehicle studio products retain their current implementation.
+
+Original T-shirt studio: https://satingraphic-apparel-studio.mehrad-tr.chatgpt.site/
+
+This original studio retains its original independent account, draft and order workflow; it does not import the newer product options or return an approved design to the main website's cart automatically. This is a deliberate restoration of the requested first version. Existing data has not been deleted. The source commit for the selective restoration is `00c1a7781b664d22702c6ea8762ddfa60a0fb8bd`. The version-29 details below describe the base before this restoration.
+
 ## Verified starting point
 
 - Published website: https://satin-graphic-website.mehrad-tr.chatgpt.site
