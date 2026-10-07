@@ -1,20 +1,20 @@
 # Continue the Satin website
 
-## Requested selective restoration — October 6, 2026
+## Current integrated website — October 6, 2026
 
-The owner requested Home as before the latest changes and the original version of the T-shirt designer, keeping the other sections. Home's core layout was identical in versions 28 and 29; its banner appearance/autoplay code was restored to version 28. The standalone Apparel Studio's saved version 1 was redeployed. Only products whose garment category is `t-shirts` route to that original studio, both from product design links and direct design-studio URLs. Other apparel and print/vehicle studio products retain their current implementation.
+The owner subsequently requested the apparel editor inside the main website. Version 31 removes every T-shirt redirect to the separate studio. Product options, private uploads, saved designs, approvals and the return to the product page now use the main site's existing workflow. T-shirts use the original flat garment photograph with no human models; other apparel uses blank garment illustrations. Artwork / My Files / Designs tabs, quick text, name, number and the sample Satin logo are available in the apparel editor. PNG, JPG, WebP and safe SVG uploads are supported.
 
-Original T-shirt studio: https://satingraphic-apparel-studio.mehrad-tr.chatgpt.site/
+Main T-shirt editor: https://satin-graphic-website.mehrad-tr.chatgpt.site/satin/design-studio/?product=apparel-men-g500
 
-This original studio retains its original independent account, draft and order workflow; it does not import the newer product options or return an approved design to the main website's cart automatically. This is a deliberate restoration of the requested first version. Existing data has not been deleted. The source commit for the selective restoration is `00c1a7781b664d22702c6ea8762ddfa60a0fb8bd`. The version-29 details below describe the base before this restoration.
+Version 31 also removes the top Home promotional slider and places Log in beside the header cart. Offset product templates no longer reference undefined vehicle-design state. Apparel routes now match complete path segments, so `/apparel-ui.mjs`, `/apparel-data.mjs` and `/apparel-colours.mjs` return JavaScript instead of apparel-page HTML. Source commit: `cd579e548748e4bd0c6dea44cd05fd166c85ff8b`. Existing data has not been deleted.
 
 ## Verified starting point
 
 - Published website: https://satin-graphic-website.mehrad-tr.chatgpt.site
 - Admin login: https://satin-graphic-website.mehrad-tr.chatgpt.site/admin/login
 - Site project: `appgprj_6ac142017f40819191489e0d0deace96`
-- Latest published version: 29
-- Exact original Site source commit: `828a8f1c521d4aef6eb4782aea5f5a61b923f676`
+- Latest published version: 31
+- Exact current Site source commit: `cd579e548748e4bd0c6dea44cd05fd166c85ff8b`
 - GitHub repository: https://github.com/Mehrad-zb/satin-graphic-website
 
 The GitHub handoff copies that source tree, excluding its environment-specific `node_modules` symlink, and adds these handoff documents. GitHub history is preserved. Dependencies should be installed locally when needed rather than using the original temporary dependency path.
@@ -43,7 +43,7 @@ Admin identity uses the Sites hosting context and a server-side temporary-sessio
 
 ## Verification on handoff
 
-The retrieved version 29 passed all 20 automated test entries locally. These cover admin authorization, form/product editing, private artwork ownership, checkout pricing, mocked payment providers and signed webhooks, plus the version 29 regressions. They do not establish visual QA, merchant acceptance or live carrier connectivity.
+Version 31 passed all 23 automated test entries locally. Additional regressions execute all five Offset templates, verify apparel JavaScript routing, and exercise private JPEG/WebP uploads. Local browser QA verified the integrated apparel editor, text/name controls, sample-logo upload, file and saved-design tabs, colour changes, mockup generation and approval returning to the same product with its options. Browser navigation into Business Cards now displays the product form without errors. This does not establish merchant acceptance, carrier connectivity or exhaustive QA of unrelated sections.
 
 Use `npm test` and `npm run build` with Node 24+. Existing code is in versioned Worker/static output; preserve assets and inspect the build verifier before adopting a different framework.
 
