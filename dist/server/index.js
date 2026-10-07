@@ -15,6 +15,7 @@ import {managementRoutes} from './management.mjs';
 import {catalogRoutes,publicProducts} from './catalog.mjs';
 import {commerceRoutes} from './commerce.mjs';
 import {studioRoutes} from './studio.mjs';
+import {PRODUCTS as STUDIO_PRODUCTS} from './studio-model.mjs';
 const DEFAULT_PRICING={"bases": {"sedan": 2800.0, "suv": 3400.0, "pickup-truck": 3200.0, "minivan": 3600.0, "transit-van": 3950.0, "sprinter-van": 4300.0, "cargo-van": 4200.0, "box-truck": 5800.0, "trailer": 4800.0, "bus": 8500.0}, "roofMultiplier": 1.12, "designDeposit": 250};
 const ALLOWED = new Set(['Auto Detailing','Interior Detailing','Exterior Detailing','Paint Correction','Ceramic Coating','Social Media Services','Videography']);
 const OPTIONS = new Set(['Interior detailing','Exterior detailing','Paint correction','Ceramic coating','Pet hair removal','Upholstery cleaning','Social strategy','Post design','Short-form video','Content calendar','Publishing support','Campaign creative','Brand film','Product video','Social clips','Event coverage','Editing','Captions']);
@@ -23,6 +24,7 @@ const text=(v,max)=>typeof v==='string'?v.trim().slice(0,max):'';
 const app = {
  async fetch(request,env){
   const url=new URL(request.url);
+  if(request.method==='GET'&&/^\/satin(?:\/(?:fa|fr|es))?\/design-studio\/?$/.test(url.pathname)&&STUDIO_PRODUCTS.find(p=>p.id===url.searchParams.get('product'))?.garment?.category==='t-shirts')return Response.redirect('https://satingraphic-apparel-studio.mehrad-tr.chatgpt.site/',302);
   const garmentImage=await apparelPhoto(request,url,env);if(garmentImage)return garmentImage;
   if(optimizedAssets[url.pathname]){
    const assetUrl=new URL(url);assetUrl.pathname=optimizedAssets[url.pathname];
