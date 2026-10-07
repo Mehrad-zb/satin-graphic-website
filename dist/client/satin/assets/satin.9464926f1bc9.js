@@ -2394,7 +2394,8 @@ const HOME_CONTENT = {
         "fa": "رپ تجاری، تغییر رنگ و محافظت از رنگ خودرو."
       },
       "path": "/vehicle-wraps",
-      "photo": "job-greenlife-van",
+      "photo": "sprinter-wrapped.optimized.webp",
+      "fit": "contain",
       "icon": "truck"
     },
     {
@@ -2418,7 +2419,8 @@ const HOME_CONTENT = {
         "fa": "تی‌شرت، هودی، کلاه و لباس کار سفارشی."
       },
       "path": "/apparel",
-      "photo": "pr-stickers",
+      "photo": "satin-shirt-logo.webp",
+      "fit": "contain",
       "icon": "shirt"
     },
     {
@@ -2666,7 +2668,7 @@ function vehicleSVG(type = "van", o = {}) {
 const BLACK_BG = /^(sedan|suv|pickup|van|sprinter|dec|cc|ppf-audi|tint-\d|car-red|lambo)/;
 function photo(name, o = {}) {
   const printPhoto = Object.entries({"pr-bc":"print-business-cards","pr-flyer":"print-flyers","pr-postcard":"print-postcards","pr-brochure":"print-brochures","pr-doorhanger":"print-door-hangers"}).find(([prefix])=>name.startsWith(prefix))?.[1];
-  const photoSrc = `${SITE.base}/img/${printPhoto||name}.${printPhoto||transparentImages.includes(name)?"png":"jpg"}`;
+  const photoSrc = /\.(webp|png|jpe?g|svg)$/i.test(name) ? `${SITE.base}/img/${name}` : `${SITE.base}/img/${printPhoto||name}.${printPhoto||transparentImages.includes(name)?"png":"jpg"}`;
   const fit = o.fit || (BLACK_BG.test(name) ? "contain" : "cover");
   const bg = fit === "contain" ? "transparent" : "var(--bg-3)";
   return `<div class="art photo ${o.cls || ""}" style="background:${bg};${o.style || ""}"><img src="${photoSrc}" alt="${esc(o.alt || o.label || "")}" loading="lazy" decoding="async" style="object-fit:${fit};${o.pos ? "object-position:" + o.pos : ""}"></div>`;
@@ -3009,7 +3011,7 @@ PAGES.home = () => {
   ${homeCounters()}
   ${homeVideoStory()}
   ${homeTrust()}
-  ${sec(secHead(c.servicesKicker,c.servicesTitle,c.servicesIntro)+`<div class="svc home-services">${HOME_CONTENT.services.map(s=>`<a href="${href(s.path)}"><span class="service-icon">${icon(s.icon,22)}</span><h3>${esc(tr(s.name))}</h3><p class="small">${esc(s.description[LANG]||s.description.en)}</p>${art(s.icon==='shirt'?'apparel':'photo',{photo:s.icon==='shirt'?null:s.photo,alt:tr(s.name)+' — Satin Graphic',tag:false})}<span class="link">${esc(tr('Explore'))} ${arrowSm()}</span></a>`).join('')}</div>`)}
+  ${sec(secHead(c.servicesKicker,c.servicesTitle,c.servicesIntro)+`<div class="svc home-services">${HOME_CONTENT.services.map(s=>`<a href="${href(s.path)}"><span class="service-icon">${icon(s.icon,22)}</span><h3>${esc(tr(s.name))}</h3><p class="small">${esc(s.description[LANG]||s.description.en)}</p>${art('photo',{photo:s.photo,fit:s.fit,alt:tr(s.name)+' — Satin Graphic',tag:false})}<span class="link">${esc(tr('Explore'))} ${arrowSm()}</span></a>`).join('')}</div>`)}
   ${homeMaterials()}
   ${sec(secHead(c.workKicker,c.workTitle,c.workIntro)+`<div class="home-work">${HOME_CONTENT.work.map(w=>`<figure>${art('photo',{photo:w.photo,alt:w.title[LANG]||w.title.en,tag:false})}<figcaption>${esc(w.title[LANG]||w.title.en)}</figcaption></figure>`).join('')}</div>`,'alt')}
   ${homeScrollProcess()}
@@ -3847,7 +3849,7 @@ function header() {
   return `<a class="sr" href="#main" data-skip>Skip to content</a><header class="hdr"><div class="wrap bar">
     <a class="logo" href="${href("/")}" aria-label="Satin Graphic home"><img src="${LOGO}" alt="Satin Graphic" width="483" height="78"></a>
     ${A("/design-studio", "Design Studio", "studio-nav studio-entry")}<nav class="nav" aria-label="Main">${managedNavigation?menuHTML(managedNavigation,false,(location.pathname.match(/^\/satin\/(fa|fr|es)(?:\/|$)/)?.[1]||'en')):`${Object.entries(MEGA).map(([k, m]) => `<button type="button" data-mega="${k}" aria-expanded="false">${m.label}<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button>`).join("")}${A("/portfolio", "Our Work", "studio-nav")}${A("/design-studio", "Design Studio", "studio-nav")}`}</nav>
-    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button><button class="icon-btn burger" data-burger aria-label="Open menu">${icon("menu")}</button></div></div>
+    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button>${A("/login", tr("Log in"), "btn sm ghost login-btn")}<button class="icon-btn burger" data-burger aria-label="Open menu">${icon("menu")}</button></div></div>
     <div class="mega" data-megapanel><div class="wrap in"></div></div></header>`;
 }
 function megaHTML(k) {

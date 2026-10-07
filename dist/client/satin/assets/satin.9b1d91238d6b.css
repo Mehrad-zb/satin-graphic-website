@@ -741,3 +741,19 @@ main :is(.grid,.split,.in,.cfg,.row,.service-request)>*{min-width:0} main :is(h1
 .consent-banner{position:fixed;z-index:75;bottom:20px;inset-inline-end:20px;max-width:400px;padding:18px;background:white;color:#182333;border:1px solid #d9dde5;border-radius:14px;box-shadow:0 8px 35px #0002;display:grid;gap:12px;font-size:14px}.consent-banner div{display:flex;gap:10px}
 
 .vehstage,.reveal-story .ph,.art.photo,.portfolio-card-photo,.portfolio-project-photos img,.portfolio-project-hero figure>img,.managed-product-gallery{background:#fff!important}.vehstage picture{position:absolute;inset:0}.art.photo img[src$=".png"],.portfolio-card-photo img[src$=".png"]{object-fit:contain}
+
+/* Home page refinements — Oct 2026 */
+.counter-grid{justify-items:center;text-align:center}
+.counter-item{align-items:center;text-align:center}
+.counter-item b{text-align:center}
+.home-reviews .review-carousel{max-width:none;width:100%}
+.home-reviews .review-slides{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.home-reviews .review-slide{padding:32px 34px;min-height:0}
+.home-reviews .review-photo{height:280px;object-fit:cover;border-radius:12px}
+.brand-logo,.brand-logo:hover,.brand-logo:focus-visible{box-shadow:none!important;transform:none!important;background:transparent!important}
+.brand-logo img{transition:filter .25s,opacity .25s}
+.brand-logo:hover img,.brand-logo:focus-visible img{filter:none!important;opacity:1!important}
+.right .login-btn{white-space:nowrap}
+@media(max-width:1060px){.counter-item:last-child{justify-self:center}}
+@media(max-width:760px){.home-reviews .review-slides{grid-template-columns:1fr}.home-reviews .review-photo{height:220px}.right .login-btn{padding-inline:10px}}
+@media(max-width:420px){.right .login-btn{padding:0 9px;font-size:13px}.right [data-language]{max-width:84px}}
