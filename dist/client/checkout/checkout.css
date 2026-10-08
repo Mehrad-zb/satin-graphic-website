@@ -34,3 +34,11 @@
 .pay-paypal{border:1px solid var(--line);border-radius:12px;padding:18px 22px;background:#fff}
 .paypal-host{min-height:48px}
 @media(max-width:520px){.pay-review{grid-template-columns:1fr;gap:12px}.pay-card,.pay-paypal{padding:16px}.pay-card-head{flex-wrap:wrap}}
+/* discount code */
+.coupon-form{display:flex;gap:8px;margin:12px 0 4px}
+.coupon-form input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:inherit;font-size:14px;text-transform:uppercase}
+.coupon-form input::placeholder{text-transform:none}
+.summary-total.discount strong{color:#286d43}
+.coupon-remove{background:none;border:0;padding:0 0 0 6px;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer}
+.coupon-error{font-size:13px;color:#ad123f;margin:10px 0 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
