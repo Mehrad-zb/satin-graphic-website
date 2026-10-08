@@ -108,10 +108,12 @@ async function init() {
   /* --- keep clear of the cookie/analytics consent banner (and other bottom popups) --- */
   const lift = () => {
     const b = document.querySelector('.consent-banner');
-    const h = b && b.offsetParent !== null ? b.getBoundingClientRect() : null;
-    root.style.setProperty('--scw-lift', h ? Math.max(0, innerHeight - h.top) + 'px' : '0px');
+    const h = b ? b.getBoundingClientRect() : null;
+    const base = innerWidth <= 560 ? 14 : 20;
+    root.style.setProperty('--scw-lift', h && h.height > 0 ? Math.max(0, innerHeight - h.top - base + 10) + 'px' : '0px');
   };
-  lift(); new MutationObserver(lift).observe(document.body, { childList: true }); addEventListener('resize', lift);
+  lift(); requestAnimationFrame(lift); setTimeout(lift, 800);
+  new MutationObserver(lift).observe(document.body, { childList: true }); addEventListener('resize', lift);
 
   /* --- rendering --- */
   const scroll = () => { log.scrollTop = log.scrollHeight; };
