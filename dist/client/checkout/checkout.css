@@ -4,3 +4,33 @@
 @media(max-width:520px){.brand-small{font-size:8px}.brand>span{width:36px;height:36px}.checkout-header nav a{display:none}.address-fields,.proofs{grid-template-columns:1fr}.cart-row{grid-template-columns:1fr auto}.cart-thumb{display:none}.page-title .currency{font-size:12px}.steps button{font-size:14px}.actions .btn{flex:1}.check-row{flex-direction:column}.item-price{font-size:17px}.rate{padding:15px}}
 
 @media(max-width:520px){.steps{overflow-x:auto}.steps li{flex:0 0 100px}.steps button{min-height:82px}}
+/* embedded payment (Square card form, wallets, PayPal buttons) */
+.pay-review{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:16px 18px;background:#f7f9fc;border:1px solid var(--line);border-radius:10px;margin-top:6px}
+.pay-review h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.pay-review p{margin:0;font-size:14px}
+.pay-card{margin-top:24px;border:1px solid var(--line);border-radius:12px;padding:22px;background:#fff;box-shadow:0 1px 2px #17233708,0 8px 24px #17233710}
+.pay-card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.pay-card-head h3{margin:0;font-size:17px}
+.card-brands{display:flex;gap:6px;flex-wrap:wrap}
+.card-brands i{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.04em;color:#172337;border:1px solid var(--line);border-radius:5px;padding:3px 6px;background:#fff}
+.sq-card{min-height:89px}
+.sq-loading{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;min-height:50px;padding:0 4px}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid #dce3ed;border-top-color:#172337;animation:pay-spin .8s linear infinite;flex-shrink:0}
+@keyframes pay-spin{to{transform:rotate(360deg)}}
+.pay-error{color:#ad123f;font-size:14px;margin:4px 0 0;min-height:1px}
+.pay-error:empty{display:none}
+.pay-card .btn.pay-btn{width:100%;margin-top:14px;padding:15px 22px;font-size:16px;background:var(--accent);border-color:var(--accent);border-radius:10px;gap:10px;transition:filter .15s}
+.pay-card .btn.pay-btn:hover:not([disabled]){filter:brightness(.93)}
+.pay-card .btn.pay-btn[disabled]{opacity:.6;cursor:default}
+.pay-card .btn.pay-btn.loading::before{content:"";width:16px;height:16px;border-radius:50%;border:2px solid #ffffff66;border-top-color:#fff;animation:pay-spin .8s linear infinite}
+.secure-note{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);font-size:12.5px;margin:12px 0 0;text-align:center}
+.secure-note svg{flex-shrink:0}
+.pay-wallets{display:grid;gap:10px;margin-bottom:16px}
+#sq-google-pay{min-height:48px}
+.apple-pay-button{height:48px;border-radius:9px;cursor:pointer;-webkit-appearance:-apple-pay-button;-apple-pay-button-type:plain;-apple-pay-button-style:black;background:#000}
+.pay-or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px;margin:18px 0}
+.pay-or::before,.pay-or::after{content:"";flex:1;height:1px;background:var(--line)}
+.pay-wallets .pay-or{margin:4px 0 0}
+.pay-paypal{border:1px solid var(--line);border-radius:12px;padding:18px 22px;background:#fff}
+.paypal-host{min-height:48px}
+@media(max-width:520px){.pay-review{grid-template-columns:1fr;gap:12px}.pay-card,.pay-paypal{padding:16px}.pay-card-head{flex-wrap:wrap}}
