@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" font-family="Inter,Arial,sans-serif">
+<defs>
+<linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5d6b78"/><stop offset=".5" stop-color="#3b4651"/><stop offset="1" stop-color="#2a323b"/></linearGradient>
+<linearGradient id="refl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e2d9"/><stop offset="1" stop-color="#d9d1c5"/></linearGradient>
+</defs>
+<rect width="1200" height="760" fill="url(#wall)"/>
+<rect y="690" width="1200" height="70" fill="#a9a39a"/>
+<!-- sign band -->
+<rect x="60" y="40" width="1080" height="80" fill="#17191e"/>
+<text x="600" y="95" text-anchor="middle" font-size="40" font-weight="900" fill="#fff" letter-spacing="6">YOUR BRAND</text>
+<!-- frame -->
+<rect x="60" y="140" width="1080" height="550" fill="#1d2126"/>
+<!-- left window -->
+<rect x="80" y="160" width="430" height="510" fill="url(#glass)"/>
+<!-- door -->
+<rect x="530" y="160" width="250" height="530" fill="#15181c"/>
+<rect x="548" y="178" width="214" height="490" fill="url(#glass)"/>
+<rect x="740" y="380" width="8" height="120" rx="4" fill="#c9ccd1"/>
+<!-- right window -->
+<rect x="800" y="160" width="320" height="510" fill="url(#glass)"/>
+<!-- reflections -->
+<path d="M80 160 L260 160 L130 670 L80 670Z" fill="url(#refl)"/><path d="M548 178 L660 178 L590 668 L548 668Z" fill="url(#refl)"/><path d="M820 160 L980 160 L880 670 L820 670Z" fill="url(#refl)"/>
+<!-- decals left window: logo + lettering -->
+<circle cx="295" cy="330" r="88" fill="none" stroke="#fff" stroke-width="7"/>
+<text x="295" y="322" text-anchor="middle" font-size="36" font-weight="900" fill="#fff">LOGO</text>
+<text x="295" y="356" text-anchor="middle" font-size="16" font-weight="600" fill="#fff" letter-spacing="3">EST. 2026</text>
+<text x="295" y="485" text-anchor="middle" font-size="34" font-weight="800" fill="#fff">Coffee · Bakery</text>
+<rect x="150" y="510" width="290" height="6" fill="#c91c50"/>
+<text x="295" y="560" text-anchor="middle" font-size="22" fill="#fff" opacity=".95">www.yourbrand.ca</text>
+<!-- door decals: hours -->
+<text x="655" y="250" text-anchor="middle" font-size="40" font-weight="900" fill="#c91c50">OPEN</text>
+<g font-size="17" fill="#fff"><text x="580" y="300">Mon – Fri</text><text x="730" y="300" text-anchor="end">7 – 6</text><text x="580" y="330">Saturday</text><text x="730" y="330" text-anchor="end">8 – 5</text><text x="580" y="360">Sunday</text><text x="730" y="360" text-anchor="end">9 – 3</text></g>
+<text x="655" y="560" text-anchor="middle" font-size="22" font-weight="700" fill="#fff">PUSH</text>
+<rect x="560" y="620" width="190" height="10" rx="5" fill="#fff" opacity=".9"/>
+<!-- right window -->
+<text x="960" y="300" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">Free Wi-Fi</text>
+<text x="960" y="345" text-anchor="middle" font-size="22" fill="#fff" opacity=".9">Order ahead online</text>
+<rect x="830" y="560" width="260" height="70" rx="10" fill="#fff"/>
+<text x="960" y="606" text-anchor="middle" font-size="28" font-weight="900" fill="#17191e">905-000-0000</text>
+</svg>

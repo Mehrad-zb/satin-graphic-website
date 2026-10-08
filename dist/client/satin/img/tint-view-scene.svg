@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa6e8"/><stop offset=".55" stop-color="#a9d3f3"/><stop offset="1" stop-color="#f6e7c8"/></linearGradient>
+<linearGradient id="far" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7f9fb5"/><stop offset="1" stop-color="#9fb7c4"/></linearGradient>
+<linearGradient id="mid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8a55"/><stop offset="1" stop-color="#3a6e43"/></linearGradient>
+<linearGradient id="near" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6aa54f"/><stop offset="1" stop-color="#3f7a35"/></linearGradient>
+<linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b5f66"/><stop offset="1" stop-color="#3b3e44"/></linearGradient>
+<radialGradient id="sun" cx="0.78" cy="0.22" r="0.25"><stop offset="0" stop-color="#fff8d6"/><stop offset=".3" stop-color="#fff2b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff2b0" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1200" height="700" fill="url(#sky)"/>
+<rect width="1200" height="700" fill="url(#sun)"/>
+<g fill="#fff" opacity=".85"><ellipse cx="230" cy="130" rx="90" ry="22"/><ellipse cx="290" cy="118" rx="60" ry="24"/><ellipse cx="610" cy="90" rx="110" ry="20"/><ellipse cx="680" cy="80" rx="60" ry="22"/></g>
+<path d="M0 360 L120 300 L230 335 L360 265 L500 330 L640 280 L780 335 L930 270 L1060 320 L1200 285 L1200 430 L0 430Z" fill="url(#far)"/>
+<path d="M0 410 Q200 350 420 395 T840 385 T1200 375 L1200 520 L0 520Z" fill="url(#mid)"/>
+<g fill="#2f5e37">
+<path d="M90 420 l25 -80 l25 80z"/><path d="M150 425 l20 -60 l20 60z"/><path d="M980 410 l28 -90 l28 90z"/><path d="M1040 415 l22 -70 l22 70z"/><path d="M1110 412 l26 -84 l26 84z"/>
+</g>
+<path d="M0 500 Q300 455 600 480 T1200 470 L1200 700 L0 700Z" fill="url(#near)"/>
+<path d="M0 600 L1200 560 L1200 700 L0 700Z" fill="url(#road)"/>
+<path d="M0 640 L1200 612" stroke="#f3f3f0" stroke-width="6" stroke-dasharray="70 60"/>
+<g fill="#2d5a30"><circle cx="300" cy="500" r="40"/><circle cx="335" cy="488" r="34"/><rect x="310" y="515" width="10" height="45" fill="#4a3a2a"/><circle cx="820" cy="492" r="44"/><circle cx="860" cy="478" r="36"/><rect x="832" y="510" width="11" height="48" fill="#4a3a2a"/></g>
+</svg>

@@ -16,3 +16,76 @@
 .rule-cfg .featured-options .product-option-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.rule-cfg .featured-options .product-option-content{min-height:96px;font-size:16px}.rule-cfg .featured-options .product-option-card{min-width:0}
 .rule-cfg{scroll-margin-top:180px}.rule-cfg .rule-summary{top:170px}@media(max-width:700px){.rule-cfg{scroll-margin-top:140px}}
 .managed-product-gallery{display:flex;gap:12px;overflow:auto;margin-bottom:24px}.managed-product-gallery img{width:180px;height:160px;object-fit:cover;border-radius:12px;flex-shrink:0}.managed-product-gallery img:first-child{width:260px}.managed-product-description{white-space:pre-line;line-height:1.7;margin:12px 0 25px}
+/* ---- Studio v2: left tabs, locked product card, garment/vehicle stages, dialogs ---- */
+.studio-steps li>a,.studio-steps li>button{display:flex;align-items:center;gap:12px;color:inherit;background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:none}
+.studio-steps li>a:hover span,.studio-steps li>button:hover span{color:var(--studio-accent)}
+.studio-left-tabs{display:grid;grid-template-columns:repeat(3,1fr);margin:-24px -24px 20px;border-bottom:1px solid #ececef;background:#fafafa;border-radius:8px 8px 0 0;overflow:hidden}
+.studio-left-tabs button{border:0!important;border-radius:0!important;background:none!important;min-height:52px!important;font-weight:600;color:#6b6e77!important;border-bottom:2px solid transparent!important;padding:8px 6px!important}
+.studio-left-tabs button.active{color:var(--studio-accent)!important;border-bottom-color:var(--studio-accent)!important;background:#fff!important}
+.studio-mini-heading{font-size:13px;font-weight:650;color:#4b4e57;margin:4px 0 10px;text-transform:uppercase;letter-spacing:.05em}
+.studio-v2 .studio-tools button{display:flex;align-items:center;justify-content:center;gap:8px}
+.studio-shape-tools{grid-template-columns:repeat(4,1fr)!important}
+.studio-shape-tools button{padding:6px!important;color:#30333b}
+.studio-shape-tools button:hover{color:var(--studio-accent)}
+.studio-notes{margin-top:6px}
+.studio-upload-button{position:relative;display:flex!important;align-items:center;justify-content:center;gap:10px;cursor:pointer;width:100%;margin-bottom:6px}
+.studio-upload-button input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.studio-v2 .studio-assets{gap:8px}
+.studio-v2 .studio-upload-name{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px;border:1px solid #ececef;border-radius:6px}
+.studio-v2 .studio-upload-name img,.studio-file-badge{width:44px;height:44px;object-fit:contain;background:#f4f4f6;border-radius:4px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#6b6e77}
+.studio-v2 .studio-upload-name button{min-height:34px!important;padding:4px 10px!important}
+.studio-design-list{display:grid;gap:8px;margin-top:14px;max-height:420px;overflow:auto}
+.studio-design-list button{display:grid!important;text-align:start;gap:2px;padding:10px 12px!important;min-height:0!important}
+.studio-design-list button span{font-size:12px;color:#8b8d95}
+.studio-design-list button.selected{border-color:#f6a3c1!important;background:#fff0f5!important}
+.studio-product-card{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:center;padding:12px;border:1px solid #ececef;border-radius:8px;background:#fafafb;margin-bottom:18px}
+.studio-product-card img{width:72px;height:72px;object-fit:contain;border-radius:6px;background:#fff;mix-blend-mode:multiply}
+.studio-product-card b{display:block;font-size:15px;line-height:1.35;color:#202124}
+.studio-product-card span{display:block;font-size:12px;color:#8b8d95;margin:2px 0 4px}
+.studio-product-card a{font-size:13px;color:var(--studio-accent);font-weight:600}
+.studio-layer-list button{align-items:center;justify-content:flex-start!important}
+.studio-layer-icon{display:inline-grid;place-items:center;width:22px;color:#6b6e77;flex-shrink:0}
+.studio-layer-list button.selected .studio-layer-icon{color:var(--studio-accent)}
+.studio-range{display:grid;grid-template-columns:minmax(0,1fr) 76px;gap:8px;align-items:center}
+.studio-range input[type=range]{padding:0;min-height:0;border:0;accent-color:var(--studio-accent)}
+.studio-layer-tools{grid-template-columns:repeat(3,1fr)!important}
+.studio-layer-tools button{min-height:38px!important;padding:6px!important;font-size:13px!important}
+.studio-mockup-bg{border:0;padding:0;margin:0 0 12px}
+.studio-mockup-bg legend{font-size:14px;color:#61646d;margin-bottom:8px}
+.studio-mockup-bg div{display:flex;gap:10px}
+.studio-mockup-bg label{margin:0!important;cursor:pointer}
+.studio-mockup-bg input{position:absolute;opacity:0;width:1px;height:1px}
+.studio-mockup-bg span{display:block;width:30px;height:30px;border-radius:50%;background:var(--swatch);border:1px solid #d4d4d8;box-shadow:inset 0 0 0 2px #fff}
+.studio-mockup-bg input:checked+span{outline:2px solid var(--studio-accent);outline-offset:2px}
+.studio-mockup-bg input:focus-visible+span{outline:2px solid #202124;outline-offset:2px}
+.studio-canvas-toolbar input[type=color]{width:32px;height:30px;padding:0;border:1px solid #dedee2;border-radius:4px;vertical-align:middle;background:#fff}
+.studio-stage:focus{outline:none}
+.studio-stage:focus-visible{outline:2px solid var(--studio-accent);outline-offset:-2px}
+.studio-stage svg [data-handle]{touch-action:none}
+/* vehicles use the regular canvas with a photo/vector guide overlay */
+.studio-stage.vehicle-stage{aspect-ratio:auto;display:grid;place-items:center;padding:44px 24px;min-height:420px;background:#f1f2f4}
+.studio-stage.vehicle-stage svg{position:static;width:min(100%,calc(var(--canvas-height) * var(--canvas-ratio,1)));height:auto;max-width:100%;left:auto;top:auto;background:#fff;box-shadow:0 10px 24px #20212416}
+/* garments: photo with the print area positioned on the chest/back/sleeve */
+.studio-stage.garment-stage{display:block;aspect-ratio:1;min-height:0!important;padding:0!important;background-color:#fff!important;background-size:contain;background-repeat:no-repeat;background-position:center;max-width:640px;margin:0 auto;border-radius:0 0 8px 8px}
+.studio-stage.garment-stage svg{position:absolute;left:var(--area-x);top:var(--area-y);width:var(--area-w);height:auto;max-width:none;background:transparent;box-shadow:none;outline:1.5px dashed #9aa3b2;outline-offset:0;overflow:visible}
+.studio-apparel .studio-center{display:flex;flex-direction:column}
+.studio-apparel .studio-canvas-toolbar{border-radius:8px 8px 0 0}
+.studio-confirm{width:min(480px,calc(100% - 28px))}
+.studio-confirm h2{font-size:21px;margin:0 0 10px}
+.studio-confirm p{color:#5f636c;margin:0 0 22px;font-size:15px}
+.studio-dialog-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.studio-dialog-actions .studio-action{padding:10px 18px;min-height:44px}
+.studio-picker-grid .studio-apparel-card img{object-fit:contain;background:#f3f3f5;mix-blend-mode:multiply}
+.studio-picker-grid .studio-apparel-card{isolation:isolate}
+@media(max-width:760px){.studio-left-tabs{margin:-20px -20px 18px}.studio-stage.vehicle-stage{padding:24px 10px;min-height:0}.studio-shape-tools{grid-template-columns:repeat(4,1fr)!important}.studio-dialog-actions{justify-content:stretch}.studio-dialog-actions .studio-action{flex:1}}
+.studio-v2 .studio-properties{position:static!important;max-height:none!important;overflow:visible!important}
+.studio-v2 .studio-properties>div:nth-child(2){order:0}
+.studio-v2 .studio-stage.garment-stage>svg{width:var(--area-w)!important;height:auto!important;left:var(--area-x);top:var(--area-y)}
+.studio-v2 .garment-colours{border:0;padding:0;margin:0 0 16px}
+.studio-v2 .garment-swatches{display:flex;flex-wrap:wrap;gap:7px;max-height:178px;overflow:auto;padding:3px}
+.studio-v2 .garment-swatches label{margin:0!important}
+.studio-v2 .garment-swatches span{width:26px!important;height:26px!important}
+.studio-v2 .garment-swatches label{width:30px!important;height:30px!important}
+.studio-v2 .studio-stage.garment-stage{width:100%;max-width:none;background-size:min(100%,640px) auto;border:1px solid var(--edge);border-top:0}
+.studio-picker-grid .studio-apparel-card img{object-fit:cover;object-position:50% 42%;background:#fff;mix-blend-mode:normal;border:1px solid #f0f0f2}
+@media(max-width:760px){.studio-v2 .studio-stage:not(.garment-stage){--canvas-height:470px}}

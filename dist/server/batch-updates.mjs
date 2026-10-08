@@ -20,10 +20,10 @@ export function batchUpgrade(original){
   if(r.constants.baseq1!==undefined){r.constants.unit1=r.constants.baseq1;for(const n of [2,5,10,25])r.constants['unit'+n]=r.constants['baseq'+n]/n; r.formula=r.formula.replace(/\(if\(quantity == 1, baseq1, if\(quantity == 2, baseq2, if\(quantity == 5, baseq5, if\(quantity == 10, baseq10, baseq25\)\)\)\)\)/g,'(quantity * if(quantity < 2, unit1, if(quantity < 5, unit2, if(quantity < 10, unit5, if(quantity < 25, unit10, unit25)))))');}
  }
  if(r.id.startsWith('apparel-')){r.constants.designFee=30;r.constants.designDeposit=30;}
- if(r.id==='wallpaper'||r.id.startsWith('wallpaper-'))r.constants.designFee=150;
+ if(r.id==='wallpaper'||r.id.startsWith('wallpaper-')){r.fields=r.fields.filter(f=>f.key!=='design');r.formula=r.formula.replace(/\s*\+\s*design \* designFee/,'');r.artworkOptional=true;}
  if(r.id.startsWith('glass-')||r.id==='window-graphics')r.constants.designFee=100;
  if(r.id==='glass-full-window-graphics'){replace('material',select('material','Material',[['Regular vinyl',9],['Blackout film · grey adhesive',12],['Clear film',10]]));replace('adhesive',select('adhesive','Adhesive',[['Removable',0],['Permanent',1]]));}
- if(r.id==='glass-window-decals'){replace('material',select('material','Material',[['Single-colour calendered vinyl',15],['Full-colour digital print',15]]));}
+ if(r.id==='glass-window-decals'){replace('material',select('material','Material · per sq ft',[['Single-colour cut vinyl · $12',12]]));}
  if(r.id==='tint-commercial'){replace('film',select('film','Material',[['Ceramic',12],['Regular',5]]));replace('vlt',select('vlt','Visible light transmission',[['20%',20],['35%',35],['60%',60],['70%',70]]));}
  if(r.id==='tint-vehicle'){
   replace('film',select('film','Material',[['Ceramic',1.8],['Regular',1]]));replace('vlt',select('vlt','Visible light transmission',[['5%',5],['20%',20],['35%',35],['60%',60]]));r.fields=r.fields.filter(f=>f.key!=='coverage');

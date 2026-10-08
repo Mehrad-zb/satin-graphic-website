@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc2ee"/><stop offset="1" stop-color="#e9f3fb"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3442"/><stop offset=".45" stop-color="#1a212b"/><stop offset=".5" stop-color="#3b4a5c"/><stop offset=".56" stop-color="#1a212b"/><stop offset="1" stop-color="#121820"/></linearGradient>
+<linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#e4e4e0"/></linearGradient>
+<linearGradient id="wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9c6b43"/><stop offset="1" stop-color="#b98457"/></linearGradient>
+<linearGradient id="lawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#77b255"/><stop offset="1" stop-color="#4e8a3a"/></linearGradient>
+</defs>
+<rect width="1200" height="760" fill="url(#s)"/>
+<g fill="#fff" opacity=".8"><ellipse cx="220" cy="120" rx="100" ry="24"/><ellipse cx="290" cy="106" rx="60" ry="26"/><ellipse cx="930" cy="90" rx="120" ry="22"/></g>
+<rect y="600" width="1200" height="160" fill="url(#lawn)"/>
+<path d="M120 610 L1080 610 L1080 640 L120 640Z" fill="#c9c6bd"/>
+<rect x="160" y="300" width="560" height="310" fill="url(#w)"/>
+<rect x="720" y="210" width="340" height="400" fill="url(#w)"/>
+<rect x="140" y="282" width="600" height="24" fill="#2b2f36"/>
+<rect x="700" y="192" width="380" height="24" fill="#2b2f36"/>
+<rect x="160" y="306" width="150" height="304" fill="url(#wood)"/>
+<g fill="url(#g)" stroke="#2b2f36" stroke-width="8">
+<rect x="340" y="340" width="350" height="250"/>
+<rect x="760" y="250" width="260" height="150"/>
+<rect x="760" y="430" width="260" height="170"/>
+</g>
+<g stroke="#2b2f36" stroke-width="6"><path d="M515 340V590"/><path d="M890 250V400"/><path d="M890 430V600"/></g>
+<g fill="#fff" opacity=".18"><path d="M350 350 L420 350 L360 470Z"/><path d="M770 260 L820 260 L775 330Z"/><path d="M770 440 L830 440 L780 540Z"/></g>
+<rect x="190" y="420" width="90" height="190" fill="#2b2f36"/><circle cx="265" cy="520" r="5" fill="#d8b878"/>
+<g fill="#3e7d38"><circle cx="1110" cy="560" r="60"/><circle cx="1150" cy="530" r="48"/><circle cx="90" cy="560" r="56"/><circle cx="50" cy="535" r="44"/></g>
+<g fill="#2f6a2c"><rect x="80" y="600" width="18" height="40"/><rect x="1120" y="600" width="18" height="40"/></g>
+</svg>
