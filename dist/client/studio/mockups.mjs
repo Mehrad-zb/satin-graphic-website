@@ -2,6 +2,7 @@
 // scenes are composited on canvas with clean vector props (doors, stands, grass) or product photos.
 import {PRODUCTS,dimensions,hangerHole,sideViews} from './model.mjs';
 import {t} from './i18n.mjs';
+import {PRINT_AREAS} from './print-areas.mjs';
 export const load=src=>new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not load a mockup image.'));i.src=src;});
 const canvas=(w,h)=>{const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);return [c,c.getContext('2d')];};
 function rr(ctx,x,y,w,h,r){ctx.beginPath();if(r>0)ctx.roundRect(x,y,w,h,r);else ctx.rect(x,y,w,h);}
@@ -79,12 +80,27 @@ async function rollUp(model,arts){const W=1400,H=1100,[c,ctx]=canvas(W,H);const 
  return c.toDataURL('image/png');}
 
 /* ---------------- apparel ---------------- */
-// Printable area on the garment photo (fractions of the square photo) per side key.
-export function printArea(product,key){const g=product.garment||{},cat=g.category||'',women=g.group==='women',youth=g.group==='youth';if(g.group==='hats')return {x:.35,y:.29,w:.3};if(g.group==='totes')return {x:.32,y:.45,w:.36};if(key==='left-sleeve')return {x:.668,y:.3,w:.066};if(key==='right-sleeve')return {x:.266,y:.3,w:.066};const w=cat==='hoodies'?.24:women?.25:youth?.26:.29;if(key==='back')return {x:.5-w/2-.005,y:cat==='hoodies'?.3:.22,w};return {x:.5-w/2,y:cat==='hoodies'?.24:.28,w};}
-export async function apparelScene(model,arts,photoFor,background='#f1f2f4'){const product=PRODUCTS.find(p=>p.id===model.productId),views=sideViews(product),hasBack=views.some(v=>v.key==='back');const panels=hasBack?['front','back']:['front'];const S=900,gap=40,W=panels.length*S+(panels.length+1)*gap,H=S+gap*2;const [c,ctx]=canvas(W,H);ctx.fillStyle=background;ctx.fillRect(0,0,W,H);
- for(const [p,key] of panels.entries()){const x=gap+p*(S+gap),y=gap;const photo=await load(photoFor(key));ctx.save();ctx.shadowColor='#0f172a22';ctx.shadowBlur=30;ctx.shadowOffsetY=12;ctx.fillStyle='#fff';rr(ctx,x,y,S,S,22);ctx.fill();ctx.restore();ctx.save();rr(ctx,x,y,S,S,22);ctx.clip();ctx.drawImage(photo,x,y,S,S);
-  for(const [i,v] of views.entries()){if(!arts[i])continue;const onThis=key==='front'?v.key!=='back':v.key==='back';if(!onThis)continue;const a=printArea(product,v.key),d=dimensions(product,model.options,i),aw=a.w*S,ah=aw*d.height/d.width;ctx.globalAlpha=.96;ctx.drawImage(arts[i],x+a.x*S,y+a.y*S,aw,ah);ctx.globalAlpha=1;}
-  ctx.restore();ctx.fillStyle=background==='#22252b'?'#ffffffcc':'#4b5563';ctx.font='600 26px Inter, Arial, sans-serif';ctx.textAlign='center';}
+// Printable area on the garment photo (fractions of the square photo) per side key. Measured per model from its own
+// front/back product photos (print-areas.mjs); the generic fallback is only used for a model without measurements.
+export function printArea(product,key){const m=PRINT_AREAS[product.id]?.[key==='back'?'back':'front'];if(m)return {x:m[0],y:m[1],w:m[2]};const g=product.garment||{},cat=g.category||'',women=g.group==='women',youth=g.group==='youth';if(g.group==='hats')return {x:.33,y:.36,w:.34};if(g.group==='totes')return {x:.34,y:.46,w:.32};const w=cat==='hoodies'?.2:women?.2:youth?.2:.22;if(key==='back')return {x:.5-w/2,y:.3,w};return {x:.5-w/2,y:.33,w};}
+// Ink on fabric: the artwork keeps its own colours (as printed with an underbase) and picks up the folds and shadows
+// of the real garment photo (luminance relative to the print area's median), with a hint of fabric showing through.
+function inkOnFabric(ctx,art,x,y,w,h){const cw=ctx.canvas.width,ch=ctx.canvas.height,X=Math.max(0,Math.floor(x)),Y=Math.max(0,Math.floor(y)),W=Math.min(cw-X,Math.ceil(x+w)-X),H=Math.min(ch-Y,Math.ceil(y+h)-Y);if(W<2||H<2)return;
+ const [l,g]=canvas(W,H);g.imageSmoothingQuality='high';g.drawImage(art,x-X,y-Y,w,h);const ink=g.getImageData(0,0,W,H).data,img=ctx.getImageData(X,Y,W,H),fab=img.data,n=W*H,L=new Float32Array(n);
+ for(let i=0;i<n;i++){const k=i*4;L[i]=(fab[k]*.299+fab[k+1]*.587+fab[k+2]*.114)/255;}
+ const sample=[];for(let i=0;i<n;i+=Math.max(1,Math.floor(n/4000)))if(ink[i*4+3]>8)sample.push(L[i]);if(!sample.length)for(let i=0;i<n;i+=Math.max(1,Math.floor(n/4000)))sample.push(L[i]);sample.sort((a,b)=>a-b);const med=Math.max(.04,sample[Math.floor(sample.length*.6)]);
+ for(let i=0;i<n;i++){const k=i*4,a=ink[k+3]/255;if(!a)continue;const f=Math.max(.5,Math.min(1.12,(L[i]+.02)/(med+.02))),o=a*.95;for(let c=0;c<3;c++)fab[k+c]=Math.round(fab[k+c]*(1-o)+Math.min(255,ink[k+c]*f)*o);}
+ ctx.putImageData(img,X,Y);}
+// One garment view (front or back): the real product photo of the chosen model and colour with the artwork printed
+// in its measured print area.
+export async function garmentPanel(model,arts,key,photoURL,S=900){const product=PRODUCTS.find(p=>p.id===model.productId),photo=await load(photoURL),[c,ctx]=canvas(S,S);ctx.fillStyle='#fff';ctx.fillRect(0,0,S,S);ctx.imageSmoothingQuality='high';ctx.drawImage(photo,0,0,S,S);
+ for(const [i,v] of sideViews(product).entries()){if(!arts[i]||(key==='back')!==(v.key==='back'))continue;const a=printArea(product,v.key),d=dimensions(product,model.options,i),w=a.w*S;inkOnFabric(ctx,arts[i],a.x*S,a.y*S,w,w*d.height/d.width);}
+ return c;}
+export function garmentKeys(product,arts){const views=sideViews(product),back=views.findIndex(v=>v.key==='back');return back>=0&&arts?.[back]?['front','back']:['front'];}
+export async function garmentShots(model,arts,photoFor){const product=PRODUCTS.find(p=>p.id===model.productId),out=[];for(const key of garmentKeys(product,arts))out.push({key,label:key==='back'?'Back':'Front',canvas:await garmentPanel(model,arts,key,photoFor(key))});return out;}
+// Front and back side by side (the mockup stored with the order).
+export async function apparelScene(model,arts,photoFor,background='#f1f2f4'){const shots=await garmentShots(model,arts,photoFor),S=900,gap=40,W=shots.length*S+(shots.length+1)*gap,H=S+gap*2+44;const [c,ctx]=canvas(W,H);ctx.fillStyle=background;ctx.fillRect(0,0,W,H);
+ shots.forEach((s,p)=>{const x=gap+p*(S+gap),y=gap;ctx.save();ctx.shadowColor='#0f172a22';ctx.shadowBlur=30;ctx.shadowOffsetY=12;ctx.fillStyle='#fff';rr(ctx,x,y,S,S,22);ctx.fill();ctx.restore();ctx.save();rr(ctx,x,y,S,S,22);ctx.clip();ctx.drawImage(s.canvas,x,y,S,S);ctx.restore();ctx.fillStyle=background==='#22252b'?'#ffffffcc':'#4b5563';ctx.font='600 26px Inter, Arial, sans-serif';ctx.textAlign='center';ctx.fillText(t(s.label),x+S/2,y+S+36);});
  return c.toDataURL('image/png');}
 
 /* ---------------- photographed displays (x-frame, a-frame, flags) ---------------- */
@@ -99,7 +115,7 @@ function stack(list,background){const W=1800,hs=list.map(c=>c.height*W/c.width),
 let scenesPromise=null;
 export const loadScenes=()=>scenesPromise||(scenesPromise=fetch('/studio/mockups/scenes/scenes.json').then(r=>r.json()).catch(e=>{scenesPromise=null;throw e;}));
 const SCENE_FOR={'business-cards':['cards'],flyers:['poster'],postcards:['poster'],brochures:['brochure','brochure-open'],'door-hangers':['doorhanger'],'roll-up-banner':['rollup'],'a-frame-signs':['aframe'],'x-frame-banner':['xbanner'],flags:['flag']};
-export function sceneKeys(product){if(!product)return [];if(SCENE_FOR[product.id])return SCENE_FOR[product.id];const g=product.garment;if(!g)return [];if(g.group==='hats')return ['hat'];if(g.group==='totes')return [];const c=g.category;if(c==='hoodies')return ['hoodie'];if(c==='sweatshirts'||c==='long-sleeves')return ['sweatshirt'];if(g.group==='women')return ['tee-women'];if(g.group==='youth'||c==='tanks')return ['tee-flat'];return ['tee-men'];}
+export function sceneKeys(product){if(!product)return [];if(SCENE_FOR[product.id])return SCENE_FOR[product.id];const g=product.garment;if(!g)return [];return [];}
 // Projective transform: unit square -> quad (TL,TR,BR,BL).
 function homography(q){const [[x0,y0],[x1,y1],[x2,y2],[x3,y3]]=q,dx1=x1-x2,dx2=x3-x2,dy1=y1-y2,dy2=y3-y2,sx=x0-x1+x2-x3,sy=y0-y1+y2-y3;let g=0,h=0;if(sx||sy){const den=dx1*dy2-dx2*dy1;g=(sx*dy2-dx2*sy)/den;h=(dx1*sy-sx*dy1)/den;}const a=x1-x0+g*x1,b=x3-x0+h*x3,c=x0,d=y1-y0+g*y1,e=y3-y0+h*y3,f=y0;return (u,v)=>{const w=g*u+h*v+1;return [(a*u+b*v+c)/w,(d*u+e*v+f)/w];};}
 function triangle(ctx,img,s,d){const [[u0,v0],[u1,v1],[u2,v2]]=s,[[x0,y0],[x1,y1],[x2,y2]]=d;const den=(u1-u0)*(v2-v0)-(u2-u0)*(v1-v0);if(!den)return;const a=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/den,b=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/den,c=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/den,e=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/den;const cx=(x0+x1+x2)/3,cy=(y0+y1+y2)/3,grow=p=>{const dx=p[0]-cx,dy=p[1]-cy,l=Math.hypot(dx,dy)||1;return [p[0]+dx/l*.7,p[1]+dy/l*.7];};const [p0,p1,p2]=d.map(grow);ctx.save();ctx.beginPath();ctx.moveTo(...p0);ctx.lineTo(...p1);ctx.lineTo(...p2);ctx.closePath();ctx.clip();ctx.transform(a,b,c,e,x0-a*u0-c*v0,y0-b*u0-e*v0);ctx.drawImage(img,0,0);ctx.restore();}
@@ -140,9 +156,9 @@ export async function photoMockup(key,arts,{colour}={}){const scenes=await loadS
   ctx.globalCompositeOperation=q.mode==='multiply'?'multiply':'source-over';ctx.drawImage(l,0,0);ctx.globalCompositeOperation='source-over';}
  return c;}
 // All realistic scenes for a design, as canvases (empty when the product has no photo scene yet).
-export async function photoMockups(model,arts,options={}){const product=PRODUCTS.find(p=>p.id===model.productId),out=[];for(const key of sceneKeys(product)){if(key==='brochure-open'&&/half/i.test(model.options?.fold||''))continue;const sc=(await loadScenes())[key];out.push({key,label:sc.label,canvas:await photoMockup(key,arts,options)});}return out;}
+export async function photoMockups(model,arts,options={}){const product=PRODUCTS.find(p=>p.id===model.productId),out=[];if(product?.garment)return options.photoFor?garmentShots(model,arts,options.photoFor):[];for(const key of sceneKeys(product)){if(key==='brochure-open'&&/half/i.test(model.options?.fold||''))continue;const sc=(await loadScenes())[key];out.push({key,label:sc.label,canvas:await photoMockup(key,arts,options)});}return out;}
 
 // arts: array indexed by side (canvas or null). Returns a PNG data URL.
-export async function renderMockup(model,arts,options={}){const id=model.productId;if(id.startsWith('vehicle-'))return vehicleScene(model,arts);try{const shots=await photoMockups(model,arts,options);if(shots.length)return stack(shots.map(s=>s.canvas),options.background);}catch(e){console.warn('Photo mockup failed',e);}if(id.startsWith('apparel-'))return apparelScene(model,arts,options.photoFor,options.background);
+export async function renderMockup(model,arts,options={}){const id=model.productId;if(id.startsWith('vehicle-'))return vehicleScene(model,arts);if(id.startsWith('apparel-'))return apparelScene(model,arts,options.photoFor,options.background);try{const shots=await photoMockups(model,arts,options);if(shots.length)return stack(shots.map(s=>s.canvas),options.background);}catch(e){console.warn('Photo mockup failed',e);}
  if(id==='business-cards')return businessCards(model,arts);if(id==='flyers'||id==='postcards')return sheets(model,arts);if(id==='brochures')return brochure(model,arts);if(id==='door-hangers')return doorHangers(model,arts);if(id==='yard-signs')return yardSigns(model,arts);if(id==='roll-up-banner')return rollUp(model,arts);
  if(['a-frame-signs','x-frame-banner','flags'].includes(id))return photoScene(id,arts[0],arts[1]);return flatGeneric(model,arts);}

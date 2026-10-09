@@ -1,0 +1,127 @@
+/* Theme: Carbon Studio — cinematic full-dark look: near-black surfaces, white type, electric-blue accent,
+   UPPERCASE heavy display headings, pill nav, glassy translucent cards and soft long shadows.
+   Used with /themes/_base-modern.css. The site is dark in BOTH the visitor's light and dark mode,
+   so every token is set for all modes (plus the few rules the main CSS only applies in its own dark mode). */
+
+@import url("/themes/_dark-surfaces.css");
+
+/* ---------- tokens: same dark palette in light mode, dark mode and the forced data-theme modes ---------- */
+:where(html:not([data-style="classic"])):root,
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#121116;--bg-2:#18171d;--bg-3:#222128;--card:#1a191f;
+  --ink:#ffffff;--ink-2:#c9c8d1;--mut:#9897a3;--line:#2d2c35;--line-soft:#222128;
+  --btn:#2ea7ff;--btn-ink:#04111d;
+  --accent:#2ea7ff;--accent-2:#6cc3ff;--accent-soft:rgb(46 167 255/.14);
+  --good:#4cc38a;--good-soft:#15291f;--glass:rgb(18 17 22/.82);
+  --shadow:0 1px 2px rgb(0 0 0/.35),0 10px 30px rgb(0 0 0/.4);
+  --shadow-lg:0 2px 6px rgb(0 0 0/.35),0 40px 80px -20px rgb(0 0 0/.7);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#121116;--bg-2:#18171d;--bg-3:#222128;--card:#1a191f;
+    --ink:#ffffff;--ink-2:#c9c8d1;--mut:#9897a3;--line:#2d2c35;--line-soft:#222128;
+    --btn:#2ea7ff;--btn-ink:#04111d;
+    --accent:#2ea7ff;--accent-2:#6cc3ff;--accent-soft:rgb(46 167 255/.14);
+    --good:#4cc38a;--good-soft:#15291f;--glass:rgb(18 17 22/.82);
+    --shadow:0 1px 2px rgb(0 0 0/.35),0 10px 30px rgb(0 0 0/.4);
+    --shadow-lg:0 2px 6px rgb(0 0 0/.35),0 40px 80px -20px rgb(0 0 0/.7);
+  }
+}
+html:not([data-style="classic"]){
+  --vv-display:Inter,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --vv-navy:#0c0b10;--vv-navy-2:#16151b;--vv-cta-end:#0a2741;
+  --vv-glow:rgb(46 167 255/.22);--vv-glow-2:rgb(120 90 255/.12);
+  --vv-shadow-sm:0 1px 0 rgb(255 255 255/.04) inset,0 18px 40px -22px rgb(0 0 0/.8);
+  --vv-shadow-md:0 1px 0 rgb(255 255 255/.05) inset,0 28px 60px -26px rgb(0 0 0/.85);
+  --vv-shadow-lg:0 1px 0 rgb(255 255 255/.06) inset,0 44px 90px -30px rgb(0 0 0/.9),0 0 0 1px rgb(46 167 255/.18);
+  --vv-ring:0 0 0 4px rgb(46 167 255/.28);
+  --vv-accent-ink:#5cbaff;--vv-on-accent:#04111d;--vv-hot:#7fd0ff;--vv-num-end:#2ea7ff;
+  --vv-hdr-bg:rgb(18 17 22/.84);
+  --vv-wraps-bg:#ffffff;--vv-wraps-ink:#121116;
+  --vv-ftr-bg:#0b0a0e;--vv-ftr-ink:#c9c8d1;--vv-ftr-mut:#8a8995;--vv-ftr-line:#201f26;
+  --vv-ftr-field:#16151b;--vv-ftr-field-line:#2d2c35;--vv-ftr-btn-line:#34333d;
+  --vv-ftr-glow:rgb(46 167 255/.16);--vv-chat:#1a7fd0;
+  --vv-sel-line:#2ea7ff;
+  --vv-radius:22px;--vv-btn-r:999px;
+  --cb-glass:rgb(48 48 48/.4);--cb-glass-line:rgb(255 255 255/.09);--cb-frame:#f2f3f5;
+  --ds-surface:#1c1b22;--ds-field:#18171d;--ds-field-line:#34333d;--ds-line:#2d2c35;--ds-chip:#24232b;
+  --ds-sel-bg:rgb(46 167 255/.14);--ds-sel-ink:#9dd6ff;--ds-sel-line:#2ea7ff;--ds-hover-line:rgb(46 167 255/.5);
+  --ds-glass:var(--cb-glass);--ds-glass-line:var(--cb-glass-line);--ds-tint:#1b2a3b;
+  background:var(--bg);color-scheme:dark;
+}
+html:not([data-style="classic"]) body{background:var(--bg);color:var(--ink)}
+
+/* the logo files have a white background: invert them and let "screen" drop the (now black) box onto the dark page */
+html:not([data-style="classic"]) :is(.logo img,.dlogo,.flogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+
+/* ---------- typography: heavy uppercase display headings ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) :is(.d1,.d2,.hhero h1,.phero h1,.sec-head h2,.cta h2){text-transform:uppercase;letter-spacing:.01em;font-weight:850}
+html:not([data-style="classic"]) .d1{font-size:clamp(38px,5.6vw,80px);line-height:.98}
+html:not([data-style="classic"]) .d2{font-size:clamp(28px,3.4vw,48px);line-height:1.04}
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h3,.d3){letter-spacing:-.01em}
+html:not([data-style="classic"]) .eyebrow{color:var(--vv-accent-ink);letter-spacing:.22em}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,#fff 35%,#2ea7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--accent);-webkit-text-fill-color:var(--accent)}
+html:not([data-style="classic"]) ::selection{background:rgb(46 167 255/.35);color:#fff}
+
+/* ---------- header: translucent bar, pill buttons ---------- */
+html:not([data-style="classic"]) .hdr{border-bottom-color:rgb(255 255 255/.06);box-shadow:0 20px 40px -30px rgb(0 0 0/.9)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){background:rgb(255 255 255/.05);box-shadow:inset 0 0 0 1px rgb(255 255 255/.07);color:#e6e6ec;text-transform:uppercase;font-size:12px;letter-spacing:.06em;font-weight:700}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{background:rgb(255 255 255/.12);color:#fff}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{background:rgb(46 167 255/.12);color:#8ccfff;box-shadow:inset 0 0 0 1px rgb(46 167 255/.4)}
+html:not([data-style="classic"]) .hdr .icon-btn,html:not([data-style="classic"]) .language-control select{background-color:rgb(255 255 255/.06);border-color:rgb(255 255 255/.1);color:#fff}
+html:not([data-style="classic"]) .mega{background:#141319;border-top-color:rgb(255 255 255/.06);box-shadow:0 40px 80px -30px rgb(0 0 0/.9)}
+html:not([data-style="classic"]) .mega .promo{background:linear-gradient(160deg,#1d2a3a,#141319);border:1px solid var(--cb-glass-line)}
+html:not([data-style="classic"]) .drawer .panel{background:#141319}
+
+/* ---------- hero: cinematic glow + vignette ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{
+  background:
+    radial-gradient(45% 55% at 82% 18%,rgb(46 167 255/.24),transparent 70%),
+    radial-gradient(35% 45% at 8% 0%,rgb(120 90 255/.14),transparent 70%),
+    radial-gradient(70% 60% at 50% 110%,rgb(0 0 0/.6),transparent 70%);
+}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{opacity:.6;background-image:linear-gradient(rgb(255 255 255/.035) 1px,transparent 1px),linear-gradient(90deg,rgb(255 255 255/.035) 1px,transparent 1px)}
+html:not([data-style="classic"]) .phero .art{filter:drop-shadow(0 40px 60px rgb(0 0 0/.7))}
+html:not([data-style="classic"]) .sec.alt{background:linear-gradient(180deg,#16151b,#121116)}
+
+/* ---------- glass cards ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){background:var(--cb-glass);border:1px solid var(--cb-glass-line);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{border-color:rgb(46 167 255/.45)}
+html:not([data-style="classic"]) main details{background:var(--cb-glass);border-color:var(--cb-glass-line)}
+
+/* ---------- buttons: electric blue pills with dark ink ---------- */
+html:not([data-style="classic"]) .btn{text-transform:uppercase;letter-spacing:.04em;font-size:.84em}
+html:not([data-style="classic"]) :is(.rule-cfg .btn,.sum-dock .btn){text-transform:none;letter-spacing:0;font-size:inherit}
+html:not([data-style="classic"]) .ftr .news .btn{text-transform:none;letter-spacing:0;font-size:.8em}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:linear-gradient(135deg,#2ea7ff,#53b8ff);color:#04111d;box-shadow:0 14px 34px -12px rgb(46 167 255/.75)}
+html:not([data-style="classic"]) .btn.ghost{background:rgb(255 255 255/.06);border-color:rgb(255 255 255/.16);color:#fff}
+html:not([data-style="classic"]) .btn.ghost:hover{background:rgb(255 255 255/.12);border-color:rgb(46 167 255/.6);color:#fff}
+html:not([data-style="classic"]) .btn:not(.ghost):not(.sm){box-shadow:0 14px 30px -14px rgb(0 0 0/.9)}
+
+/* ---------- call-to-action band ---------- */
+html:not([data-style="classic"]) .cta{border:1px solid var(--cb-glass-line)}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#2ea7ff;color:#04111d}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#fff;color:#04111d}
+
+/* ---------- product photos with white backgrounds sit in light rounded frames ---------- */
+html:not([data-style="classic"]) .managed-product-gallery img{background:var(--cb-frame)}
+
+
+/* ---------- home page scenes that hard-code light backgrounds ---------- */
+html:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]) .home-reviews{background:linear-gradient(180deg,#16151b,#121116)}
+html:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+/* the scroll video is filmed on white: keep it inside a light rounded frame */
+html:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 40px 90px -30px rgb(0 0 0/.85),0 0 0 1px rgb(255 255 255/.08)}
+html:not([data-style="classic"]) .review-photo{background:var(--cb-frame)!important}
+
+
+/* ---------- footer ---------- */
+html:not([data-style="classic"]) .ftr{border-top:1px solid #1d1c22}
+html:not([data-style="classic"]) .ftr::before{background:linear-gradient(90deg,transparent,#2ea7ff,transparent)}
+
+/* ---------- chat widget: white icon / button text on the blue brand colour ---------- */
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}

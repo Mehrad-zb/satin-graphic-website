@@ -1,0 +1,155 @@
+/* Theme: Playful Labs — warm off-white canvas, near-black type, soft rounded white cards with a playful tilt on hover,
+   colourful blurred blobs behind heroes and highlight sections, pill buttons and gradient word highlights.
+   Used with /themes/_base-modern.css. Decoration only: blobs are pseudo-elements (pointer-events:none) and stay still
+   for visitors who prefer reduced motion. */
+/* in the visitor's dark mode, repaint the light-only surfaces of forms, configurators and checkout */
+@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#f1efea;--bg-2:#e9e6df;--bg-3:#e1ddd4;--card:#ffffff;
+    --ink:#1f1f1f;--ink-2:#444746;--mut:#5f6368;--line:#dcd7cc;--line-soft:#e6e2da;
+    --btn:#1f1f1f;--btn-ink:#ffffff;
+    --accent:#3367e6;--accent-2:#b5307f;--accent-soft:#e2e9fd;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#f1efea;--bg-2:#e9e6df;--bg-3:#e1ddd4;--card:#ffffff;
+  --ink:#1f1f1f;--ink-2:#444746;--mut:#5f6368;--line:#dcd7cc;--line-soft:#e6e2da;
+  --btn:#1f1f1f;--btn-ink:#ffffff;
+  --accent:#3367e6;--accent-2:#b5307f;--accent-soft:#e2e9fd;
+}
+html:not([data-style="classic"]){
+  --vv-display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --vv-navy:#1f1f1f;--vv-navy-2:#2b2a29;--vv-cta-end:#2c2340;
+  --vv-accent-ink:#2a5bd7;--vv-on-accent:#ffffff;--vv-hot:#7b8cff;--vv-num-end:#b5307f;
+  --vv-hdr-bg:color-mix(in srgb,var(--bg) 86%,transparent);
+  --vv-wraps-bg:#1f1f1f;--vv-wraps-ink:#ffffff;
+  --vv-ftr-bg:#1f1f1f;--vv-ftr-ink:#d9d6cf;--vv-ftr-mut:#a09d96;--vv-ftr-line:#33322f;
+  --vv-ftr-field:#2a2928;--vv-ftr-field-line:#3d3c39;--vv-ftr-btn-line:#4a4945;
+  --vv-ftr-glow:rgb(74 238 138/.16);--vv-chat:#1f1f1f;
+  --vv-shadow-sm:0 1px 2px rgb(31 31 31/.04),0 8px 24px -10px rgb(31 31 31/.12);
+  --vv-shadow-md:0 2px 4px rgb(31 31 31/.04),0 18px 40px -16px rgb(31 31 31/.18);
+  --vv-shadow-lg:0 2px 6px rgb(31 31 31/.05),0 30px 60px -24px rgb(31 31 31/.26);
+  --vv-radius:24px;--vv-btn-r:999px;--vv-sel-line:#3367e6;
+  --lb-green:#4aee8a;--lb-blue:#5b9bff;--lb-pink:#fbb9f5;--lb-yellow:#ffd666;
+  --lb-cream:#e6e1d6;--lb-blob-o:.75;
+  --lb-grad:linear-gradient(90deg,#3367e6,#9b3fd0 55%,#d6307a);
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#141413;--bg-2:#1c1b1a;--bg-3:#262523;--card:#1f1e1d;--ink:#f1efea;--ink-2:#cfccc5;--mut:#9e9b94;--line:#34332f;--line-soft:#282725;
+    --btn:#f1efea;--btn-ink:#1f1f1f;--accent:#8ab4ff;--accent-2:#f08bd4;--accent-soft:rgb(138 180 255/.14);
+    --vv-accent-ink:#9dc0ff;--vv-on-accent:#141413;--vv-num-end:#f08bd4;--lb-cream:#2c2b29;--lb-blob-o:.3;
+    --vv-wraps-bg:#f1efea;--vv-wraps-ink:#1f1f1f;--vv-ftr-bg:#0f0f0e;
+    --lb-grad:linear-gradient(90deg,#8ab4ff,#c79bff 55%,#f08bd4);
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#141413;--bg-2:#1c1b1a;--bg-3:#262523;--card:#1f1e1d;--ink:#f1efea;--ink-2:#cfccc5;--mut:#9e9b94;--line:#34332f;--line-soft:#282725;
+  --btn:#f1efea;--btn-ink:#1f1f1f;--accent:#8ab4ff;--accent-2:#f08bd4;--accent-soft:rgb(138 180 255/.14);
+  --vv-accent-ink:#9dc0ff;--vv-on-accent:#141413;--vv-num-end:#f08bd4;--lb-cream:#2c2b29;--lb-blob-o:.3;
+  --vv-wraps-bg:#f1efea;--vv-wraps-ink:#1f1f1f;--vv-ftr-bg:#0f0f0e;
+  --lb-grad:linear-gradient(90deg,#8ab4ff,#c79bff 55%,#f08bd4);
+}
+
+/* ---------- typography: friendly geometric sans, medium weight, gradient highlights ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,.d1,.d2){letter-spacing:-.035em}
+html:not([data-style="classic"]) :is(.d1,.d2,.hhero h1,.phero h1){font-weight:650}
+html:not([data-style="classic"]) .d1{font-size:clamp(40px,6.2vw,88px);line-height:1.02}
+html:not([data-style="classic"]) .sec-head{text-align:center;margin-inline:auto}
+html:not([data-style="classic"]) .sec-head :is(.lede,p){margin-inline:auto}
+html:not([data-style="classic"]) .sec-head .eyebrow{justify-content:center}
+html:not([data-style="classic"]) .eyebrow{color:var(--ink);letter-spacing:.14em;font-weight:750}
+html:not([data-style="classic"]) .eyebrow::before{background:var(--lb-grad);width:22px;height:4px}
+html:not([data-style="classic"]) :is(.hhero h1 .red,h1 em,h2 em,.d1 em,.d2 em){background:var(--lb-grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-style:normal}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:var(--lb-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* the logo files have a white background: multiply drops it onto the cream page (dark mode: the site inverts it, screen drops the black) */
+html:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}
+@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:screen}}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:screen}
+
+/* ---------- header ---------- */
+html:not([data-style="classic"]) .hdr{box-shadow:none;border-bottom-color:transparent}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){font-weight:600;color:var(--ink)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{background:var(--lb-cream);color:var(--ink)}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+html:not([data-style="classic"]) .mega{background:var(--bg);border-radius:0 0 28px 28px}
+html:not([data-style="classic"]) .mega .col a:hover{background:var(--lb-cream);color:var(--ink)}
+html:not([data-style="classic"]) .mega .promo{background:var(--card);border:1px solid var(--line-soft)}
+
+/* ---------- colourful blobs (decoration only) ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{
+  inset:-10% -6% auto -6%;height:120%;opacity:var(--lb-blob-o);filter:blur(36px);
+  background:
+    radial-gradient(28% 34% at 86% 22%,var(--lb-green),transparent 70%),
+    radial-gradient(24% 30% at 10% 12%,var(--lb-blue),transparent 70%),
+    radial-gradient(26% 30% at 62% 96%,var(--lb-pink),transparent 70%);
+  animation:lb-drift 18s ease-in-out infinite alternate;
+}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{background-image:none}
+html:not([data-style="classic"]) .sec.alt{position:relative;isolation:isolate;overflow:clip;background:var(--bg-2)}
+html:not([data-style="classic"]) .sec.alt::before{content:"";position:absolute;z-index:-1;pointer-events:none;width:min(40vw,500px);aspect-ratio:1;inset-inline-end:-6%;top:10%;border-radius:38% 62% 55% 45%/45% 40% 60% 55%;background:var(--lb-pink);opacity:calc(var(--lb-blob-o) * .55);filter:blur(48px);animation:lb-drift 22s ease-in-out infinite alternate}
+html:not([data-style="classic"]) .sec.alt::after{content:"";position:absolute;z-index:-1;pointer-events:none;width:min(32vw,380px);aspect-ratio:1;inset-inline-start:-5%;bottom:8%;border-radius:55% 45% 40% 60%/50% 60% 40% 50%;background:var(--lb-green);opacity:calc(var(--lb-blob-o) * .5);filter:blur(48px);animation:lb-drift 26s ease-in-out infinite alternate-reverse}
+@keyframes lb-drift{from{transform:translate3d(0,0,0) rotate(0)}to{transform:translate3d(2%,3%,0) rotate(6deg)}}
+
+/* ---------- home page scenes that hard-code white / grey backgrounds ---------- */
+html:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+html:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important;box-shadow:var(--vv-shadow-md)}
+html:not([data-style="classic"]) .process-line{background:var(--line)}
+
+/* ---------- cards: soft white, rounded, playful tilt ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-color:transparent;box-shadow:var(--vv-shadow-sm)}
+html:not([data-style="classic"]) :is(a.card,.cms-card):hover{transform:translateY(-6px) rotate(-1deg);box-shadow:var(--vv-shadow-lg);border-color:transparent}
+html:not([data-style="classic"]) :is(a.card,.cms-card):nth-child(even):hover{transform:translateY(-6px) rotate(1deg)}
+html:not([data-style="classic"]) main details{background:var(--card);border-color:transparent;border-radius:20px}
+
+/* ---------- buttons: dark and cream pills ---------- */
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:var(--btn);color:var(--btn-ink);box-shadow:0 10px 24px -14px rgb(31 31 31/.7)}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{box-shadow:0 14px 30px -14px rgb(31 31 31/.75)}
+html:not([data-style="classic"]) .btn.ghost{background:var(--lb-cream);border-color:transparent;color:var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:not([data-style="classic"]) .btn.ghost:hover{background:var(--card);border-color:var(--line);color:var(--ink)}
+html:not([data-style="classic"]) .badge{background:var(--ink);color:var(--bg)}
+
+/* ---------- call-to-action band: charcoal with colourful blobs ---------- */
+html:not([data-style="classic"]) .cta{border-radius:32px;background:#1f1f1f}
+html:not([data-style="classic"]) .cta::before{inset:auto -10% -60% auto;width:55%;background:radial-gradient(circle,rgb(74 238 138/.55),transparent 62%);filter:blur(10px)}
+html:not([data-style="classic"]) .cta::after{content:"";position:absolute;z-index:-1;pointer-events:none;width:40%;aspect-ratio:1;left:-12%;top:-55%;border-radius:50%;background:radial-gradient(circle,rgb(91 155 255/.5),transparent 62%);filter:blur(10px)}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#f1efea;color:#1f1f1f}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#fff;color:#1f1f1f}
+
+/* ---------- footer ---------- */
+html:not([data-style="classic"]) .ftr::before{height:4px;background:linear-gradient(90deg,var(--lb-blue),var(--lb-green),var(--lb-pink))}
+html:not([data-style="classic"]) .ftr .news .btn{background:#f1efea;color:#1f1f1f}
+
+/* ---------- configurators: selected choices in blue ---------- */
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-card input:checked+.product-option-content,.rule-cfg .quantity-presets button[aria-pressed=true],.rule-cfg .artwork-options label:has(input:checked)){box-shadow:inset 0 0 0 1px var(--vv-sel-line)}
+html:not([data-style="classic"]) .rule-cfg .rule-summary{border-radius:24px}
+
+@media (prefers-reduced-motion:reduce){
+  html:not([data-style="classic"]) :is(.hhero,.phero,.sec.alt)::before,html:not([data-style="classic"]) .sec.alt::after{animation:none}
+  html:not([data-style="classic"]) :is(a.card,.cms-card):hover{transform:none}
+}
+@media (max-width:700px){
+  html:not([data-style="classic"]) :is(.hhero,.phero)::before{filter:blur(26px)}
+  html:not([data-style="classic"]) .cta{border-radius:24px}
+}
+html:not([data-style="classic"]) :is(.rule-artwork,.reference-cfg .rule-artwork){background:var(--card)!important;border-color:var(--line-soft)}
+html:not([data-style="classic"]) .artwork-consent{background:var(--bg)}
+/* gradient word highlight: the end of each hero headline line melts from ink into blue → magenta */
+html:not([data-style="classic"]) :is(.hhero,.phero) h1{width:fit-content;max-width:100%;background:linear-gradient(100deg,var(--ink) 0 52%,#3367e6 74%,#b5307f 94%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(100deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.hhero,.phero) h1{background-image:linear-gradient(100deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}
+/* checkout keeps its own light layout; only its pink accents follow the theme */
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--accent-soft);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-footer{background:var(--bg-2);border-top-color:var(--line)}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn){color:var(--vv-accent-ink)}
+/* chat widget: the brand colour is near-black here, so its icon/button text must be white */
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
+@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .scw{--vv-chat:#3d3c39}}
+html[dir=rtl]:not([data-style="classic"]) :is(.hhero,.phero) h1{background-image:linear-gradient(260deg,var(--ink) 0 52%,#3367e6 74%,#b5307f 94%)}
+@media (prefers-color-scheme:dark){html[dir=rtl]:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(260deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
+html:not([data-style="classic"]) .scw-launch{box-shadow:0 10px 30px rgb(31 31 31/.3),0 0 0 2px var(--bg)}

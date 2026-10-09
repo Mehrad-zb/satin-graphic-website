@@ -357,7 +357,7 @@ const POLICIES = {
     ["Window graphics and wallpaper", ["Workmanship warranty: 2 years against lifting and peeling on properly prepared surfaces. Film durability per manufacturer rating (2–7 years by product). Not covered: surfaces we advised against (fresh paint, unprimed drywall, damaged glass), removal by the customer, or damage from cleaning with abrasives or ammonia."]],
     ["Print and apparel", ["Print orders are warranted to match the approved proof and to be free of manufacturing defects at delivery — see Defects and reprints on the Orders policy. Apparel decoration is warranted for 50 washes when the care label is followed (wash inside-out in cold water, no bleach, low heat or hang dry). Outdoor print products carry the durability ratings listed on their pages."]],
     ["Websites", ["Every website includes 30 days of post-launch fixes for defects in what we built. Ongoing updates, content changes and third-party service outages are covered by a care plan, not the warranty."]],
-    ["Making a claim", ["Email info@satingraphic.ca with your invoice number, photos of the issue and the date it appeared. Call (905) 555-0148 if it is urgent.", "We inspect within 10 business days (in person for vehicles and installations) and repair, replace or reprint the affected area at no charge if it is covered.", "Warranties are for the original purchaser and are not transferable unless stated on the manufacturer’s card."]]]},
+    ["Making a claim", ["Email info@satingraphic.ca with your invoice number, photos of the issue and the date it appeared. Call (905) 962-6222 if it is urgent.", "We inspect within 10 business days (in person for vehicles and installations) and repair, replace or reprint the affected area at no charge if it is covered.", "Warranties are for the original purchaser and are not transferable unless stated on the manufacturer’s card."]]]},
   "artwork-guidelines": { t: "Artwork Guidelines", k: "Help", d: "How to prepare files so your proof matches your screen and your print matches your proof.", s: [
     ["File formats we accept", ["*Best: print-ready PDF (PDF/X-1a or “High Quality Print”) with bleed and crop marks.", "*Vector: AI, EPS, SVG — required for cut vinyl, embroidery and any logo we scale up.", "*Raster: TIFF, PSD (flattened), PNG or JPG at the resolution listed for the product.", "*Layouts: InDesign packages (with links and fonts) are welcome. Word, PowerPoint, Canva and Publisher files are not print-ready; we can rebuild them as a design service."]],
     ["Resolution", ["*Offset print (cards, flyers, brochures): 300 DPI at final size.", "*Large format and wallpaper: 100–150 DPI at final size, or 25% scale at 4× that resolution.", "*Vehicle wraps: 72–100 DPI at full vehicle scale; vector wherever possible.", "*Apparel (DTF): 300 DPI at the printed size, PNG with a transparent background.", "Screenshots and web images (72 DPI) are almost never usable — ask before you build on one."]],
@@ -375,7 +375,7 @@ const POLICIES = {
     ["Defects and reprints", ["If your order does not match the approved proof — wrong colour, size, stock, misregistration, trimming faults, or a manufacturing defect — tell us within 7 days of pickup or delivery. We will reprint the affected quantity at no charge, or refund it if a reprint is not practical. We may ask for photos or the return of the defective goods."]],
     ["Cancellations", ["*Before proof approval: cancel at any time at no charge; design deposits are not refundable once design work has started.", "*After proof approval, before production: we charge for materials ordered and time spent (typically 25%).", "*After production starts: custom-printed orders cannot be cancelled. Wrap and installation bookings cancelled with less than 48 hours’ notice forfeit 25% of the deposit."]],
     ["Materials and tools", ["Unopened, unused vinyl rolls, laminates and tools from the shop may be returned within 14 days for a refund less a 15% restocking fee. Cut lengths of film are custom and non-returnable."]],
-    ["How to reach us", ["Email info@satingraphic.ca with your order or quote reference, or call (905) 555-0148 during business hours. We reply within one business day."]]]},
+    ["How to reach us", ["Email info@satingraphic.ca with your order or quote reference, or call (905) 962-6222 during business hours. We reply within one business day."]]]},
   "privacy-policy": { t: "Privacy Policy", k: "Legal", d: "How Satin Graphic collects, uses and protects your personal information.", s: [
     ["Who this covers", ["This policy applies to personal information collected by Satin Graphic (“we”, “us”) through this website, our quote and contact forms, our newsletter, phone and email, and in our Vaughan, Ontario facility. We comply with Canada’s Personal Information Protection and Electronic Documents Act (PIPEDA)."]],
     ["What we collect", ["We collect only what we need to quote, produce and deliver your order, and to stay in touch about it:", "*Contact details — name, email, phone, business name and address.", "*Project details — the vehicle, product, quantities, measurements and options you configure, plus any artwork or photos you upload.", "*Order and payment records — invoices, deposits and payment confirmations (card numbers are processed by our payment provider and never stored by us).", "*Website usage — pages visited, device type and approximate location, collected through cookies and analytics.", "*Newsletter subscription — your email address, if you sign up."]],
@@ -384,7 +384,7 @@ const POLICIES = {
     ["Your artwork and files", ["Files you upload are stored on our servers and used only to produce your order. We keep them so reprints match exactly; ask us to delete them at any time after the job is complete. We may photograph finished work for our portfolio unless you tell us not to when you order."]],
     ["Cookies", ["This site uses a small number of cookies and local-storage entries: to remember the items in your quote cart, and for anonymous analytics that help us see which pages are useful. You can block cookies in your browser; the quote cart will then reset between visits."]],
     ["How we protect it", ["Data is transmitted over encrypted connections (HTTPS) and stored on access-controlled systems. Only staff who need it to complete your order can see it. No system is perfectly secure; if a breach affects your information we will notify you and the Office of the Privacy Commissioner as PIPEDA requires."]],
-    ["Your rights", ["You can ask to see the personal information we hold about you, correct it, withdraw consent to marketing, or have it deleted where we are not required to keep it. Email info@satingraphic.ca or call (905) 555-0148; we respond within 30 days. If you are not satisfied, you may contact the Office of the Privacy Commissioner of Canada."]],
+    ["Your rights", ["You can ask to see the personal information we hold about you, correct it, withdraw consent to marketing, or have it deleted where we are not required to keep it. Email info@satingraphic.ca or call (905) 962-6222; we respond within 30 days. If you are not satisfied, you may contact the Office of the Privacy Commissioner of Canada."]],
     ["Changes to this policy", ["We update this page when our practices change and note the date at the top. Continued use of the site after a change means you accept the updated policy."]]]},
   "terms-and-conditions": { t: "Terms & Conditions", k: "Legal", d: "The terms that apply to every quote, order and service from Satin Graphic.", s: [
     ["Agreement", ["By requesting a quote, approving a proof or placing an order with Satin Graphic you agree to these terms, our Privacy Policy and the Orders, Shipping & Returns policy. If you are ordering for a business you confirm you are authorized to bind it."]],
@@ -397,12 +397,12 @@ const POLICIES = {
     ["Warranty and liability", ["Our workmanship warranties are described on the Warranty page and are the only warranties we give. To the extent the law allows, our total liability for any order is limited to the amount you paid for it, and we are not liable for indirect or consequential loss such as lost business or downtime.", "Nothing in these terms limits rights you have under the Ontario Consumer Protection Act that cannot be waived."]],
     ["Intellectual property", ["Artwork we create is licensed to you for the project it was created for once paid in full; source files are provided on design-service packages that include them. Ready-made wrap designs are licensed per vehicle as described on their pages. We may show finished work in our portfolio unless you ask us not to in writing."]],
     ["Website use", ["The content of this site is ours or licensed to us. You may not scrape, copy or republish it. Prices and availability shown online may change without notice; obvious errors do not bind us."]],
-    ["Governing law", ["These terms are governed by the laws of Ontario and the federal laws of Canada applicable in Ontario. Disputes will be heard in the courts of Ontario. Questions: info@satingraphic.ca · (905) 555-0148."]]]},
+    ["Governing law", ["These terms are governed by the laws of Ontario and the federal laws of Canada applicable in Ontario. Disputes will be heard in the courts of Ontario. Questions: info@satingraphic.ca · (905) 962-6222."]]]},
   "accessibility": { t: "Accessibility", k: "Legal", d: "Our commitment to making this website and our Vaughan, Ontario facility usable by everyone.", s: [
     ["Our commitment", ["Satin Graphic is committed to providing goods, services and information in a way that respects the dignity and independence of people with disabilities, in accordance with the Accessibility for Ontarians with Disabilities Act (AODA) and the Integrated Accessibility Standards Regulation."]],
     ["This website", ["We aim to meet WCAG 2.1 Level AA. The site is built with semantic HTML, keyboard-operable menus and forms, visible focus states, text alternatives for images, sufficient colour contrast, and it respects reduced-motion preferences. Some product configurators are visual by nature; every one can also be completed by phone or email."]],
     ["Our facility", ["*Step-free entrance and accessible parking at the front of the building.", "*Service animals and support persons are welcome throughout customer areas.", "*Documents such as quotes and proofs can be provided in large print or by email on request.", "*Staff receive AODA customer-service training."]],
-    ["Feedback and requests", ["If you have difficulty using any part of this site or our services, or would like this information in another format, contact info@satingraphic.ca or (905) 555-0148. We respond within 5 business days and will work with you to provide what you need."]]]},
+    ["Feedback and requests", ["If you have difficulty using any part of this site or our services, or would like this information in another format, contact info@satingraphic.ca or (905) 962-6222. We respond within 5 business days and will work with you to provide what you need."]]]},
 };
 
 /* Quote wizard per service */
@@ -429,6 +429,21 @@ const HOME_VIDEO = {
     ["01 · Your idea", "A clear starting point.", "Tell us about your vehicle, brand and goals. We build a design around them."],
     ["02 · Your design", "Made for your vehicle.", "Artwork, film and finish come together in a proof before production starts."],
     ["03 · Your finish", "Ready for the road.", "Our team prints, prepares and installs your graphics, then checks the finished result."]
+  ]
+};
+
+/* Colour change page: same scroll-scrubbed video component as the home page (all-intra-ish 8-frame GOP, no B-frames, for smooth seeking). */
+const COLOR_VIDEO = {
+  src: "/satin/video/color-change-scroll.mp4",
+  poster: "/satin/img/color-change-scroll.jpg",
+  cls: "cc-video-story",
+  label: "A sports car changing colour from red to black, white and green",
+  eyebrow: "Scroll to change the colour",
+  caption: "One car, many finishes. Colour-change film transforms the look without touching the paint.",
+  steps: [
+    ["01 · Pick a colour", "Hundreds of colours.", "Gloss, satin, matte, metallic and colour-flip films from 3M, Avery Dennison and more."],
+    ["02 · Pick a finish", "Finish changes everything.", "The same colour reads completely differently in gloss, satin or matte. We show you real samples in the shop."],
+    ["03 · Drive it", "Reversible and protective.", "The film protects the factory paint underneath and comes off cleanly when you want the original colour back."]
   ]
 };
 
@@ -528,6 +543,12 @@ const SEO = {
     "title": "Color Change Toronto | Satin Graphic",
     "description": "Color Change in Vaughan and Toronto/GTA. Explore options, project details and estimates from Satin Graphic. Request a quote for your project.",
     "image": "sprinter-wrapped",
+    "noindex": false
+  },
+  "/vehicle-wraps/visualizer": {
+    "title": "Car Wrap Visualizer – Preview 3M & Avery Colours | Satin Graphic",
+    "description": "Try 200+ 3M, Avery Dennison, KPMF and ORACAL wrap colours on your type of vehicle. Choose finish, window tint and wheels, then get a custom quote in Vaughan.",
+    "image": "home-video-poster",
     "noindex": false
   },
   "/vehicle-wraps/paint-protection-film": {
@@ -1456,6 +1477,23 @@ const TRANSLATIONS = {
     "es": "03 · Tu acabado",
     "fa": "۰۳ · نتیجه نهایی"
   },
+  "Scroll to change the colour": {"fr": "Défilez pour changer la couleur", "es": "Desplázate para cambiar el color", "fa": "با اسکرول رنگ را عوض کنید"},
+  "01 · Pick a colour": {"fr": "01 · Choisissez une couleur", "es": "01 · Elige un color", "fa": "۰۱ · انتخاب رنگ"},
+  "02 · Pick a finish": {"fr": "02 · Choisissez une finition", "es": "02 · Elige un acabado", "fa": "۰۲ · انتخاب پوشش"},
+  "03 · Drive it": {"fr": "03 · Prenez la route", "es": "03 · A conducir", "fa": "۰۳ · رانندگی کنید"},
+  "Hundreds of colours.": {"fr": "Des centaines de couleurs.", "es": "Cientos de colores.", "fa": "صدها رنگ."},
+  "Gloss, satin, matte, metallic and colour-flip films from 3M, Avery Dennison and more.": {"fr": "Films brillants, satinés, mats, métallisés et caméléon de 3M, Avery Dennison et plus.", "es": "Vinilos brillantes, satinados, mate, metalizados y camaleónicos de 3M, Avery Dennison y más.", "fa": "فیلم‌های براق، ساتن، مات، متالیک و تغییررنگ از 3M، Avery Dennison و برندهای دیگر."},
+  "Finish changes everything.": {"fr": "La finition change tout.", "es": "El acabado lo cambia todo.", "fa": "نوع پوشش همه چیز را تغییر می‌دهد."},
+  "The same colour reads completely differently in gloss, satin or matte. We show you real samples in the shop.": {"fr": "Une même couleur paraît complètement différente en brillant, satiné ou mat. Nous vous montrons de vrais échantillons en atelier.", "es": "El mismo color se ve totalmente distinto en brillante, satinado o mate. Te mostramos muestras reales en el taller.", "fa": "یک رنگ در حالت براق، ساتن یا مات کاملاً متفاوت دیده می‌شود. نمونه‌های واقعی را در کارگاه به شما نشان می‌دهیم."},
+  "Reversible and protective.": {"fr": "Réversible et protecteur.", "es": "Reversible y protector.", "fa": "برگشت‌پذیر و محافظ."},
+  "The film protects the factory paint underneath and comes off cleanly when you want the original colour back.": {"fr": "Le film protège la peinture d’origine et se retire proprement lorsque vous voulez retrouver la couleur d’origine.", "es": "El vinilo protege la pintura de fábrica y se retira limpiamente cuando quieras recuperar el color original.", "fa": "این فیلم از رنگ کارخانه محافظت می‌کند و هر زمان بخواهید بدون آسیب جدا می‌شود."},
+  "A sports car changing colour from red to black, white and green": {"fr": "Une voiture sport qui passe du rouge au noir, au blanc et au vert", "es": "Un deportivo que cambia de rojo a negro, blanco y verde", "fa": "یک خودروی اسپرت که رنگش از قرمز به مشکی، سفید و سبز تغییر می‌کند"},
+  "Wrap visualizer": {"fr": "Visualiseur de covering", "es": "Visualizador de wrap", "fa": "شبیه‌ساز رپ"},
+  "Wrap Visualizer": {"fr": "Visualiseur de covering", "es": "Visualizador de wrap", "fa": "شبیه‌ساز رپ"},
+  "See the colour before you commit.": {"fr": "Voyez la couleur avant de vous décider.", "es": "Mira el color antes de decidir.", "fa": "قبل از تصمیم، رنگ را ببینید."},
+  "Open the wrap visualizer": {"fr": "Ouvrir le visualiseur", "es": "Abrir el visualizador", "fa": "باز کردن شبیه‌ساز رپ"},
+  "Try the wrap visualizer": {"fr": "Essayer le visualiseur", "es": "Probar el visualizador", "fa": "امتحان شبیه‌ساز رپ"},
+  "Loading the visualizer…": {"fr": "Chargement du visualiseur…", "es": "Cargando el visualizador…", "fa": "در حال بارگذاری شبیه‌ساز…"},
   "A clear starting point.": {
     "fr": "Un point de départ clair.",
     "es": "Un punto de partida claro.",
@@ -2968,14 +3006,14 @@ function revealStory(stepsArr, o = {}) {
     </div></div></section>`;
 }
 
-function homeVideoStory() {
-  return `<section class="video-story" data-video-story><div class="wrap video-stick">
-    <div class="video-copy"><span class="eyebrow">${esc(HOME_VIDEO.eyebrow)}</span>
-      <div class="video-steps">${HOME_VIDEO.steps.map(([k, h, d], i) => `<div class="video-step ${i === 0 ? "active" : ""}" data-video-step="${i}"><span class="tiny">${esc(k)}</span><h2 class="d2">${esc(h)}</h2><p class="lede">${esc(d)}</p></div>`).join("")}</div>
-      ${quoteBtn("Start a quote", "Vehicle Wraps", "btn")}
+function homeVideoStory(V = HOME_VIDEO, cta = quoteBtn("Start a quote", "Vehicle Wraps", "btn")) {
+  return `<section class="video-story${V.cls ? " " + V.cls : ""}" data-video-story><div class="wrap video-stick">
+    <div class="video-copy"><span class="eyebrow">${esc(V.eyebrow)}</span>
+      <div class="video-steps">${V.steps.map(([k, h, d], i) => `<div class="video-step ${i === 0 ? "active" : ""}" data-video-step="${i}"><span class="tiny">${esc(k)}</span><h2 class="d2">${esc(h)}</h2><p class="lede">${esc(d)}</p></div>`).join("")}</div>
+      ${cta}
     </div>
     <figure class="video-figure">
-      <div class="video-frame"><video data-scroll-video muted playsinline preload="none" disablepictureinpicture disableremoteplayback width="910" height="512" poster="${HOME_VIDEO.poster}" aria-label="${esc(HOME_VIDEO.label)}"><source src="${HOME_VIDEO.src}" type="video/mp4">${esc(HOME_VIDEO.caption)}</video></div>
+      <div class="video-frame"><video data-scroll-video muted playsinline preload="none" disablepictureinpicture disableremoteplayback width="910" height="512" poster="${V.poster}" aria-label="${esc(V.label)}"><source src="${V.src}" type="video/mp4">${esc(V.caption)}</video></div>
     </figure>
   </div></section>`;
 }
@@ -3129,6 +3167,7 @@ PAGES.wraps = () => ({
       { name: "Paint Protection Film", path: "/vehicle-wraps/paint-protection-film", d: "Clear protection for high-impact areas or the entire vehicle.", art: art("ppf", { photo: "install-ppf" }) },
       { name: "Price Estimator", path: "/vehicle-wraps/estimator", d: "Choose your vehicle, coverage and finish to see a starting price.", art: art("fleet", { photo: "sprinter-bare" }) },
     ], 4)) +
+    sec(`<div class="split" style="align-items:center"><div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start"><span class="eyebrow">Wrap visualizer</span><h2 class="d2">See the colour before you commit.</h2><p class="lede">Try 200+ colour-change films from 3M, Avery Dennison, KPMF and ORACAL on your type of vehicle, with finish, window tint and wheel options. Then send the build to us for a quote.</p>${A("/vehicle-wraps/visualizer", `Open the wrap visualizer ${arrowSm()}`, "btn")}</div><a href="${href("/vehicle-wraps/visualizer")}" class="wv-hub-art" style="border-radius:var(--r-md);overflow:hidden;background:#cfd0d3;display:block;aspect-ratio:16/9;box-shadow:var(--shadow)"><img src="/visualizer/preview.webp" alt="Electric sedan previewed in a gloss blue wrap in the Satin wrap visualizer" loading="lazy" decoding="async" width="1200" height="675" style="width:100%;height:auto;display:block"></a></div>`) +
     sec(`<div class="split" style="align-items:center"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow">Instant price estimator</span><h2 class="d2">Plan your wrap before you visit.</h2><p class="lede">Choose your vehicle, coverage, roof and finish to get an instant starting estimate.</p><p class="tiny">Arlon · Avery Dennison · 3M · Professional installation · 5-year wrap warranty</p></div>
       <div class="card" style="padding:26px;gap:14px"><span class="eyebrow plain">Reference configuration</span><h3 class="d3">Transit High Roof Long Wheel</h3><p class="small">Full commercial wrap · roof not included</p><div style="display:flex;align-items:baseline;gap:10px"><span class="tiny">FROM</span><b style="font-size:44px;letter-spacing:-.03em">$3,950</b></div>${A("/vehicle-wraps/estimator/transit-van", `Open price estimator ${arrowSm()}`, "btn")}</div></div>`, "alt") +
     revealStory([["01 — Bare panel", "Bare panel", "We start from a clean, decontaminated panel and take exact measurements."], ["02 — Design proof", "Design proof", "A to-scale digital proof is built and approved before anything is printed."], ["03 — Print & laminate", "Print & laminate", "The design is printed in-house and sealed under a protective laminate."], ["04 — Installed wrap", "Installed wrap", "Certified installers apply the wrap panel by panel, heat-formed around every edge."]], { eyebrow: "How a wrap comes together", pair: ["van-bare", "van-wrapped"] }) +
@@ -3177,14 +3216,20 @@ function bindColorScrub(root) {
   const on = () => { if (!raf) raf = requestAnimationFrame(tick); };
   addEventListener("scroll", on, { passive: true }); addEventListener("resize", on); tick();
 }
+PAGES.visualizer = () => ({
+  title: "Wrap Visualizer",
+  html: `<section class="wv" data-wrap-visualizer data-lang="${LANG}"><div class="wv-app" data-wv-app><p class="wv-loading">Loading the visualizer…</p></div></section>`,
+  init: m => import("/visualizer/visualizer.mjs").then(x => { const host = m.querySelector("[data-wrap-visualizer]"); if (!host) return; host.outerHTML = x.pageHTML(LANG); return x.mount(m.querySelector("[data-wrap-visualizer]"), { lang: LANG }); }).catch(e => console.error("Visualizer failed", e))
+});
 PAGES.colorChange = () => ({
   title: "Color Change Wrap",
   html: hero({ kicker: "Color Change Wrap", title: "A new colour, no repaint required.", lede: "Premium finishes for a completely new look — fully reversible, and easier on resale value than paint.", crumbs: [["Home", "/"], ["Vehicle Wraps", "/vehicle-wraps"], ["Color Change"]], ctas: quoteBtn("Get a colour change quote", "Vehicle Wraps", "btn", "Wrap type: Color change"), art: colorScrub() }) +
+    homeVideoStory(COLOR_VIDEO, quoteBtn("Get a colour change quote", "Vehicle Wraps", "btn", "Wrap type: Color change")) +
     sec(secHead("Popular on", "Every body style, matched to the panel gaps.") + `<div class="grid g5" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">${[["Car / Sedan", "Factory-line panel gaps templated for a seamless finish.", "cc-bmw-green"], ["SUV / Crossover", "Popular in satin and colour-flip finishes.", "cc-suv-green"], ["Pickup Truck", "Bed rail and mirror caps matched or contrasted.", "cc-pickup-green"], ["Coupe & sports car", "Wheel arches and spoilers wrapped in one piece where the film allows.", "cc-audi-green"], ["Tesla & EV", "Panel gaps and camera cut-outs templated to factory spec.", "cc-tesla-green.webp"]].map(([t, d, v], i) => `<button type="button" class="card body-style" data-quote="Vehicle Wraps" data-details="Vehicle type: ${["Sedan", "SUV", "Pickup Truck", "Coupe / sports car", "Tesla / EV"][i]}; Wrap type: Color change; Coverage: Full Wrap">${art("color", { photo: v })}<h3>${t}</h3><p>${d}</p><span class="link">Get a price for this ${icon("arrow", 14)}</span></button>`).join("")}</div>`) +
     sec(`<div class="split" style="align-items:center"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow">Finish options</span><h2 class="d2">Pick a finish to preview its character.</h2>
       ${seg("Finish", FINISHES.map(f => f.name), 0, { key: "finish" })}
       <div class="og"><span class="lab">Colour</span><div class="swatches" data-swatches>${[["#2f3a46", "#8b9bab"], ["#0f1a3a", "#4a6cc4"], ["#1d3b2a", "#78b28d"], ["#3a1012", "#e8314a"], ["#1b1b1d", "#6b6b70"], ["#c9ced6", "#ffffff"]].map((c, i) => `<button type="button" aria-label="Colour ${i + 1}" data-c="${c.join(",")}" aria-pressed="${i === 0}" style="background:linear-gradient(135deg,${c[1]},${c[0]})"></button>`).join("")}</div></div>
-      <p class="lede" data-finish-d><b>Gloss.</b> ${FINISHES[0].d}</p>${quoteBtn("Get a color change quote", "Vehicle Wraps")}</div>
+      <p class="lede" data-finish-d><b>Gloss.</b> ${FINISHES[0].d}</p><div style="display:flex;flex-wrap:wrap;gap:10px">${quoteBtn("Get a color change quote", "Vehicle Wraps")}${A("/vehicle-wraps/visualizer", "Try the wrap visualizer", "btn ghost")}</div></div>
       <div class="finish-stage" data-finish-stage>${vehicleSVG("sedan", { mode: "color", c: ["#2f3a46", "#8b9bab"], anim: true, gloss: .55 })}</div></div>`, "alt") +
     sec(`<div class="split"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow">Why colour change</span><h2 class="d2">Every finish paint can’t do, and a few it can.</h2><div class="prose"><p>A colour-change wrap replaces the visible colour of the vehicle with cast vinyl film — gloss, satin, matte, satin chrome or colour-flip — without touching the paint underneath. It protects the factory finish, holds resale value, and comes off cleanly when you want the original colour back.</p><p>We disassemble handles, lights and trim where needed so the film tucks behind edges rather than being cut on the panel, and we template panel gaps and camera cut-outs on modern vehicles so the finish looks factory.</p></div></div>
       ${feats([["150+ colours", "The full 3M 2080 and Avery SW900 ranges, sampled in-shop.", "drop"], ["Protects the paint", "Stone chips and swirls land on the film, not the clear coat.", "shield"], ["Fully reversible", "Removes cleanly from OEM paint, even years later.", "layers"], ["Door jambs optional", "Add jambs for a colour match when the doors are open.", "ruler"]], 2)}</div>`) +
@@ -3901,7 +3946,7 @@ const ROUTES = [
  ['/portfolio',(_p,q)=>portfolioPage(LANG,'/portfolio',q,serviceUI.projects)],['/portfolio/:category',(p,q)=>['commercial','colour-change'].includes(p.category)?portfolioPage(LANG,'/portfolio/'+p.category,q,serviceUI.projects):null],['/portfolio/projects/:slug',(p,q)=>portfolioPage(LANG,'/portfolio/projects/'+p.slug,q,serviceUI.projects)],
  ...Object.keys(SERVICE_COPY).map(k=>[SERVICE_COPY[k].path,()=>newServicePage(k)]),["/auto-detailing/booking",bookingPage],["/design-studio",studioPage],
   ["/", PAGES.home], ["/vehicle-wraps", PAGES.wraps], ["/vehicle-wraps/commercial", PAGES.commercial], ["/vehicle-wraps/commercial/:slug", PAGES.commercialItem],
-  ["/vehicle-wraps/color-change", PAGES.colorChange], ["/vehicle-wraps/paint-protection-film", PAGES.ppf], ["/vehicle-wraps/estimator", PAGES.estimator], ["/vehicle-wraps/estimator/:slug", PAGES.estimatorItem],
+  ["/vehicle-wraps/color-change", PAGES.colorChange], ["/vehicle-wraps/visualizer", PAGES.visualizer], ["/vehicle-wraps/paint-protection-film", PAGES.ppf], ["/vehicle-wraps/estimator", PAGES.estimator], ["/vehicle-wraps/estimator/:slug", PAGES.estimatorItem],
   ["/print-shop", PAGES.printShop], ["/print-shop/offset", PAGES.offset], ["/print-shop/offset/:slug", PAGES.offsetItem], ["/print-shop/large-format", PAGES.large], ["/print-shop/large-format/:slug", PAGES.largeItem],
   ["/apparel", PAGES.apparel], ["/apparel/:slug", PAGES.apparelItem], ["/window-graphics", PAGES.glass], ["/window-graphics/:slug", PAGES.glassItem],
   ["/window-tint", PAGES.tint], ["/window-tint/vehicle", PAGES.tintVehicle], ["/window-tint/commercial", PAGES.tintCommercial], ["/wallpaper", PAGES.wallpaper],
@@ -3943,7 +3988,7 @@ function navigate(url) {
 
 /* ---------- chrome ---------- */
 const MEGA = {
-  wraps: { label: "Vehicle Wraps", cols: [["Commercial Wrap", [["All vehicle wraps", "/vehicle-wraps", 1], ["Commercial wrap", "/vehicle-wraps/commercial", 1], ...COMMERCIAL.map(c => [c.name, "/vehicle-wraps/commercial/" + c.slug])]], ["Color Change & PPF", [["Color change wrap", "/vehicle-wraps/color-change"], ["Paint protection film", "/vehicle-wraps/paint-protection-film"]]], ["Price Estimator", [["Open estimator", "/vehicle-wraps/estimator", 1], ...ESTIMATOR.slice(0, 6).map(e => [e.name, "/vehicle-wraps/estimator/" + e.slug])]]], promo: ["Price estimator", "Pick a vehicle, coverage and finish for a starting price in under a minute.", "/vehicle-wraps/estimator", "fleet", "sprinter-wrapped"] },
+  wraps: { label: "Vehicle Wraps", cols: [["Commercial Wrap", [["All vehicle wraps", "/vehicle-wraps", 1], ["Commercial wrap", "/vehicle-wraps/commercial", 1], ...COMMERCIAL.map(c => [c.name, "/vehicle-wraps/commercial/" + c.slug])]], ["Color Change & PPF", [["Color change wrap", "/vehicle-wraps/color-change"], ["Wrap visualizer", "/vehicle-wraps/visualizer"], ["Paint protection film", "/vehicle-wraps/paint-protection-film"]]], ["Price Estimator", [["Open estimator", "/vehicle-wraps/estimator", 1], ...ESTIMATOR.slice(0, 6).map(e => [e.name, "/vehicle-wraps/estimator/" + e.slug])]]], promo: ["Price estimator", "Pick a vehicle, coverage and finish for a starting price in under a minute.", "/vehicle-wraps/estimator", "fleet", "sprinter-wrapped"] },
   print: { label: "Print Shop", cols: [["Offset Printing", [["All print shop", "/print-shop", 1], ["Offset printing", "/print-shop/offset", 1], ...OFFSET.map(o => [o.name, "/print-shop/offset/" + o.slug])]], ["Large Format", [["Large format", "/print-shop/large-format", 1], ...LARGE.map(o => [o.name, "/print-shop/large-format/" + o.slug])]], ["Help", [["Artwork guidelines", "/artwork-guidelines"], ["Orders & shipping", "/refund-policy"], ["Track an order", "/track"]]]], promo: ["Business cards", "Configure stock, sides and quantity — live price as you go.", "/print-shop/offset/business-cards", "print", "pr-bc-1"] },
   apparel: { label: "Apparel", cols: [["Custom Apparel", [["All apparel", "/apparel", 1], ...APPAREL.map(a => [a.name, "/apparel/" + a.slug])]], ["Decoration", [["DTF print", "/apparel/t-shirts"], ["Embroidery", "/apparel/hats"], ["DTF transfer", "/apparel/hoodies"], ["Heat-press vinyl", "/apparel/workwear"]]], ["Help", [["Apparel artwork guide", "/artwork-guidelines"], ["Warranty", "/warranty"]]]], promo: ["See your logo on it", "Upload a logo and preview it on the garment before you order.", "/apparel", "apparel", "satin-shirt-logo.webp"] },
   windows: { label: "Windows & Walls", cols: [["Window Graphics", [["All window graphics", "/window-graphics", 1], ...GLASS.map(g => [g.name, "/window-graphics/" + g.slug])]], ["Window Tint", [["Window tint", "/window-tint", 1], ["Vehicle tint", "/window-tint/vehicle"], ["Commercial tint", "/window-tint/commercial"]]], ["Wallpaper", [["Wallpaper", "/wallpaper", 1], ["Home", "/wallpaper?space=home"], ["Office", "/wallpaper?space=office"], ["Custom", "/wallpaper?space=custom"]]]], promo: ["VLT preview", "Drag the slider to see how each tint percentage reads on glass.", "/window-tint", "tint", "install-tint"] },
@@ -3983,10 +4028,10 @@ function footer() {
     <div style="display:flex;flex-direction:column;gap:12px;max-width:340px"><img src="${LOGO}" alt="Satin Graphic" style="height:24px;width:auto;align-self:flex-start" class="flogo" width="483" height="78"><p class="small">${LANG==='en'?'Vehicle wraps, print shop, apparel, window graphics, wallpaper and window tint — one studio, one facility.':LANGUAGE_COPY[LANG].footer}</p>
       <p class="small">${SITE.phone.includes('555-')?'':`<span style="user-select:all">${SITE.phone}</span> · `}<span style="user-select:all">${SITE.email}</span><br><span dir="ltr">${SITE.address}<br>${SITE.city}</span></p>
       <form class="news" data-form="news" novalidate><input class="inp" type="email" id="nl-email" placeholder="Email for project tips" aria-label="Email for newsletter" required><button class="btn sm" type="submit">Subscribe</button></form></div>
-    ${col("Services", [["Auto detailing", "/auto-detailing"], ["Book auto detailing", "/auto-detailing/booking"], ["Vehicle wraps", "/vehicle-wraps"], ["Commercial wraps", "/vehicle-wraps/commercial"], ["Color change", "/vehicle-wraps/color-change"], ["Paint protection film", "/vehicle-wraps/paint-protection-film"], ["Price estimator", "/vehicle-wraps/estimator"], ["Window tint", "/window-tint"]])}
+    ${col("Services", [["Auto detailing", "/auto-detailing"], ["Book auto detailing", "/auto-detailing/booking"], ["Vehicle wraps", "/vehicle-wraps"], ["Commercial wraps", "/vehicle-wraps/commercial"], ...(LANG==='en'?[["Vehicle lettering", "/vehicle-wraps/lettering"]]:[]), ["Color change", "/vehicle-wraps/color-change"], ["Paint protection film", "/vehicle-wraps/paint-protection-film"], ["Price estimator", "/vehicle-wraps/estimator"], ["Window tint", "/window-tint"]])}
     ${col("Print & more", [["Print shop", "/print-shop"], ["Offset printing", "/print-shop/offset"], ["Large format", "/print-shop/large-format"], ["Apparel", "/apparel"], ["Window graphics", "/window-graphics"], ["Wallpaper", "/wallpaper"], ["Website design", "/website-design"], ["Social media services", "/social-media-services"], ["Videography", "/videography"], ["Design Studio", "/design-studio"]])}
     ${col("Company", [["Our work", "/portfolio"], ["About", "/about"], ["Reviews", "/reviews"], ["Shop", "/shop"], ["Contact", "/contact"], ["FAQ", "/faq"], ["Track order", "/track"], ["Log in", "/login"]])}
-    ${col("Help & policies", [["Artwork guidelines", "/artwork-guidelines"], ["Warranty", "/warranty"], ["Orders, shipping & returns", "/refund-policy"], ["Privacy policy", "/privacy-policy"], ["Terms & conditions", "/terms-and-conditions"], ["Accessibility", "/accessibility"]])}
+    ${col("Help & policies", [...(LANG==='en'?[["Guides & advice", "/guides"]]:[]), ["Artwork guidelines", "/artwork-guidelines"], ["Warranty", "/warranty"], ["Orders, shipping & returns", "/refund-policy"], ["Privacy policy", "/privacy-policy"], ["Terms & conditions", "/terms-and-conditions"], ["Accessibility", "/accessibility"]])}
   </div><div class="bot"><span>© 2026 Satin Graphic · Satin Auto Wrap</span><span>${LANG==='en'?'Prices in CAD':LANGUAGE_COPY[LANG].prices} · ${esc(SITE.city)}</span></div></div></footer>`;
 }
 
@@ -4180,7 +4225,8 @@ function bindVideoStory(root) {
 function videoStoryTick() {
   const section=document.querySelector('[data-video-story]');if(!section||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const r=section.getBoundingClientRect(),head=document.querySelector('.hdr')?.offsetHeight||68;
-  const p=Math.max(0,Math.min(1,(head-r.top)/Math.max(1,r.height-(innerHeight-head))));
+  const span=r.height-(innerHeight-head);/* sticky (desktop): progress through the pinned section; stacked (mobile): progress while the section crosses the viewport */
+  const p=Math.max(0,Math.min(1,span>40?(head-r.top)/span:(innerHeight-r.top-r.height*.25)/Math.max(1,innerHeight-head+r.height*.25)));
   section.querySelectorAll('[data-video-step]').forEach((step,i)=>step.classList.toggle('active',i===Math.min(2,Math.floor(p*3))));
   section._scrollSeek?.(p);
 }
@@ -4368,7 +4414,7 @@ if(!globalThis.__PRERENDER__){
  const visitRef=ss('satinRef',()=>{try{return document.referrer&&new URL(document.referrer).host!==location.host?document.referrer:'';}catch{return '';}});
  const sendVisit=(type='pv')=>{if(typeof type!=='string')type='pv';if(sessionStorage.getItem('satinAnalyticsConsent')==='yes'&&(type!=='pv'||document.visibilityState==='visible')&&!window.frameElement){const body=JSON.stringify({id:visitorId,path:location.pathname,consent:true,type,ref:visitRef,w:innerWidth});if(type!=='pv'&&navigator.sendBeacon)navigator.sendBeacon('/api/visit',new Blob([body],{type:'application/json'}));else fetch('/api/visit',{method:'POST',headers:{'Content-Type':'application/json'},body,keepalive:true}).catch(()=>{});}};
  document.addEventListener('click',e=>{if(e.target.closest?.('a[href^="tel:"],a[href^="mailto:"],a[href*="wa.me/"]'))sendVisit('contact');},true);
- if(!window.frameElement&&!sessionStorage.getItem('satinAnalyticsConsent')){const banner=document.createElement('aside');banner.className='consent-banner';banner.setAttribute('aria-label','Visitor analytics');banner.innerHTML='<p>Allow anonymous visit measurement? This shares your current page and approximate city with Satin Graphic for this visit.</p><div><button class="btn sm" data-allow>Allow</button><button class="btn sm ghost" data-decline>Decline</button></div>';document.body.append(banner);banner.addEventListener('click',e=>{if(e.target.closest('[data-allow],[data-decline]')){sessionStorage.setItem('satinAnalyticsConsent',e.target.closest('[data-allow]')?'yes':'no');banner.remove();sendVisit();}});}
+ if(!window.frameElement&&!sessionStorage.getItem('satinAnalyticsConsent')){const banner=document.createElement('aside');banner.className='consent-banner';banner.setAttribute('aria-label','Visitor analytics');banner.innerHTML='<p>Allow anonymous visit measurement? This shares your current page and approximate city with Satin Graphic'+(window.__sgAnalytics?' (and with Google Analytics, without advertising cookies)':'')+' for this visit.</p><div><button class="btn sm" data-allow>Allow</button><button class="btn sm ghost" data-decline>Decline</button></div>';document.body.append(banner);banner.addEventListener('click',e=>{if(e.target.closest('[data-allow],[data-decline]')){sessionStorage.setItem('satinAnalyticsConsent',e.target.closest('[data-allow]')?'yes':'no');banner.remove();sendVisit();}});}
  sendVisit('pv');
 }
 

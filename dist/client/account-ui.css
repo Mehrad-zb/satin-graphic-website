@@ -130,3 +130,15 @@
   .acct-steps li{font-size:11px}
   .acct-totals{max-width:none}
 }
+
+/* Saved designs (Design Studio) */
+.acct-designs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.acct-design{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column}
+.acct-design-img{aspect-ratio:2/1.15;background:#f1f2f4;display:grid;place-items:center;overflow:hidden}
+.acct-design-img img{width:100%;height:100%;object-fit:contain;display:block}
+.acct-design-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.acct-design-body h3{margin:0;font-size:16px}
+.acct-design-body p{margin:0}
+.acct-design-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.acct-design-acts .btn{font-size:13px}
+.acct-danger{color:#b42318}

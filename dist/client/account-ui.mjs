@@ -23,6 +23,8 @@ const FA = {
   'Open orders': 'سفارش‌های باز', 'Unpaid invoices': 'فاکتورهای پرداخت‌نشده', 'Hello': 'سلام', 'Loading…': 'در حال بارگذاری…', 'Saved.': 'ذخیره شد.',
   'Quantity': 'تعداد', 'Size': 'اندازه', 'Design service requested': 'درخواست خدمات طراحی', 'Pay or view': 'مشاهده / پرداخت', 'Reference': 'شماره', 'Service': 'خدمت',
   'Your email is confirmed. Welcome!': 'ایمیل شما تأیید شد. خوش آمدید!', 'Confirm password': 'تکرار رمز', 'Passwords do not match.': 'رمزها یکسان نیستند.',
+  'Saved designs': 'طرح‌های ذخیره‌شده', 'Edit': 'ویرایش', 'Order this design': 'سفارش این طرح', 'Download PDF': 'دانلود PDF', 'Mockup PNG': 'پیش‌نمایش PNG', 'Delete': 'حذف',
+  'Approved': 'تأیید شده', 'Draft': 'پیش‌نویس', 'No saved designs yet.': 'هنوز طرحی ذخیره نکرده‌اید.', 'Open Design Studio': 'باز کردن استودیو طراحی', 'Delete this design?': 'این طرح حذف شود؟',
   'I agree to the': 'با این موارد موافقم:', 'Terms': 'شرایط', 'Privacy Policy': 'حریم خصوصی', 'Customer area': 'ناحیهٔ مشتری',
 };
 const t = s => (LANG === 'fa' && FA[s]) || s;
@@ -55,7 +57,7 @@ async function api(path, data) {
 }
 function ensureCss() {
   if (document.querySelector('link[data-account-css]')) return;
-  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/account-ui.css?v=1'; l.dataset.accountCss = ''; document.head.append(l);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/account-ui.css?v=2'; l.dataset.accountCss = ''; document.head.append(l);
 }
 const msgBox = (el, text, ok = false) => { if (el) el.innerHTML = text ? `<div class="acct-msg ${ok ? 'ok' : 'err'}" role="${ok ? 'status' : 'alert'}">${esc(text)}</div>` : ''; };
 async function busy(btn, fn) { const old = btn?.textContent; if (btn) { btn.disabled = true; } try { await fn(); } finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = old; } } }
@@ -127,7 +129,7 @@ function loginView(host, mode, ctx) {
 }
 
 /* ---------------- My account ---------------- */
-const TABS = [['dashboard', 'Dashboard'], ['orders', 'Orders'], ['invoices', 'Invoices'], ['requests', 'Quotes & bookings'], ['profile', 'Profile']];
+const TABS = [['dashboard', 'Dashboard'], ['orders', 'Orders'], ['designs', 'Saved designs'], ['invoices', 'Invoices'], ['requests', 'Quotes & bookings'], ['profile', 'Profile']];
 function go(params) { const u = new URL(BASE + '/account/', location.origin); for (const [k, v] of Object.entries(params)) if (v) u.searchParams.set(k, v); history.pushState(null, '', u.pathname + u.search); }
 async function accountView(host, q) {
   const tab = TABS.some(x => x[0] === q.get('tab')) ? q.get('tab') : (q.get('order') ? 'orders' : 'dashboard');
@@ -143,7 +145,8 @@ async function accountView(host, q) {
     if (!OVERVIEW || q.get('welcome') || q.get('refresh')) OVERVIEW = await api('overview');
     ME = OVERVIEW.customer;
     if (q.get('order')) await orderView(main, q.get('order'), host);
-    else ({ dashboard, orders: ordersView, invoices: invoicesView, requests: requestsView, profile: profileView })[tab](main, host);
+    else if (tab === 'designs') await designsView(main, host);
+    else ({ dashboard, orders: ordersView, designs: designsView, invoices: invoicesView, requests: requestsView, profile: profileView })[tab](main, host);
     if (flash) main.insertAdjacentHTML('afterbegin', `<div class="acct-msg ${q.get('error') ? 'err' : 'ok'}" role="status">${esc(flash)}</div>`);
   } catch (e) {
     if (e.status === 401) { setHint(false); location.replace(BASE + '/login/?return=' + encodeURIComponent(location.pathname + location.search)); return; }
@@ -208,6 +211,47 @@ async function orderView(main, id, host) {
       const notes = [r.priceChanged ? 'Prices are recalculated at today’s rates.' : '', r.needsArtwork ? `${r.needsArtwork} item(s) need artwork again — open the product page to upload it.` : '', r.skipped.length ? 'Not added: ' + r.skipped.join(', ') + '.' : ''].filter(Boolean).join(' ');
       box.innerHTML = `<div class="acct-msg ok" role="status">${r.added ? `${r.added} item(s) added to your cart.` : 'These items are already in your cart.'} ${esc(notes)} <a class="btn sm" href="/satin/checkout/">Go to checkout</a></div>`;
     } catch (e) { msgBox(box, e.message); }
+  }));
+}
+/* ---------------- Design Studio designs saved to the account ---------------- */
+let PRODUCTS = null;
+const loadProducts = async () => PRODUCTS || (PRODUCTS = (await import('/studio/model.mjs')).PRODUCTS);
+const local = p => (p || '').replace(/^\/satin(?=\/|$)/, BASE);
+const designFile = (d, id, inline) => `/api/customer/design-file?design=${encodeURIComponent(d.id)}&id=${encodeURIComponent(id)}${inline ? '&inline=1' : ''}`;
+async function blobURL(url) { const r = await fetch(url, { credentials: 'same-origin' }); if (!r.ok) throw Error('Could not load the file.'); const b = await r.blob(); return new Promise((res, rej) => { const f = new FileReader(); f.onload = () => res(f.result); f.onerror = rej; f.readAsDataURL(b); }); }
+async function designsView(main) {
+  const [{ designs }, products] = await Promise.all([api('designs'), loadProducts().catch(() => [])]);
+  const prod = id => products.find(p => p.id === id);
+  const nameOf = d => { const p = prod(d.productId); return p ? (p.group === 'Apparel' ? p.name.split('|')[0].trim() : p.name) : d.productId; };
+  const card = d => { const img = d.thumb || d.mockup;
+    return `<article class="acct-design" data-design="${esc(d.id)}"><div class="acct-design-img">${img ? `<img src="${designFile(d, img, true)}" alt="${esc(nameOf(d))}" loading="lazy">` : '<span>—</span>'}</div>
+      <div class="acct-design-body"><h3 data-no-translate>${esc(nameOf(d))}</h3><p class="small">${day(d.updatedAt)} · ${d.approved ? chip('Approved', 'good') : chip('Draft', 'info')}</p>
+      <div class="acct-design-acts"><button class="btn sm" data-dact="order">${t('Order this design')}</button><button class="btn sm ghost" data-dact="edit">${t('Edit')}</button>
+      <button class="btn sm ghost" data-dact="pdf">${t('Download PDF')}</button>${img ? `<a class="btn sm ghost" href="${designFile(d, img, false)}" download="${esc(d.productId)}-mockup.png">${t('Mockup PNG')}</a>` : ''}<button class="btn sm ghost acct-danger" data-dact="delete">${t('Delete')}</button></div><div data-dmsg></div></div></article>`; };
+  main.innerHTML = `<div class="acct-block"><div class="acct-bh"><div><h2>${t('Saved designs')}</h2><p class="small">Designs you save or approve in Design Studio while signed in. Re-open them to edit, download them or order them any time.</p></div><a class="btn sm ghost" href="${BASE}/design-studio/">${t('Open Design Studio')}</a></div>
+    ${designs.length ? `<div class="acct-designs">${designs.map(card).join('')}</div>` : `<div class="acct-empty"><p>${t('No saved designs yet.')}</p><a class="btn sm" href="${BASE}/design-studio/">${t('Open Design Studio')}</a></div>`}</div>`;
+  main.querySelectorAll('[data-dact]').forEach(b => b.addEventListener('click', () => {
+    const el = b.closest('[data-design]'), d = designs.find(x => x.id === el.dataset.design), box = el.querySelector('[data-dmsg]'), p = prod(d.productId), act = b.dataset.dact;
+    busy(b, async () => {
+      try {
+        msgBox(box, '');
+        if (act === 'delete') { if (!confirm(t('Delete this design?'))) return; await api('designs/delete', { id: d.id }); el.remove(); return; }
+        if (act === 'pdf' && d.approved && d.prints.length) {
+          const { pdfFromRasters } = await import('/studio/pdf.mjs');
+          const pages = []; for (const f of d.prints) pages.push({ image: await blobURL(designFile(d, f.id, true)), widthIn: f.widthIn, heightIn: f.heightIn, bleedIn: f.bleedIn || 0, dpi: f.dpi });
+          const a = document.createElement('a'); a.href = URL.createObjectURL(await pdfFromRasters(pages, nameOf(d) + ' - Satin Graphic Design Studio')); a.download = d.productId + '-print-ready.pdf'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); return;
+        }
+        if (!p) throw Error('This product is no longer available in Design Studio.');
+        const o = await api('designs/open', { id: d.id }); // brings the design (and its files) into this browser's studio session
+        const studio = (extra) => local('/satin/design-studio/') + '?' + new URLSearchParams({ product: o.productId, designId: o.id, ...extra });
+        if (act === 'edit') location.assign(studio({}));
+        else if (act === 'pdf') location.assign(studio({ export: 'pdf' }));
+        else if (act === 'order') {
+          if (!o.approved) { location.assign(studio({ review: '1' })); return; }
+          const u = new URL(local(p.path).replace(/\/?$/, '/'), location.origin); u.searchParams.set('designId', o.id); if (d.values && Object.keys(d.values).length) u.searchParams.set('values', JSON.stringify(d.values)); location.assign(u.pathname + u.search);
+        }
+      } catch (e) { msgBox(box, e.message); }
+    });
   }));
 }
 function profileView(main) {

@@ -1,0 +1,81 @@
+/* Shared by full-dark looks: Carbon Studio (always) and Playful Labs (in the visitor's dark mode, imported with a media query).
+   Several stylesheets (configurators in /studio/designer.css, /checkout/checkout.css, batch.css, services.css, portfolio…)
+   hard-code white surfaces and dark text; on a dark page those become unreadable. These rules repaint them from tokens:
+     --ds-surface option cards · --ds-field inputs / panels · --ds-field-line their borders · --ds-line dividers · --ds-chip small chips
+     --ds-sel-bg / --ds-sel-ink / --ds-sel-line selected choices · --ds-hover-line · --ds-glass(-line) cards · --ds-tint notice band
+   Appearance only. */
+html:not([data-style="classic"]){
+  --ds-surface:color-mix(in srgb,var(--card) 92%,#fff);--ds-field:var(--bg-2);--ds-field-line:color-mix(in srgb,var(--line) 80%,#fff);
+  --ds-line:var(--line);--ds-chip:var(--bg-3);
+  --ds-sel-bg:var(--accent-soft);--ds-sel-ink:var(--vv-accent-ink);--ds-sel-line:var(--accent);--ds-hover-line:color-mix(in srgb,var(--accent) 50%,transparent);
+  --ds-glass:var(--card);--ds-glass-line:var(--line);--ds-tint:color-mix(in srgb,var(--accent) 16%,var(--card));
+}
+html:not([data-style="classic"]) select option{background:var(--card);color:var(--ink)}
+/* ---------- forms, configurators, summaries ---------- */
+html:not([data-style="classic"]) :is(main,.modal) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){background-color:var(--ds-field);color:var(--ink);border-color:var(--ds-field-line)}
+html:not([data-style="classic"]) :is(main,.modal) :is(input,textarea)::placeholder{color:var(--mut)}
+html:not([data-style="classic"]) .rule-cfg .rule-summary{background:var(--card);border-color:var(--line);color:var(--ink)}
+html:not([data-style="classic"]) .rule-cfg .rule-summary .product-order-choices>div>:last-child{color:var(--ink)}
+
+/* ---------- configurators & request forms (several rules there hard-code white) ---------- */
+html:not([data-style="classic"]) .rule-cfg{background:transparent}
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-content,.rule-cfg .quantity-presets button,.rule-cfg .product-check-card,.rule-cfg .artwork-options label,.reference-choice>span,.garment-size-grid label,.service-checkboxes label,.room-pick,.glass-guide-item,.wall-steps li,.tpl-steps li,.shop-info,.shop-filter-list,.bag-feat,.art-check,.acct-sbtn,.review-carousel,.review-avatar,.cs-label){background:var(--ds-surface);border-color:var(--ds-field-line);color:var(--ink)}
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-card,.rule-cfg .quantity-presets button,.room-pick,.reference-choice>span):hover :is(.product-option-content){border-color:var(--ds-hover-line)}
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-card input:checked+.product-option-content,.rule-cfg .quantity-presets button[aria-pressed=true],.rule-cfg .artwork-options label:has(input:checked),.reference-choice:has(input:checked)>span,.room-pick[aria-pressed=true],.service-checkboxes label:has(input:checked)){background:var(--ds-sel-bg);border-color:var(--ds-sel-line);color:var(--ds-sel-ink);box-shadow:inset 0 0 0 1px var(--ds-sel-line)}
+html:not([data-style="classic"]) :is(.rule-cfg .product-number-field input,.service-request :is(input,textarea,select),.garment-size-grid input,.portfolio-filters :is(input,select)){background:var(--ds-field);color:var(--ink);border-color:var(--ds-field-line)}
+html:not([data-style="classic"]) .garment-size-grid span{background:var(--ds-chip);color:var(--ink-2)}
+html:not([data-style="classic"]) :is(.rule-artwork,.reference-cfg .rule-artwork,.artwork-consent,.apparel-upload-help,.request-summary,.terms-check,.sum-extras){background:var(--ds-field)!important;border-color:var(--ds-line);color:var(--ink-2)}
+html:not([data-style="classic"]) :is(.rule-artwork,.artwork-consent,.apparel-upload-help) :is(a,b,strong,label,legend,h3,h4){color:var(--ink)}
+html:not([data-style="classic"]) .rule-artwork a{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :is(.tint-legal,.booking-notice,.art-check.warn,.art-resp,.acct-chip.warn){background:rgb(255 190 70/.1);color:#ffd9a0;border-color:rgb(255 190 70/.3)}
+html:not([data-style="classic"]) .acct-chip.info{background:var(--ds-sel-bg);color:var(--ds-sel-ink)}
+html:not([data-style="classic"]) :is(.tint-shortcut,.detail-plan.featured){background:linear-gradient(135deg,var(--ds-tint),var(--card));border:1px solid var(--ds-glass-line);color:var(--ink)}
+html:not([data-style="classic"]) .process-line{background:var(--ds-line)}
+html:not([data-style="classic"]) .service-image{background:var(--ds-field)}
+html:not([data-style="classic"]) .service-image figcaption{background:color-mix(in srgb,var(--bg) 85%,transparent);color:var(--ink)}
+html:not([data-style="classic"]) :is(.portfolio-intro,.portfolio-filters,.portfolio-related){background:var(--ds-field);color:var(--ink)}
+html:not([data-style="classic"]) .portfolio-card{background:var(--ds-glass);border-color:var(--ds-glass-line);color:var(--ink)}
+html:not([data-style="classic"]) :is(.portfolio-tags span,.portfolio-categories small,.portfolio-pagination>a){background:var(--ds-chip);color:var(--ink-2)}
+html:not([data-style="classic"]) .ps-nav{background:color-mix(in srgb,var(--card) 90%,transparent);color:#fff}
+html:not([data-style="classic"]) input[type=file]::file-selector-button{background:var(--ds-chip);color:#fff;border:1px solid var(--ds-field-line);border-radius:8px}
+
+/* text colours that other stylesheets hard-code for a light page */
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-content,.rule-cfg .quantity-presets button,.rule-cfg .product-number-field input,.rule-cfg .product-order-choices strong,.room-pick,.process-waypoints .active,.shop-trust li,.product-tabs [aria-selected=true],.ap-nav,.ap-zoom-hint,.acct-sbtn,.portfolio-categories a[aria-current],.portfolio-card,.reference-choice>span){color:var(--ink)}
+html:not([data-style="classic"]) :is(.rule-cfg .product-option-group legend,.rule-cfg .product-number-field,.rule-cfg .rule-summary>h3,.rule-cfg .rule-summary>.sum-body>h3,.rule-cfg .product-order-total>span,.rule-cfg .product-order-choices>div,.rule-cfg .rule-artwork h4,.video-copy .eyebrow,.review-person div span,.process-index,.order-notes em,.art-thumb.doc,.zeus-tabs button,.shop-info-tabs button,.shop-filter-list legend,.product-tabs [role=tab],.garment-colours legend b,.portfolio-intro-top p,.portfolio-categories a,.portfolio-tags span,.portfolio-project-top p,.reference-choice small){color:var(--mut)}
+html:not([data-style="classic"]) :is(.video-copy .lede,.bag-feat p,.glass-guide-item p,.wall-steps p,.tpl-steps p){color:var(--ink-2)}
+html:not([data-style="classic"]) .rule-cfg .product-order-choices>div>:first-child{color:var(--mut)}
+html:not([data-style="classic"]) :is(.rule-cfg [data-price-error],.ap-summary [data-price-error],.acct-msg.err,.acct-chip.bad){color:#ff8a9a}
+html:not([data-style="classic"]) :is(.request-status.success,.acct-msg.ok,.acct-chip.good,.acct-steps li.now>span){color:#7fe0b0}
+html:not([data-style="classic"]) :is(.acct-msg.err,.acct-chip.bad){background:rgb(255 84 104/.12)}
+html:not([data-style="classic"]) :is(.acct-msg.ok,.acct-chip.good){background:rgb(76 195 138/.12)}
+html:not([data-style="classic"]) :is(.ap-nav,.ap-zoom-hint){background:color-mix(in srgb,var(--card) 85%,transparent);color:#fff}
+html:not([data-style="classic"]) .portfolio-view{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .apparel-benefits span{color:var(--ds-sel-ink)}
+
+/* ---------- checkout (its own stylesheet hard-codes a light page) ---------- */
+html:not([data-style="classic"]) .checkout-wrap{--muted:var(--mut);--line:var(--ds-line);color:var(--ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps,.panel,.summary,.quiet,.login-options button,.pay-card,.item-tabs button,.payment-options button){background:var(--card);border-color:var(--ds-line);color:var(--ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg);color:var(--ds-sel-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.upload-zone,.hint,.checks summary,.check-row,.pay-review,.proof-frame){background:var(--ds-field);border-color:var(--ds-line);color:var(--ink-2)}
+html:not([data-style="classic"]) .checkout-wrap :is(.field input,.field select){background:var(--ds-field);color:var(--ink);border-color:var(--ds-field-line)}
+html:not([data-style="classic"]) .checkout-wrap :is(.btn.secondary){background:transparent;color:#fff;border-color:var(--ds-field-line)}
+html:not([data-style="classic"]) .checkout-wrap :is(.guide-list,.specs){color:var(--ink-2)}
+html:not([data-style="classic"]) .checkout-wrap :is(.specs strong,.payment-options button,.card-brands i){color:var(--ink)}
+html:not([data-style="classic"]) .checkout-wrap .card-brands i{background:var(--ds-chip)}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap .alert{background:rgb(255 190 70/.1);color:#ffd9a0}
+html:not([data-style="classic"]) .checkout-wrap .alert.error{background:rgb(255 84 104/.12);color:#ffb3bd}
+html:not([data-style="classic"]) .checkout-wrap .alert.success{background:rgb(76 195 138/.12);color:#9fe3c0}
+html:not([data-style="classic"]) :is(.checkout-wrap .delete,.checkout-wrap .pay-error,.checkout-wrap .coupon-error){color:#ff8a9a}
+html:not([data-style="classic"]) .checkout-wrap .summary-total.discount strong{color:#7fe0b0}
+html:not([data-style="classic"]) .checkout-wrap .under-review{color:#ffd28a}
+html:not([data-style="classic"]) .checkout-footer{background:var(--vv-ftr-bg);color:var(--ink-2);border-top-color:var(--line)}
+html:not([data-style="classic"]) .checkout-footer a{color:var(--ink)}
+html:not([data-style="classic"]) body:has(>.checkout-wrap,>main.checkout-wrap) dialog{background:var(--card);color:var(--ink)}
+
+/* client / material logos are dark artwork: show them on light chips */
+html:not([data-style="classic"]) .brand-logo img{background:#eceef2;border-radius:14px;padding:10px 14px;box-sizing:border-box;opacity:1}
+
+/* ---------- cookie banner ---------- */
+html:not([data-style="classic"]) .consent-banner{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:0 30px 60px -20px rgb(0 0 0/.8)}
+html:not([data-style="classic"]) .acct-switch button[aria-selected=true]{background:var(--ds-chip);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ds-field-line)}
