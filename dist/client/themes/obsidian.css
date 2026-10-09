@@ -1,0 +1,108 @@
+/* Theme: Obsidian — true-black pages with neon teal / cyan accents, glowing edges and crisp white type.
+   Dark in both the visitor's light and dark mode. Used with /themes/_base-modern.css. Pure appearance. */
+@import url("/themes/_dark-surfaces.css");
+/* same dark palette in the visitor's light mode, dark mode and the forced data-theme modes */
+:where(html:not([data-style="classic"])):root,
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#000000;--bg-2:#07090a;--bg-3:#101416;--card:#0b0e10;
+  --ink:#ffffff;--ink-2:#c4d0d4;--mut:#8b999e;--line:#1d2629;--line-soft:#12181a;
+  --btn:#00e5ff;--btn-ink:#001417;
+  --accent:#00e5ff;--accent-2:#14f1c6;--accent-soft:rgb(0 229 255/.12);
+  --good:#14f1c6;--good-soft:#06231d;--glass:rgb(0 0 0/.8);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#000000;--bg-2:#07090a;--bg-3:#101416;--card:#0b0e10;
+  --ink:#ffffff;--ink-2:#c4d0d4;--mut:#8b999e;--line:#1d2629;--line-soft:#12181a;
+  --btn:#00e5ff;--btn-ink:#001417;
+  --accent:#00e5ff;--accent-2:#14f1c6;--accent-soft:rgb(0 229 255/.12);
+  --good:#14f1c6;--good-soft:#06231d;--glass:rgb(0 0 0/.8);
+  }
+}
+html:not([data-style="classic"]){
+  --vv-display:Manrope,Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#000000;--vv-navy-2:#061214;--vv-cta-end:#003a40;
+  --vv-glow:rgb(0 229 255/.2);--vv-glow-2:rgb(20 241 198/.12);
+  --vv-shadow-sm:0 1px 0 rgb(255 255 255/.04) inset,0 18px 40px -22px rgb(0 0 0/.9);
+  --vv-shadow-md:0 1px 0 rgb(255 255 255/.05) inset,0 28px 60px -26px rgb(0 0 0/.9);
+  --vv-shadow-lg:0 0 0 1px rgb(0 229 255/.28),0 30px 70px -30px rgb(0 229 255/.35);
+  --vv-ring:0 0 0 4px rgb(0 229 255/.28);
+  --vv-accent-ink:#3beeff;--vv-on-accent:#001417;--vv-hot:#14f1c6;--vv-num-end:#14f1c6;
+  --vv-hdr-bg:rgb(0 0 0/.82);
+  --vv-wraps-bg:#00e5ff;--vv-wraps-ink:#001417;
+  --vv-ftr-bg:#000000;--vv-ftr-ink:#b7c4c8;--vv-ftr-mut:#7c8a8f;--vv-ftr-line:#142023;
+  --vv-ftr-field:#070b0c;--vv-ftr-field-line:#1d2b2e;--vv-ftr-btn-line:#24363a;--vv-ftr-glow:rgb(0 229 255/.14);--vv-chat:#00a9bd;
+  --vv-radius:18px;--vv-btn-r:999px;--vv-sel-line:#00e5ff;
+  --ds-surface:#0b1012;--ds-field:#070a0b;--ds-field-line:#22302f;--ds-line:#1d2629;--ds-chip:#121a1c;
+  --ds-sel-bg:rgb(0 229 255/.12);--ds-sel-ink:#7ff4ff;--ds-sel-line:#00e5ff;--ds-hover-line:rgb(0 229 255/.5);
+  --ds-glass:rgb(11 14 16/.85);--ds-glass-line:rgb(0 229 255/.14);--ds-tint:#032a2f;
+  background:var(--bg);color-scheme:dark;
+}
+
+/* the logo files have a white background: invert them and let "screen" drop the (now black) box onto the dark page */
+html:not([data-style="classic"]) :is(.logo img,.dlogo,.flogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html:not([data-style="classic"]) body{background:var(--bg);color:var(--ink)}
+/* home page scenes that hard-code light backgrounds */
+html:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+/* the scroll video is filmed on white: keep it inside a light rounded frame */
+html:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 40px 90px -30px rgb(0 0 0/.85),0 0 0 1px rgb(255 255 255/.08)}
+html:not([data-style="classic"]) .review-photo{background:#eef0f3!important}
+html:not([data-style="classic"]) .managed-product-gallery img{background:#f2f3f5}
+html:not([data-style="classic"]) .hdr .language-control select{color-scheme:dark}
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:var(--vv-chat-ink,#fff)}
+
+/* ---------- type ---------- */
+html:not([data-style="classic"]) :is(.d1,.d2,.hhero h1,.phero h1){font-weight:800}
+html:not([data-style="classic"]) .eyebrow{color:var(--vv-accent-ink);letter-spacing:.24em}
+html:not([data-style="classic"]) .eyebrow::before{background:linear-gradient(90deg,#00e5ff,#14f1c6);box-shadow:0 0 10px #00e5ff}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,#fff 30%,#00e5ff 70%,#14f1c6);-webkit-background-clip:text;background-clip:text;color:transparent}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--accent);-webkit-text-fill-color:var(--accent);text-shadow:0 0 28px rgb(0 229 255/.45)}
+html:not([data-style="classic"]) ::selection{background:rgb(0 229 255/.35);color:#fff}
+
+/* ---------- header ---------- */
+html:not([data-style="classic"]) .hdr{border-bottom-color:rgb(0 229 255/.12);box-shadow:0 1px 0 rgb(0 229 255/.06),0 20px 40px -30px rgb(0 0 0/.9)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){color:#d9e4e7}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{background:rgb(0 229 255/.1);color:#7ff4ff}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{color:#7ff4ff;box-shadow:inset 0 0 0 1px rgb(0 229 255/.4)}
+html:not([data-style="classic"]) .hdr .icon-btn,html:not([data-style="classic"]) .language-control select{background-color:rgb(255 255 255/.04);border-color:rgb(255 255 255/.1);color:#fff}
+html:not([data-style="classic"]) .mega{background:#050708;border-top-color:rgb(0 229 255/.1);box-shadow:0 40px 80px -30px rgb(0 0 0/.95)}
+html:not([data-style="classic"]) .mega .promo{background:linear-gradient(160deg,#032a2f,#050708);border:1px solid rgb(0 229 255/.16)}
+html:not([data-style="classic"]) .drawer .panel{background:#050708}
+
+/* ---------- heroes: neon glow + fine grid ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{background:radial-gradient(42% 52% at 85% 15%,rgb(0 229 255/.22),transparent 70%),radial-gradient(32% 42% at 5% 0%,rgb(20 241 198/.14),transparent 70%)}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{opacity:.7;background-image:linear-gradient(rgb(0 229 255/.05) 1px,transparent 1px),linear-gradient(90deg,rgb(0 229 255/.05) 1px,transparent 1px)}
+html:not([data-style="classic"]) .phero .art{filter:drop-shadow(0 40px 60px rgb(0 0 0/.8))}
+html:not([data-style="classic"]) .sec.alt{background:linear-gradient(180deg,#05090a,#000)}
+
+/* ---------- cards: black glass with cyan edge on hover ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){background:var(--ds-glass);border:1px solid var(--ds-glass-line)}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{border-color:rgb(0 229 255/.55);box-shadow:var(--vv-shadow-lg)}
+html:not([data-style="classic"]) main details{background:var(--ds-glass);border-color:var(--ds-glass-line)}
+
+/* ---------- buttons: neon cyan pills with black ink ---------- */
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:linear-gradient(135deg,#00e5ff,#14f1c6);color:#001417;box-shadow:0 0 0 1px rgb(0 229 255/.4),0 12px 34px -10px rgb(0 229 255/.6)}
+html:not([data-style="classic"]) .btn.ghost{background:transparent;border-color:rgb(0 229 255/.35);color:#e6fdff}
+html:not([data-style="classic"]) .btn.ghost:hover{background:rgb(0 229 255/.08);border-color:#00e5ff;color:#fff}
+html:not([data-style="classic"]) .btn:not(.ghost):not(.sm){box-shadow:0 14px 30px -14px rgb(0 0 0/.9)}
+
+/* ---------- call-to-action ---------- */
+html:not([data-style="classic"]) .cta{background:linear-gradient(135deg,#000 0%,#031a1d 60%,#003a40 100%);border:1px solid rgb(0 229 255/.2)}
+html:not([data-style="classic"]) .cta::before{background:radial-gradient(circle,rgb(0 229 255/.45),transparent 65%)}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#00e5ff;color:#001417}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#fff;color:#001417}
+
+/* ---------- footer ---------- */
+html:not([data-style="classic"]) .ftr{border-top:1px solid #0c1517}
+html:not([data-style="classic"]) .ftr::before{height:1px;background:linear-gradient(90deg,transparent,#00e5ff,#14f1c6,transparent);box-shadow:0 0 14px #00e5ff}
+html:not([data-style="classic"]) .ftr .news .btn{background:#00e5ff;color:#001417}
+html:not([data-style="classic"]) .ftr .col a:hover{color:#7ff4ff}
+
+/* ---------- shared contrast hooks: apparel accents and checkout highlights follow the readable accent ---------- */
+html:not([data-style="classic"]) .ap-sec{--ap-accent:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--vv-accent-ink))}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn):not(.delete){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--ink))}

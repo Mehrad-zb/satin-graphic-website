@@ -150,3 +150,126 @@ button.card.body-style{text-align:left;font:inherit;color:inherit;cursor:pointer
 /* dark mode: the configurator summary card used a fixed white background (text became unreadable) */
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .rule-cfg .rule-summary{background:var(--card);border-color:var(--line);color:var(--ink)}:root:not([data-theme="light"]) .rule-cfg .rule-summary .product-order-choices>div>:last-child{color:var(--ink)}}
 :root[data-theme="dark"] .rule-cfg .rule-summary{background:var(--card);border-color:var(--line);color:var(--ink)}:root[data-theme="dark"] .rule-cfg .rule-summary .product-order-choices>div>:last-child{color:var(--ink)}
+/* ---------- Videography page (/videography, all languages): layout built by videographyPage() in /batch-pages.mjs.
+   Scoped with :has() as well as the .vidp class so the hero is styled before the script runs (no layout jump). Theme tokens only. ---------- */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero{padding-block:clamp(28px,4vw,56px) clamp(48px,5.5vw,80px)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .split{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .d1{font-size:clamp(40px,4.6vw,68px);line-height:1.04;margin-top:16px;max-width:13ch}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .lede{margin:22px 0 0;max-width:54ch;font-size:clamp(16px,1.3vw,18px);line-height:1.65}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-actions{margin-top:32px;gap:12px;width:auto}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-actions .btn{min-height:50px;padding-inline:26px;flex:0 0 auto}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-image{border-radius:24px;box-shadow:0 30px 60px -30px rgb(15 20 30/.45);aspect-ratio:4/3.3;width:100%;max-width:100%}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-image img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;object-position:62% 50%}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner{display:flex;align-items:center;gap:16px;margin-top:32px;padding:12px 14px 12px 12px;max-width:470px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);text-decoration:none;box-shadow:0 10px 26px -18px rgb(15 20 30/.35);transition:border-color .2s,transform .2s,box-shadow .2s}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));transform:translateY(-2px);box-shadow:0 16px 34px -18px rgb(15 20 30/.4)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-logo{flex:none;display:grid;place-items:center;width:66px;height:66px;border-radius:16px;background:#0b0b0d;box-shadow:inset 0 0 0 1px rgb(255 255 255/.1)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-logo img{display:block;height:50px;width:auto;border-radius:0!important;transform:none!important}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt{display:grid;gap:3px;min-width:0;line-height:1.25}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt small{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt b{font-size:19px;font-weight:850;letter-spacing:-.01em;color:var(--ink)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt span{font-size:13.5px;color:var(--mut)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-go{flex:none;margin-inline-start:auto;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);font-size:16px;color:var(--ink)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner:hover .zeus-partner-go{background:var(--btn);border-color:var(--btn);color:var(--btn-ink)}
+html[dir=rtl] :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-go{transform:scaleX(-1)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) :is(.lede,.vid-cta p,.faq details>div) b{font-weight:800;color:inherit}
+
+/* services */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-services{background:var(--bg-2)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-services .sec-head .lede{max-width:60ch}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,1.6vw,22px)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc{display:flex;flex-direction:column;gap:10px;padding:clamp(22px,2.2vw,30px);border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink);transition:border-color .2s,transform .25s,box-shadow .25s}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line));transform:translateY(-3px);box-shadow:0 18px 40px -26px rgb(15 20 30/.45)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-ic{display:grid;place-items:center;width:50px;height:50px;border-radius:14px;margin-bottom:8px;background:var(--accent-soft);color:var(--vv-accent-ink,var(--accent))}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-ic svg{width:26px;height:26px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc h3{margin:0;font-size:19px;line-height:1.25;color:var(--ink)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.6}
+
+/* process (original "What is included" section) */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-features{gap:clamp(14px,1.6vw,22px);counter-reset:vidstep}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature{position:relative;padding:clamp(24px,2.4vw,32px);border:1px solid var(--line);border-radius:22px;background:var(--card)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature .step-num{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 10px;margin-bottom:20px;border-radius:999px;background:var(--btn);color:var(--btn-ink);font-size:15px;font-weight:800}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature h3{font-size:21px;margin:0 0 10px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature p{margin:0;color:var(--ink-2);line-height:1.65}
+
+/* price plans (Zeus Frames) */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-plans .zeus-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,340px);gap:clamp(24px,4vw,64px);align-items:end;margin-bottom:clamp(26px,3vw,40px)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-plans .zeus-title{margin-top:14px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-plans .zeus-title b{font-weight:900}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-plans .zeus-head .lede{margin:16px 0 0;max-width:62ch;line-height:1.65}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card{display:flex;align-items:center;gap:18px;padding:16px 20px 16px 16px;border-radius:22px;background:#0b0b0d;color:#fff;text-decoration:none;box-shadow:0 24px 50px -28px rgb(0 0 0/.65),inset 0 0 0 1px rgb(255 255 255/.08);transition:transform .2s,box-shadow .2s}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card:hover{transform:translateY(-2px);box-shadow:0 30px 60px -28px rgb(0 0 0/.75),inset 0 0 0 1px rgb(255 255 255/.18)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card .zeus-logo.lg{width:84px;height:96px;background:transparent;box-shadow:none;border-inline-end:1px solid rgb(255 255 255/.14);border-radius:0;padding-inline-end:16px;box-sizing:content-box}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card .zeus-logo.lg img{height:86px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card span:not(.zeus-logo){display:grid;gap:4px;line-height:1.25}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a9abb3}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card b{font-size:21px;font-weight:850;color:#fff}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card em{font-style:normal;font-size:13.5px;color:#d7d9de;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgb(255 255 255/.3)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs{display:flex;flex-wrap:nowrap;gap:4px;width:max-content;max-width:100%;margin:0 0 clamp(20px,2.4vw,30px);padding:5px;border:1px solid var(--line);border-radius:999px;background:var(--card);overflow-x:auto;scrollbar-width:none}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs::-webkit-scrollbar{display:none}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs button{flex:none;margin:0;padding:10px 18px;border:0;border-radius:999px;background:transparent;color:var(--ink-2);font:inherit;font-size:14.5px;font-weight:700;white-space:nowrap;cursor:pointer;transition:background .2s,color .2s}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs button:hover{color:var(--ink);background:var(--bg-2)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs button[aria-selected=true]{background:var(--btn);color:var(--btn-ink);border:0}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,1.6vw,22px);margin:0;align-items:stretch}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans.n1{grid-template-columns:minmax(0,380px)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans.n2{grid-template-columns:repeat(2,minmax(0,380px))}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans[hidden]{display:none!important}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan{position:relative;display:flex;flex-direction:column;gap:10px;padding:clamp(24px,2.4vw,32px);border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan.pop{border:2px solid var(--accent);box-shadow:0 26px 56px -32px color-mix(in srgb,var(--accent) 65%,transparent)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-pop{position:absolute;top:-13px;inset-inline-start:24px;padding:4px 12px;border-radius:999px;background:var(--accent);color:var(--vv-on-accent,#fff);font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan h3{margin:0;font-size:19px;color:var(--ink)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan .plan-price{font-size:clamp(28px,2.6vw,36px);font-weight:850;letter-spacing:-.02em;color:var(--ink);line-height:1.1}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan ul{list-style:none;flex:1;margin:8px 0 14px;padding:16px 0 0;border-top:1px solid var(--line);display:grid;gap:10px;align-content:start}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan li{position:relative;margin:0;padding-inline-start:26px;font-size:15px;line-height:1.45;color:var(--ink-2)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan li::before{content:"✓";position:absolute;inset-inline-start:0;top:2px;display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--accent-soft);color:var(--vv-accent-ink,var(--accent));font-size:10.5px;font-weight:900;line-height:1}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plan .btn{width:100%;min-height:48px;justify-content:center}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-foot{margin:22px 0 0;color:var(--mut)}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-foot a{color:var(--ink)}
+
+/* FAQ: one readable column */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-faq .faq{grid-template-columns:minmax(0,1fr);max-width:860px;gap:0}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-faq .faq details{margin-block:0 12px}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-faq .faq details>div{line-height:1.65}
+
+/* closing call to action */
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-cta-sec{padding-top:0}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-cta{position:relative;isolation:isolate}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-cta>div:first-child{position:relative;z-index:1}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-cta p{max-width:58ch}
+:is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-cta .acts{z-index:1}
+
+@media (max-width:1000px){
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans{grid-template-columns:repeat(2,minmax(0,1fr))}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-plans .zeus-head{grid-template-columns:minmax(0,1fr);align-items:start}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card{max-width:420px}
+}
+@media (max-width:800px){
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero{padding-block:20px 56px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .split{grid-template-columns:minmax(0,1fr);gap:32px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .d1{max-width:none}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-image{aspect-ratio:4/3}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner{max-width:none}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-features{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-grid,:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans,:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans.n1,:is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-plans.n2{grid-template-columns:minmax(0,1fr)}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-hero .service-actions .btn{flex:1 1 140px;padding-inline:16px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner{gap:12px;padding:10px 12px 10px 10px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-logo{width:56px;height:56px;border-radius:14px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-logo img{height:42px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt b{font-size:17px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-partner-txt span{font-size:12.5px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card{gap:14px;padding:14px 16px 14px 12px;max-width:none}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card .zeus-logo.lg{width:62px;height:76px;padding-inline-end:12px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-card .zeus-logo.lg img{height:70px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:auto;border-radius:20px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-tabs button{padding:10px 8px;font-size:14px;white-space:normal;border-radius:14px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:16px;row-gap:4px;padding:18px;border-radius:18px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-ic{grid-row:span 2;width:44px;height:44px;margin:0;border-radius:12px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc-ic svg{width:23px;height:23px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc h3{font-size:17px;align-self:end}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-svc p{font-size:14.5px}
+  :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature .step-num{min-width:38px;height:38px;margin-bottom:14px}
+}
+@media (prefers-reduced-motion:reduce){:is(.vidp,.page-enter:has(form[data-service-key="video"])) :is(.zeus-partner,.zeus-card,.vid-svc){transition:none;transform:none!important}}

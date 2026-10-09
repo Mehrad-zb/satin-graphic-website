@@ -1,0 +1,164 @@
+/* Theme: Cupertino — inspired by Apple's product pages: white and #f5f5f7 tiles, near-black type in the system
+   font stack, huge tight-tracked headlines, a thin translucent blurred header, blue pill links and buttons,
+   black full-bleed call-to-action tiles and lots of whitespace. No Apple fonts or artwork are loaded.
+   Used with /themes/_base-modern.css. Pure appearance. */
+@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f5f5f7;--bg-3:#e8e8ed;--card:#ffffff;
+    --ink:#1d1d1f;--ink-2:#424245;--mut:#6e6e73;--line:#d2d2d7;--line-soft:#e8e8ed;
+    --btn:#0071e3;--btn-ink:#ffffff;
+    --accent:#0071e3;--accent-2:#2997ff;--accent-soft:#e8f1fc;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f5f5f7;--bg-3:#e8e8ed;--card:#ffffff;
+    --ink:#1d1d1f;--ink-2:#424245;--mut:#6e6e73;--line:#d2d2d7;--line-soft:#e8e8ed;
+    --btn:#0071e3;--btn-ink:#ffffff;
+    --accent:#0071e3;--accent-2:#2997ff;--accent-soft:#e8f1fc;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#000000;--bg-2:#101012;--bg-3:#1d1d1f;--card:#1c1c1e;--ink:#f5f5f7;--ink-2:#d2d2d7;--mut:#a1a1a6;--line:#38383d;--line-soft:#232326;
+    --btn:#0a84ff;--btn-ink:#ffffff;--accent:#0a84ff;--accent-2:#2997ff;--accent-soft:rgb(41 151 255/.16);--vv-accent-ink:#2997ff;--vv-on-accent:#ffffff;--vv-num-end:#2997ff;
+    --vv-hdr-bg:rgb(22 22 23/.8);--cu-tile:#1c1c1e;--vv-ftr-bg:#101012;--vv-wraps-bg:#f5f5f7;--vv-wraps-ink:#1d1d1f;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#000000;--bg-2:#101012;--bg-3:#1d1d1f;--card:#1c1c1e;--ink:#f5f5f7;--ink-2:#d2d2d7;--mut:#a1a1a6;--line:#38383d;--line-soft:#232326;
+    --btn:#0a84ff;--btn-ink:#ffffff;--accent:#0a84ff;--accent-2:#2997ff;--accent-soft:rgb(41 151 255/.16);--vv-accent-ink:#2997ff;--vv-on-accent:#ffffff;--vv-num-end:#2997ff;
+    --vv-hdr-bg:rgb(22 22 23/.8);--cu-tile:#1c1c1e;--vv-ftr-bg:#101012;--vv-wraps-bg:#f5f5f7;--vv-wraps-ink:#1d1d1f;
+}
+html:not([data-style="classic"]){
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
+  --vv-display:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
+  --vv-navy:#000000;--vv-navy-2:#1d1d1f;--vv-cta-end:#000000;
+  --vv-accent-ink:#0066cc;--vv-on-accent:#ffffff;--vv-hot:#0071e3;--vv-num-end:#1d1d1f;
+  --vv-hdr-bg:rgb(255 255 255/.72);
+  --vv-wraps-bg:#1d1d1f;--vv-wraps-ink:#ffffff;
+  --vv-ftr-bg:#f5f5f7;--vv-ftr-ink:#424245;--vv-ftr-head:#1d1d1f;--vv-ftr-mut:#6e6e73;--vv-ftr-line:#d2d2d7;
+  --vv-ftr-field:#ffffff;--vv-ftr-field-line:#d2d2d7;--vv-ftr-btn-line:#d2d2d7;--vv-ftr-glow:transparent;--vv-chat:#0071e3;
+  --vv-shadow-sm:none;--vv-shadow-md:0 4px 24px rgb(0 0 0/.06);--vv-shadow-lg:0 12px 40px rgb(0 0 0/.1);
+  --vv-ring:0 0 0 4px rgb(0 113 227/.25);--vv-radius:22px;--vv-btn-r:980px;--vv-sel-line:#0071e3;
+  --cu-tile:#f5f5f7;
+}
+html:not([data-style="classic"]):not([dir=rtl]) body{font-family:var(--font)}
+html:not([data-style="classic"]):not([dir=rtl]) body :is(button,input,select,textarea,.btn){font-family:var(--font)}
+
+/* ---------- type: huge, tight, semibold ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,h3,.d1,.d2,.d3){letter-spacing:-.022em}
+html:not([data-style="classic"]) :is(.d1,.hhero h1,.phero h1){font-weight:700;letter-spacing:-.035em}
+html:not([data-style="classic"]) .d1{font-size:clamp(44px,7vw,96px);line-height:1.02}
+html:not([data-style="classic"]) .d2{font-size:clamp(32px,4.6vw,64px);line-height:1.05;font-weight:700;letter-spacing:-.03em}
+html:not([data-style="classic"]) :is(h3,.d3){font-weight:600}
+html:not([data-style="classic"]) .eyebrow{color:var(--mut);font-weight:600;letter-spacing:.02em;text-transform:none;font-size:17px}
+html:not([data-style="classic"]) .eyebrow::before{display:none}
+html:not([data-style="classic"]) .lede{color:var(--ink-2);font-size:clamp(17px,1.5vw,21px);line-height:1.45;letter-spacing:-.01em}
+html:not([data-style="classic"]) .sec-head{text-align:center;margin-inline:auto;align-items:center}
+html:not([data-style="classic"]) .sec-head :is(.lede,p){margin-inline:auto}
+html:not([data-style="classic"]) .sec-head.row{text-align:start;align-items:flex-end}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--ink)}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--vv-accent-ink);-webkit-text-fill-color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) main a:not(.btn):not(.card):not([class*=cms]):hover{text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- header: thin translucent glass ---------- */
+html:not([data-style="classic"]) .hdr{-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);box-shadow:none;border-bottom:1px solid rgb(0 0 0/.08)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){height:34px;min-height:34px;padding:0 12px;font-size:12.5px;font-weight:500;color:var(--ink);opacity:.85;background:transparent!important;box-shadow:none}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{opacity:1;color:var(--ink);background:transparent!important}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{background:var(--vv-wraps-bg)!important;color:var(--vv-wraps-ink)!important;opacity:1}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{color:var(--vv-accent-ink);box-shadow:none}
+html:not([data-style="classic"]) .hdr .icon-btn{background:transparent;border-color:transparent}
+html:not([data-style="classic"]) .language-control select{background-color:transparent;border-color:var(--line)}
+html:not([data-style="classic"]) .mega{background:var(--vv-hdr-bg);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);box-shadow:0 30px 50px -30px rgb(0 0 0/.25)}
+html:not([data-style="classic"]) .mega .promo{background:var(--cu-tile)}
+
+/* ---------- heroes: calm, centred-feeling, no mesh ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero)::before,html:not([data-style="classic"]) :is(.hhero,.phero)::after{display:none}
+html:not([data-style="classic"]) .phero .art{filter:none}
+html:not([data-style="classic"]) .sec.alt{background:var(--cu-tile)}
+html:not([data-style="classic"]) .sec{padding-block:clamp(72px,10vw,140px)}
+
+/* ---------- tiles & cards: soft grey tiles, no borders ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-color:transparent;background:var(--cu-tile);box-shadow:none;border-radius:24px}
+html:not([data-style="classic"]) .sec.alt :is(.card,.review-slide,.cms-card,.cms-rep-i){background:var(--card)}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{transform:scale(1.012);box-shadow:var(--vv-shadow-md);border-color:transparent}
+html:not([data-style="classic"]) a.card:hover img{transform:none}
+html:not([data-style="classic"]) main details{background:var(--cu-tile);border-color:transparent;border-radius:18px}
+html:not([data-style="classic"]) main details[open]{box-shadow:none;border-color:transparent}
+
+/* ---------- buttons: blue pills, flat ---------- */
+html:not([data-style="classic"]) .btn{font-weight:500;letter-spacing:-.01em;box-shadow:none!important}
+html:not([data-style="classic"]) .btn:hover{transform:none}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:var(--accent);color:#fff}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{background:#0077ed}
+html:not([data-style="classic"]) .btn.ghost{background:transparent;color:var(--vv-accent-ink);border:1px solid var(--accent);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:not([data-style="classic"]) .btn.ghost:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+html:not([data-style="classic"]) .badge{background:var(--ink);color:var(--bg)}
+
+/* ---------- call-to-action: black full-bleed tile ---------- */
+html:not([data-style="classic"]) .cta{background:#000;border-radius:28px;color:#f5f5f7;box-shadow:none}
+html:not([data-style="classic"]) .cta::before{display:none}
+html:not([data-style="classic"]) .cta :is(h2,.d2){color:#f5f5f7}
+html:not([data-style="classic"]) .cta p{color:#a1a1a6}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#0071e3;color:#fff}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#0077ed;color:#fff}
+html:not([data-style="classic"]) .cta .btn.ghost{color:#2997ff;border-color:#2997ff;background:transparent}
+
+/* ---------- footer: light grey, small type (dark in the visitor's dark mode) ---------- */
+html:not([data-style="classic"]) .ftr .col a{font-size:12.5px}
+html:not([data-style="classic"]) .ftr .news .btn{background:var(--accent);color:#fff}
+html:not([data-style="classic"]) .ftr .news .inp{background:var(--vv-ftr-field);border:1px solid var(--vv-ftr-field-line)}
+@media (prefers-color-scheme:light){
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::before,html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::after{display:none}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .col a:hover{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(.flogo,.logo img){filter:none;mix-blend-mode:multiply}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .btn.ghost{color:var(--vv-ftr-head);border-color:var(--vv-ftr-btn-line)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .news .inp{color:var(--vv-ftr-head)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
+}
+html[data-theme="light"]:not([data-style="classic"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr::before,html[data-theme="light"]:not([data-style="classic"]) .ftr::after{display:none}
+html[data-theme="light"]:not([data-style="classic"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .col a:hover{color:var(--vv-accent-ink)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr :is(.flogo,.logo img){filter:none;mix-blend-mode:multiply}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .btn.ghost{color:var(--vv-ftr-head);border-color:var(--vv-ftr-btn-line)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp{color:var(--vv-ftr-head)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
+
+/* dark mode: Apple-style true black with the logo inverted */
+@media (prefers-color-scheme:dark){
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .review-photo{background:#eef0f3!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .managed-product-gallery img{background:#f2f3f5}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.hdr .logo img,.dlogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html:not([data-style="classic"]):not([data-theme="light"]) .hdr{border-bottom-color:rgb(255 255 255/.1)}
+html:not([data-style="classic"]):not([data-theme="light"]) .cta{background:#1c1c1e}
+}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html[data-theme="dark"]:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+html[data-theme="dark"]:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html[data-theme="dark"]:not([data-style="classic"]) .review-photo{background:#eef0f3!important}
+html[data-theme="dark"]:not([data-style="classic"]) .managed-product-gallery img{background:#f2f3f5}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html[data-theme="dark"]:not([data-style="classic"]) .hdr{border-bottom-color:rgb(255 255 255/.1)}
+html[data-theme="dark"]:not([data-style="classic"]) .cta{background:#1c1c1e}
+
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
+@media (max-width:700px){
+  html:not([data-style="classic"]) .d1{font-size:clamp(40px,11vw,56px)}
+  html:not([data-style="classic"]) .d2{font-size:clamp(30px,8.5vw,42px)}
+  html:not([data-style="classic"]) .sec{padding-block:64px}
+  html:not([data-style="classic"]) .eyebrow{font-size:15px}
+}
+
+/* ---------- shared contrast hooks: apparel accents and checkout highlights follow the readable accent ---------- */
+html:not([data-style="classic"]) .ap-sec{--ap-accent:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--vv-accent-ink))}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn):not(.delete){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--ink))}

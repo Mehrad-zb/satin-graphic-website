@@ -58,3 +58,11 @@
   .summary-total{padding:6px 0}
   .summary-total.grand{margin-top:6px;padding-top:12px}
 }
+
+/* digital downloads on the payment confirmation (wrap designs, vehicle templates) */
+.digital-dl{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;text-align:left;border:1px solid var(--line,#e3e5ea);border-radius:14px;padding:14px 16px;margin:12px auto;max-width:620px;background:var(--surface,#fff)}
+.digital-dl>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.digital-dl span{font-size:13.5px;color:var(--muted,#5b6474);word-break:break-word}
+.digital-dl .btn{flex:none}
+.digital-wait{font-size:14px;color:var(--muted,#5b6474);max-width:260px}
+.digital-note{font-size:13.5px;color:var(--muted,#5b6474);max-width:620px;margin:8px auto 18px}

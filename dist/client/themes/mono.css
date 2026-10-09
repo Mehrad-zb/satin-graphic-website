@@ -1,0 +1,144 @@
+/* Theme: Mono — pure black & white editorial: serif display headlines, uppercase small labels, hairline rules,
+   square black buttons, flat bordered cards and a black footer. Inverted in the visitor's dark mode.
+   Used with /themes/_base-modern.css. Pure appearance (system serif fonts, nothing extra is downloaded). */
+@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f3f3f1;--bg-3:#e8e8e5;--card:#ffffff;
+    --ink:#000000;--ink-2:#222222;--mut:#555555;--line:#cfcfcc;--line-soft:#e6e6e3;
+    --btn:#000000;--btn-ink:#ffffff;
+    --accent:#000000;--accent-2:#444444;--accent-soft:#ededeb;
+    --mo-edge:#000000;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f3f3f1;--bg-3:#e8e8e5;--card:#ffffff;
+    --ink:#000000;--ink-2:#222222;--mut:#555555;--line:#cfcfcc;--line-soft:#e6e6e3;
+    --btn:#000000;--btn-ink:#ffffff;
+    --accent:#000000;--accent-2:#444444;--accent-soft:#ededeb;
+    --mo-edge:#000000;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#0a0a0a;--bg-2:#141414;--bg-3:#1f1f1f;--card:#0f0f0f;--ink:#ffffff;--ink-2:#dddddd;--mut:#a6a6a6;--line:#3a3a3a;--line-soft:#262626;
+    --btn:#ffffff;--btn-ink:#000000;--accent:#ffffff;--accent-2:#cccccc;--accent-soft:rgb(255 255 255/.1);--vv-accent-ink:#ffffff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
+    --mo-edge:#ffffff;--vv-wraps-bg:#ffffff;--vv-wraps-ink:#000000;--vv-ftr-bg:#000000;--vv-hdr-bg:rgb(10 10 10/.92);
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#0a0a0a;--bg-2:#141414;--bg-3:#1f1f1f;--card:#0f0f0f;--ink:#ffffff;--ink-2:#dddddd;--mut:#a6a6a6;--line:#3a3a3a;--line-soft:#262626;
+    --btn:#ffffff;--btn-ink:#000000;--accent:#ffffff;--accent-2:#cccccc;--accent-soft:rgb(255 255 255/.1);--vv-accent-ink:#ffffff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
+    --mo-edge:#ffffff;--vv-wraps-bg:#ffffff;--vv-wraps-ink:#000000;--vv-ftr-bg:#000000;--vv-hdr-bg:rgb(10 10 10/.92);
+}
+html:not([data-style="classic"]){
+  --vv-display:Georgia,"Times New Roman","Noto Serif",serif;
+  --vv-navy:#000000;--vv-navy-2:#111111;--vv-cta-end:#000000;
+  --vv-glow:transparent;--vv-glow-2:transparent;
+  --vv-accent-ink:#000000;--vv-on-accent:#ffffff;--vv-hot:#000000;--vv-num-end:#000000;
+  --vv-hdr-bg:rgb(255 255 255/.94);
+  --vv-wraps-bg:#000000;--vv-wraps-ink:#ffffff;
+  --vv-ftr-bg:#000000;--vv-ftr-ink:#d4d4d4;--vv-ftr-mut:#9a9a9a;--vv-ftr-line:#262626;
+  --vv-ftr-field:#111111;--vv-ftr-field-line:#3a3a3a;--vv-ftr-btn-line:#4a4a4a;--vv-ftr-glow:transparent;--vv-chat:#000000;
+  --vv-shadow-sm:none;--vv-shadow-md:none;--vv-shadow-lg:none;
+  --vv-ring:0 0 0 3px rgb(0 0 0/.25);--vv-radius:0px;--vv-btn-r:0px;--vv-sel-line:#000000;
+}
+@media (prefers-color-scheme:dark){
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .review-photo{background:#eef0f3!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .managed-product-gallery img{background:#f2f3f5}
+html:not([data-style="classic"]):not([data-theme="light"]){--vv-ring:0 0 0 3px rgb(255 255 255/.35);--ds-surface:#141414;--ds-field:#0f0f0f;--ds-field-line:#444;--ds-line:#3a3a3a;--ds-chip:#1f1f1f;--ds-sel-bg:rgb(255 255 255/.1);--ds-sel-ink:#fff;--ds-sel-line:#fff;--ds-tint:#1f1f1f}
+html:not([data-style="classic"]):not([data-theme="light"]) .scw{--vv-chat:#ffffff}
+html:not([data-style="classic"]):not([data-theme="light"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#000!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .hhero h1 .red{text-decoration-color:#fff}
+}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html[data-theme="dark"]:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+html[data-theme="dark"]:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html[data-theme="dark"]:not([data-style="classic"]) .review-photo{background:#eef0f3!important}
+html[data-theme="dark"]:not([data-style="classic"]) .managed-product-gallery img{background:#f2f3f5}
+html[data-theme="dark"]:not([data-style="classic"]){--vv-ring:0 0 0 3px rgb(255 255 255/.35);--ds-surface:#141414;--ds-field:#0f0f0f;--ds-field-line:#444;--ds-line:#3a3a3a;--ds-chip:#1f1f1f;--ds-sel-bg:rgb(255 255 255/.1);--ds-sel-ink:#fff;--ds-sel-line:#fff;--ds-tint:#1f1f1f}
+html[data-theme="dark"]:not([data-style="classic"]) .scw{--vv-chat:#ffffff}
+html[data-theme="dark"]:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#000!important}
+html[data-theme="dark"]:not([data-style="classic"]) .hhero h1 .red{text-decoration-color:#fff}
+
+/* ---------- type: serif headlines, small uppercase labels ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,.d1,.d2){font-family:var(--vv-display);letter-spacing:-.02em;font-weight:400}
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h3,.d3){font-family:var(--vv-display);letter-spacing:-.01em;font-weight:700}
+html:not([data-style="classic"]) .d1{font-size:clamp(44px,6.6vw,96px);line-height:1}
+html:not([data-style="classic"]) .d2{font-size:clamp(32px,4vw,58px);line-height:1.04}
+html:not([data-style="classic"]) .eyebrow{color:var(--ink);letter-spacing:.2em;font-weight:700;font-size:11px}
+html:not([data-style="classic"]) .eyebrow::before{width:24px;height:1px;border-radius:0;background:var(--ink)}
+html:not([data-style="classic"]) .lede{color:var(--ink-2)}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:none;color:var(--ink);-webkit-background-clip:border-box;background-clip:border-box;font-family:var(--vv-display);font-weight:400}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--ink);-webkit-text-fill-color:var(--ink);font-style:italic;text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.12em}
+html:not([data-style="classic"]) ::selection{background:var(--ink);color:var(--bg)}
+html:not([data-style="classic"]) main a:not(.btn):not(.card):not([class*=cms]){text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+html:not([data-style="classic"]) :focus-visible{outline-color:var(--ink)}
+
+/* ---------- header: white with a black hairline ---------- */
+html:not([data-style="classic"]) .hdr{box-shadow:none;border-bottom:1px solid var(--mo-edge);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){border-radius:0;text-transform:uppercase;font-size:12px;letter-spacing:.1em;font-weight:700;color:var(--ink);background:transparent!important;box-shadow:none}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{color:var(--ink);background:transparent!important;text-decoration:underline;text-underline-offset:5px}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{border-radius:0!important}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{color:var(--ink);box-shadow:inset 0 0 0 1px var(--mo-edge)}
+html:not([data-style="classic"]) .hdr .icon-btn,html:not([data-style="classic"]) .language-control select,html:not([data-style="classic"]) .hdr .login-btn{border-radius:0;border-color:var(--mo-edge)}
+html:not([data-style="classic"]) .mega{border-top:1px solid var(--mo-edge);border-bottom:1px solid var(--mo-edge);box-shadow:none}
+html:not([data-style="classic"]) .mega .promo{border-radius:0;background:var(--bg-2)}
+html:not([data-style="classic"]) .mega .col a{border-radius:0}
+html:not([data-style="classic"]) .mega .col a:hover{background:transparent;text-decoration:underline}
+
+/* ---------- heroes & sections: no decoration, hairline rules ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero)::before,html:not([data-style="classic"]) :is(.hhero,.phero)::after{display:none}
+html:not([data-style="classic"]) :is(.hhero,.phero){border-bottom:1px solid var(--mo-edge)}
+html:not([data-style="classic"]) .phero .art{filter:none}
+html:not([data-style="classic"]) .sec.alt{background:var(--bg-2)}
+html:not([data-style="classic"]) .sec-head{border-top:1px solid var(--mo-edge);padding-top:18px;max-width:none}
+
+/* ---------- cards: flat, square, bordered ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-radius:0;border:1px solid var(--mo-edge);box-shadow:none;background:var(--card)}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{transform:none;box-shadow:6px 6px 0 var(--mo-edge);border-color:var(--mo-edge)}
+html:not([data-style="classic"]) .card :is(.art,img){border-radius:0}
+html:not([data-style="classic"]) a.card:hover img{transform:none;filter:grayscale(0)}
+html:not([data-style="classic"]) a.card:hover :is(.link,h3){color:var(--ink);text-decoration:underline}
+html:not([data-style="classic"]) main details{border-radius:0;border-color:var(--mo-edge);background:transparent}
+html:not([data-style="classic"]) main details[open]{box-shadow:none;border-color:var(--mo-edge)}
+html:not([data-style="classic"]) :is(.rule-summary,.cfg-summary,.summary){border-radius:0}
+html:not([data-style="classic"]) main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){border-radius:0}
+html:not([data-style="classic"]) .modal .box{border-radius:0}
+
+/* ---------- buttons: square black, outlined ghost ---------- */
+html:not([data-style="classic"]) .btn{text-transform:uppercase;letter-spacing:.1em;font-size:.82em;font-weight:700;box-shadow:none!important}
+html:not([data-style="classic"]) :is(.rule-cfg .btn,.sum-dock .btn,.checkout-wrap .btn){text-transform:none;letter-spacing:0;font-size:inherit}
+html:not([data-style="classic"]) .btn:hover{transform:none}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:var(--btn);color:var(--btn-ink)}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{background:var(--bg);color:var(--ink);box-shadow:inset 0 0 0 1px var(--mo-edge)!important}
+html:not([data-style="classic"]) .btn.ghost{background:transparent;border:1px solid var(--mo-edge);color:var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:not([data-style="classic"]) .btn.ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+html:not([data-style="classic"]) .badge{background:var(--ink);color:var(--bg);border-radius:0}
+
+/* ---------- call-to-action: solid black block ---------- */
+html:not([data-style="classic"]) .cta{background:#000;border-radius:0;box-shadow:none;border:1px solid var(--mo-edge)}
+html:not([data-style="classic"]) .cta::before{display:none}
+html:not([data-style="classic"]) .cta :is(h2,.d2){color:#fff}
+html:not([data-style="classic"]) .cta p{color:#bdbdbd}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#fff;color:#000}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#000;color:#fff;box-shadow:inset 0 0 0 1px #fff!important}
+html:not([data-style="classic"]) .cta .btn.ghost{color:#fff;border-color:#fff}
+
+/* ---------- footer: black ---------- */
+html:not([data-style="classic"]) .ftr::before,html:not([data-style="classic"]) .ftr::after{display:none}
+html:not([data-style="classic"]) .ftr{border-top:1px solid var(--mo-edge)}
+html:not([data-style="classic"]) .ftr .news .inp{border-radius:0}
+html:not([data-style="classic"]) .ftr .news .btn{background:#fff;color:#000}
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
+html:not([data-style="classic"]) .scw-links a{background:#f3f3f1}
+
+/* ---------- shared contrast hooks: apparel accents and checkout highlights follow the readable accent ---------- */
+html:not([data-style="classic"]) .ap-sec{--ap-accent:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--vv-accent-ink))}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn):not(.delete){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--ink))}

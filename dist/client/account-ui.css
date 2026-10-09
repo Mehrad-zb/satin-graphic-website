@@ -142,3 +142,6 @@
 .acct-design-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
 .acct-design-acts .btn{font-size:13px}
 .acct-danger{color:#b42318}
+
+.acct-dl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:8px}
+.acct-dl .tiny{word-break:break-word}

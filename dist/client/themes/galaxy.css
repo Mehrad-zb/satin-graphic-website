@@ -1,0 +1,137 @@
+/* Theme: Galaxy — inspired by Samsung's website: crisp white pages, black text, bold sans headlines,
+   black pill buttons with white text, full-width light-grey hero banners, rounded card grids, thin dividers
+   and a deep blue accent for links. No Samsung fonts or artwork are loaded. Used with /themes/_base-modern.css. */
+@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f4f4f4;--bg-3:#eaeaea;--card:#ffffff;
+    --ink:#000000;--ink-2:#313131;--mut:#5f5f5f;--line:#dddddd;--line-soft:#ececec;
+    --btn:#000000;--btn-ink:#ffffff;
+    --accent:#1428a0;--accent-2:#2189ff;--accent-soft:#e8ebf8;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f4f4f4;--bg-3:#eaeaea;--card:#ffffff;
+    --ink:#000000;--ink-2:#313131;--mut:#5f5f5f;--line:#dddddd;--line-soft:#ececec;
+    --btn:#000000;--btn-ink:#ffffff;
+    --accent:#1428a0;--accent-2:#2189ff;--accent-soft:#e8ebf8;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#000000;--bg-2:#121212;--bg-3:#1f1f1f;--card:#161616;--ink:#ffffff;--ink-2:#d6d6d6;--mut:#a0a0a0;--line:#333333;--line-soft:#222222;
+    --btn:#ffffff;--btn-ink:#000000;--accent:#6e8cff;--accent-2:#2189ff;--accent-soft:rgb(110 140 255/.16);--vv-accent-ink:#8ea6ff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
+    --gx-tile:#161616;--vv-hdr-bg:rgb(0 0 0/.9);--vv-wraps-bg:#ffffff;--vv-wraps-ink:#000000;--vv-ftr-bg:#0b0b0b;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#000000;--bg-2:#121212;--bg-3:#1f1f1f;--card:#161616;--ink:#ffffff;--ink-2:#d6d6d6;--mut:#a0a0a0;--line:#333333;--line-soft:#222222;
+    --btn:#ffffff;--btn-ink:#000000;--accent:#6e8cff;--accent-2:#2189ff;--accent-soft:rgb(110 140 255/.16);--vv-accent-ink:#8ea6ff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
+    --gx-tile:#161616;--vv-hdr-bg:rgb(0 0 0/.9);--vv-wraps-bg:#ffffff;--vv-wraps-ink:#000000;--vv-ftr-bg:#0b0b0b;
+}
+html:not([data-style="classic"]){
+  --vv-display:Inter,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --vv-navy:#000000;--vv-navy-2:#141414;--vv-cta-end:#1428a0;
+  --vv-accent-ink:#1428a0;--vv-on-accent:#ffffff;--vv-hot:#2189ff;--vv-num-end:#000000;
+  --vv-hdr-bg:#ffffff;
+  --vv-wraps-bg:#000000;--vv-wraps-ink:#ffffff;
+  --vv-ftr-bg:#f4f4f4;--vv-ftr-ink:#313131;--vv-ftr-head:#000000;--vv-ftr-mut:#5f5f5f;--vv-ftr-line:#dddddd;
+  --vv-ftr-field:#ffffff;--vv-ftr-field-line:#cfcfcf;--vv-ftr-btn-line:#cfcfcf;--vv-ftr-glow:transparent;--vv-chat:#000000;
+  --vv-shadow-sm:none;--vv-shadow-md:0 6px 24px rgb(0 0 0/.08);--vv-shadow-lg:0 14px 40px rgb(0 0 0/.12);
+  --vv-ring:0 0 0 3px rgb(33 137 255/.35);--vv-radius:20px;--vv-btn-r:999px;--vv-sel-line:#000000;
+  --gx-tile:#f4f4f4;
+}
+/* ---------- type: bold, compact ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,h3,.d1,.d2,.d3){letter-spacing:-.02em}
+html:not([data-style="classic"]) :is(.d1,.d2,.hhero h1,.phero h1){font-weight:800}
+html:not([data-style="classic"]) .d1{font-size:clamp(40px,5.6vw,76px);line-height:1.05}
+html:not([data-style="classic"]) .d2{font-size:clamp(28px,3.4vw,46px);line-height:1.1}
+html:not([data-style="classic"]) .eyebrow{color:var(--ink);font-weight:700;letter-spacing:.08em}
+html:not([data-style="classic"]) .eyebrow::before{background:var(--accent);width:14px;height:3px}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:none;color:var(--ink);-webkit-background-clip:border-box;background-clip:border-box}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--vv-accent-ink);-webkit-text-fill-color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) main a:not(.btn):not(.card):not([class*=cms]){text-underline-offset:3px}
+
+/* ---------- header: solid white, bold black menu, underline on hover ---------- */
+html:not([data-style="classic"]) .hdr{-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;border-bottom:1px solid var(--line)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){border-radius:0;font-size:14px;font-weight:700;color:var(--ink);background:transparent!important;box-shadow:inset 0 -2px 0 transparent}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{color:var(--ink);background:transparent!important;box-shadow:inset 0 -2px 0 var(--ink)}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{border-radius:999px!important}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{color:var(--vv-accent-ink);box-shadow:none}
+html:not([data-style="classic"]) .mega{box-shadow:0 24px 40px -24px rgb(0 0 0/.25)}
+html:not([data-style="classic"]) .mega .promo{background:var(--gx-tile);border-radius:20px}
+
+/* ---------- heroes: full-width grey banners ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero){background:var(--gx-tile)}
+html:not([data-style="classic"]) :is(.hhero,.phero)::before,html:not([data-style="classic"]) :is(.hhero,.phero)::after{display:none}
+html:not([data-style="classic"]) .phero .art{filter:none}
+html:not([data-style="classic"]) .sec.alt{background:var(--gx-tile)}
+
+/* ---------- cards: rounded, flat, light grey ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){background:var(--gx-tile);border-color:transparent;box-shadow:none;border-radius:20px}
+html:not([data-style="classic"]) .sec.alt :is(.card,.review-slide,.cms-card,.cms-rep-i){background:var(--card)}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{transform:none;box-shadow:var(--vv-shadow-md);border-color:transparent}
+html:not([data-style="classic"]) a.card:hover :is(.link,h3){color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+html:not([data-style="classic"]) main details{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0}
+html:not([data-style="classic"]) main details[open]{box-shadow:none;border-color:var(--line)}
+
+/* ---------- buttons: black pills, white text ---------- */
+html:not([data-style="classic"]) .btn{font-weight:700;box-shadow:none!important}
+html:not([data-style="classic"]) .btn:hover{transform:none}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:var(--btn);color:var(--btn-ink)}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{background:#555555;color:#fff}
+html:not([data-style="classic"]) .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:not([data-style="classic"]) .btn.ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+html:not([data-style="classic"]) .badge{background:var(--accent);color:#fff}
+
+/* ---------- call-to-action: deep blue banner ---------- */
+html:not([data-style="classic"]) .cta{background:linear-gradient(120deg,#000 0%,#0b1a6e 55%,#1428a0 100%);border-radius:24px;box-shadow:none}
+html:not([data-style="classic"]) .cta::before{display:none}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#fff;color:#000}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#e6e6e6;color:#000}
+
+html:not([data-style="classic"]) .ftr .news .btn{background:var(--btn);color:var(--btn-ink)}
+html:not([data-style="classic"]) .ftr .news .inp{background:var(--vv-ftr-field);border:1px solid var(--vv-ftr-field-line)}
+@media (prefers-color-scheme:light){
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::before,html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::after{display:none}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .col a:hover{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(.flogo,.logo img){filter:none;mix-blend-mode:multiply}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .btn.ghost{color:var(--vv-ftr-head);border-color:var(--vv-ftr-btn-line)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .news .inp{color:var(--vv-ftr-head)}
+html:not([data-style="classic"]):not([data-theme="dark"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
+}
+html[data-theme="light"]:not([data-style="classic"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr::before,html[data-theme="light"]:not([data-style="classic"]) .ftr::after{display:none}
+html[data-theme="light"]:not([data-style="classic"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .col a:hover{color:var(--vv-accent-ink)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr :is(.flogo,.logo img){filter:none;mix-blend-mode:multiply}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .btn.ghost{color:var(--vv-ftr-head);border-color:var(--vv-ftr-btn-line)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp{color:var(--vv-ftr-head)}
+html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
+@media (prefers-color-scheme:dark){
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .review-photo{background:#eef0f3!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .managed-product-gallery img{background:#f2f3f5}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.hdr .logo img,.dlogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{background:#d6d6d6;color:#000}
+}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html[data-theme="dark"]:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+html[data-theme="dark"]:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html[data-theme="dark"]:not([data-style="classic"]) .review-photo{background:#eef0f3!important}
+html[data-theme="dark"]:not([data-style="classic"]) .managed-product-gallery img{background:#f2f3f5}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{background:#d6d6d6;color:#000}
+
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
+
+/* ---------- shared contrast hooks: apparel accents and checkout highlights follow the readable accent ---------- */
+html:not([data-style="classic"]) .ap-sec{--ap-accent:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--vv-accent-ink))}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn):not(.delete){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--ink))}

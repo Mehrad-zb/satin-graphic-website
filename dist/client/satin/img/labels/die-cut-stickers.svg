@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="t"><title id="t">Die-cut vinyl stickers</title>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3eef5"/><stop offset="1" stop-color="#e8f0f4"/></linearGradient>
+<filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".18"/></filter></defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<g filter="url(#s)">
+<path d="M210 250 c0 -70 60 -120 130 -110 c40 -60 150 -50 170 20 c70 0 110 70 80 130 c40 50 0 130 -70 120 c-30 60 -140 60 -170 0 c-80 10 -130 -60 -100 -120 c-30 -10 -40 -30 -40 -40z" fill="#fff"/>
+<path d="M232 252 c0 -56 50 -96 108 -88 c36 -52 128 -44 146 18 c58 0 90 58 66 108 c32 42 0 108 -58 98 c-26 50 -118 50 -142 0 c-66 8 -108 -50 -84 -100 c-24 -8 -36 -24 -36 -36z" fill="#c8184a"/>
+<text x="400" y="300" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="54" text-anchor="middle">YOUR</text><text x="400" y="356" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="54" text-anchor="middle">BRAND</text>
+<g transform="rotate(12 600 560)"><circle cx="600" cy="560" r="100" fill="#fff"/><circle cx="600" cy="560" r="86" fill="#17191e"/><path d="M560 560 l28 28 l52 -60" fill="none" stroke="#f2b33d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></g>
+<g transform="rotate(-10 230 580)"><path d="M150 520 h150 a30 30 0 0 1 30 30 v60 a30 30 0 0 1 -30 30 h-150 a30 30 0 0 1 -30 -30 v-60 a30 30 0 0 1 30 -30z" fill="#fff"/><path d="M160 532 h130 a22 22 0 0 1 22 22 v52 a22 22 0 0 1 -22 22 h-130 a22 22 0 0 1 -22 -22 v-52 a22 22 0 0 1 22 -22z" fill="#2f6fd0"/><text x="225" y="592" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="34" text-anchor="middle">HELLO</text></g>
+</g></svg>

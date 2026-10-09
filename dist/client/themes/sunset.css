@@ -1,0 +1,110 @@
+/* Theme: Sunset — warm peach and apricot pages, burnt-orange to rose gradient buttons, soft sun glows behind heroes,
+   rounded cards and a deep plum footer. Used with /themes/_base-modern.css. Pure appearance. */
+@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#fffaf5;--bg-2:#fff1e6;--bg-3:#ffe3cf;--card:#ffffff;
+    --ink:#2b1610;--ink-2:#5b3a2e;--mut:#7d5a4b;--line:#f1d8c6;--line-soft:#f8e8dc;
+    --btn:#2b1610;--btn-ink:#ffffff;
+    --accent:#e4570f;--accent-2:#d63f6c;--accent-soft:#ffe6d6;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#fffaf5;--bg-2:#fff1e6;--bg-3:#ffe3cf;--card:#ffffff;
+    --ink:#2b1610;--ink-2:#5b3a2e;--mut:#7d5a4b;--line:#f1d8c6;--line-soft:#f8e8dc;
+    --btn:#2b1610;--btn-ink:#ffffff;
+    --accent:#e4570f;--accent-2:#d63f6c;--accent-soft:#ffe6d6;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#1a0f0c;--bg-2:#22140f;--bg-3:#2e1b14;--card:#251611;--ink:#fff3ea;--ink-2:#efd2c2;--mut:#bf9c8b;--line:#3d261d;--line-soft:#2d1b15;
+    --btn:#ff8a4c;--btn-ink:#1a0f0c;--accent:#ff8a4c;--accent-2:#ff6b8f;--accent-soft:rgb(255 138 76/.15);--vv-accent-ink:#ffa070;--vv-on-accent:#1a0f0c;--vv-num-end:#ff6b8f;
+    --vv-wraps-bg:#ff8a4c;--vv-wraps-ink:#1a0f0c;--vv-ftr-bg:#120a08;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#1a0f0c;--bg-2:#22140f;--bg-3:#2e1b14;--card:#251611;--ink:#fff3ea;--ink-2:#efd2c2;--mut:#bf9c8b;--line:#3d261d;--line-soft:#2d1b15;
+    --btn:#ff8a4c;--btn-ink:#1a0f0c;--accent:#ff8a4c;--accent-2:#ff6b8f;--accent-soft:rgb(255 138 76/.15);--vv-accent-ink:#ffa070;--vv-on-accent:#1a0f0c;--vv-num-end:#ff6b8f;
+    --vv-wraps-bg:#ff8a4c;--vv-wraps-ink:#1a0f0c;--vv-ftr-bg:#120a08;
+}
+html:not([data-style="classic"]){
+  --vv-display:Manrope,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#2a1018;--vv-navy-2:#3d1622;--vv-cta-end:#6e2a1c;
+  --vv-glow:rgb(255 146 76/.28);--vv-glow-2:rgb(255 107 143/.18);
+  --vv-accent-ink:#b5420a;--vv-on-accent:#ffffff;--vv-hot:#d63f6c;--vv-num-end:#d63f6c;
+  --vv-hdr-bg:rgb(255 250 245/.86);
+  --vv-wraps-bg:linear-gradient(135deg,#d9480f,#c42d63);--vv-wraps-ink:#ffffff;
+  --vv-ftr-bg:#2a1018;--vv-ftr-ink:#f0d3c8;--vv-ftr-mut:#bf968a;--vv-ftr-line:#43202a;
+  --vv-ftr-field:#361521;--vv-ftr-field-line:#57303b;--vv-ftr-btn-line:#64363f;--vv-ftr-glow:rgb(255 138 76/.22);--vv-chat:#c43a12;
+  --vv-shadow-sm:0 1px 2px rgb(120 50 20/.05),0 8px 22px -10px rgb(120 50 20/.16);
+  --vv-shadow-md:0 2px 4px rgb(120 50 20/.05),0 18px 40px -16px rgb(120 50 20/.22);
+  --vv-shadow-lg:0 2px 6px rgb(120 50 20/.06),0 30px 60px -24px rgb(120 50 20/.3);
+  --vv-radius:24px;--vv-btn-r:999px;--vv-sel-line:#d9480f;
+  --ss-grad:linear-gradient(135deg,#d9480f,#c42d63);
+}
+/* in the visitor's dark mode, repaint the light-only surfaces of forms, configurators and checkout */
+@media (prefers-color-scheme:dark){
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .review-photo{background:#eef0f3!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .managed-product-gallery img{background:#f2f3f5}
+html:not([data-style="classic"]):not([data-theme="light"]){--vv-hdr-bg:rgb(26 15 12/.88);--ds-surface:#2e1b14;--ds-field:#22140f;--ds-field-line:#4a2f24;--ds-line:#3d261d;--ds-chip:#33201a;--ds-sel-bg:rgb(255 138 76/.15);--ds-sel-ink:#ffc2a0;--ds-sel-line:#ff8a4c;--ds-tint:#3b1d12}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.logo img,.dlogo){mix-blend-mode:screen}
+html:not([data-style="classic"]):not([data-theme="light"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){color:#1a0f0c!important;background:linear-gradient(135deg,#ff9a5c,#ff7a9c)!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .hhero h1 .red{background-image:linear-gradient(100deg,#ffa070,#ff7a9c)!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .btn.ghost{background:transparent!important;color:var(--ink)!important;border-color:var(--line)!important}
+html:not([data-style="classic"]):not([data-theme="light"]) .ftr .news .btn{color:#fff}
+}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.process-story,.home-reviews){background:var(--bg)}
+html[data-theme="dark"]:not([data-style="classic"]) .video-story{background:var(--bg)!important;border-color:transparent}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.video-stick,.video-stage){background:transparent!important}
+html[data-theme="dark"]:not([data-style="classic"]) .video-frame{background:#fff!important;border-radius:28px!important;overflow:hidden!important}
+html[data-theme="dark"]:not([data-style="classic"]) .review-photo{background:#eef0f3!important}
+html[data-theme="dark"]:not([data-style="classic"]) .managed-product-gallery img{background:#f2f3f5}
+html[data-theme="dark"]:not([data-style="classic"]){--vv-hdr-bg:rgb(26 15 12/.88);--ds-surface:#2e1b14;--ds-field:#22140f;--ds-field-line:#4a2f24;--ds-line:#3d261d;--ds-chip:#33201a;--ds-sel-bg:rgb(255 138 76/.15);--ds-sel-ink:#ffc2a0;--ds-sel-line:#ff8a4c;--ds-tint:#3b1d12}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.logo img,.dlogo){mix-blend-mode:screen}
+html[data-theme="dark"]:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){color:#1a0f0c!important;background:linear-gradient(135deg,#ff9a5c,#ff7a9c)!important}
+html[data-theme="dark"]:not([data-style="classic"]) .hhero h1 .red{background-image:linear-gradient(100deg,#ffa070,#ff7a9c)!important}
+html[data-theme="dark"]:not([data-style="classic"]) .btn.ghost{background:transparent!important;color:var(--ink)!important;border-color:var(--line)!important}
+html[data-theme="dark"]:not([data-style="classic"]) .ftr .news .btn{color:#fff}
+
+html:not([data-style="classic"]) :is(.d1,.d2,.hhero h1,.phero h1){font-weight:800}
+html:not([data-style="classic"]) .eyebrow{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .eyebrow::before{background:var(--ss-grad);width:22px;height:3px}
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,var(--ink) 25%,#d9480f 60%,#c42d63);-webkit-background-clip:text;background-clip:text;color:transparent}
+html:not([data-style="classic"]) .hhero h1 .red{background:linear-gradient(100deg,#d9480f,#c42d63);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* logo files have a white background: multiply drops it onto the peach page */
+@media (prefers-color-scheme:light){
+html:not([data-style="classic"]):not([data-theme="dark"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}
+}
+html[data-theme="light"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}
+
+
+html:not([data-style="classic"]) .hdr{box-shadow:0 12px 30px -26px rgb(120 50 20/.5);border-bottom-color:var(--line-soft)}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{background:var(--vv-wraps-bg)!important}
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{background:radial-gradient(40% 55% at 88% 10%,rgb(255 166 92/.42),transparent 70%),radial-gradient(34% 44% at 5% 0%,rgb(255 120 150/.22),transparent 70%),radial-gradient(60% 50% at 55% 105%,rgb(255 200 150/.35),transparent 70%)}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{display:none}
+html:not([data-style="classic"]) .sec.alt{background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-color:var(--line-soft)}
+html:not([data-style="classic"]) main details{border-radius:18px}
+
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:var(--ss-grad);color:#fff;box-shadow:0 12px 26px -12px rgb(217 72 15/.7)}
+html:not([data-style="classic"]) .btn.ghost{background:rgb(255 255 255/.7);border-color:var(--line)}
+html:not([data-style="classic"]) .btn.ghost:hover{border-color:#d9480f;color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .badge{background:var(--ss-grad);color:#fff}
+
+html:not([data-style="classic"]) .cta{background:linear-gradient(130deg,#2a1018 0%,#5a1d2c 55%,#9a3412 100%)}
+html:not([data-style="classic"]) .cta::before{background:radial-gradient(circle,rgb(255 166 92/.6),transparent 62%)}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#fff;color:#2a1018}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#ffd9c2;color:#2a1018}
+html:not([data-style="classic"]) .ftr::before{background:linear-gradient(90deg,#ff9a5c,#d9480f,#c42d63,#ff9a5c)}
+html:not([data-style="classic"]) .ftr .news .btn{background:var(--ss-grad);color:#fff}
+html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
+
+/* ---------- shared contrast hooks: apparel accents and checkout highlights follow the readable accent ---------- */
+html:not([data-style="classic"]) .ap-sec{--ap-accent:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--vv-accent-ink))}
+html:not([data-style="classic"]) .checkout-wrap a:not(.btn):not(.delete){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){background:var(--ds-sel-bg,var(--accent-soft));color:var(--ds-sel-ink,var(--ink))}
