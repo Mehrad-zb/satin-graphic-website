@@ -1,0 +1,33 @@
+/* Theme: Forest — emerald green with a deep forest footer and warm off-white sections. Used with /themes/_base-modern.css. */
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f3f7f4;--bg-3:#e6efe9;--card:#ffffff;
+    --ink:#10241b;--ink-2:#33473d;--mut:#5f7268;--line:#dde7e1;--line-soft:#ecf2ee;
+    --btn:#10241b;--btn-ink:#ffffff;
+    --accent:#1f7a4d;--accent-2:#2fa36b;--accent-soft:#e5f3eb;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f3f7f4;--bg-3:#e6efe9;--card:#ffffff;
+  --ink:#10241b;--ink-2:#33473d;--mut:#5f7268;--line:#dde7e1;--line-soft:#ecf2ee;
+  --btn:#10241b;--btn-ink:#ffffff;
+  --accent:#1f7a4d;--accent-2:#2fa36b;--accent-soft:#e5f3eb;
+}
+html:not([data-style="classic"]){
+  --vv-display:Manrope,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#0d2b1f;--vv-navy-2:#14382a;--vv-cta-end:#24503b;
+  --vv-accent-ink:#1a6b43;--vv-hot:#4cc38a;
+  --vv-ftr-bg:#0d2b1f;--vv-ftr-ink:#c5d6cd;--vv-ftr-mut:#8ba699;--vv-ftr-line:#1d3f31;--vv-ftr-field:#0a2219;--vv-ftr-field-line:#2a5443;--vv-ftr-btn-line:#2f5c49;
+  --vv-ftr-glow:rgb(76 195 138/.18);
+  --vv-radius:18px;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#0a1410;--bg-2:#10201a;--bg-3:#172b22;--card:#0e1b16;--line:#1f3a2e;--line-soft:#172d24;
+    --accent:#4cc38a;--accent-2:#6fd6a4;--accent-soft:rgb(76 195 138/.14);--vv-accent-ink:#5fd09a;--vv-on-accent:#0a1410;--vv-num-end:#4cc38a;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#0a1410;--bg-2:#10201a;--bg-3:#172b22;--card:#0e1b16;--line:#1f3a2e;--line-soft:#172d24;
+  --accent:#4cc38a;--accent-2:#6fd6a4;--accent-soft:rgb(76 195 138/.14);--vv-accent-ink:#5fd09a;--vv-on-accent:#0a1410;--vv-num-end:#4cc38a;
+}

@@ -1,5 +1,5 @@
 {
- "_note": "Photo mockup scenes. Coordinates are pixels in the scene image. pts = TL,TR,BR,BL of the printable surface. mode: opaque (covers the printed sample), multiply (blank surface; shading shows through), shade (art then multiplied by the -shade.webp luminance, clipped to its alpha). rect = upright print area for apparel (art is fitted top-centre). Garment scenes recolour the alpha mask of -shade.webp.",
+ "_note": "Photo mockup scenes. Coordinates are pixels in the scene image. pts = TL,TR,BR,BL of the printable surface. mode: opaque (covers the printed sample), multiply (blank surface; shading shows through), shade (art multiplied by the -shade.webp luminance, clipped to its alpha). fit: reshape = the object is erased (plate = same photo with the printed objects removed) and redrawn at the artwork's true proportions inside the photo object (same area as the photo object, limited by grow [maxU,maxV] relative to it; anchor in 0..1 of the object; optional stack/shadow/rotate); scale = the photo region (object + hardware) is rescaled about anchor so the surface matches the artwork's proportions (axis x keeps height; max/min limit the change); cover: true = fill and crop; stretch: true = always stretch (curved panels); default = stretch when within 6%, else contain. clip = alpha image that the art is clipped to (curved paper). hole: 'hanger' cuts the door-hanger die line. rect = upright print area for apparel (art is fitted top-centre). Garment scenes recolour the alpha mask of -shade.webp.",
  "cards": {
   "src": "cards.webp",
   "w": 1600,
@@ -28,7 +28,24 @@
      ]
     ],
     "mode": "opaque",
-    "gloss": true
+    "gloss": true,
+    "fit": "reshape",
+    "rotate": true,
+    "stack": {
+     "n": 6,
+     "dx": 2,
+     "dy": 4
+    },
+    "shadow": {
+     "dx": 14,
+     "dy": 22,
+     "blur": 30,
+     "alpha": 0.32
+    },
+    "grow": [
+     1.12,
+     1.12
+    ]
    },
    {
     "side": 0,
@@ -51,9 +68,22 @@
      ]
     ],
     "mode": "opaque",
-    "gloss": true
+    "gloss": true,
+    "fit": "reshape",
+    "rotate": true,
+    "shadow": {
+     "dx": 10,
+     "dy": 18,
+     "blur": 26,
+     "alpha": 0.34
+    },
+    "grow": [
+     1.12,
+     1.12
+    ]
    }
-  ]
+  ],
+  "plate": "cards-plate.webp"
  },
  "poster": {
   "src": "poster.webp",
@@ -82,7 +112,17 @@
      ]
     ],
     "mode": "opaque",
-    "fit": "contain"
+    "fit": "reshape",
+    "shadow": {
+     "dx": 0,
+     "dy": 6,
+     "blur": 16,
+     "alpha": 0.22
+    },
+    "grow": [
+     1.06,
+     1.04
+    ]
    },
    {
     "side": 1,
@@ -106,9 +146,20 @@
      ]
     ],
     "mode": "opaque",
-    "fit": "contain"
+    "fit": "reshape",
+    "shadow": {
+     "dx": 0,
+     "dy": 6,
+     "blur": 16,
+     "alpha": 0.22
+    },
+    "grow": [
+     1.06,
+     1.04
+    ]
    }
-  ]
+  ],
+  "plate": "poster-plate.webp"
  },
  "brochure": {
   "src": "brochure.webp",
@@ -137,7 +188,19 @@
      ]
     ],
     "mode": "opaque",
-    "gloss": true
+    "gloss": true,
+    "fit": "reshape",
+    "rotate": true,
+    "shadow": {
+     "dx": 12,
+     "dy": 18,
+     "blur": 26,
+     "alpha": 0.25
+    },
+    "grow": [
+     1.08,
+     1.08
+    ]
    },
    {
     "side": 1,
@@ -161,9 +224,22 @@
      ]
     ],
     "mode": "opaque",
-    "gloss": true
+    "gloss": true,
+    "fit": "reshape",
+    "rotate": true,
+    "shadow": {
+     "dx": 12,
+     "dy": 18,
+     "blur": 26,
+     "alpha": 0.25
+    },
+    "grow": [
+     1.08,
+     1.08
+    ]
    }
-  ]
+  ],
+  "plate": "brochure-plate.webp"
  },
  "brochure-open": {
   "src": "brochure-open.webp",
@@ -180,23 +256,24 @@
     ],
     "pts": [
      [
-      315,
-      140
+      300,
+      122
      ],
      [
-      570,
-      290
+      572,
+      280
      ],
      [
       360,
-      865
+      872
      ],
      [
-      30,
-      688
+      12,
+      696
      ]
     ],
-    "mode": "multiply"
+    "mode": "multiply",
+    "stretch": true
    },
    {
     "side": 1,
@@ -207,23 +284,24 @@
     ],
     "pts": [
      [
-      570,
-      290
+      572,
+      280
      ],
      [
-      868,
-      382
+      870,
+      374
      ],
      [
-      740,
-      987
+      742,
+      994
      ],
      [
       360,
-      865
+      872
      ]
     ],
-    "mode": "multiply"
+    "mode": "multiply",
+    "stretch": true
    },
    {
     "side": 1,
@@ -234,25 +312,27 @@
     ],
     "pts": [
      [
-      868,
-      382
+      870,
+      374
      ],
      [
-      1155,
-      410
+      1174,
+      400
      ],
      [
-      1103,
-      1030
+      1120,
+      1048
      ],
      [
-      740,
-      987
+      742,
+      994
      ]
     ],
-    "mode": "multiply"
+    "mode": "multiply",
+    "stretch": true
    }
-  ]
+  ],
+  "clip": "brochure-open-clip.webp"
  },
  "doorhanger": {
   "src": "doorhanger.webp",
@@ -282,22 +362,21 @@
     ],
     "mode": "opaque",
     "radius": 0.05,
-    "holes": [
-     {
-      "c": [
-       503,
-       507
-      ],
-      "r": 101
-     },
-     {
-      "rect": [
-       250,
-       476,
-       160,
-       62
-      ]
-     }
+    "fit": "reshape",
+    "anchor": [
+     0.5,
+     0
+    ],
+    "hole": "hanger",
+    "shadow": {
+     "dx": -10,
+     "dy": 22,
+     "blur": 40,
+     "alpha": 0.38
+    },
+    "grow": [
+     1.1,
+     1.04
     ]
    },
    {
@@ -323,25 +402,25 @@
     ],
     "mode": "opaque",
     "radius": 0.05,
-    "holes": [
-     {
-      "c": [
-       1117,
-       507
-      ],
-      "r": 101
-     },
-     {
-      "rect": [
-       864,
-       476,
-       160,
-       62
-      ]
-     }
+    "fit": "reshape",
+    "anchor": [
+     0.5,
+     0
+    ],
+    "hole": "hanger",
+    "shadow": {
+     "dx": -10,
+     "dy": 22,
+     "blur": 40,
+     "alpha": 0.38
+    },
+    "grow": [
+     1.1,
+     1.04
     ]
    }
-  ]
+  ],
+  "plate": "doorhanger-plate.webp"
  },
  "rollup": {
   "src": "rollup.webp",
@@ -354,24 +433,39 @@
     "pts": [
      [
       519,
-      100
+      121
      ],
      [
       1081,
-      100
+      121
      ],
      [
       1081,
-      1375
+      1376
      ],
      [
       519,
-      1375
+      1376
      ]
     ],
-    "mode": "opaque"
+    "mode": "opaque",
+    "fit": "scale",
+    "region": [
+     470,
+     85,
+     1130,
+     1505
+    ],
+    "anchor": [
+     800,
+     1500
+    ],
+    "axis": "x",
+    "max": 1.45,
+    "min": 0.7
    }
-  ]
+  ],
+  "plate": "rollup-plate.webp"
  },
  "aframe": {
   "src": "aframe.webp",
@@ -399,7 +493,21 @@
       890
      ]
     ],
-    "mode": "multiply"
+    "mode": "multiply",
+    "fit": "scale",
+    "region": [
+     110,
+     190,
+     705,
+     1150
+    ],
+    "anchor": [
+     407,
+     1130
+    ],
+    "axis": "x",
+    "max": 1.25,
+    "min": 0.75
    },
    {
     "side": 1,
@@ -422,9 +530,24 @@
       886
      ]
     ],
-    "mode": "multiply"
+    "mode": "multiply",
+    "fit": "scale",
+    "region": [
+     865,
+     190,
+     1500,
+     1150
+    ],
+    "anchor": [
+     1180,
+     1135
+    ],
+    "axis": "x",
+    "max": 1.25,
+    "min": 0.75
    }
-  ]
+  ],
+  "plate": "aframe-plate.webp"
  },
  "xbanner": {
   "src": "xbanner.webp",
@@ -434,29 +557,6 @@
   "quads": [
    {
     "side": 0,
-    "pts": [
-     [
-      498,
-      160
-     ],
-     [
-      728,
-      152
-     ],
-     [
-      726,
-      742
-     ],
-     [
-      512,
-      750
-     ]
-    ],
-    "mode": "multiply"
-   },
-   {
-    "side": 1,
-    "fallback": 0,
     "pts": [
      [
       808,
@@ -475,9 +575,24 @@
       829
      ]
     ],
-    "mode": "opaque"
+    "mode": "opaque",
+    "fit": "scale",
+    "region": [
+     765,
+     150,
+     1090,
+     945
+    ],
+    "anchor": [
+     928,
+     940
+    ],
+    "axis": "x",
+    "max": 1.3,
+    "min": 0.75
    }
-  ]
+  ],
+  "plate": "xbanner-plate.webp"
  },
  "flag": {
   "src": "flag.webp",
@@ -507,9 +622,25 @@
      ]
     ],
     "mode": "shade",
-    "clip": "shade"
+    "clip": "shade",
+    "fit": "scale",
+    "region": [
+     676,
+     60,
+     1010,
+     1470
+    ],
+    "anchor": [
+     676,
+     800
+    ],
+    "axis": "x",
+    "max": 1.6,
+    "min": 0.8,
+    "cover": true
    }
-  ]
+  ],
+  "plate": "flag-plate.webp"
  },
  "hat": {
   "src": "hat.webp",

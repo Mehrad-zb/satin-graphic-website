@@ -1,0 +1,237 @@
+/* Satin Graphic — shared structure of the "modern" site themes (Vivid Crimson, Yellow & Navy, Midnight Gold, Ocean, Forest).
+   Loaded from the theme block in /batch.css together with ONE /themes/<id>.css file that only sets colours/fonts:
+     @import url("/themes/_base-modern.css"); @import url("/themes/<id>.css");
+   The "Default" theme loads neither file, so the original (Classic) look returns exactly.
+   Pure appearance: no layout-changing rules for controls, no behaviour. Every rule is scoped to
+   html:not([data-style="classic"]) so the Website editor preview can switch back to Default instantly.
+   Note: html[data-theme] is the site's light/dark mode, hence data-style.
+   Colour tokens in the theme files use :where(...):root, so Website editor › Theme colours (html:root{...}) still win. */
+
+/* Marker read by the main bundle, which sets html[data-style="vivid"] and enables scroll-reveal. */
+:root{--site-style:vivid}
+
+html:not([data-style="classic"]){
+  --vv-display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#0b1424;--vv-navy-2:#15213a;
+  --vv-glow:color-mix(in srgb,var(--accent,#c91c50) 20%,transparent);
+  --vv-glow-2:color-mix(in srgb,var(--accent-2,#e2456f) 12%,transparent);
+  --vv-shadow-sm:0 1px 2px rgb(15 26 44/.05),0 6px 18px -8px rgb(15 26 44/.12);
+  --vv-shadow-md:0 2px 4px rgb(15 26 44/.04),0 14px 34px -14px rgb(15 26 44/.20);
+  --vv-shadow-lg:0 2px 6px rgb(15 26 44/.05),0 28px 56px -22px rgb(15 26 44/.30);
+  --vv-ring:0 0 0 4px color-mix(in srgb,var(--accent,#c91c50) 18%,transparent);
+  --vv-ease:cubic-bezier(.2,.7,.2,1);
+  --vv-radius:20px;--vv-btn-r:999px;
+  /* theme hooks (defaults = Vivid Crimson); each /themes/<id>.css overrides only what it needs */
+  --vv-accent-ink:var(--accent);           /* accent used as TEXT on light surfaces */
+  --vv-on-accent:#fff;                     /* text on accent-filled buttons/badges */
+  --vv-hot:#ff6a8a;                        /* 2nd stop of accent gradients (buttons, footer stripe) */
+  --vv-num-end:var(--accent);              /* end colour of the gradient numbers */
+  --vv-cta-end:#2a1530;                    /* 3rd stop of the dark call-to-action band */
+  --vv-hdr-bg:color-mix(in srgb,var(--card,#fff) 88%,transparent);
+  --vv-wraps-bg:var(--vv-navy);--vv-wraps-ink:#fff; /* the "Vehicle Wraps" pill in the main menu */
+  --vv-ftr-bg:var(--vv-navy);--vv-ftr-ink:#c3c9d6;--vv-ftr-mut:#8992a5;--vv-ftr-line:#1f2a40;
+  --vv-ftr-field:#111c30;--vv-ftr-field-line:#2a3650;--vv-ftr-btn-line:#33405a;
+  --vv-ftr-glow:color-mix(in srgb,var(--accent) 24%,transparent);
+  --vv-sel-line:var(--accent);             /* border of selected option cards / pills */
+}
+
+/* ---------- typography ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,h3,.d1,.d2,.d3){font-family:var(--vv-display);letter-spacing:-.03em}
+html:not([data-style="classic"]) .d1{font-size:clamp(40px,6vw,84px);line-height:1;font-weight:800}
+html:not([data-style="classic"]) .d2{font-size:clamp(30px,3.8vw,52px);line-height:1.06;font-weight:750}
+html:not([data-style="classic"]) .d3{letter-spacing:-.02em}
+html:not([data-style="classic"]) :is(h1,h2,h3,.d1,.d2,.d3){text-wrap:balance}
+html:not([data-style="classic"]) .eyebrow{color:var(--vv-accent-ink);font-weight:700;letter-spacing:.16em}
+html:not([data-style="classic"]) .eyebrow::before{width:18px;height:2px;border-radius:2px;background:currentColor}
+html:not([data-style="classic"]) #main p,html:not([data-style="classic"]) .lede{text-wrap:pretty}
+html:not([data-style="classic"]) .lede{color:var(--ink-2)}
+html:not([data-style="classic"]) ::selection{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+
+/* ---------- header ---------- */
+html:not([data-style="classic"]) .hdr{background:var(--vv-hdr-bg);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 12px 32px -28px rgb(15 26 44/.45)}
+html:not([data-style="classic"]) .hdr .nav{border-top-color:var(--line-soft)}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a){height:38px;min-height:38px;padding:0 14px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink-2);letter-spacing:.005em;transition:background .2s,color .2s,box-shadow .2s}
+html:not([data-style="classic"]) .hdr .nav>:is(button,a):hover,html:not([data-style="classic"]) .hdr .nav>button[aria-expanded="true"]{background:var(--accent-soft);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav{background:transparent;color:var(--vv-accent-ink);font-weight:700;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 28%,transparent)}
+html:not([data-style="classic"]) .hdr .nav>a.studio-nav:hover{background:var(--accent-soft)}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{background:var(--vv-wraps-bg)!important;color:var(--vv-wraps-ink)!important;border-radius:999px!important;padding:0 16px!important;font-weight:700!important}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){background:var(--accent)!important;color:var(--vv-on-accent)!important;box-shadow:0 8px 20px -8px color-mix(in srgb,var(--accent) 70%,transparent)!important}
+@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]){background:#f1f1f1!important;color:var(--vv-navy)!important}}
+html[data-theme="dark"]:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]){background:#f1f1f1!important;color:var(--vv-navy)!important}
+@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]) .chev{color:var(--vv-navy)!important}}
+html[data-theme="dark"]:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]) .chev{color:var(--vv-navy)!important}
+html:not([data-style="classic"]) .hdr .icon-btn{border-radius:999px;background:var(--card);border:1px solid var(--line)}
+html:not([data-style="classic"]) .hdr .icon-btn:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .language-control select{border-radius:999px;padding-inline:12px 6px;background-color:var(--card);border-color:var(--line);font-weight:600;cursor:pointer}
+html:not([data-style="classic"]) .hdr .login-btn{border-radius:999px}
+html:not([data-style="classic"]) .mega{border-top:1px solid var(--line-soft);box-shadow:0 30px 60px -30px rgb(15 26 44/.35)}
+html:not([data-style="classic"]) .mega .col a{border-radius:10px;padding-inline:8px;margin-inline:-8px}
+html:not([data-style="classic"]) .mega .col a:hover{background:var(--accent-soft);color:var(--vv-accent-ink);transform:none}
+html:not([data-style="classic"]) .mega .promo{border-radius:var(--vv-radius);background:linear-gradient(160deg,var(--bg-2),var(--card))}
+html:not([data-style="classic"]) .drawer .panel{box-shadow:-30px 0 60px -30px rgb(15 26 44/.4)}
+html:not([data-style="classic"]) .drawer summary{font-family:var(--vv-display);letter-spacing:-.01em}
+
+/* ---------- hero sections: soft mesh + depth ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero){isolation:isolate;position:relative}
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{
+  content:"";position:absolute;inset:-20% -10% auto -10%;height:120%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(38% 48% at 88% 14%,var(--vv-glow),transparent 70%),
+    radial-gradient(32% 42% at 6% 0%,var(--vv-glow-2),transparent 70%),
+    radial-gradient(50% 60% at 60% 100%,color-mix(in srgb,var(--ink,#0f1a2c) 5%,transparent),transparent 70%);
+}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.45;
+  background-image:linear-gradient(color-mix(in srgb,var(--ink,#0f1a2c) 5%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink,#0f1a2c) 5%,transparent) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 75%);
+}
+html:not([data-style="classic"]) .phero .art{filter:drop-shadow(0 30px 40px rgb(15 26 44/.16))}
+html:not([data-style="classic"]) .phero .art.photo:not(.cut){border-radius:var(--vv-radius);overflow:hidden}
+html:not([data-style="classic"]) :is(.hhero,.phero) .lede{font-size:clamp(16px,1.35vw,19px);line-height:1.6}
+html:not([data-style="classic"]) .crumbs{font-size:12.5px;color:var(--mut)}
+html:not([data-style="classic"]) .crumbs a:hover{color:var(--vv-accent-ink)}
+
+/* ---------- section rhythm ---------- */
+html:not([data-style="classic"]) .sec{padding-block:clamp(64px,8.5vw,112px)}
+html:not([data-style="classic"]) .sec.alt{background:linear-gradient(180deg,var(--bg-2),color-mix(in srgb,var(--bg-2) 55%,var(--bg)))}
+html:not([data-style="classic"]) .sec.tight{padding-block:clamp(44px,5.5vw,76px)}
+html:not([data-style="classic"]) .sec-head{margin-bottom:clamp(28px,3.5vw,44px)}
+html:not([data-style="classic"]) .sec-head .lede{max-width:62ch}
+
+/* ---------- cards & product grids ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-radius:var(--vv-radius);border:1px solid color-mix(in srgb,var(--line) 80%,transparent);background:var(--card);box-shadow:var(--vv-shadow-sm);transition:transform .35s var(--vv-ease),box-shadow .35s var(--vv-ease),border-color .25s}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{transform:translateY(-4px);box-shadow:var(--vv-shadow-lg);border-color:color-mix(in srgb,var(--accent) 30%,var(--line))}
+html:not([data-style="classic"]) .card :is(.art,img){border-radius:calc(var(--vv-radius) - 8px)}
+html:not([data-style="classic"]) a.card img{transition:transform .6s var(--vv-ease)}
+html:not([data-style="classic"]) a.card:hover img{transform:scale(1.035)}
+html:not([data-style="classic"]) a.card :is(.link,h3){transition:color .2s}
+html:not([data-style="classic"]) a.card:hover :is(.link,h3){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .card .price,html:not([data-style="classic"]) .card .foot b{color:var(--ink);font-weight:750;font-variant-numeric:tabular-nums}
+html:not([data-style="classic"]) .card .tiny{color:var(--mut)}
+
+/* ---------- FAQ / accordions ---------- */
+html:not([data-style="classic"]) main details{border-radius:16px;transition:box-shadow .25s,border-color .25s,background .25s}
+html:not([data-style="classic"]) main details[open]{box-shadow:var(--vv-shadow-sm);border-color:color-mix(in srgb,var(--accent) 22%,var(--line))}
+html:not([data-style="classic"]) main details>summary{font-weight:650;color:var(--ink)}
+html:not([data-style="classic"]) main details>summary:hover{color:var(--vv-accent-ink)}
+
+/* ---------- numbers ---------- */
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,var(--ink) 30%,var(--vv-num-end));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- buttons ---------- */
+html:not([data-style="classic"]) .btn{border-radius:var(--vv-btn-r);font-weight:700;letter-spacing:.005em;transition:transform .2s var(--vv-ease),box-shadow .25s var(--vv-ease),background .2s,color .2s,border-color .2s}
+html:not([data-style="classic"]) .btn:not(.ghost):not(.sm){box-shadow:0 10px 22px -12px rgb(15 26 44/.6)}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .btn:not(.ghost):not(.sm),.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)){background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 72%,var(--vv-hot)));border-color:transparent;color:var(--vv-on-accent);box-shadow:0 12px 26px -12px color-mix(in srgb,var(--accent) 85%,transparent)}
+html:not([data-style="classic"]) :is(.btn.red,.hdr .q-desk,:is(.hhero,.phero) .ctas .btn:not(.ghost),.hhero .top .btn:not(.ghost)):hover{box-shadow:0 16px 32px -12px color-mix(in srgb,var(--accent) 90%,transparent)}
+html:not([data-style="classic"]) .btn:hover{transform:translateY(-2px)}
+html:not([data-style="classic"]) .btn:active{transform:translateY(0)}
+html:not([data-style="classic"]) .btn.ghost{background:color-mix(in srgb,var(--card,#fff) 75%,transparent);border:1px solid var(--line);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+html:not([data-style="classic"]) .btn.ghost:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- forms & configurators ---------- */
+html:not([data-style="classic"]) main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea),html:not([data-style="classic"]) .modal :is(input:not([type=checkbox]):not([type=radio]),select,textarea){border-radius:12px;border-color:var(--line);transition:border-color .2s,box-shadow .2s}
+html:not([data-style="classic"]) main :is(input,select,textarea):focus,html:not([data-style="classic"]) .modal :is(input,select,textarea):focus{outline:none;border-color:var(--vv-accent-ink);box-shadow:var(--vv-ring)}
+html:not([data-style="classic"]) :is(.rule-summary,.cfg-summary,.summary){border-radius:var(--vv-radius)}
+html:not([data-style="classic"]) .modal .box{border-radius:24px;box-shadow:0 40px 90px -30px rgb(11 20 36/.55)}
+
+html:not([data-style="classic"]) .managed-product-gallery{background:transparent!important}
+html:not([data-style="classic"]) .managed-product-gallery img{border-radius:14px;box-shadow:var(--vv-shadow-sm);background:var(--card)}
+
+/* ---------- call-to-action band ---------- */
+html:not([data-style="classic"]) .cta{position:relative;overflow:hidden;isolation:isolate;border-radius:28px;background:linear-gradient(135deg,var(--vv-navy) 0%,var(--vv-navy-2) 60%,var(--vv-cta-end) 100%);color:#e9ecf3;box-shadow:var(--vv-shadow-lg)}
+html:not([data-style="classic"]) .cta::before{content:"";position:absolute;inset:auto -12% -55% auto;width:62%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 45%,transparent),transparent 65%);z-index:-1;pointer-events:none}
+html:not([data-style="classic"]) .cta :is(h2,.d2){color:#fff}
+html:not([data-style="classic"]) .cta p{color:#c4cad7}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:#fff;color:var(--vv-navy);box-shadow:0 12px 28px -12px rgb(0 0 0/.6)}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:var(--accent);color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .cta .btn.ghost{background:transparent;color:#fff;border-color:rgb(255 255 255/.28)}
+html:not([data-style="classic"]) .cta .tel{color:#aab2c3}
+
+/* ---------- answer-first summary ("At a glance"): base styles live in /services.css ---------- */
+html:not([data-style="classic"]) .vv-answer .answer-box{border-radius:24px;box-shadow:var(--vv-shadow-md)}
+
+/* ---------- footer ---------- */
+html:not([data-style="classic"]) .ftr{position:relative;background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);border-top:0;--ink:#fff;--ink-2:var(--vv-ftr-ink);--mut:var(--vv-ftr-mut);--line:var(--vv-ftr-line);--line-soft:var(--vv-ftr-line);overflow:hidden}
+html:not([data-style="classic"]) .ftr::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--accent),var(--vv-hot),var(--accent))}
+html:not([data-style="classic"]) .ftr::after{content:"";position:absolute;width:560px;height:560px;right:-180px;top:-280px;border-radius:50%;background:radial-gradient(circle,var(--vv-ftr-glow),transparent 70%);pointer-events:none}
+html:not([data-style="classic"]) .ftr .col a{transition:color .2s,transform .2s}
+html:not([data-style="classic"]) .ftr .col a:hover{color:#fff;transform:translateX(2px)}
+html[dir=rtl]:not([data-style="classic"]) .ftr .col a:hover{transform:translateX(-2px)}
+html:not([data-style="classic"]) .ftr :is(h2,h4){color:#fff;letter-spacing:.12em}
+html:not([data-style="classic"]) .ftr :is(.flogo,.logo img){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen} /* logo file has a white background */
+html:not([data-style="classic"]) .ftr .btn.ghost{color:#fff;border-color:var(--vv-ftr-btn-line);background:transparent}
+html:not([data-style="classic"]) .ftr .news .inp{background:var(--vv-ftr-field);border:1px solid var(--vv-ftr-field-line);color:#fff;border-radius:999px}
+html:not([data-style="classic"]) .ftr .news .btn{background:var(--accent);color:var(--vv-on-accent)}
+
+/* ---------- motion: quick, subtle, never leaves content half-faded ---------- */
+html:not([data-style="classic"]) .vv-rv{opacity:0;transform:translateY(16px);transition:opacity .5s var(--vv-ease),transform .6s var(--vv-ease)}
+html:not([data-style="classic"]) .vv-rv.vv-in,html:not([data-style="classic"]) .vv-rv:has([data-scroll-entrance]){opacity:1;transform:none}
+html:not([data-style="classic"]) [data-scroll-entrance]{transition-duration:.45s,.55s!important}
+@media (prefers-reduced-motion:reduce){
+  html:not([data-style="classic"]) .vv-rv{opacity:1;transform:none;transition:none}
+  html:not([data-style="classic"]) :is(.card,.btn,a.card img,.hdr .nav>*,.ftr .col a){transition:none}
+  html:not([data-style="classic"]) :is(a.card,.btn):hover,html:not([data-style="classic"]) a.card:hover img{transform:none}
+}
+
+/* ---------- mobile polish ---------- */
+@media (max-width:900px){
+  html:not([data-style="classic"]) .hdr .studio-entry{min-height:36px;width:auto;justify-self:center;padding:0 18px;border-radius:999px;font-size:13px;background:transparent;color:var(--vv-accent-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 30%,transparent)}
+}
+@media (max-width:700px){
+  html:not([data-style="classic"]) .d1{font-size:clamp(36px,10.5vw,50px);line-height:1.04}
+  html:not([data-style="classic"]) .d2{font-size:clamp(28px,8vw,38px)}
+  html:not([data-style="classic"]) .sec{padding-block:56px}
+  html:not([data-style="classic"]) .sec.tight{padding-block:40px}
+  html:not([data-style="classic"]) :is(.hhero,.phero)::after{background-size:36px 36px}
+  html:not([data-style="classic"]) :is(.phero .ctas,.hhero .ctas) .btn{min-height:48px}
+  html:not([data-style="classic"]) a.card:hover{transform:none}
+  html:not([data-style="classic"]) .cta{border-radius:22px}
+  html:not([data-style="classic"]) .language-control select{width:78px;max-width:78px;padding-inline:9px 2px;font-size:13px}
+}
+@media (max-width:380px){
+  html:not([data-style="classic"]) .language-control select{width:64px;max-width:64px}
+}
+
+/* ---------- brand colour hooks: older rules that hard-code the original crimson follow the theme accent ---------- */
+html:not([data-style="classic"]) .btn.red{color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .badge{background:var(--accent);color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .chip.red{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .hhero h1 .red{color:var(--vv-accent-ink);-webkit-text-fill-color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :is(.service-feature .step-num,.map-list a:hover,.mega .col>a:hover,.drawer a:hover){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :is(.pills,.opts) button[aria-pressed=true]{color:var(--vv-accent-ink);background:var(--accent-soft);border-color:var(--vv-sel-line)}
+html:not([data-style="classic"]) .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 30%,transparent)}
+html:not([data-style="classic"]) .reference-option input[type=range]{accent-color:var(--accent)}
+html:not([data-style="classic"]) .ps-slide::before{background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 35%,transparent),transparent)}
+html:not([data-style="classic"]) :is(.ps-eb::before,.ps-dots button.on){background:var(--accent)}
+html:not([data-style="classic"]) .ps-btn{background:var(--accent);color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .ps-btn:hover{box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 35%,transparent)}
+html:not([data-style="classic"]) .tint-glass-map [data-glass]:is(:hover,:focus-visible) .xp{stroke:var(--accent)}
+html:not([data-style="classic"]) .tint-glass-map [data-glass].on :is(.xp,.ip){fill:var(--accent)}
+html:not([data-style="classic"]) :is(.glass-guide-item span,.wall-step-icon){color:var(--vv-accent-ink);background:var(--accent-soft)}
+html:not([data-style="classic"]) .room-pick[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :is(.zeus-tabs,.shop-info-tabs) button[aria-selected=true]{color:var(--vv-accent-ink);border-bottom-color:var(--accent)}
+html:not([data-style="classic"]) .zeus-plan.pop{border-color:var(--accent)}
+html:not([data-style="classic"]) .shop-trust svg{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .tpl-steps b{background:var(--accent);color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .scw{--scw-brand:var(--vv-chat,var(--accent));--scw-brand-d:color-mix(in srgb,var(--vv-chat,var(--accent)) 82%,#000)}
+html:not([data-style="classic"]) :is(.feat .ico,.service-icon,.plan-symbol){color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .studio-nav{color:var(--vv-accent-ink);background:var(--accent-soft)}
+html:not([data-style="classic"]) .studio-cta{background:var(--accent);color:var(--vv-on-accent)}
+html:not([data-style="classic"]) .service-checkboxes label:has(input:checked){border-color:var(--vv-sel-line)}
+html:not([data-style="classic"]) :is(.service-request input[type=checkbox],.rule-cfg .artwork-options input[type=radio]){accent-color:var(--vv-accent-ink)}
+/* configurators: selected option cards, quantity presets, artwork choice */
+html:not([data-style="classic"]) .rule-cfg .product-option-card input:checked+.product-option-content,
+html:not([data-style="classic"]) .rule-cfg .quantity-presets button[aria-pressed=true],
+html:not([data-style="classic"]) .rule-cfg .artwork-options label:has(input:checked),
+html:not([data-style="classic"]) :is(.room-options,.finish-options,.booking-spots) [aria-pressed=true]{background:var(--accent-soft);border-color:var(--vv-sel-line);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .rule-cfg .product-option-card:hover .product-option-content{border-color:color-mix(in srgb,var(--vv-sel-line) 70%,var(--line))}
+html:not([data-style="classic"]) .rule-cfg fieldset:focus-within legend{color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) :is(.garment-swatches input:checked+span,.garment-size-grid label:has(input:focus)){outline-color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .reference-choice:has(input:checked)>span{border-color:var(--vv-sel-line);box-shadow:inset 0 0 0 1px var(--vv-sel-line);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .detail-plan.featured{border-color:var(--accent)}
+html:not([data-style="classic"]) .product-tabs [aria-selected=true]{border-bottom-color:var(--accent)}
+html:not([data-style="classic"]) .apparel-benefits span{background:var(--accent-soft);color:var(--vv-accent-ink)}
+html:not([data-style="classic"]) .scw-links a{background:color-mix(in srgb,var(--vv-chat,var(--accent)) 10%,#fff)}
+html:not([data-style="classic"]) .scw-launch{box-shadow:0 10px 30px color-mix(in srgb,var(--scw-brand) 35%,transparent),0 2px 6px #0003}

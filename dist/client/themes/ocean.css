@@ -1,0 +1,34 @@
+/* Theme: Clean Ocean — ocean blue + teal on crisp white, deep-sea navy footer. Used with /themes/_base-modern.css. */
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f2f8fb;--bg-3:#e4f0f6;--card:#ffffff;
+    --ink:#0b2233;--ink-2:#30475a;--mut:#5d7384;--line:#dce8ef;--line-soft:#ebf3f7;
+    --btn:#0b2233;--btn-ink:#ffffff;
+    --accent:#0077b6;--accent-2:#00a6c8;--accent-soft:#e3f2fa;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f2f8fb;--bg-3:#e4f0f6;--card:#ffffff;
+  --ink:#0b2233;--ink-2:#30475a;--mut:#5d7384;--line:#dce8ef;--line-soft:#ebf3f7;
+  --btn:#0b2233;--btn-ink:#ffffff;
+  --accent:#0077b6;--accent-2:#00a6c8;--accent-soft:#e3f2fa;
+}
+html:not([data-style="classic"]){
+  --vv-display:Inter,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#062a3f;--vv-navy-2:#0a3a55;--vv-cta-end:#0b5470;
+  --vv-accent-ink:#00679e;--vv-hot:#00b4d8;
+  --vv-ftr-bg:#062a3f;--vv-ftr-ink:#c3d6e2;--vv-ftr-mut:#88a5b8;--vv-ftr-line:#14405a;--vv-ftr-field:#08334c;--vv-ftr-field-line:#1d5070;--vv-ftr-btn-line:#235a7c;
+  --vv-ftr-glow:rgb(0 180 216/.2);
+  --vv-radius:22px;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#06141c;--bg-2:#0b1e29;--bg-3:#122a37;--card:#0a1a24;--line:#1b3443;--line-soft:#142a37;
+    --accent:#38bdf8;--accent-2:#22d3ee;--accent-soft:rgb(56 189 248/.14);--vv-accent-ink:#5cc8f8;--vv-on-accent:#06141c;--vv-num-end:#38bdf8;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#06141c;--bg-2:#0b1e29;--bg-3:#122a37;--card:#0a1a24;--line:#1b3443;--line-soft:#142a37;
+  --accent:#38bdf8;--accent-2:#22d3ee;--accent-soft:rgb(56 189 248/.14);--vv-accent-ink:#5cc8f8;--vv-on-accent:#06141c;--vv-num-end:#38bdf8;
+}
+html:not([data-style="classic"]) .d1,html:not([data-style="classic"]) .d2{letter-spacing:-.035em}

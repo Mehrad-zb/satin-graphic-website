@@ -42,3 +42,19 @@
 .coupon-remove{background:none;border:0;padding:0 0 0 6px;color:var(--muted);font-size:12px;text-decoration:underline;cursor:pointer}
 .coupon-error{font-size:13px;color:#ad123f;margin:10px 0 0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Order summary fits the screen: the item list scrolls inside, the totals stay visible */
+.summary-items{min-width:0}
+.summary-foot{min-width:0}
+@media(min-width:901px){
+  aside.summary{top:150px;display:flex;flex-direction:column;max-height:calc(100vh - 166px);max-height:calc(100dvh - 166px);overflow:hidden}
+  .summary>h2{flex:none}
+  .summary-items{flex:1 1 auto;min-height:72px;overflow-y:auto;overscroll-behavior:contain;margin-inline:-6px;padding-inline:6px;scrollbar-width:thin}
+  .summary-foot{flex:none;border-top:1px solid var(--line);padding-top:6px;margin-top:2px}
+}
+@media(min-width:901px) and (max-height:820px){
+  aside.summary{padding:18px 20px}
+  .summary-item{padding:11px 0}
+  .summary-total{padding:6px 0}
+  .summary-total.grand{margin-top:6px;padding-top:12px}
+}

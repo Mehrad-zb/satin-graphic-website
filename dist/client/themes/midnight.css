@@ -1,0 +1,42 @@
+/* Theme: Midnight Gold — dark luxe. Near-black header, footer and call-to-action bands with warm gold accents,
+   ivory page background in light mode, deep black in dark mode. Used with /themes/_base-modern.css. */
+@import url("/themes/_dark-header.css");
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#fbfaf7;--bg-2:#f3f0e8;--bg-3:#e9e4d8;--card:#ffffff;
+    --ink:#121317;--ink-2:#3a3b42;--mut:#6b6a70;--line:#e4dfd3;--line-soft:#efebe2;
+    --btn:#121317;--btn-ink:#f6e7b8;
+    --accent:#c9a227;--accent-2:#e0bd55;--accent-soft:#f7efd6;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#fbfaf7;--bg-2:#f3f0e8;--bg-3:#e9e4d8;--card:#ffffff;
+  --ink:#121317;--ink-2:#3a3b42;--mut:#6b6a70;--line:#e4dfd3;--line-soft:#efebe2;
+  --btn:#121317;--btn-ink:#f6e7b8;
+  --accent:#c9a227;--accent-2:#e0bd55;--accent-soft:#f7efd6;
+}
+html:not([data-style="classic"]){
+  --vv-display:Manrope,"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --vv-navy:#0e0f13;--vv-navy-2:#1a1b21;--vv-cta-end:#2b2414;
+  --vv-accent-ink:#8a6a12;--vv-on-accent:#121317;--vv-hot:#f1d27a;--vv-num-end:#b08a1e;
+  --vv-wraps-bg:transparent;--vv-wraps-ink:#e0bd55;
+  --vv-hdr-dark:#0e0f13;--vv-hdr-card:#1a1b21;--vv-hdr-line:#2c2d35;--vv-hdr-ink2:#d9d6cc;--vv-hdr-mut:#9a978d;--vv-hdr-soft:rgb(224 189 85/.14);
+  --vv-ftr-bg:#0e0f13;--vv-ftr-ink:#cfcabb;--vv-ftr-mut:#8f8b80;--vv-ftr-line:#24252c;--vv-ftr-field:#16171c;--vv-ftr-field-line:#30313a;--vv-ftr-btn-line:#3a3b44;
+  --vv-ftr-glow:rgb(201 162 39/.18);--vv-chat:#121317;
+  --vv-radius:14px;--vv-btn-r:10px;--vv-sel-line:#b8921f;
+}
+@media (prefers-color-scheme:dark){
+  html:not([data-style="classic"]):not([data-theme="light"]){
+    --bg:#0b0b0e;--bg-2:#131318;--bg-3:#1c1c22;--card:#131318;--ink:#f4f1ea;--ink-2:#cfcabb;--mut:#959185;--line:#2a2a31;--line-soft:#1f1f25;
+    --btn:#e0bd55;--btn-ink:#121317;--accent:#e0bd55;--accent-2:#f1d27a;--accent-soft:rgb(224 189 85/.13);--vv-accent-ink:#e0bd55;--vv-num-end:#e0bd55;
+  }
+}
+html[data-theme="dark"]:not([data-style="classic"]){
+  --bg:#0b0b0e;--bg-2:#131318;--bg-3:#1c1c22;--card:#131318;--ink:#f4f1ea;--ink-2:#cfcabb;--mut:#959185;--line:#2a2a31;--line-soft:#1f1f25;
+  --btn:#e0bd55;--btn-ink:#121317;--accent:#e0bd55;--accent-2:#f1d27a;--accent-soft:rgb(224 189 85/.13);--vv-accent-ink:#e0bd55;--vv-num-end:#e0bd55;
+}
+html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{box-shadow:inset 0 0 0 1px rgb(224 189 85/.55)!important}
+html:not([data-style="classic"]) .eyebrow{letter-spacing:.22em}
+html:not([data-style="classic"]) .cta .btn:not(.ghost){background:linear-gradient(135deg,#e0bd55,#c9a227);color:#121317}
+html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#f6e7b8;color:#121317}
+html:not([data-style="classic"]) .ftr :is(h2,h4){color:#e0bd55}

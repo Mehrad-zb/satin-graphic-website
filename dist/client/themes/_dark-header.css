@@ -1,0 +1,18 @@
+/* Shared by themes with a dark header bar (Yellow & Navy, Midnight Gold).
+   Imported at the top of those theme files; driven by --vv-hdr-* set in the theme.
+   The header (and its mega menus, which live inside it) switches to light-on-dark text. */
+html:not([data-style="classic"]) .hdr{
+  --vv-hdr-bg:var(--vv-hdr-dark);
+  --ink:#fff;--ink-2:var(--vv-hdr-ink2);--mut:var(--vv-hdr-mut);--line:var(--vv-hdr-line);--line-soft:var(--vv-hdr-line);
+  --card:var(--vv-hdr-card);--bg:var(--vv-hdr-dark);--bg-2:var(--vv-hdr-card);--accent-soft:var(--vv-hdr-soft);
+  --vv-accent-ink:var(--accent);--btn:#fff;--btn-ink:var(--vv-hdr-dark);
+  color:#fff;border-bottom-color:transparent;box-shadow:0 14px 34px -24px rgb(0 0 0/.6);
+  -webkit-backdrop-filter:none;backdrop-filter:none
+}
+/* the logo file has a white background: invert it, then "screen" drops the (now black) background onto the dark bar */
+html:not([data-style="classic"]) .hdr :is(.logo img,.dlogo){filter:invert(1) hue-rotate(180deg) brightness(1.15);mix-blend-mode:screen}
+html:not([data-style="classic"]) .hdr .mega{box-shadow:0 30px 60px -30px rgb(0 0 0/.65)}
+html:not([data-style="classic"]) .hdr .mega .promo{background:linear-gradient(160deg,var(--vv-hdr-card),var(--vv-hdr-dark))}
+html:not([data-style="classic"]) .hdr .language-control select{color:#fff;color-scheme:dark}
+html:not([data-style="classic"]) .hdr .btn.ghost{color:#fff;background:transparent;border-color:var(--vv-hdr-line)}
+html:not([data-style="classic"]) .hdr .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}

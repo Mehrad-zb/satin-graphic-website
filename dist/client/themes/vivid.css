@@ -1,0 +1,17 @@
+/* Theme: Vivid Crimson — brand crimson + deep navy (the original "Vivid" style).
+   Used with /themes/_base-modern.css; colour tokens only. Light mode sets the palette, dark mode keeps the site's dark palette. */
+@media (prefers-color-scheme:light){
+  :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
+    --bg:#ffffff;--bg-2:#f5f6fa;--bg-3:#eceff5;--card:#ffffff;
+    --ink:#0f1a2c;--ink-2:#334158;--mut:#5b687c;--line:#e2e6ee;--line-soft:#eef0f5;
+    --btn:#0f1a2c;--btn-ink:#ffffff;
+    --accent:#c91c50;--accent-2:#e2456f;--accent-soft:#fdecf1;
+  }
+}
+:where(html[data-theme="light"]:not([data-style="classic"])):root{
+  --bg:#ffffff;--bg-2:#f5f6fa;--bg-3:#eceff5;--card:#ffffff;
+  --ink:#0f1a2c;--ink-2:#334158;--mut:#5b687c;--line:#e2e6ee;--line-soft:#eef0f5;
+  --btn:#0f1a2c;--btn-ink:#ffffff;
+  --accent:#c91c50;--accent-2:#e2456f;--accent-soft:#fdecf1;
+}
+/* all --vv-* structure variables keep their defaults from _base-modern.css */
