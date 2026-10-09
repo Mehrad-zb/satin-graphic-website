@@ -1,0 +1,97 @@
+/* Satin Graphic — "Vivid" site style.
+   Imported from the theme block in /batch.css only when Website editor › Theme › Site style = Vivid.
+   Rules are scoped to html:not([data-style="classic"]) so they apply before first paint (no flash);
+   choosing "Classic" drops the import (or set data-style="classic") and the original look returns exactly.
+   Note: html[data-theme] is already used by the site's light/dark mode, hence data-style. */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&display=swap");
+
+/* Marker read by the main bundle, which sets html[data-style="vivid"] and enables scroll-reveal. */
+:root{--site-style:vivid}
+
+html:not([data-style="classic"]){
+  --vv-display:"Sora","Plus Jakarta Sans",system-ui,sans-serif;
+  --vv-glow:color-mix(in srgb,var(--accent,#c91c50) 22%,transparent);
+  --vv-glow-2:color-mix(in srgb,var(--accent-2,#ff4d6d) 14%,transparent);
+  --vv-shadow-sm:0 1px 2px rgb(23 25 30/.05),0 4px 14px -6px rgb(23 25 30/.10);
+  --vv-shadow-lg:0 2px 4px rgb(23 25 30/.04),0 24px 48px -18px rgb(23 25 30/.22);
+  --vv-ease:cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---------- typography ---------- */
+html:not([data-style="classic"]):not([dir=rtl]) body :is(h1,h2,h3,.d1,.d2,.d3){font-family:var(--vv-display);letter-spacing:-.035em}
+html:not([data-style="classic"]) .d1{font-size:clamp(42px,6.8vw,92px);line-height:.96;font-weight:800}
+html:not([data-style="classic"]) .d2{font-size:clamp(32px,4.4vw,56px);line-height:1.02}
+html:not([data-style="classic"]) .eyebrow{color:var(--accent);font-weight:700;letter-spacing:.16em}
+html:not([data-style="classic"]) .eyebrow::before{width:18px;height:2px;border-radius:2px}
+html:not([data-style="classic"]) #main p,html:not([data-style="classic"]) .lede{text-wrap:pretty}
+
+/* ---------- hero sections: soft mesh + depth ---------- */
+html:not([data-style="classic"]) :is(.hhero,.phero){isolation:isolate}
+html:not([data-style="classic"]) :is(.hhero,.phero)::before{
+  content:"";position:absolute;inset:-20% -10% auto -10%;height:120%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(40% 50% at 85% 18%,var(--vv-glow),transparent 70%),
+    radial-gradient(35% 45% at 8% 0%,var(--vv-glow-2),transparent 70%),
+    radial-gradient(50% 60% at 60% 100%,color-mix(in srgb,var(--ink,#17191e) 6%,transparent),transparent 70%);
+}
+html:not([data-style="classic"]) :is(.hhero,.phero)::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(color-mix(in srgb,var(--ink,#17191e) 5%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--ink,#17191e) 5%,transparent) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 75%);
+}
+html:not([data-style="classic"]) .phero .art{filter:drop-shadow(0 30px 40px rgb(23 25 30/.18))}
+
+/* ---------- section rhythm ---------- */
+html:not([data-style="classic"]) .sec{padding-block:clamp(64px,9vw,120px)}
+html:not([data-style="classic"]) .sec.alt{background:linear-gradient(180deg,var(--bg-2),color-mix(in srgb,var(--bg-2) 60%,var(--bg)))}
+html:not([data-style="classic"]) .sec.tight{padding-block:clamp(48px,6vw,80px)}
+
+/* ---------- cards ---------- */
+html:not([data-style="classic"]) :is(.card,.review-slide,.cms-card,.cms-rep-i){border-color:color-mix(in srgb,var(--line) 70%,transparent);box-shadow:var(--vv-shadow-sm);transition:transform .35s var(--vv-ease),box-shadow .35s var(--vv-ease),border-color .25s}
+html:not([data-style="classic"]) :is(a.card,.review-slide,.cms-card,.cms-rep-i):hover{transform:translateY(-6px);box-shadow:var(--vv-shadow-lg);border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+html:not([data-style="classic"]) a.card img{transition:transform .6s var(--vv-ease)}
+html:not([data-style="classic"]) a.card:hover img{transform:scale(1.04)}
+html:not([data-style="classic"]) .faq details,html:not([data-style="classic"]) main details{transition:box-shadow .25s}
+html:not([data-style="classic"]) main details[open]{box-shadow:var(--vv-shadow-sm)}
+
+/* ---------- numbers ---------- */
+html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,var(--ink) 30%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- buttons ---------- */
+html:not([data-style="classic"]) .btn{border-radius:999px;font-weight:700;letter-spacing:.005em}
+html:not([data-style="classic"]) .btn:not(.ghost):not(.sm){box-shadow:0 8px 20px -10px rgb(23 25 30/.55)}
+html:not([data-style="classic"]) .btn.red,html:not([data-style="classic"]) .hdr .btn:not(.ghost):not(.sm){background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,#ff5a7a));border-color:transparent;color:#fff;box-shadow:0 10px 24px -10px color-mix(in srgb,var(--accent) 80%,transparent)}
+html:not([data-style="classic"]) .btn:hover{transform:translateY(-2px)}
+html:not([data-style="classic"]) .btn.ghost{background:color-mix(in srgb,var(--card,#fff) 70%,transparent);backdrop-filter:blur(6px)}
+html:not([data-style="classic"]) :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- header ---------- */
+html:not([data-style="classic"]) .hdr{box-shadow:0 1px 0 color-mix(in srgb,var(--line) 60%,transparent),0 10px 30px -24px rgb(23 25 30/.35)}
+
+/* ---------- footer ---------- */
+html:not([data-style="classic"]) .ftr{position:relative;background:#17191e;color:#c9ccd3;border-top:0;--ink:#fff;--ink-2:#c9ccd3;--mut:#8b909c;--line:#2a2d35;--line-soft:#2a2d35;overflow:hidden}
+html:not([data-style="classic"]) .ftr::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--accent),#ff6b8b,var(--accent))}
+html:not([data-style="classic"]) .ftr::after{content:"";position:absolute;width:520px;height:520px;right:-160px;top:-260px;border-radius:50%;background:radial-gradient(circle,rgb(201 28 80/.22),transparent 70%);pointer-events:none}
+html:not([data-style="classic"]) .ftr .col a:hover{color:#fff;transform:translateX(2px)}
+html:not([data-style="classic"]) .ftr .col a{transition:color .2s,transform .2s}
+html:not([data-style="classic"]) .ftr h4{color:#fff}
+html:not([data-style="classic"]) .ftr :is(.flogo,.logo img){filter:invert(1) hue-rotate(180deg) brightness(1.15)}
+html:not([data-style="classic"]) .ftr .btn.ghost{color:#fff;border-color:#3a3e48;background:transparent}
+
+/* ---------- scroll reveal (classes added by the bundle; never hides content without JS) ---------- */
+html:not([data-style="classic"]) .vv-rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--vv-ease),transform .8s var(--vv-ease)}
+html:not([data-style="classic"]) .vv-rv.vv-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html:not([data-style="classic"]) .vv-rv{opacity:1;transform:none;transition:none}
+  html:not([data-style="classic"]) :is(.card,.btn,a.card img){transition:none}
+}
+
+/* ---------- mobile polish ---------- */
+@media (max-width:700px){
+  html:not([data-style="classic"]) .d1{font-size:clamp(38px,11vw,52px)}
+  html:not([data-style="classic"]) .sec{padding-block:56px}
+  html:not([data-style="classic"]) :is(.hhero,.phero)::after{background-size:36px 36px}
+  html:not([data-style="classic"]) .phero .ctas .btn,html:not([data-style="classic"]) .hhero .btn{min-height:48px}
+  html:not([data-style="classic"]) a.card:hover{transform:none}
+}

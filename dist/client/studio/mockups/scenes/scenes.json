@@ -1,0 +1,673 @@
+{
+ "_note": "Photo mockup scenes. Coordinates are pixels in the scene image. pts = TL,TR,BR,BL of the printable surface. mode: opaque (covers the printed sample), multiply (blank surface; shading shows through), shade (art then multiplied by the -shade.webp luminance, clipped to its alpha). rect = upright print area for apparel (art is fitted top-centre). Garment scenes recolour the alpha mask of -shade.webp.",
+ "cards": {
+  "src": "cards.webp",
+  "w": 1600,
+  "h": 1600,
+  "label": "Business cards",
+  "quads": [
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      652,
+      217
+     ],
+     [
+      1462,
+      503
+     ],
+     [
+      1290,
+      1080
+     ],
+     [
+      480,
+      794
+     ]
+    ],
+    "mode": "opaque",
+    "gloss": true
+   },
+   {
+    "side": 0,
+    "pts": [
+     [
+      232,
+      672
+     ],
+     [
+      1070,
+      840
+     ],
+     [
+      962,
+      1384
+     ],
+     [
+      124,
+      1218
+     ]
+    ],
+    "mode": "opaque",
+    "gloss": true
+   }
+  ]
+ },
+ "poster": {
+  "src": "poster.webp",
+  "w": 1600,
+  "h": 1067,
+  "label": "Printed sheets",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      137,
+      98
+     ],
+     [
+      755,
+      98
+     ],
+     [
+      755,
+      968
+     ],
+     [
+      137,
+      968
+     ]
+    ],
+    "mode": "opaque",
+    "fit": "contain"
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      845,
+      98
+     ],
+     [
+      1463,
+      98
+     ],
+     [
+      1463,
+      968
+     ],
+     [
+      845,
+      968
+     ]
+    ],
+    "mode": "opaque",
+    "fit": "contain"
+   }
+  ]
+ },
+ "brochure": {
+  "src": "brochure.webp",
+  "w": 1600,
+  "h": 1480,
+  "label": "Brochure – outside and inside",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      52,
+      402
+     ],
+     [
+      893,
+      150
+     ],
+     [
+      1066,
+      746
+     ],
+     [
+      225,
+      998
+     ]
+    ],
+    "mode": "opaque",
+    "gloss": true
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      705,
+      600
+     ],
+     [
+      1553,
+      855
+     ],
+     [
+      1378,
+      1450
+     ],
+     [
+      530,
+      1195
+     ]
+    ],
+    "mode": "opaque",
+    "gloss": true
+   }
+  ]
+ },
+ "brochure-open": {
+  "src": "brochure-open.webp",
+  "w": 1200,
+  "h": 1200,
+  "label": "Brochure – open",
+  "quads": [
+   {
+    "side": 1,
+    "fallback": 0,
+    "slice": [
+     0,
+     3
+    ],
+    "pts": [
+     [
+      315,
+      140
+     ],
+     [
+      570,
+      290
+     ],
+     [
+      360,
+      865
+     ],
+     [
+      30,
+      688
+     ]
+    ],
+    "mode": "multiply"
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "slice": [
+     1,
+     3
+    ],
+    "pts": [
+     [
+      570,
+      290
+     ],
+     [
+      868,
+      382
+     ],
+     [
+      740,
+      987
+     ],
+     [
+      360,
+      865
+     ]
+    ],
+    "mode": "multiply"
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "slice": [
+     2,
+     3
+    ],
+    "pts": [
+     [
+      868,
+      382
+     ],
+     [
+      1155,
+      410
+     ],
+     [
+      1103,
+      1030
+     ],
+     [
+      740,
+      987
+     ]
+    ],
+    "mode": "multiply"
+   }
+  ]
+ },
+ "doorhanger": {
+  "src": "doorhanger.webp",
+  "w": 1600,
+  "h": 1600,
+  "label": "Door hangers",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      264,
+      300
+     ],
+     [
+      738,
+      300
+     ],
+     [
+      736,
+      1320
+     ],
+     [
+      262,
+      1320
+     ]
+    ],
+    "mode": "opaque",
+    "radius": 0.05,
+    "holes": [
+     {
+      "c": [
+       503,
+       507
+      ],
+      "r": 101
+     },
+     {
+      "rect": [
+       250,
+       476,
+       160,
+       62
+      ]
+     }
+    ]
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      878,
+      300
+     ],
+     [
+      1352,
+      300
+     ],
+     [
+      1350,
+      1322
+     ],
+     [
+      876,
+      1322
+     ]
+    ],
+    "mode": "opaque",
+    "radius": 0.05,
+    "holes": [
+     {
+      "c": [
+       1117,
+       507
+      ],
+      "r": 101
+     },
+     {
+      "rect": [
+       864,
+       476,
+       160,
+       62
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "rollup": {
+  "src": "rollup.webp",
+  "w": 1600,
+  "h": 1600,
+  "label": "Roll-up banner",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      519,
+      100
+     ],
+     [
+      1081,
+      100
+     ],
+     [
+      1081,
+      1375
+     ],
+     [
+      519,
+      1375
+     ]
+    ],
+    "mode": "opaque"
+   }
+  ]
+ },
+ "aframe": {
+  "src": "aframe.webp",
+  "w": 1600,
+  "h": 1217,
+  "label": "A-frame sign",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      162,
+      245
+     ],
+     [
+      648,
+      245
+     ],
+     [
+      648,
+      890
+     ],
+     [
+      162,
+      890
+     ]
+    ],
+    "mode": "multiply"
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      1012,
+      246
+     ],
+     [
+      1362,
+      258
+     ],
+     [
+      1426,
+      832
+     ],
+     [
+      1088,
+      886
+     ]
+    ],
+    "mode": "multiply"
+   }
+  ]
+ },
+ "xbanner": {
+  "src": "xbanner.webp",
+  "w": 1600,
+  "h": 1067,
+  "label": "X-frame banner",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      498,
+      160
+     ],
+     [
+      728,
+      152
+     ],
+     [
+      726,
+      742
+     ],
+     [
+      512,
+      750
+     ]
+    ],
+    "mode": "multiply"
+   },
+   {
+    "side": 1,
+    "fallback": 0,
+    "pts": [
+     [
+      808,
+      178
+     ],
+     [
+      1072,
+      182
+     ],
+     [
+      1052,
+      836
+     ],
+     [
+      803,
+      829
+     ]
+    ],
+    "mode": "opaque"
+   }
+  ]
+ },
+ "flag": {
+  "src": "flag.webp",
+  "w": 1600,
+  "h": 1600,
+  "label": "Feather flag",
+  "shade": "flag-shade.webp",
+  "quads": [
+   {
+    "side": 0,
+    "pts": [
+     [
+      672,
+      140
+     ],
+     [
+      990,
+      136
+     ],
+     [
+      990,
+      1445
+     ],
+     [
+      672,
+      1445
+     ]
+    ],
+    "mode": "shade",
+    "clip": "shade"
+   }
+  ]
+ },
+ "hat": {
+  "src": "hat.webp",
+  "w": 1600,
+  "h": 1270,
+  "shade": "hat-shade.webp",
+  "garment": true,
+  "label": "Cap",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     620,
+     470,
+     1000,
+     700
+    ]
+   }
+  ]
+ },
+ "tee-men": {
+  "src": "tee-men.webp",
+  "w": 1600,
+  "h": 1067,
+  "shade": "tee-men-shade.webp",
+  "garment": true,
+  "label": "T-shirt",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     235,
+     190,
+     575,
+     640
+    ]
+   },
+   {
+    "side": 1,
+    "rect": [
+     1030,
+     170,
+     1380,
+     640
+    ]
+   }
+  ]
+ },
+ "tee-women": {
+  "src": "tee-women.webp",
+  "w": 1600,
+  "h": 963,
+  "shade": "tee-women-shade.webp",
+  "garment": true,
+  "label": "Women’s T-shirt",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     335,
+     160,
+     565,
+     470
+    ]
+   },
+   {
+    "side": 1,
+    "rect": [
+     1035,
+     130,
+     1285,
+     470
+    ]
+   }
+  ]
+ },
+ "tee-flat": {
+  "src": "tee-flat.webp",
+  "w": 1600,
+  "h": 1066,
+  "shade": "tee-flat-shade.webp",
+  "garment": true,
+  "label": "T-shirt (flat)",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     335,
+     275,
+     615,
+     660
+    ]
+   },
+   {
+    "side": 1,
+    "rect": [
+     985,
+     265,
+     1285,
+     660
+    ]
+   }
+  ]
+ },
+ "hoodie": {
+  "src": "hoodie.webp",
+  "w": 1600,
+  "h": 1600,
+  "shade": "hoodie-shade.webp",
+  "garment": true,
+  "label": "Hoodie",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     345,
+     605,
+     605,
+     880
+    ]
+   },
+   {
+    "side": 1,
+    "rect": [
+     965,
+     650,
+     1265,
+     1000
+    ]
+   }
+  ]
+ },
+ "sweatshirt": {
+  "src": "sweatshirt.webp",
+  "w": 1600,
+  "h": 1067,
+  "shade": "sweatshirt-shade.webp",
+  "garment": true,
+  "label": "Sweatshirt",
+  "areas": [
+   {
+    "side": 0,
+    "rect": [
+     260,
+     230,
+     630,
+     700
+    ]
+   },
+   {
+    "side": 1,
+    "rect": [
+     990,
+     190,
+     1390,
+     700
+    ]
+   }
+  ]
+ }
+}
