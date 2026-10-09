@@ -1,6 +1,6 @@
 // Mockup rendering for the Design Studio. Artwork for each side arrives as a canvas (trim size, no bleed);
 // scenes are composited on canvas with clean vector props (doors, stands, grass) or product photos.
-import {PRODUCTS,dimensions,hangerHole,sideViews,sleeveSpec} from './model.mjs';
+import {PRODUCTS,dimensions,hangerHole,sideViews} from './model.mjs';
 import {t} from './i18n.mjs';
 import {PRINT_AREAS} from './print-areas.mjs';
 export const load=src=>new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not load a mockup image.'));i.src=src;});
@@ -82,25 +82,7 @@ async function rollUp(model,arts){const W=1400,H=1100,[c,ctx]=canvas(W,H);const 
 /* ---------------- apparel ---------------- */
 // Printable area on the garment photo (fractions of the square photo) per side key. Measured per model from its own
 // front/back product photos (print-areas.mjs); the generic fallback is only used for a model without measurements.
-export function printArea(product,key){if(/sleeve/.test(key||''))return sleeveArea(product,key);const m=PRINT_AREAS[product.id]?.[key==='back'?'back':'front'];if(m)return {x:m[0],y:m[1],w:m[2]};const g=product.garment||{},cat=g.category||'',women=g.group==='women',youth=g.group==='youth';if(g.group==='hats')return {x:.33,y:.36,w:.34};if(g.group==='totes')return {x:.34,y:.46,w:.32};const w=cat==='hoodies'?.2:women?.2:youth?.2:.22;if(key==='back')return {x:.5-w/2,y:.3,w};return {x:.5-w/2,y:.33,w};}
-/* ---------------- sleeve views ---------------- */
-// The product photos only show the front and back, so each sleeve gets its own close-up: a high-resolution ghost-mannequin
-// photo of the sleeve (studio/mockups/sleeves, grey shading + garment alpha, made from the owner's mockup photos) recoloured
-// to the chosen garment colour. Short sleeves use a T-shirt sleeve, hoodies/sweatshirts the upper sleeve of a fleece hoodie
-// (hood faded out for crews) and long-sleeve garments the full-length sleeve. The photo shows the wearer's left sleeve;
-// the right sleeve view is its mirror image. Print areas are fractions of the square view (as for the product photos).
-const SLEEVE_VIEWS={tee:{x:.408,y:.407,w:.183},hoodie:{x:.33,y:.42,w:.19},fleece:{x:.48,y:.3,w:.17},long:{x:.42,y:.21,w:.085}};
-export function sleeveSource(product){const s=sleeveSpec(product.garment);return !s||s.kind==='short'?'tee':s.kind==='long'?'long':s.hood?'hoodie':'fleece';}
-export function sleeveArea(product,key){const a={...SLEEVE_VIEWS[sleeveSource(product)]};if(key==='right-sleeve')a.x=1-a.x-a.w;return a;}
-const sleeveCache=new Map();
-const hexRGB=h=>{const n=parseInt(/^#[0-9a-f]{6}$/i.test(h||'')?h.slice(1):'ffffff',16);return [n>>16&255,n>>8&255,n&255];};
-export function sleeveImage(product,key,hex){const src=sleeveSource(product),id=[src,key,hex].join('|');if(sleeveCache.has(id))return sleeveCache.get(id);
- const job=load('/studio/mockups/sleeves/sleeve-'+src+'.webp').then(img=>{const S=img.naturalWidth||1000,[g,gx]=canvas(S,S);if(key==='right-sleeve'){gx.translate(S,0);gx.scale(-1,1);}gx.drawImage(img,0,0,S,S);
-  const px=gx.getImageData(0,0,S,S),d=px.data,sample=[];for(let i=0;i<d.length;i+=4*97)if(d[i+3]>240)sample.push(d[i]);sample.sort((a,b)=>a-b);const ref=Math.max(40,sample[Math.floor(sample.length*.6)]||220);
-  let [r,gg,b]=hexRGB(hex).map(v=>v/255);const lum=r*.299+gg*.587+b*.114,lift=lum<.12?.12-lum*.7:0,dim=lum>.8?1-(lum-.8)*.3:1;[r,gg,b]=[r,gg,b].map(v=>(v+(1-v)*lift)*dim);const sheen=.2*(1-lum)+.04,cap=lum>.85?1.04:1.12;
-  for(let i=0;i<d.length;i+=4){if(!d[i+3])continue;const f=Math.min(cap,d[i]/ref),k=(f-1)*sheen;const o=[r,gg,b].map(v=>Math.max(0,Math.min(1,v*f+k+(f>1?(f-1)*(1-v)*.5:0))));for(let j=0;j<3;j++)d[i+j]=Math.round(o[j]*255);}
-  gx.putImageData(px,0,0);const [c,ctx]=canvas(S,S);ctx.fillStyle='#fff';ctx.fillRect(0,0,S,S);ctx.save();ctx.shadowColor='rgba(15,23,42,.22)';ctx.shadowBlur=S*.022;ctx.shadowOffsetY=S*.008;ctx.drawImage(g,0,0);ctx.restore();ctx.drawImage(g,0,0);return c.toDataURL('image/jpeg',.9);});
- sleeveCache.set(id,job);job.catch(()=>sleeveCache.delete(id));return job;}
+export function printArea(product,key){const m=PRINT_AREAS[product.id]?.[key==='back'?'back':'front'];if(m)return {x:m[0],y:m[1],w:m[2]};const g=product.garment||{},cat=g.category||'',women=g.group==='women',youth=g.group==='youth';if(g.group==='hats')return {x:.33,y:.36,w:.34};if(g.group==='totes')return {x:.34,y:.46,w:.32};const w=cat==='hoodies'?.2:women?.2:youth?.2:.22;if(key==='back')return {x:.5-w/2,y:.3,w};return {x:.5-w/2,y:.33,w};}
 // Ink on fabric: the artwork keeps its own colours (as printed with an underbase) and picks up the folds and shadows
 // of the real garment photo (luminance relative to the print area's median), with a hint of fabric showing through.
 function inkOnFabric(ctx,art,x,y,w,h){const cw=ctx.canvas.width,ch=ctx.canvas.height,X=Math.max(0,Math.floor(x)),Y=Math.max(0,Math.floor(y)),W=Math.min(cw-X,Math.ceil(x+w)-X),H=Math.min(ch-Y,Math.ceil(y+h)-Y);if(W<2||H<2)return;
@@ -111,13 +93,13 @@ function inkOnFabric(ctx,art,x,y,w,h){const cw=ctx.canvas.width,ch=ctx.canvas.he
  ctx.putImageData(img,X,Y);}
 // One garment view (front or back): the real product photo of the chosen model and colour with the artwork printed
 // in its measured print area.
-export async function garmentPanel(model,arts,key,photoURL,S=900){const product=PRODUCTS.find(p=>p.id===model.productId),photo=await load(await photoURL),[c,ctx]=canvas(S,S);ctx.fillStyle='#fff';ctx.fillRect(0,0,S,S);ctx.imageSmoothingQuality='high';ctx.drawImage(photo,0,0,S,S);
+export async function garmentPanel(model,arts,key,photoURL,S=900){const product=PRODUCTS.find(p=>p.id===model.productId),photo=await load(photoURL),[c,ctx]=canvas(S,S);ctx.fillStyle='#fff';ctx.fillRect(0,0,S,S);ctx.imageSmoothingQuality='high';ctx.drawImage(photo,0,0,S,S);
  for(const [i,v] of sideViews(product).entries()){if(!arts[i]||v.key!==key)continue;const a=printArea(product,v.key),d=dimensions(product,model.options,i),w=a.w*S;inkOnFabric(ctx,arts[i],a.x*S,a.y*S,w,w*d.height/d.width);}
  return c;}
-// One panel per printed side (front, back, left/right sleeve); the front photo when nothing is printed yet.
+// One panel per printed side (front, back); the front photo when nothing is printed yet.
 export function garmentKeys(product,arts){const keys=sideViews(product).filter((v,i)=>arts?.[i]).map(v=>v.key);return keys.length?keys:['front'];}
 export async function garmentShots(model,arts,photoFor){const product=PRODUCTS.find(p=>p.id===model.productId),out=[];for(const key of garmentKeys(product,arts))out.push({key,label:sideViews(product).find(v=>v.key===key)?.label||'Front',canvas:await garmentPanel(model,arts,key,photoFor(key))});return out;}
-// Every printed side (front, back, sleeves) side by side, 2 × 2 for four sides (the mockup stored with the order).
+// Every printed side (front, back) side by side (the mockup stored with the order).
 export async function apparelScene(model,arts,photoFor,background='#f1f2f4'){const shots=await garmentShots(model,arts,photoFor),S=900,gap=40,cols=shots.length===4?2:shots.length,rows=Math.ceil(shots.length/cols),W=cols*S+(cols+1)*gap,H=rows*(S+gap+44)+gap;const [c,ctx]=canvas(W,H);ctx.fillStyle=background;ctx.fillRect(0,0,W,H);
  shots.forEach((s,p)=>{const x=gap+p%cols*(S+gap),y=gap+Math.floor(p/cols)*(S+gap+44);ctx.save();ctx.shadowColor='#0f172a22';ctx.shadowBlur=30;ctx.shadowOffsetY=12;ctx.fillStyle='#fff';rr(ctx,x,y,S,S,22);ctx.fill();ctx.restore();ctx.save();rr(ctx,x,y,S,S,22);ctx.clip();ctx.drawImage(s.canvas,x,y,S,S);ctx.restore();ctx.fillStyle=background==='#22252b'?'#ffffffcc':'#4b5563';ctx.font='600 26px Inter, Arial, sans-serif';ctx.textAlign='center';ctx.fillText(t(s.label),x+S/2,y+S+36);});
  return c.toDataURL('image/png');}
