@@ -8,7 +8,7 @@ if(!globalThis.__PRERENDER__&&document.querySelector('#main :is('+PRICING_MARK+'
 async function needsPricing(root){if(root.querySelector(PRICING_MARK))return true;try{const r=await fetch('/api/rules?path='+encodeURIComponent(location.pathname.replace(/\/$/,'')));if(!r.ok)return false;const j=await r.json();return !!(j&&j.rule);}catch{return true;}}
 const [{DICT:STUDIO_TRANSLATIONS,observeTranslations},{transparentImages},serviceUI,{replaceConfig}]=await Promise.all([import('/studio/i18n.mjs'),import('/transparent-images.mjs'),import('/services-ui.mjs'),import('/pricing-form.mjs')]);
 await serviceUI.loadServices();
-const {menuHTML,syncAccountLinks}=await import('/site-navigation.mjs');
+const {menuHTML,syncAccountLinks,quickRowHTML,drawerHTML,mountMobileChrome,isDrawerOpen,closeDrawer}=await import('/site-navigation.mjs');
 let contentGeneration=0;
 if(!document.querySelector('[href="/cms/portfolio.css"]')){const c=document.createElement('link');c.rel='stylesheet';c.href='/cms/portfolio.css';document.head.append(c);}
 /* speed: portfolio code + data load only on /portfolio pages */
@@ -98,7 +98,7 @@ const PROCESS = {
   wrap: [["Consult & measure", "We confirm the vehicle, year and trim, then measure or template every panel we’ll cover."], ["Design & proof", "Your artwork goes onto a to-scale vehicle template. You approve a proof before print."], ["Print & laminate", "Printed in-house on cast wrap film and sealed under a matching laminate for UV and abrasion."], ["Prep & install", "The vehicle is decontaminated, then wrapped panel by panel in a climate-controlled bay."], ["Post-heat & inspect", "Edges and recesses are post-heated to lock the film, then the whole vehicle is inspected."]],
   ppf: [["Paint correction", "New vehicles get a decontamination wash; used ones get a light polish so defects aren’t sealed under the film."], ["Pattern cut", "Film is plotter-cut to your exact year / trim so panel edges are wrapped, not trimmed on paint."], ["Install", "Applied wet in a dust-controlled bay; edges tucked; film squeegeed and heat-set."], ["Cure & inspect", "48 hours to cure. Any moisture pockets clear on their own within a week."]],
   print: [["Start from the template", "Set up your document at the final size with the bleed and safe area shown in the table."], ["Work in CMYK at 300 DPI", "Convert RGB images before export; anything under 150 DPI at print size will look soft."], ["Outline fonts, embed images", "Or send the fonts along. Linked images that aren’t embedded arrive as grey boxes."], ["Export a print-ready PDF", "PDF/X-1a or “High Quality Print” with crop marks and bleed. Single pages, not spreads."], ["We proof before we print", "You’ll get a digital proof to approve. Nothing goes to press until you sign off."]],
-  apparel: [["Send your logo", "Vector (AI, EPS, SVG, PDF) if you have it; a high-res PNG works for DTF."], ["Pick garment, colour and placement", "Use the customizer, or tell us and we’ll set it up."], ["Approve the mockup", "We send a proof with the print sized in inches on the garment colour you chose."], ["Production", "5–7 business days for most orders; rush on request."]],
+  apparel: [["Send your logo", "Vector (AI, EPS, SVG, PDF) if you have it; a high-res PNG works for DTF."], ["Pick garment, colour and placement", "Use the customizer, or tell us and we’ll set it up."], ["Approve the mockup", "We send a proof with the print sized in inches on the garment colour you chose."], ["Production", "5–7 business days for most orders."]],
   glass: [["Measure the glass", "Width and height of each pane, plus a photo of the window from outside. We confirm on site."], ["Send vector artwork", "Logos and lettering as AI, EPS, SVG or PDF with fonts outlined — cut vinyl can’t use a JPG."], ["Approve the proof", "We show the graphic on your window photo, to scale, so you see the sightline before it’s cut."], ["Production & install", "Most glass jobs install in half a day; storefronts are usually done before opening hours."]],
   tintV: [["Pick the tier", "Compare heat rejection, UV block and glare reduction in the film table on the tint hub."], ["Confirm the glass", "Body style and which windows — the estimator handles it."], ["Book the install", "Most vehicles are done in 2–4 hours while you wait."], ["Cure & enjoy", "Leave the glass alone for a few days; the film settles fully within a week."]],
   tintC: [["Pick the tier", "Compare heat rejection, UV block and glare reduction in the film table on the tint hub."], ["Confirm the glass", "Send pane count and sizes or book a free site measure."], ["Book the install", "Scheduled around your hours; no downtime for staff."], ["Cure & enjoy", "Leave the glass alone for a few days; the film settles fully within a week."]],
@@ -114,7 +114,7 @@ const FAQ = {
     ["How do I get a quote?", "Use the estimator on any product page, add configured items to the quote cart, or hit “Get a Quote” anywhere on the site. Tell us what you need and we reply within one business day with a firm price."],
     ["Where are you located and what are your hours?", "We are in Vaughan, Ontario, serving the Greater Toronto Area. Monday to Friday 8:00–18:00, Saturday 9:00–15:00, closed Sunday. Shop visits are by appointment so the right person is available."],
     ["Do you offer design services?", "Yes — an in-house team designs wraps, print, apparel, window graphics and websites. Design deposits are credited to production when you go ahead."],
-    ["Can I pay online?", "Quotes are confirmed by email and paid by Interac e-Transfer, credit card or cheque. Online checkout is coming; for now every order is a quote so we can check the artwork first."],
+    ["Can I pay online?", "Yes — online checkout is live. Add print, label, sign and apparel products to your cart and pay securely online; we check every file before production. Custom work such as wraps, tint and installations is quoted first."],
     ["Do you ship?", "Pickup in Vaughan is free; we ship print and apparel across Canada by courier and install wraps, tint, glass and wall graphics across the GTA."],
     ["What warranty do you offer?", "Five years on wrap workmanship, ten on PPF film, lifetime on tint film, and reprints for any print job that doesn’t match its approved proof. The full terms are on the Warranty page."]]},
   wraps: { name: "Vehicle wraps", items: [
@@ -144,7 +144,7 @@ const FAQ = {
     ["PPF or ceramic coating?", "They do different jobs. Ceramic coating makes washing easier and adds gloss but doesn’t stop rock chips. PPF stops chips. The best result is PPF on the front with ceramic over everything."],
     ["Can I get PPF over a wrap?", "Yes, on a fresh wrap — it’s a common combination for matte colour changes that need protection from stains."]]},
   offset: { name: "Offset print", items: [
-    ["How fast can I get them?", "Standard turnaround is 2–4 business days after proof approval. Next-day rush is available on most products for a 30% surcharge — ask when you order."],
+    ["How fast can I get them?", "Print shop orders are ready in 7–10 business days after proof approval and payment. Need them by a specific date? Tell us when you order and we’ll confirm what’s possible."],
     ["Will the colours match my screen?", "Screens are RGB and backlit; print is CMYK on paper, so bright blues and greens shift a little. Build your file in CMYK and, if a colour is critical, ask for a hard-copy proof or a Pantone match."],
     ["What if I don’t have a print-ready file?", "Send what you have — a logo, a Word document, a photo — and choose the design service option. We’ll lay it out, send a proof and only print once you approve it."],
     ["Can I see a sample before ordering?", "Yes. Drop by the shop to feel the stocks, or we can mail a sample pack of the papers you’re deciding between."],
@@ -369,7 +369,7 @@ const POLICIES = {
     ["Not sure?", ["Send what you have. We preflight every file and tell you what, if anything, needs fixing before you pay for a proof. Or choose the design service option and we will build it for you."]]]},
   "refund-policy": { t: "Orders, Shipping & Returns", k: "Policy", d: "How orders are confirmed, when they ship, and what happens if something is wrong.", s: [
     ["When an order is confirmed", ["An order is confirmed when you approve the proof and payment (or the required deposit) is received. Turnaround times start from that moment, not from when the request was sent."]],
-    ["Turnaround", ["*Offset print (cards, flyers, brochures): 2–4 business days.", "*Large format (banners, signs, flags): 2–3 business days.", "*Apparel: 5–7 business days.", "*Window graphics and wallpaper: 3–5 business days plus installation scheduling.", "*Vehicle wraps, PPF and tint: scheduled on booking; typically 1–3 days in the shop.", "Rush production is available on most print products for a surcharge — ask before you approve the proof."]],
+    ["Turnaround", ["*Print shop (cards, flyers, brochures, labels and stickers): 7–10 business days.", "*Large format (banners, signs, flags): 2–5 business days.", "*Apparel: 5–7 business days.", "*Window graphics and wallpaper: 3–5 business days plus installation scheduling.", "*Vehicle wraps, PPF and tint: scheduled on booking; typically 1–3 days in the shop.", "Need it by a specific date? Tell us before you approve the proof and we’ll confirm whether it’s possible."]],
     ["Pickup and shipping", ["Pickup at our Vaughan, Ontario facility is free. We hold completed orders for 30 days; unclaimed orders after that may be recycled and are non-refundable.", "We ship across Canada by courier; the cost is quoted by weight and destination before you confirm. Orders over $500 within the GTA ship free.", "Risk passes to you when the courier collects the package. We pack to prevent damage; if a package arrives damaged, photograph it before opening and contact us within 48 hours so we can claim against the carrier and reprint."]],
     ["Custom-made goods", ["Everything we make is produced to your artwork and specifications, so it cannot be resold. For that reason we do not accept returns or offer refunds for change of mind, ordering the wrong size or quantity, or errors that were present in the proof you approved."]],
     ["Defects and reprints", ["If your order does not match the approved proof — wrong colour, size, stock, misregistration, trimming faults, or a manufacturing defect — tell us within 7 days of pickup or delivery. We will reprint the affected quantity at no charge, or refund it if a reprint is not practical. We may ask for photos or the return of the defective goods."]],
@@ -2607,7 +2607,7 @@ function languageHref(path,code) {
   return SITE.base+(code==='en'?'':'/'+code)+(base==='/'?'/':base.replace(/\/$/,'')+'/')+suffix;
 }
 function languageSelector(path='/') {
-  return `<label class="language-control">${icon('globe',18)}<span class="sr">${esc(tr('Language'))}</span><select data-language aria-label="${esc(tr('Language'))}">${SITE.languages.map(l=>`<option value="${l.code}" ${l.code===LANG?'selected':''} lang="${l.locale}" dir="${l.dir}">${esc(l.name)}</option>`).join('')}</select></label>`;
+  return `<label class="language-control">${icon('globe',18)}<span class="sr">${esc(tr('Language'))}</span><select data-language aria-label="${esc(tr('Language'))}">${SITE.languages.map(l=>`<option value="${l.code}" ${l.code===LANG?'selected':''} lang="${l.locale}" dir="${l.dir}">${esc(l.name)}</option>`).join('')}</select><span class="lang-code" aria-hidden="true">${LANG.toUpperCase()}</span></label>`;
 }
 function localizedHTML(html) {
   if(LANG==='en')return html;
@@ -2655,7 +2655,7 @@ function localizedPage(path,page) {
   let html=localizedHTML(page.html);
   if(path!=='/') {
     const name=localizedRouteName(path);
-    html=html.replace(/(<h1\b[^>]*>)[\s\S]*?(<\/h1>)/,(m,a,b)=>a+esc(name)+b);
+    if(!page.portfolio)html=html.replace(/(<h1\b[^>]*>)[\s\S]*?(<\/h1>)/,(m,a,b)=>a+esc(name)+b); // portfolio pages carry their own (localized) heading
     if(path!=='/design-studio')html='<div class="translation-note" role="note">'+esc(LANGUAGE_COPY[LANG].draft)+'</div>'+html;
     // Mark English body copy honestly while the specialist translation is being reviewed.
     html=html.replace(/<p([^>]*)>([^<]+)<\/p>/g,(m,attrs,text)=>/[a-zA-Z]/.test(text)&&text.length>70&&!/[\u0600-\u06ff]/.test(text)&&tr(text)===text?'<p'+attrs+' lang="en" dir="ltr">'+text+'</p>':m);
@@ -3327,7 +3327,7 @@ PAGES.printShop = () => ({
     sec(`<div class="grid g3">
       <a class="card" href="${href("/print-shop/offset")}" style="padding:28px">${art("print", { photo: "pr-bc-1" })}<span class="eyebrow">Offset printing</span><h3 class="d3">Cards, flyers and folded stories.</h3><p>Premium paper products for everyday brand moments — five products, each with its own artwork path.</p><span class="link" style="align-self:flex-start">Explore offset printing ${arrowSm()}</span></a>
       <a class="card" href="${href("/print-shop/large-format")}" style="padding:28px">${art("banner", { photo: "pr-rollup" })}<span class="eyebrow">Large format</span><h3 class="d3">Banners, signs and displays.</h3><p>Give your message the space it deserves — six formats, configured and quoted in minutes.</p><span class="link" style="align-self:flex-start">Explore large format ${arrowSm()}</span></a>
-      <a class="card" href="${href("/print-shop/labels")}" style="padding:28px"><div class="art photo" style="background:var(--bg-3);"><img src="/satin/img/labels/labels-hero.svg" alt="Custom labels and stickers" loading="lazy" width="800" height="800" style="object-fit:cover"></div><span class="eyebrow">Labels &amp; stickers</span><h3 class="d3">Roll labels, sticker sheets and die-cut stickers.</h3><p>Waterproof product labels and custom-shape stickers — choose size, material and finish and see the price live.</p><span class="link" style="align-self:flex-start">Explore labels &amp; stickers ${arrowSm()}</span></a></div>`) +
+      <a class="card" href="${href("/print-shop/labels")}" style="padding:28px"><div class="art photo" style="background:var(--bg-3);"><img src="/satin/img/pr-stickers.jpg" alt="Custom labels and stickers" loading="lazy" width="800" height="800" style="object-fit:cover"></div><span class="eyebrow">Labels &amp; stickers</span><h3 class="d3">Roll labels, sticker sheets and die-cut stickers.</h3><p>Waterproof product labels and custom-shape stickers — choose size, material and finish and see the price live.</p><span class="link" style="align-self:flex-start">Explore labels &amp; stickers ${arrowSm()}</span></a></div>`) +
     serviceUI.printBanner() +
     sec(secHead("Offset printing", "Paper products", "", A("/print-shop/offset", `All offset products ${arrowSm()}`, "link")) + linkCards(OFFSET.slice(0, 4).map((p, i) => ({ name: p.name, path: "/print-shop/offset/" + p.slug, d: p.list, price: `${p.from} / ${p.fromQ}`, cta: "Design & price", art: art("print", { photo: p.photo }) })), 4)) +
     sec(secHead("Large format printing", "Banners, signs & displays", "", A("/print-shop/large-format", `All large format ${arrowSm()}`, "link")) + linkCards(LARGE.map((p, i) => ({ name: p.name, path: "/print-shop/large-format/" + p.slug, d: p.d, price: p.from, art: art("banner", { photo: p.photo }) })), 3), "alt") +
@@ -3362,7 +3362,7 @@ PAGES.offsetItem = ({ slug }) => {
         ${dropzone("Drop your print-ready artwork", "PDF, AI or EPS · front and back files for double-sided printing.", "of-up")}
       </div>${summaryBox({ label: "Your order", sub: "Total · CAD", note: "CAD · tax and delivery calculated at checkout." })}</div>`) +
       sec(`<div class="split"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow">About our ${esc(p.name.toLowerCase())}</span><h2 class="d2">${esc(p.about[0])}</h2><div class="prose">${p.about.slice(1).map(t => `<p>${esc(t)}</p>`).join("")}</div></div>
-        ${feats([["Press-quality colour", "Calibrated CMYK output; Pantone matching on request.", "drop"], ["Premium stocks", "14–32 pt cards, 100 lb silk and gloss text, kraft and recycled options.", "layers"], ["Proofed before print", "A PDF proof to approve — hard-copy proofs available.", "eye"], ["Fast turnaround", "Most runs are ready in 2–4 business days; rush available.", "clock"]], 2)}</div>`, "alt") +
+        ${feats([["Press-quality colour", "Calibrated CMYK output; Pantone matching on request.", "drop"], ["Premium stocks", "14–32 pt cards, 100 lb silk and gloss text, kraft and recycled options.", "layers"], ["Proofed before print", "A PDF proof to approve — hard-copy proofs available.", "eye"], ["Clear turnaround", "Standard production is 7–10 business days after proof approval.", "clock"]], 2)}</div>`, "alt") +
       sec(secHead("Guidelines & file prep", "Set your file up right the first time.", "Follow the specs below and your proof will match your screen. Templates and a full guide are on the artwork page.") + `<div class="split">${spec(guideRows(p))}<div style="display:flex;flex-direction:column;gap:16px">${steps(PROCESS.print)}<div class="note">${icon("brush")}<span>No file? Choose “I need design services” in the configurator and our team will build it from your logo and copy. ${A("/artwork-guidelines", "Full artwork guidelines", "link")}</span></div></div></div>`) +
       workSec("Recently off the press", WORK.offset, { cls: "alt" }) + faqSec("offset") +
       ctaBand(`Need a hand with your ${p.name.toLowerCase()}?`, "Not sure about stock, quantity or finish? Tell us how they’ll be used and we’ll recommend the right combination.", "Ask a print specialist", "Print Shop"),
@@ -3399,7 +3399,7 @@ PAGES.largeItem = ({ slug }) => {
         ${dropzone("Drop your artwork", "PDF, AI, EPS, JPG or PNG", "lf-up")}
       </div>${summaryBox({ label: "Estimate", sub: "Before tax", note: `${esc(p.from)} · final price confirmed on quote.`, second: quoteBtn("Request a quote", "Print Shop", "btn ghost block", "Product: " + p.name) })}</div>`) +
       sec(`<div class="split"><div style="display:flex;flex-direction:column;gap:16px"><span class="eyebrow">About ${esc(p.name.toLowerCase())}</span><h2 class="d2">${esc(p.name)} that hold up outdoors.</h2><div class="prose"><p>${esc(p.d)} Printed in-house on a latex large-format press with UV-stable inks, so colour stays true through a season of sun and rain.</p><p>Every large-format order includes finishing — hemming, grommets, stakes, frames or poles as the product needs — and a digital proof at scale so you can see how the layout reads from across a room or a parking lot.</p></div></div>
-        ${feats([["UV-stable inks", "Latex inks rated for 2–3 years outdoors unlaminated.", "sun"], ["Finished, not just printed", "Hems, grommets and hardware included where listed.", "check"], ["Custom sizes", "Standard formats or any size up to 10 ft wide seamless.", "ruler"], ["Ready in days", "Most pieces ship in 2–3 business days after proof.", "clock"]], 2)}</div>`, "alt") +
+        ${feats([["UV-stable inks", "Latex inks rated for 2–3 years outdoors unlaminated.", "sun"], ["Finished, not just printed", "Hems, grommets and hardware included where listed.", "check"], ["Custom sizes", "Standard formats or any size up to 10 ft wide seamless.", "ruler"], ["Ready in days", "Most pieces are ready in 2–5 business days after proof approval.", "clock"]], 2)}</div>`, "alt") +
       sec(secHead("Guidelines & file prep", "Big prints, simple file rules.", "Large format is forgiving on resolution but strict on file type and colour. Here’s what works.") + `<div class="split">${spec([["Final size", p.size], ["Scale", "Build at 100% or at 25% with 4× resolution"], ["Resolution", "100–150 DPI at final size (300 DPI is unnecessary and huge)"], ["Bleed", "1 in on all sides for banners; 0.25 in for rigid signs"], ["Colour", "CMYK; Pantone references welcome for brand colours"], ["File types", "PDF, AI, EPS · TIFF or JPG at 150 DPI for photos"], ["Fonts", "Outlined — banners are often edited last-minute, so send editable too"]])}<div style="display:flex;flex-direction:column;gap:16px">${steps(PROCESS.print)}<div class="note">${icon("ruler")}<span>Keep important text at least 3 in from banner edges where grommets and hems land.</span></div></div></div>`) +
       workSec("Signs and banners we’ve made", WORK.large, { cls: "alt" }) + faqSec("large") +
       ctaBand(`Need ${p.name.toLowerCase()} by a date?`, "Tell us the size, quantity and the day you need them. We’ll confirm production and installation slots straight away.", "Request a quote", "Print Shop"),
@@ -3792,7 +3792,7 @@ PAGES.about = () => ({
       <div class="stats">${[["500+", "Vehicles wrapped per year", 500, "+"], ["10,000+", "Print jobs completed", 10000, "+"], ["12+", "In-house equipment stations", 12, "+"], ["48 hr", "Average proof turnaround", 48, " hr"]].map(([v, l, n, s]) => `<div><b data-count="${n}" data-suf="${s}">${v}</b><span>${l}</span></div>`).join("")}</div>`) +
     sec(secHead("Selected work", "Recent projects") + `<div class="tabs" data-wf>${["All", "Fleet Wrap", "Color Change", "Window Graphics", "Print", "Apparel", "Wallpaper", "PPF", "Window Tint"].map((c, i) => `<button type="button" data-val="${c}" aria-pressed="${i === 0}">${c}</button>`).join("")}</div>${workGrid(WORK.about)}`, "alt", "selected-work") +
     sec(secHead("Our facility", "What’s on the floor") + `<div class="grid g3">${[["Large-Format Printers", "Latex and UV flatbed presses for wrap film, banners and rigid signage.", "print"], ["Roll Lamination Line", "Gloss, matte and satin laminate applied under heat and pressure for durability.", "layers"], ["Climate-Controlled Install Bay", "Dust-filtered, temperature-controlled bays for clean wrap and PPF installs.", "truck"], ["Offset & Digital Press", "Short and long-run printing for cards, brochures and collateral.", "file"], ["In-House Design Studio", "Every proof — vehicle, print or apparel — is designed on-site before it’s produced.", "brush"], ["Apparel Decoration", "DTF and Vinyl Heat Press; embroidery on caps and polos presses for team and fleet uniforms.", "shirt"]].map(([t, d, ic], i) => `<div class="card">${["pr-vinyl-banner-2", "install-film", "install-orange", "pr-booklet", "web-wrap", null][i] ? photo(["pr-vinyl-banner-2", "install-film", "install-orange", "pr-booklet", "web-wrap"][i], { style: "aspect-ratio:16/10;border-radius:12px;margin:-8px -8px 6px", alt: t }) : `<span class="ico">${icon(ic)}</span>`}<h3>${t}</h3><p>${d}</p></div>`).join("")}</div>`) +
-    sec(secHead("Our values", "How we work") + `<div class="grid g4">${[["Precision", "Templates and proofs are checked panel-by-panel before anything goes to print."], ["Craftsmanship", "Every wrap is installed by our certified in-house team — never subcontracted out."], ["Turnaround", "Most print orders ship in 48 hours; most wraps install in a single day."], ["Partnership", "One point of contact from first sketch to final install, across every service."]].map(([t, d], i) => `<div class="feat"><span class="mono tiny">0${i + 1}</span><b>${t}</b><p>${d}</p></div>`).join("")}</div>`, "alt") +
+    sec(secHead("Our values", "How we work") + `<div class="grid g4">${[["Precision", "Templates and proofs are checked panel-by-panel before anything goes to print."], ["Craftsmanship", "Every wrap is installed by our certified in-house team — never subcontracted out."], ["Turnaround", "Print shop orders are ready in 7–10 business days (large format 2–5); most wraps install in a single day."], ["Partnership", "One point of contact from first sketch to final install, across every service."]].map(([t, d], i) => `<div class="feat"><span class="mono tiny">0${i + 1}</span><b>${t}</b><p>${d}</p></div>`).join("")}</div>`, "alt") +
     sec(secHead("Our team", "Who you’ll talk to") + `<div class="team">${[["RK", "Ryan K.", "Lead Installer, Vehicle Wraps"], ["SM", "Sarah M.", "Print Production Manager"], ["AT", "Andre T.", "Senior Graphic Designer"], ["JD", "Jenna D.", "Client Success Lead"]].map(([i, n, r]) => `<div class="p">${art("person", { text: i, tag: "Portrait coming soon" })}<b>${n}</b><span class="tiny">${r}</span></div>`).join("")}</div>`) +
     ctaBand("Have a surface in mind?", "Tell us what you’re covering and we’ll price it out.", "Start a quote"),
   init(root) {
@@ -4001,13 +4001,15 @@ MEGA.detailing={label:'Auto Detailing',cols:[['Vehicle Care',[['Auto detailing',
 MEGA.shop.cols[1][1].push(['Social media services','/social-media-services',1],['Videography','/videography',1]);
 
 const navigationSeed=document.querySelector('[data-navigation-bootstrap]');const managedNavigation=navigationSeed?JSON.parse(navigationSeed.textContent).items:null;
+const navItems=()=>managedNavigation||[...Object.entries(MEGA).map(([key,m])=>({key,label:m.label,href:'/satin'+(m.cols[0]?.[1]?.[0]?.[1]||''),groups:m.cols.map(([label,links])=>({label,links:links.map(([t,p])=>({label:t,href:'/satin'+p}))}))})),{key:'portfolio',label:'Our Work',href:'/satin/portfolio'},{key:'studio',label:'Design Studio',href:'/satin/design-studio'}];
+const mobileChromeOptions=()=>({items:navItems(),lang:LANG,localize:localizedHTML,logo:LOGO,phone:SITE.phone.includes('555-')?'':SITE.phone,path:location.pathname,langHref:c=>languageHref(parseLocation().path,c)});
 if(managedNavigation)for(const m of managedNavigation){const original=MEGA[m.key];MEGA[m.key]={label:m.label,cols:(m.groups||[]).map(g=>[g.label,(g.links||[]).filter(l=>l.active!==false).map(l=>[l.label,l.href.replace(/^\/satin/, ''),/^all\b/i.test(l.label)?2:0])]),promo:original?.promo||[m.label,'Explore '+m.label,m.href.replace(/^\/satin/,''),'print','pr-bc-1']};}
 
 function header() {
   return `<a class="sr" href="#main" data-skip>Skip to content</a><header class="hdr"><div class="wrap bar">
     <a class="logo" href="${href("/")}" aria-label="Satin Graphic home"><img src="${LOGO}" alt="Satin Graphic" width="483" height="78"></a>
     ${A("/design-studio", "Design Studio", "studio-nav studio-entry")}<nav class="nav" aria-label="Main">${managedNavigation?menuHTML(managedNavigation,false,(location.pathname.match(/^\/satin\/(fa|fr|es)(?:\/|$)/)?.[1]||'en')):`${Object.entries(MEGA).map(([k, m]) => `<button type="button" data-mega="${k}" aria-expanded="false">${m.label}<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button>`).join("")}${A("/portfolio", "Our Work", "studio-nav")}${A("/design-studio", "Design Studio", "studio-nav")}`}</nav>
-    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button>${A("/login", tr("Log in"), "btn sm ghost login-btn")}<button class="icon-btn burger" data-burger aria-label="Open menu">${icon("menu")}</button></div></div>
+    <div class="right">${languageSelector()}${quoteBtn("Get a quote", "", "btn sm q-desk")}<button class="icon-btn" data-cart aria-label="Open cart">${icon("cart")}<span class="badge" data-n="0" data-cart-n>0</span></button>${A("/login", tr("Log in"), "btn sm ghost login-btn")}<button class="icon-btn burger" data-burger aria-label="Open menu" aria-expanded="false" aria-haspopup="dialog">${icon("menu")}</button></div></div>${quickRowHTML(navItems(),LANG)}
     <div class="mega" data-megapanel><div class="wrap in"></div></div></header>`;
 }
 function megaHTML(k) {
@@ -4016,12 +4018,8 @@ function megaHTML(k) {
     `<a class="promo" href="${href(m.promo[2])}">${art(m.promo[3], { seed: 2, tag: false, photo: m.promo[4] })}<b>${m.promo[0]}</b><span class="small">${m.promo[1]}</span><span class="link" style="align-self:flex-start">Open ${arrowSm()}</span></a>`;
 }
 function drawer() {
-  return `<div class="drawer" data-drawer><div class="scrim" data-close-drawer></div><div class="panel" role="dialog" aria-label="Menu">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><img src="${LOGO}" alt="" style="height:20px" class="dlogo"><button class="icon-btn" data-close-drawer aria-label="Close menu">${icon("close")}</button></div>
-    ${managedNavigation?menuHTML(managedNavigation,true,(location.pathname.match(/^\/satin\/(fa|fr|es)(?:\/|$)/)?.[1]||'en')):`${Object.values(MEGA).map(m => `<details><summary>${m.label}${icon("chev", 16)}</summary>${m.cols.map(([, links]) => links.map(([t, p]) => A(p, esc(t))).join("")).join("")}</details>`).join("")}
-    ${A("/design-studio", "Design Studio", "plain-link studio-nav")}${A("/portfolio", tr("Our work"), "plain-link")}${A("/about", "About", "plain-link")}${A("/contact", "Contact", "plain-link")}${A("/faq", "FAQ", "plain-link")}${A("/login", "Login", "plain-link")}
-`}
-    <div style="margin-top:16px">${quoteBtn("Get a quote", "", "btn block")}</div><p class="tiny" style="margin-top:10px">${SITE.phone.includes('555-')?'':SITE.phone}</p></div></div>`;
+  const o=mobileChromeOptions();
+  return `<div class="drawer m-drawer" data-drawer aria-hidden="true" inert>${drawerHTML(o.items,{...o,localize:null})}</div>`;
 }
 function footer() {
   const col = (h, links) => `<div class="col"><h2>${h}</h2>${links.map(([t, p]) => A(p, esc(t))).join("")}</div>`;
@@ -4282,7 +4280,7 @@ async function render(hydrate = false) {
   if (!serverPage && !keepHead) updateSEO(path, page);
   applyServerHead(path, main);
   {const pathChip=document.querySelector("span[data-path]");if(pathChip)pathChip.textContent = full;}
-  closeMega(); document.querySelector("[data-drawer]").classList.remove("open");
+  closeMega(); if(isDrawerOpen())closeDrawer({history:false,restoreFocus:false});
   if(seededHTML){main.innerHTML=replaceConfig(main.innerHTML,seededHTML);main.querySelector(".rule-cfg").after(seeded);}else if(page.cfg){const cfg=main.querySelector(".cfg");if(cfg)cfg.classList.add("pricing-pending");}
   if(page.cfg&&!seededHTML)mountCfg(main,page.cfg);
   page.init && page.init(main);
@@ -4292,6 +4290,7 @@ async function render(hydrate = false) {
   globalThis._publicTranslationObserver?.();
   globalThis._publicTranslationObserver=observeTranslations(main);
   localizeDOM(document.querySelector('.ftr'));
+  try{mountMobileChrome(mobileChromeOptions());}catch(e){console.error(e);}
   document.querySelectorAll('.hdr,[data-drawer],.ftr').forEach(r=>syncAccountLinks?.(r));
   document.documentElement.style.setProperty('--nav-h',(document.querySelector('.hdr')?.offsetHeight||76)+'px');
   current = page;
@@ -4345,7 +4344,7 @@ function boot() {
   for(const nav of document.querySelectorAll('.hdr .nav'))if(!nav.querySelector('a[href$="/portfolio/"],a[href$="/portfolio"]'))nav.insertAdjacentHTML('beforeend',A("/portfolio","Our Work","studio-nav"));
   const migrated = migrateHash();
   const app = document.getElementById("app");
-  const hydrate = !/^(\/print-shop$|\/wallpaper|\/vehicle-wraps|\/auto-detailing|\/window-graphics|\/apparel|\/shop\/vehicle-templates)/.test(parseLocation().path) && !migrated && !location.search && app.dataset.prerenderPath === parseLocation().path && !!document.getElementById("main");
+  const hydrate = !/^(\/print-shop$|\/wallpaper|\/vehicle-wraps|\/auto-detailing|\/window-graphics|\/apparel|\/shop\/vehicle-templates|\/portfolio)/.test(parseLocation().path) && !migrated && !location.search && app.dataset.prerenderPath === parseLocation().path && !!document.getElementById("main");
   if (!document.getElementById("main")) app.innerHTML = appHTML();
   Cart.save();bindForms(document.querySelector('.ftr'));
   document.addEventListener('change',e=>{
@@ -4366,8 +4365,7 @@ function boot() {
     if (t.closest("[data-qnext]")) { quoteNext(); return; }
     if (t.closest("[data-qback]")) { Q.step = Math.max(0, Q.step - 1); if (Q.step === 1 && !Q.svc) Q.step = 0; renderQuote(); return; }
     if (t.closest("[data-qsvc] button")) { pressOne(t.closest("button")); return; }
-    if (t.closest("[data-burger]")) { document.querySelector("[data-drawer]").classList.add("open"); return; }
-    if (t.closest("[data-close-drawer]")) { document.querySelector("[data-drawer]").classList.remove("open"); return; }
+    if (t.closest("[data-burger],[data-close-drawer]")) return; /* mobile drawer: handled in /site-navigation.mjs */
     if (t.closest("[data-map]")) { openMap(); return; }
     if (t.closest("[data-close]")) { closeModal(); if (!t.closest("a[href]")) return; }
     if (t.closest("[data-skip]")) { e.preventDefault(); document.getElementById("main").focus(); return; }
@@ -4382,7 +4380,7 @@ function boot() {
     }
     if (megaKey && !t.closest(".hdr")) closeMega();
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); closeMega(); document.querySelector("[data-drawer]").classList.remove("open"); } });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeModal(); closeMega(); } });
   let ticking = false;
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { revealTick(); ticking = false; }); } }, { passive: true });
   const headerSize=()=>{document.documentElement.style.setProperty('--nav-h',(document.querySelector('.hdr')?.offsetHeight||76)+'px');revealTick();};

@@ -1,7 +1,7 @@
 /* Satin Graphic website chat widget.
    Loaded on every page by the main bundle: import('/chat-widget.mjs'). Talks to the PHP API at /api/chat/*.
    The visitor's chat token lives only in localStorage and is sent in the X-Chat-Token header (never in URLs). */
-const CSS_VERSION = '1';
+const CSS_VERSION = '2';
 const KEY = 'satinChat';
 const FA = (document.documentElement.lang || '').toLowerCase().startsWith('fa');
 const T = FA ? {
@@ -11,7 +11,8 @@ const T = FA ? {
   placeholder: 'پیام خود را بنویسید…', send: 'ارسال', human: 'صحبت با همکاران', wa: 'واتس‌اپ', end: 'پایان گفتگو', close: 'بستن', openChat: 'باز کردن گفتگو',
   errName: 'لطفاً نام خود را بنویسید.', errEmail: 'لطفاً یک ایمیل معتبر بنویسید.', errPhone: 'شماره تلفن را بررسی کنید (یا خالی بگذارید).',
   waiting: 'در انتظار همکاران…', ended: 'این گفتگو بسته شد. می‌توانید گفتگوی تازه‌ای شروع کنید.', newChat: 'گفتگوی جدید', staff: 'ستین گرافیک', failed: 'ارسال نشد. دوباره تلاش کنید.',
-  confirmEnd: 'گفتگو پایان یابد؟', foot: 'دستیار ممکن است اشتباه کند — قیمت نهایی را همکاران ما تأیید می‌کنند.'
+  confirmEnd: 'گفتگو پایان یابد؟', foot: 'دستیار ممکن است اشتباه کند — قیمت نهایی را همکاران ما تأیید می‌کنند.',
+  attach: 'پیوست فایل (عکس، PDF، AI، EPS، SVG، ZIP)', uploading: 'در حال ارسال', tooBig: 'حداکثر حجم فایل {mb} مگابایت است. فایل‌های بزرگ‌تر را به info@satingraphic.ca ایمیل کنید.', typingStaff: '{name} در حال نوشتن…', download: 'دانلود', dropHere: 'فایل را این‌جا رها کنید'
 } : {
   title: 'Satin Graphic', online: 'Our team is online', open: 'We usually reply in a few minutes', closed: 'Closed now — we’ll reply by email',
   hint: 'Questions? Chat with us', intro: 'Before we start, may I have your name and email? Phone is optional.',
@@ -19,12 +20,15 @@ const T = FA ? {
   placeholder: 'Type your message…', send: 'Send', human: 'Talk to a person', wa: 'WhatsApp', end: 'End chat', close: 'Close chat', openChat: 'Open chat',
   errName: 'Please enter your name.', errEmail: 'Please enter a valid email address.', errPhone: 'Please check the phone number (or leave it empty).',
   waiting: 'Waiting for our team…', ended: 'This chat has ended. You can start a new one any time.', newChat: 'Start a new chat', staff: 'Satin Graphic', failed: 'Not sent. Please try again.',
-  confirmEnd: 'End this chat?', foot: 'The assistant can make mistakes — our team confirms final prices.'
+  confirmEnd: 'End this chat?', foot: 'The assistant can make mistakes — our team confirms final prices.',
+  attach: 'Attach a file (image, PDF, AI, EPS, SVG, ZIP)', uploading: 'Uploading', tooBig: 'Files can be up to {mb} MB. Email bigger files to info@satingraphic.ca.', typingStaff: '{name} is typing…', download: 'Download', dropHere: 'Drop the file here'
 };
 const ICON = {
   chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.8A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" stroke-width="2.6"/></svg>',
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   send: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/></svg>',
+  clip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg>',
+  file: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/></svg>',
   person: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg>',
   wa: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1 2.7 11.6 11.6 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>'
 };
@@ -66,6 +70,28 @@ async function call(path, body, token) {
   return d;
 }
 
+const ACCEPT = 'image/*,.heic,.heif,.pdf,.ai,.eps,.ps,.svg,.zip,application/pdf,application/postscript,application/zip';
+const fmtSize = n => n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+/** Attachments are private: fetched with the chat token (header), shown from a local blob URL. */
+const blobs = new Map();
+async function fileBlob(id, thumb, token) {
+  const k = id + (thumb ? ':t' : '');
+  if (!blobs.has(k)) blobs.set(k, fetch('/api/chat/file?id=' + encodeURIComponent(id) + (thumb ? '&thumb=1' : ''), { headers: { 'X-Chat-Token': token }, credentials: 'same-origin' })
+    .then(r => { if (!r.ok) throw new Error('file'); return r.blob(); }).then(b => URL.createObjectURL(b)).catch(e => { blobs.delete(k); throw e; }));
+  return blobs.get(k);
+}
+function uploadFile(file, text, token, after, onProgress) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest(); const fd = new FormData();
+    fd.append('file', file, file.name); if (text) fd.append('text', text); fd.append('after', String(after));
+    x.open('POST', '/api/chat/upload'); x.setRequestHeader('X-Chat-Token', token); x.responseType = 'json';
+    x.upload.onprogress = e => { if (e.lengthComputable) onProgress(Math.round(e.loaded / e.total * 100)); };
+    x.onload = () => { const d = x.response || {}; if (x.status >= 200 && x.status < 300) resolve(d); else { const e = new Error(d.error || T.failed); e.status = x.status; e.data = d; reject(e); } };
+    x.onerror = () => reject(new Error(T.failed));
+    x.send(fd);
+  });
+}
+
 async function init() {
   if (window.frameElement || document.querySelector('.scw') || /^\/(admin|cms|studio|invoice)\b/.test(location.pathname)) return;
   let cfg;
@@ -91,6 +117,7 @@ async function init() {
         <button type="button" class="scw-chip" data-end>${T.end}</button>
       </div>
       <form class="scw-comp" data-comp hidden><label class="scw-hp">Leave empty<input tabindex="-1" autocomplete="off" name="website"></label>
+        <button type="button" class="scw-clip" data-attach aria-label="${T.attach}" title="${T.attach}">${ICON.clip}</button><input type="file" data-file accept="${ACCEPT}" hidden>
         <textarea rows="1" maxlength="${max}" placeholder="${T.placeholder}" aria-label="${T.placeholder}"></textarea>
         <button type="submit" class="scw-send" aria-label="${T.send}">${ICON.send}</button></form>
       <div class="scw-count" data-count></div>
@@ -120,13 +147,37 @@ async function init() {
   function bubble(m) {
     const b = el('div', 'scw-m ' + m.sender); if (m.id) b.dataset.id = m.id;
     if (m.sender === 'staff') { const w = el('span', 'scw-who'); w.textContent = (m.staffName ? m.staffName.split(' ')[0] + ' · ' : '') + T.staff; b.append(w); }
-    b.append(richText(String(m.body || '')));
+    if (m.body) b.append(richText(String(m.body)));
+    if (Array.isArray(m.files) && m.files.length) b.append(...m.files.map(fileCard));
     if (Array.isArray(m.links) && m.links.length) {
       const l = el('div', 'scw-links');
       for (const x of m.links.slice(0, 4)) { if (typeof x.url !== 'string' || !/^(\/|https:\/\/)/.test(x.url)) continue; const a = document.createElement('a'); a.href = x.url; a.textContent = x.title || x.url; if (x.url.startsWith('https://')) { a.target = '_blank'; a.rel = 'noopener'; } l.append(a); }
       b.append(l);
     }
     return b;
+  }
+  function fileCard(f) {
+    const box = el('div', 'scw-file' + (f.thumb ? ' img' : ''));
+    if (f.thumb) {
+      const btn = el('button', 'scw-thumb'); btn.type = 'button'; btn.setAttribute('aria-label', f.name);
+      if (f.width && f.height) btn.style.aspectRatio = `${f.width} / ${f.height}`;
+      const img = document.createElement('img'); img.alt = f.name; btn.append(img); box.append(btn);
+      fileBlob(f.id, true, S.token).then(u => { img.src = u; }).catch(() => { btn.classList.add('err'); });
+      btn.onclick = () => openFile(f, true);
+    }
+    const row = el('button', 'scw-frow'); row.type = 'button';
+    row.innerHTML = `${ICON.file}<span><b></b><small></small></span>`;
+    row.querySelector('b').textContent = f.name; row.querySelector('small').textContent = fmtSize(f.size) + ' · ' + T.download;
+    row.onclick = () => openFile(f, false);
+    box.append(row);
+    return box;
+  }
+  async function openFile(f, view) {
+    try {
+      const u = await fileBlob(f.id, false, S.token);
+      if (view && f.image) { const o = el('div', 'scw-lb'); o.innerHTML = `<button type="button" class="scw-x" aria-label="${T.close}">${ICON.x}</button>`; const im = document.createElement('img'); im.src = u; im.alt = f.name; o.append(im); o.onclick = () => o.remove(); panel.append(o); return; }
+      const a = document.createElement('a'); a.href = u; a.download = f.name; document.body.append(a); a.click(); a.remove();
+    } catch { const m = el('div', 'scw-m system'); m.textContent = T.failed; log.append(m); scroll(); }
   }
   function add(msgs, fromPoll) {
     let fresh = 0;
@@ -142,8 +193,15 @@ async function init() {
   const showBadge = () => { badge.hidden = !(S.unread > 0); badge.textContent = String(Math.min(9, S.unread || 0)) + (S.unread > 9 ? '+' : ''); };
   function typing(on) { log.querySelector('.scw-typing')?.remove(); if (on) { log.append(el('div', 'scw-typing', '<i></i><i></i><i></i>')); scroll(); } }
   function waitingNote(on) { log.querySelector('[data-wait]')?.remove(); if (on) { const w = el('div', 'scw-m system'); w.dataset.wait = '1'; w.textContent = T.waiting; log.append(w); } }
+  function staffTyping(name) {
+    let t = log.querySelector('.scw-typing.staff');
+    if (!name) { t?.remove(); return; }
+    if (!t) { t = el('div', 'scw-typing staff', '<i></i><i></i><i></i><span></span>'); log.append(t); scroll(); }
+    t.querySelector('span').textContent = T.typingStaff.replace('{name}', name);
+  }
   function applyState(d) {
     if (d.mode) mode = d.mode; if (d.status) status = d.status;
+    if ('staffTyping' in d) staffTyping(d.staffTyping);
     humanBtn.hidden = mode === 'human' && !d.emailed && status === 'open';
     waitingNote(!!d.waiting);
     if (d.offerHuman) { humanBtn.hidden = false; humanBtn.classList.remove('pulse'); void humanBtn.offsetWidth; humanBtn.classList.add('pulse'); }
@@ -229,7 +287,8 @@ async function init() {
 
   /* --- sending --- */
   const grow = () => { ta.style.height = 'auto'; ta.style.height = Math.min(120, ta.scrollHeight) + 'px'; const n = ta.value.length; count.textContent = n > max * 0.8 ? `${n} / ${max}` : ''; };
-  ta.addEventListener('input', grow);
+  let typedAt = 0;
+  ta.addEventListener('input', () => { grow(); if (S.token && mode === 'human' && ta.value.trim() && Date.now() - typedAt > 4000) { typedAt = Date.now(); call('/typing', {}, S.token).then(d => staffTyping(d.staffTyping)).catch(() => {}); } });
   ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); comp.requestSubmit(); } });
   comp.onsubmit = async e => {
     e.preventDefault();
@@ -248,6 +307,32 @@ async function init() {
       if (er.status === 404 && er.data?.expired) { store.clear(); S = {}; render(); }
     } finally { busy = false; btn.disabled = false; ta.focus(); schedule(); }
   };
+  /* --- attachments: button, drag & drop, paste --- */
+  const fileIn = comp.querySelector('[data-file]'), clip = comp.querySelector('[data-attach]');
+  const fileMax = cfg.fileMax || 20971520;
+  async function sendFile(file) {
+    if (!file || !S.token || busy) return;
+    if (file.size > fileMax) { const m = el('div', 'scw-m system'); m.textContent = T.tooBig.replace('{mb}', String(Math.round(fileMax / 1048576))); log.append(m); scroll(); return; }
+    busy = true; clip.disabled = true;
+    const text = ta.value.trim(); ta.value = ''; grow();
+    const tmp = el('div', 'scw-m visitor pending'); const lab = el('span', 'scw-up'); lab.textContent = `${T.uploading} ${file.name}… 0%`; tmp.append(lab); log.append(tmp); scroll();
+    try {
+      const d = await uploadFile(file, text, S.token, lastId, p => { lab.textContent = `${T.uploading} ${file.name}… ${p}%`; });
+      tmp.remove(); add(d.messages); applyState(d); save();
+    } catch (er) {
+      tmp.remove(); if (text) { ta.value = text; grow(); }
+      const m = el('div', 'scw-m system'); m.textContent = er.message || T.failed; log.append(m); scroll();
+      if (er.status === 404 && er.data?.expired) { store.clear(); S = {}; render(); }
+    } finally { busy = false; clip.disabled = false; schedule(); }
+  }
+  clip.onclick = () => fileIn.click();
+  fileIn.onchange = () => { const f = fileIn.files[0]; fileIn.value = ''; sendFile(f); };
+  panel.addEventListener('dragover', e => { if (S.token && !comp.hidden && [...(e.dataTransfer?.types || [])].includes('Files')) { e.preventDefault(); panel.classList.add('drop'); } });
+  panel.addEventListener('dragleave', e => { if (e.target === panel || !panel.contains(e.relatedTarget)) panel.classList.remove('drop'); });
+  panel.addEventListener('drop', e => { panel.classList.remove('drop'); if (!S.token || comp.hidden || !e.dataTransfer?.files?.length) return; e.preventDefault(); sendFile(e.dataTransfer.files[0]); });
+  ta.addEventListener('paste', e => { const f = [...(e.clipboardData?.files || [])][0]; if (f) { e.preventDefault(); sendFile(f); } });
+  panel.dataset.drop = T.dropHere;
+
   humanBtn.onclick = async () => {
     if (!S.token) return; humanBtn.disabled = true;
     try { const d = await call('/human', { after: lastId }, S.token); add(d.messages); applyState(d); save(); }
