@@ -59,12 +59,15 @@ export async function mountPayMessaging(box, o = {}) {
         const payments = await squarePayments(cfg.square);
         if (my !== run) return;
         try { await ap?.destroy(); } catch {}
-        ap = null; el.innerHTML = '';
+        ap = null;
         const req = payments.paymentRequest({ countryCode: 'CA', currencyCode: 'CAD', total: { amount: value, label: 'Total' }, requestShippingContact: false, requestBillingContact: false });
         const inst = await payments.afterpayClearpay(req); // throws when the seller / amount is not eligible
         if (my !== run) { try { await inst.destroy(); } catch {} return; }
         ap = inst; el.hidden = false; wrap.hidden = false;
-        await inst.attachMessaging('#' + id + '-ap', { modalLinkStyle: 'circled-info-icon' });
+        // each price gets its own fresh slot: an older render that finishes late lands in a detached slot, never next to the new one
+        const slot = document.createElement('div'); slot.id = id + '-ap' + my; el.replaceChildren(slot);
+        await inst.attachMessaging('#' + slot.id, { modalLinkStyle: 'circled-info-icon' });
+        if (my !== run) slot.remove();
       } catch (e) { if (my === run) { el.hidden = true; el.innerHTML = ''; } }
     }
     if (cfg.paypal) {
@@ -73,7 +76,9 @@ export async function mountPayMessaging(box, o = {}) {
         await loadScript('https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(cfg.paypal.clientId) + '&currency=CAD&components=messages&enable-funding=paylater');
         if (my !== run || !window.paypal?.Messages) return;
         el.hidden = false; wrap.hidden = false;
-        await window.paypal.Messages({ amount: value, currency: 'CAD', placement: 'product', style: { layout: 'text', logo: { type: 'inline' }, text: { size: 12 } } }).render(el);
+        const slot = document.createElement('div'); el.replaceChildren(slot);
+        await window.paypal.Messages({ amount: value, currency: 'CAD', placement: 'product', style: { layout: 'text', logo: { type: 'inline' }, text: { size: 12 } } }).render(slot);
+        if (my !== run) slot.remove();
       } catch (e) { if (my === run) el.hidden = true; }
     }
     if (wrap.querySelectorAll(':scope>div:not([hidden])').length === 0) wrap.hidden = true;
