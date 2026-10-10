@@ -274,3 +274,9 @@ html[dir=rtl] :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-p
   :is(.vidp,.page-enter:has(form[data-service-key="video"])) .vid-process .service-feature .step-num{min-width:38px;height:38px;margin-bottom:14px}
 }
 @media (prefers-reduced-motion:reduce){:is(.vidp,.page-enter:has(form[data-service-key="video"])) :is(.zeus-partner,.zeus-card,.vid-svc){transition:none;transform:none!important}}
+
+/* Main menu "Vehicle Wraps": same look as the other menu items, only bolder. Admin → Website editor → Theme → Colours →
+   "Menu: Vehicle Wraps button" sets these variables (filled pill, colours, weight). Beats every theme's pill rule. */
+html:not(#_) .hdr .nav [data-mega="wraps"]{background:var(--nav-wraps-bg,transparent)!important;color:var(--nav-wraps-ink,var(--ink))!important;font-weight:var(--nav-wraps-weight,800)!important;border-radius:var(--nav-wraps-radius,9px)!important;padding:var(--nav-wraps-pad,0 12px)!important;box-shadow:none!important}
+html:not(#_) .hdr .nav [data-mega="wraps"] .chev{color:inherit!important}
+html:not(#_) .hdr .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){background:var(--nav-wraps-hover-bg,var(--accent-soft,var(--bg-2)))!important;color:var(--nav-wraps-hover-ink,var(--ink))!important}
