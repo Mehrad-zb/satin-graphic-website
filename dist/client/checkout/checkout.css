@@ -33,6 +33,14 @@
 .pay-wallets .pay-or{margin:4px 0 0}
 .pay-paypal{border:1px solid var(--line);border-radius:12px;padding:18px 22px;background:#fff}
 .paypal-host{min-height:48px}
+.paypal-host.two{display:grid;gap:10px}
+@media(min-width:620px){.paypal-host.two{grid-template-columns:1fr 1fr}}
+.pp-msg{margin-top:10px;min-height:20px}
+.afterpay-wrap{display:grid;gap:6px}
+.afterpay-wrap[hidden],.pp-msg[hidden],.afterpay-msg[hidden]{display:none}
+.afterpay-button{min-height:48px}
+.afterpay-button>*{width:100%}
+.afterpay-msg{font-size:13px;color:var(--muted);text-align:center;min-height:18px}
 @media(max-width:520px){.pay-review{grid-template-columns:1fr;gap:12px}.pay-card,.pay-paypal{padding:16px}.pay-card-head{flex-wrap:wrap}}
 /* discount code */
 .coupon-form{display:flex;gap:8px;margin:12px 0 4px}
