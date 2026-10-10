@@ -65,9 +65,10 @@ export async function mountPayMessaging(box, o = {}) {
         if (my !== run) { try { await inst.destroy(); } catch {} return; }
         ap = inst; el.hidden = false; wrap.hidden = false;
         // each price gets its own fresh slot: an older render that finishes late lands in a detached slot, never next to the new one
-        const slot = document.createElement('div'); slot.id = id + '-ap' + my; el.replaceChildren(slot);
+        // (Square inserts its placement next to the target, so the target sits in its own holder)
+        const holder = document.createElement('div'), slot = document.createElement('div'); slot.id = id + '-ap' + my; holder.append(slot); el.replaceChildren(holder);
         await inst.attachMessaging('#' + slot.id, { modalLinkStyle: 'circled-info-icon' });
-        if (my !== run) slot.remove();
+        if (my !== run) holder.remove();
       } catch (e) { if (my === run) { el.hidden = true; el.innerHTML = ''; } }
     }
     if (cfg.paypal) {
