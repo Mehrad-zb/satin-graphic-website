@@ -266,3 +266,19 @@ html.cv-app .scw:not(.open){display:none!important}
 .studio-cv.cv-mobile .cv-menu{left:auto!important;right:12px;width:340px}
 .studio-cv.cv-mobile .cv-fontpicker{left:12px!important;right:auto;width:380px;bottom:12px;border-radius:18px}
 }
+/* vehicles: the artboard fills the stage exactly (neutralises the legacy .vehicle-stage svg photo-offset rules), so the vehicle guide, artwork and selection handles share one box */
+.cv-stage.vehicle-stage{aspect-ratio:auto;display:block;padding:0;min-height:0;background-image:none}
+.cv-stage.vehicle-stage>svg:not(.cv-sel-overlay){position:static;inset:auto;width:100%;height:100%;max-width:none;max-height:none;transform:none}
+/* phones: the empty-state prompt is a compact banner above the artboard (space reserved by fitStage) instead of covering it */
+.studio-cv.cv-mobile .cv-empty{inset:0 auto auto 50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);height:auto;align-content:start;padding:0;gap:6px;background:none}
+.studio-cv.cv-mobile .cv-empty>b{background:none;padding:0;font-size:14px;line-height:18px}
+.studio-cv.cv-mobile .cv-empty>span{display:none}
+.studio-cv.cv-mobile .cv-empty div{flex-wrap:nowrap;justify-content:center;gap:6px}
+.studio-cv.cv-mobile .cv-empty button{padding:6px 12px;min-height:36px;white-space:nowrap;box-shadow:0 1px 3px #0f172a14}
+@media (max-height:520px){.studio-cv.cv-mobile .cv-empty{grid-auto-flow:column;align-items:center;gap:10px}.studio-cv.cv-mobile .cv-empty button{min-height:32px;padding:4px 10px}}
+/* vehicles: faded full-vehicle picture around the artboard for context (pointer-events none, never enlarges the scroll area) */
+.cv-vehicle-ctx{position:absolute;left:0;top:0;overflow:hidden;pointer-events:none;z-index:0}
+.cv-vehicle-ctx img{position:absolute;max-width:none;opacity:.55;filter:brightness(1.24) contrast(1.08);-webkit-mask-image:radial-gradient(closest-side,#000 80%,transparent 100%);mask-image:radial-gradient(closest-side,#000 80%,transparent 100%);-webkit-user-select:none;user-select:none;mix-blend-mode:multiply}
+.cv-scroll>.cv-stage-wrap{z-index:1}
+.studio-cv.cv-mobile .cv-empty>b{background:#ffffffd9;border-radius:6px;padding:1px 8px}
+.studio-cv.cv-mobile .cv-empty.cv-empty-pinned{position:absolute;bottom:auto;z-index:6}
