@@ -280,3 +280,6 @@ html[dir=rtl] :is(.vidp,.page-enter:has(form[data-service-key="video"])) .zeus-p
 html:not(#_) .hdr .nav [data-mega="wraps"]{background:var(--nav-wraps-bg,transparent)!important;color:var(--nav-wraps-ink,var(--ink))!important;font-weight:var(--nav-wraps-weight,800)!important;border-radius:var(--nav-wraps-radius,9px)!important;padding:var(--nav-wraps-pad,0 12px)!important;box-shadow:none!important}
 html:not(#_) .hdr .nav [data-mega="wraps"] .chev{color:inherit!important}
 html:not(#_) .hdr .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){background:var(--nav-wraps-hover-bg,var(--accent-soft,var(--bg-2)))!important;color:var(--nav-wraps-hover-ink,var(--ink))!important}
+
+/* Our Work photos: show the whole vehicle, never crop the front or back (mock-ups are side views on a light background) */
+img[src*="/portfolio/images/"]{object-fit:contain!important;background:#f3f4f6}
