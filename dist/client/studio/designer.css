@@ -282,3 +282,4 @@ html.cv-app .scw:not(.open){display:none!important}
 .cv-scroll>.cv-stage-wrap{z-index:1}
 .studio-cv.cv-mobile .cv-empty>b{background:#ffffffd9;border-radius:6px;padding:1px 8px}
 .studio-cv.cv-mobile .cv-empty.cv-empty-pinned{position:absolute;bottom:auto;z-index:6}
+/* Vehicle picker (studio home): bodies grouped by type */.studio-picker-sub{font-size:16px;font-weight:650;color:#4b4f58;margin:22px 0 12px}.studio-picker-vehicles .studio-picker-grid img{object-fit:contain;background:#e9ebee}.cv-vehicle-spec{margin:-4px 0 4px;font-size:13px}

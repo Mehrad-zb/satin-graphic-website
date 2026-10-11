@@ -1,0 +1,37 @@
+{
+  "id": "/satin/",
+  "name": "Satin Graphic",
+  "short_name": "Satin Graphic",
+  "description": "Design, print and wrap with Satin Graphic (Vaughan, ON): design your vehicle wrap, signs and prints in the Design Studio, get instant prices and order online.",
+  "start_url": "/satin/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "en-CA",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "design", "shopping"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "/satin/img/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/satin/img/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/satin/img/app/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/satin/img/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/satin/img/app/icon-monochrome-512.png", "sizes": "512x512", "type": "image/png", "purpose": "monochrome" }
+  ],
+  "shortcuts": [
+    { "name": "Design Studio", "short_name": "Design", "description": "Design your wrap, sign or print and order it", "url": "/satin/design-studio/?source=app", "icons": [{ "src": "/satin/img/app/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Get a quote", "short_name": "Quote", "description": "Ask for a free quote", "url": "/satin/contact/?source=app", "icons": [{ "src": "/satin/img/app/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Vehicle wraps", "short_name": "Wraps", "description": "Vehicle wraps, fleet graphics and colour change", "url": "/satin/vehicle-wraps/?source=app", "icons": [{ "src": "/satin/img/app/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "My account", "short_name": "Account", "description": "Orders, saved designs and invoices", "url": "/satin/account/?source=app", "icons": [{ "src": "/satin/img/app/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ],
+  "screenshots": [
+    { "src": "/satin/img/app/screenshot-phone-home.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Satin Graphic home: wraps, print and design" },
+    { "src": "/satin/img/app/screenshot-phone-studio.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Design Studio: design it, see the price, order it" },
+    { "src": "/satin/img/app/screenshot-phone-wraps.png", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow", "label": "Vehicle wraps and fleet graphics" },
+    { "src": "/satin/img/app/screenshot-wide-home-1920.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Satin Graphic on desktop and tablet" },
+    { "src": "/satin/img/app/screenshot-wide-studio-1920.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Design Studio on a large screen" }
+  ]
+}

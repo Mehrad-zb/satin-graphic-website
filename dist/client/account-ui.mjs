@@ -16,7 +16,7 @@ const FA = {
   'Pay now': 'پرداخت', 'Paid': 'پرداخت شده', 'Awaiting payment': 'در انتظار پرداخت', 'Refunded': 'بازپرداخت شده', 'Cancelled': 'لغو شده', 'Received': 'دریافت شد',
   'Artwork check': 'بررسی فایل', 'In production': 'در حال تولید', 'Ready': 'آماده', 'Completed': 'تکمیل شد', 'Open': 'باز', 'Overdue': 'سررسید گذشته', 'Partly paid': 'پرداخت جزئی',
   'Balance': 'مانده', 'Due': 'سررسید', 'Save changes': 'ذخیرهٔ تغییرات', 'Company (optional)': 'شرکت (اختیاری)', 'Street address': 'آدرس', 'Unit / suite': 'واحد',
-  'City': 'شهر', 'Province': 'استان', 'Postal code': 'کد پستی', 'Change password': 'تغییر رمز عبور', 'Current password': 'رمز فعلی', 'Sign-in methods': 'روش‌های ورود',
+  'City': 'شهر', 'Province': 'استان', 'Postal code': 'کد پستی', 'Change password': 'تغییر رمز عبور', 'Delete account': 'حذف حساب', 'Delete my account': 'حذف حساب من', 'Type DELETE to confirm': 'برای تأیید DELETE را تایپ کنید', 'This permanently deletes your account and saved designs. Records of past orders and invoices are kept for tax purposes.': 'حساب و طرح‌های ذخیره‌شده شما برای همیشه حذف می‌شوند. سوابق سفارش‌ها و فاکتورهای قبلی برای امور مالیاتی نگه داشته می‌شوند.', 'Current password': 'رمز فعلی', 'Sign-in methods': 'روش‌های ورود',
   'Connected': 'متصل', 'Connect': 'اتصال', 'Email and password': 'ایمیل و رمز عبور', 'Not set': 'تنظیم نشده', 'Set a password': 'تعیین رمز عبور',
   'No orders yet.': 'هنوز سفارشی ندارید.', 'No invoices yet.': 'هنوز فاکتوری ندارید.', 'No quote or booking requests yet.': 'هنوز استعلام یا نوبتی ندارید.',
   'Start an order': 'شروع سفارش', 'Get a quote': 'درخواست قیمت', 'Design Studio': 'استودیو طراحی', 'Back to orders': 'بازگشت به سفارش‌ها',
@@ -269,7 +269,12 @@ function profileView(main) {
       ${m.password ? `<label class="field"><span class="fl">${t('Current password')}</span><input class="inp" type="password" name="current" autocomplete="current-password" required></label>` : ''}
       <label class="field"><span class="fl">${t('New password')}</span><input class="inp" type="password" name="password" autocomplete="new-password" required minlength="10"><span class="tiny">${t('At least 10 characters, with letters and numbers.')}</span></label>
       <label class="field"><span class="fl">${t('Confirm password')}</span><input class="inp" type="password" name="password2" autocomplete="new-password" required></label>
-      <div><button class="btn" type="submit">${m.password ? t('Change password') : t('Set a password')}</button></div></form></div>`;
+      <div><button class="btn" type="submit">${m.password ? t('Change password') : t('Set a password')}</button></div></form></div>
+    <div class="acct-block"><div class="acct-bh"><h2>${t('Delete account')}</h2></div><div data-dmsg></div><form data-del class="acct-form acct-narrow">
+      <p class="small">${t('This permanently deletes your account and saved designs. Records of past orders and invoices are kept for tax purposes.')}</p>
+      ${m.password ? `<label class="field"><span class="fl">${t('Current password')}</span><input class="inp" type="password" name="password" autocomplete="current-password" required></label>` : ''}
+      <label class="field"><span class="fl">${t('Type DELETE to confirm')}</span><input class="inp" name="confirm" autocomplete="off" required></label>
+      <div><button class="btn ghost" type="submit" style="color:#b42318;border-color:#b42318">${t('Delete my account')}</button></div></form></div>`;
   const pf = main.querySelector('[data-profile]');
   pf.addEventListener('submit', e => { e.preventDefault(); const v = Object.fromEntries(new FormData(pf)); const box = main.querySelector('[data-pmsg]');
     busy(pf.querySelector('[type=submit]'), async () => { try { const r = await api('profile', { name: v.name, phone: v.phone, company: v.company, address: { street1: v.street1, street2: v.street2, city: v.city, state: v.state, zip: v.zip } }); ME = r.customer; OVERVIEW.customer = r.customer; msgBox(box, t('Saved.'), true); } catch (er) { msgBox(box, er.message); } }); });
@@ -277,4 +282,7 @@ function profileView(main) {
   wf.addEventListener('submit', e => { e.preventDefault(); const v = Object.fromEntries(new FormData(wf)); const box = main.querySelector('[data-wmsg]');
     if (v.password !== v.password2) { msgBox(box, t('Passwords do not match.')); return; }
     busy(wf.querySelector('[type=submit]'), async () => { try { const r = await api('password', { current: v.current || '', password: v.password }); CSRF = r.csrf; ME = r.customer; OVERVIEW.customer = r.customer; wf.reset(); msgBox(box, 'Password saved. Other devices were signed out.', true); } catch (er) { msgBox(box, er.message); } }); });
+  const df = main.querySelector('[data-del]');
+  df.addEventListener('submit', e => { e.preventDefault(); const v = Object.fromEntries(new FormData(df)); const box = main.querySelector('[data-dmsg]');
+    busy(df.querySelector('[type=submit]'), async () => { try { await api('delete-account', { password: v.password || '', confirm: v.confirm }); location.href = location.pathname.replace(/account\/.*$/, '') || '/satin/'; } catch (er) { msgBox(box, er.message); } }); });
 }

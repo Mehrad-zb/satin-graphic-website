@@ -3,9 +3,14 @@
 // editable studio layers (text, rectangles, circles, lines and the vector graphics in model.mjs SHAPES) in artboard
 // fractions. Text sizes are fractions of the short side and are shrunk to fit, so one template reflows to every size.
 // Only fonts the studio already offers are used; all copy is placeholder text.
+// The hand-made layouts below come first in the picker; templates-library.mjs adds generated layout programs × industry
+// themes (templates-themes.mjs) so every product family offers 100+ templates.
+import {genThemes,genCatalog,buildGenerated,genFonts,estEm,contrast,mix} from './templates-library.mjs';
+import {NEW_CATEGORIES,CATEGORY_I18N} from './templates-themes.mjs';
+import {DICT} from './i18n.mjs';
 
 /* ---------------- categories & themes ---------------- */
-export const TEMPLATE_CATEGORIES=[['auto','Automotive'],['realestate','Real estate'],['food','Restaurant & café'],['construction','Construction & trades'],['home','Home services'],['beauty','Beauty & salon'],['medical','Medical & dental'],['fitness','Fitness'],['retail','Retail & sale'],['events','Events'],['corporate','Corporate'],['minimal','Minimal'],['bold','Bold'],['persian','فارسی']];
+export const TEMPLATE_CATEGORIES=[['auto','Automotive'],['realestate','Real estate'],['food','Restaurant & café'],['construction','Construction & trades'],['home','Home services'],['beauty','Beauty & salon'],['medical','Medical & dental'],['fitness','Fitness'],['retail','Retail & sale'],['events','Events'],['corporate','Corporate'],...NEW_CATEGORIES,['minimal','Minimal'],['bold','Bold'],['persian','فارسی']];
 const CONTACT={phone:'(905) 555-0123',email:'hello@yourbusiness.ca',web:'www.yourbusiness.ca',address:'123 Main Street, Vaughan, ON'};
 const TH={
  auto:{cat:'auto',bg:'#0e1013',ink:'#ffffff',accent:'#e5262f',accent2:'#ff7a1a',soft:'#1d2128',muted:'#a3aab4',light:'#f3f4f6',dark:'#0e1013',head:'Bebas Neue',hb:false,body:'Barlow',icon:'car',icon2:'gear',
@@ -39,6 +44,7 @@ const TH={
  persianFood:{cat:'persian',rtl:true,bg:'#7a1f1f',ink:'#ffffff',accent:'#e9b949',accent2:'#fbf1df',soft:'#fbf1df',muted:'#c9a3a3',light:'#fffaf2',dark:'#4a1010',head:'Lalezar',hb:false,body:'Vazirmatn',icon:'dining',icon2:'sparkle',
   copy:{company:'رستوران زعفران',short:'سفارش بیرون‌بر',tagline:'غذای اصیل ایرانی',headline:'طعم اصیل\nخانه',sub:'کباب، خورش و غذاهای سنتی',bullets:['کباب و خورش','سفارش بیرون‌بر','پذیرایی مراسم','باز هر روز هفته'],offer:'٪۱۵ تخفیف',offerSub:'سفارش آنلاین',cta:'رزرو میز',person:'نام و نام خانوادگی',role:'سرآشپز',big:'باز است',menu:[['چلوکباب کوبیده','۲۲'],['جوجه کباب','۲۴'],['قورمه سبزی','۱۹'],['زرشک پلو با مرغ','۲۱']]}}
 };
+Object.assign(TH,genThemes(TH));
 
 /* ---------------- layout helpers (fractions of the trim box) ---------------- */
 const txt=(text,o)=>({type:'text',text:String(text),align:'center',...o});
@@ -228,7 +234,7 @@ const HANGER={
  coupon(c,th){const acc=th.accent===th.bg?th.dark:th.accent;return {bg:'#ffffff',layers:[rect(0,0,1,.26,th.bg),holeRing(c,onDark(th.bg)?'#ffffff':th.dark,{opacity:.35}),txt(th.copy.company,{x:.5,y:.3,size:.09,font:th.head,bold:th.hb,color:'#141414',maxW:.86}),txt(th.copy.headline,{x:.5,y:.38,size:.05,font:th.body,color:'#444444',maxW:.86}),
   rect(.08,.52,.84,.25,acc,{outline:.012*c.W*100*.4,radius:.08}),txt('COUPON',{x:.5,y:.555,size:.04,font:th.body,bold:true,color:acc,spacing:.4}),txt(th.copy.offer,{x:.5,y:.6,size:.16,font:th.head,bold:th.hb,color:'#141414',maxW:.76}),txt(th.copy.offerSub,{x:.5,y:.71,size:.04,font:th.body,color:'#444444',maxW:.76}),...centerStack(c,.86,[[th.copy.cta,{size:.05,font:th.body,bold:true,color:acc,gap:.005}],[CONTACT.phone,{size:.055,font:th.body,bold:true,color:'#141414'}]])]};},
  minimal(c,th){return {bg:'#ffffff',layers:[holeRing(c,th.accent2,{opacity:.8}),txt(th.copy.company,{x:.5,y:.3,size:.05,font:th.body,bold:true,color:th.ink,spacing:.3,maxW:.84}),txt(th.copy.headline,{x:.5,y:.38,size:.11,font:th.head,bold:th.hb,color:th.ink,maxW:.86}),hline(.42,.6,.16,th.accent2,.006),txt(th.copy.sub,{x:.5,y:.64,size:.042,font:th.body,color:th.muted,maxW:.84}),txt(CONTACT.web,{x:.5,y:.88,size:.045,font:th.body,bold:true,color:th.ink}),txt(CONTACT.phone,{x:.5,y:.92,size:.04,font:th.body,color:th.muted})]};},
- persian(c,th){return {bg:th.bg,noMirror:true,layers:[holeRing(c,th.accent,{opacity:.6}),shp('wave-bottom',0,.92,1,.08,th.accent),icon(c,th.icon,.5,.32,.14,th.accent),...centerStack(c,.5,[[th.copy.headline,{size:.14,font:th.head,color:'#ffffff',maxW:.86,gap:.02}],[th.copy.sub,{size:.05,font:th.body,color:th.accent,maxW:.84}]]),...th.copy.bullets.slice(0,3).map((b,i)=>txt(b,{x:.5,y:.66+i*.05,size:.045,font:th.body,color:'#ffffff',maxW:.8})),txt(CONTACT.phone,{x:.5,y:.83,size:.065,font:th.body,bold:true,color:'#ffffff'})]};}
+ persian(c,th){const k=c.r>1?.5:1;return {bg:th.bg,noMirror:true,layers:[holeRing(c,th.accent,{opacity:.6}),shp('wave-bottom',0,.92,1,.08,th.accent),icon(c,th.icon,.5,.32,.14*k,th.accent),...centerStack(c,.5,[[th.copy.headline,{size:.14*k,font:th.head,color:'#ffffff',maxW:.86,gap:.02}],[th.copy.sub,{size:.05*k,font:th.body,color:th.accent,maxW:.84}]]),...th.copy.bullets.slice(0,3).map((b,i)=>txt(b,{x:.5,y:.66+i*.05,size:.045*k,font:th.body,color:'#ffffff',maxW:.8})),txt(CONTACT.phone,{x:.5,y:.83,size:.065,font:th.body,bold:true,color:'#ffffff'})]};}
 };
 
 /* ================= TALL BANNERS (roll-up, X-frame) ================= */
@@ -236,7 +242,7 @@ const HANGER={
 const TALL={
  hero(c,th){const ink=onDark(th.bg)?'#ffffff':th.ink,acc=th.accent===th.bg?th.dark:th.accent;return {bg:'#ffffff',layers:[rect(0,0,1,.58,th.bg,th.grad?{gradient:{to:th.grad,angle:90}}:{}),shp('wave-bottom',0,.5,1,.1,'#ffffff'),txt(th.copy.company,{x:.5,y:.05,size:.075,font:th.head,bold:th.hb,color:ink,maxW:.86}),txt(th.copy.tagline.toUpperCase(),{x:.5,y:.095,size:.03,font:th.body,color:ink,spacing:.2,maxW:.86}),
   icon(c,th.icon,.5,.24,.42,th.accent===th.bg?'#ffffff':th.accent),txt(th.copy.headline,{x:.5,y:.36,size:.11,font:th.head,bold:th.hb,color:ink,maxW:.88}),
-  ...bullets(c,th,.14,.62,.05,'#1d1d1d',acc,th.copy.bullets,{maxW:.7,gap:.9}),rect(.12,.82,.76,.05,acc,{radius:.5}),txt(th.copy.cta,{x:.5,y:.832,size:.042,font:th.body,bold:true,color:onDark(acc)?'#ffffff':'#141414',maxW:.66}),txt(`${CONTACT.phone}\n${CONTACT.web}`,{x:.5,y:.885,size:.04,font:th.body,bold:true,color:'#333333',maxW:.86})]};},
+  ...bullets(c,th,.14,.62,Math.min(.05,.19*c.H/(c.mn*2.375*4)),'#1d1d1d',acc,th.copy.bullets,{maxW:.7,gap:.9}),rect(.12,.82,.76,.05,acc,{radius:.5}),txt(th.copy.cta,{x:.5,y:.832,size:.042,font:th.body,bold:true,color:onDark(acc)?'#ffffff':'#141414',maxW:.66}),txt(`${CONTACT.phone}\n${CONTACT.web}`,{x:.5,y:.885,size:.04,font:th.body,bold:true,color:'#333333',maxW:.86})]};},
  dark(c,th){const acc=th.accent;return {bg:th.bg,layers:[shp('slant',-.3,.5,1.1,.22,acc),shp('slant',-.25,.53,1.1,.04,'#ffffff',{opacity:.25}),txt(th.copy.company,{x:.5,y:.05,size:.08,font:th.head,bold:th.hb,color:'#ffffff',maxW:.86}),hline(.35,.105,.3,acc,.012),txt(th.copy.headline,{x:.5,y:.15,size:.16,font:th.head,bold:th.hb,color:'#ffffff',maxW:.88}),
   icon(c,th.icon,.5,.6,.62,'#ffffff'),...th.copy.bullets.map((b,i)=>txt(b.toUpperCase(),{x:.5,y:.73+i*.035,size:.042,font:th.body,bold:true,color:i%2?th.muted:'#ffffff',spacing:.08,maxW:.84})),txt(CONTACT.phone,{x:.5,y:.88,size:.075,font:th.head,bold:th.hb,color:acc,maxW:.86})]};},
  stripes(c,th){return {bg:th.bg,layers:[shp('stripes',0,0,1,.035,th.dark),shp('stripes',0,.905,1,.035,th.dark),txt(th.copy.company,{x:.5,y:.07,size:.1,font:th.head,color:th.dark,maxW:.88}),icon(c,th.icon,.5,.27,.44,th.dark),txt(th.copy.headline,{x:.5,y:.37,size:.13,font:th.head,color:th.dark,maxW:.88}),
@@ -367,17 +373,36 @@ const CATALOG={
  apparel:[L_('apparel','badge','auto','Circle badge'),L_('apparel','varsity','bold','Varsity'),L_('apparel','crew','construction','Crew tee'),L_('apparel','staff','corporate','Staff (back)'),L_('apparel','event','events','Event tee'),L_('apparel','gym','fitness','Train hard'),L_('apparel','sunset','beauty','Retro sunset'),L_('apparel','minimal','minimal','Minimal wordmark'),L_('apparel','chest','realestate','Left chest logo'),L_('apparel','crew','food','Restaurant crew'),L_('apparel','persian','persian','تی‌شرت فارسی','persian rtl farsi')],
  hat:[L_('hat','word','bold','Wordmark'),L_('hat','icon','auto','Icon + name'),L_('hat','badge','home','Round badge'),L_('hat','script','beauty','Script'),L_('hat','monogram','corporate','Monogram'),L_('hat','est','construction','Established'),L_('hat','bolt','fitness','Bolt'),L_('hat','persian','persian','کلاه فارسی','persian rtl farsi')]
 };
+{const gen=genCatalog(TH);for(const [fam,list] of Object.entries(gen))CATALOG[fam]=(CATALOG[fam]||[]).concat(list);
+ // picker names in fa / fr / es (template names are looked up through t())
+ try{for(const list of Object.values(gen))for(const tp of list)if(!DICT[tp.name])DICT[tp.name]=tp.i18n;for(const [k,v] of Object.entries(CATEGORY_I18N))if(!DICT[k])DICT[k]=v;}catch{}}
 const FAMILY_LAYOUTS={card:CARD,print:PRINT,hanger:HANGER,tall:TALL,flag:FLAG,wide:WIDE,sign:SIGN,vehicle:VEH,apparel:APP,hat:HAT};
 
 export function templatesFor(product){return CATALOG[templateFamily(product)]||[];}
-export function templateFonts(tp){const th=TH[tp.theme];return [th.head,th.body,th.script].filter(Boolean).concat(tp.fam==='apparel'||tp.fam==='hat'?['Alfa Slab One','Anton','Kaushan Script','Manrope','Great Vibes']:[]);}
+export function templateFonts(tp){const th=TH[tp.theme];return [...new Set([th.head,th.body,th.script].filter(Boolean).concat(tp.gen?genFonts(tp):tp.fam==='apparel'||tp.fam==='hat'?['Alfa Slab One','Anton','Kaushan Script','Manrope','Great Vibes']:[]))];}
 
 // ctx: {W,H (inches), bleed, fold, sideKey, garmentDark}
 export function buildTemplate(tp,ctx){const th=TH[tp.theme];const c={...ctx,r:ctx.W/ctx.H,mn:Math.min(ctx.W,ctx.H)};c.dark=!!ctx.garmentDark;c.ink=c.dark?'#ffffff':'#151515';
- let out;if(tp.fam==='brochure')out=brochure(c,th,Number(tp.lay.slice(1)));else{const fn=FAMILY_LAYOUTS[tp.fam][tp.lay];out=fn(c,th);}
+ let out;if(tp.gen){out=buildGenerated(tp,c,th);if(['apparel','hat','vehicle','flag'].includes(tp.fam))out.noMirror=true;}else if(tp.fam==='brochure')out=brochure(c,th,Number(tp.lay.slice(1)));else{const fn=FAMILY_LAYOUTS[tp.fam][tp.lay];out=fn(c,th);}
+ if(!tp.gen){tidy(out.layers,c,out.bg||'#ffffff',th,c.dark?'#151515':null);if(out.back)tidy(out.back.layers,c,out.back.bg||'#ffffff',th);}
  if(th.rtl&&!out.noMirror){out.layers=mirror(out.layers);if(out.back)out.back.layers=mirror(out.back.layers);}
  if(tp.fam==='vehicle'&&/passenger/.test(ctx.sideKey||''))out.layers=mirror(out.layers,true);
  return out;}
+// Hand-made layouts were drawn for one aspect ratio; on other sizes shrink text that would run into the text below it or
+// off the artboard, and swap text colours that lack contrast with the solid rectangle / circle / background beneath.
+function tidy(layers,c,bg,th,garment){const T=layers.filter(l=>l.type==='text'&&!l.rot);
+ const box=l=>{const lines=String(l.text).split('\n');const em=Math.max(...lines.map(t=>estEm(t,l.font,l.bold)+(l.spacing?Math.max(0,[...t].length-1)*l.spacing:0)))*1.03;let size=l.size,w=em*size*c.mn/c.W;const mw=l.maxW??.9;if(w>mw){size*=mw/w;w=mw;}
+  const x=l.x??.5;return {x:l.align==='left'?x:l.align==='right'?x-w:x-w/2,y:l.y,w,h:th_(l.size,c,lines.length),size:l.size};}; // height at full size: real fonts may be narrower than the estimate
+ for(let it=0;it<3;it++)for(const a of T){let A=box(a);for(const b of T){if(a===b)continue;const B=box(b);if(!(A.y<B.y-.001))continue;const ix=Math.min(A.x+A.w,B.x+B.w)-Math.max(A.x,B.x);if(ix<=.002)continue;
+   if(A.y+A.h>B.y+.001){const avail=B.y-A.y-.003;if(avail>0){a.size=A.size*Math.max(.35,avail/A.h);A=box(a);}}}
+  if(A.y+A.h>.995){const avail=.995-A.y;if(avail>0){a.size=A.size*Math.max(.35,avail/A.h);}}}
+ const isPath=l=>l.type==='shape'&&!l.outline&&(l.opacity??1)>.2&&!['brackets','ring','dots','stripes','chevrons'].includes(l.shape);
+ for(let i=0;i<layers.length;i++){const l=layers[i];if(l.type!=='text')continue;const B=l.rot?{x:l.x-.01,y:l.y-.01,w:.02,h:.02}:box(l),px=B.x+B.w/2,py=B.y+B.h/2;let cols=[garment||bg],known=true;
+  for(let j=0;j<i;j++){const k=layers[j],inb=px>=k.x&&px<=k.x+k.w&&py>=k.y&&py<=k.y+k.h;if(!inb)continue;if(isPath(k)){known=false;continue;}
+   if((k.type==='rect'||k.type==='circle')&&!k.outline){let inside=true;if(k.type==='circle'){const dx=(px-k.x-k.w/2)/(k.w/2),dy=(py-k.y-k.h/2)/(k.h/2);inside=dx*dx+dy*dy<=1;}
+    if(inside){const ends=k.gradient?[k.color,mix(k.color,k.gradient.to,.5),k.gradient.to]:[k.color],op=k.opacity??1;cols=op>=.99?ends:cols.flatMap(c=>ends.map(e=>mix(c,e,op)));known=true;}}}
+  const score=col=>Math.min(...cols.map(c=>contrast(col,c)));
+  if(known&&score(l.color)<3.2){const best=[th.ink,th.dark,'#ffffff','#141414'].filter(Boolean).sort((a,b)=>score(b)-score(a))[0];if(score(best)>score(l.color))l.color=best;}}}
 function mirror(layers,flipOnly=false){return layers.map(l=>{const m={...l};if(l.type==='text'){m.x=1-l.x;if(!flipOnly||l.align!=='center')m.align=l.align==='left'?'right':l.align==='right'?'left':'center';}else m.x=1-l.x-l.w;return m;});}
 
 /* ---------------- spec → studio layers ---------------- */

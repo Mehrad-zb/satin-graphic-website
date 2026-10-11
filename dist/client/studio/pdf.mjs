@@ -20,15 +20,15 @@ async function imageObject(dataURL){const img=await loadImage(dataURL),w=img.nat
 export async function pdfFromRasters(pages,title='Design'){
  const chunks=[],offsets=[];let size=0;const push=x=>{const u=typeof x==='string'?enc.encode(x):x;chunks.push(u);size+=u.length;};
  const object=(n,dict,stream)=>{offsets[n]=size;push(`${n} 0 obj\n${dict}\n`);if(stream){push(`stream\n`);push(stream);push(`\nendstream\n`);}push(`endobj\n`);};
- push('%PDF-1.4\n');push(new Uint8Array([37,226,227,207,211,10]));
+ push('%PDF-1.6\n');push(new Uint8Array([37,226,227,207,211,10]));
  const kids=[];let next=4;const plan=[];
  for(const p of pages){const img=await imageObject(p.image);const ids={page:next++,content:next++,image:next++,smask:img.smask?next++:0};kids.push(ids.page);plan.push({p,img,ids});}
  object(1,`<< /Type /Catalog /Pages 2 0 R >>`);
  object(2,`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`);
  object(3,`<< /Title ${pdfText(title)} /Creator (Satin Graphic Design Studio) /Producer (Satin Graphic Design Studio) /CreationDate (D:${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}Z) >>`);
- for(const {p,img,ids} of plan){const b=(+p.bleedIn||0)*72,W=(+p.widthIn)*72+2*b,H=(+p.heightIn)*72+2*b;
+ for(const {p,img,ids} of plan){/* pages over 200 in (vehicle sides) use /UserUnit: viewers cap page boxes at 14400 units */const u=Math.max(1,Math.ceil(((+p.widthIn)+2*(+p.bleedIn||0))*72/14400),Math.ceil(((+p.heightIn)+2*(+p.bleedIn||0))*72/14400)),b=(+p.bleedIn||0)*72/u,W=(+p.widthIn)*72/u+2*b,H=(+p.heightIn)*72/u+2*b;
   const content=enc.encode(`q ${num(W)} 0 0 ${num(H)} 0 0 cm /Im0 Do Q\n`);
-  object(ids.page,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${num(W)} ${num(H)}] /BleedBox [0 0 ${num(W)} ${num(H)}] /TrimBox [${num(b)} ${num(b)} ${num(W-b)} ${num(H-b)}] /Resources << /XObject << /Im0 ${ids.image} 0 R >> >> /Contents ${ids.content} 0 R >>`);
+  object(ids.page,`<< /Type /Page /Parent 2 0 R ${u>1?`/UserUnit ${u} `:''}/MediaBox [0 0 ${num(W)} ${num(H)}] /BleedBox [0 0 ${num(W)} ${num(H)}] /TrimBox [${num(b)} ${num(b)} ${num(W-b)} ${num(H-b)}] /Resources << /XObject << /Im0 ${ids.image} 0 R >> >> /Contents ${ids.content} 0 R >>`);
   object(ids.content,`<< /Length ${content.length} >>`,content);
   object(ids.image,`<< /Type /XObject /Subtype /Image /Width ${img.w} /Height ${img.h} ${img.dict}${ids.smask?` /SMask ${ids.smask} 0 R`:''} /Length ${img.data.length} >>`,img.data);
   if(ids.smask)object(ids.smask,`<< /Type /XObject /Subtype /Image /Width ${img.w} /Height ${img.h} ${img.smask.dict} /Length ${img.smask.data.length} >>`,img.smask.data);}
