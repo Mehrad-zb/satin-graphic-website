@@ -4444,7 +4444,7 @@ if(!globalThis.__PRERENDER__){
  sendVisit('pv');
 }
 
-if(!globalThis.__PRERENDER__){fetch('/api/pricing').then(r=>r.ok?r.json():null).then(p=>{if(!p)return;PRICING=p;for(const vehicle of ESTIMATOR)if(Number.isFinite(p.bases?.[vehicle.slug]))vehicle.base=p.bases[vehicle.slug];}).catch(()=>{});}
+if(!globalThis.__PRERENDER__){fetch('/api/pricing').then(r=>r.ok?r.json():null).then(p=>{if(!p)return;PRICING=Object.assign({roofMultiplier:1.12,designDeposit:250},p);const N=x=>Number.isFinite(x);for(const vehicle of ESTIMATOR){if(N(p.bases?.[vehicle.slug]))vehicle.base=p.bases[vehicle.slug];const q=p.q?.[vehicle.slug];if(q)for(const [n,o] of vehicle.q)for(const c of o)if(N(q[n]?.[c[0]]))c[1]=q[n][c[0]];}for(const c of COVERAGE)if(N(p.coverage?.[c[0]]))c[2]=p.coverage[c[0]];for(const f of FINISHES)if(N(p.finishes?.[f.name]))f.m=p.finishes[f.name];document.querySelectorAll('.cfg').forEach(b=>{let r=b;while(r&&!r._recalc)r=r.parentElement;if(r)try{r._recalc()}catch{}});}).catch(()=>{});}
 /* website chat widget (chat-widget.mjs injects its own /chat-widget.css) */
 if(!globalThis.__PRERENDER__&&!window.frameElement){const chat=()=>setTimeout(()=>(window.requestIdleCallback||setTimeout)(()=>import('/chat-widget.mjs').catch(()=>{}),{timeout:2500}),1200);if(document.readyState==='complete')chat();else addEventListener('load',chat,{once:true});}
 
