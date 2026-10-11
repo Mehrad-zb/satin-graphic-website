@@ -69,7 +69,7 @@ const onDark=h=>lum(h)<140;
 
 /* ---------------- product families ---------------- */
 export function templateFamily(product){const id=product.id;if(product.group==='Apparel')return /hats/.test(id)?'hat':'apparel';if(product.views)return 'vehicle';
- return {'business-cards':'card','flyers':'print','postcards':'print','brochures':'brochure','door-hangers':'hanger','roll-up-banner':'tall','x-frame-banner':'tall','flags':'flag','vinyl-banners':'wide','yard-signs':'sign','a-frame-signs':'sign'}[id]||'print';}
+ return {'business-cards':'card','flyers':'print','postcards':'print','brochures':'brochure','door-hangers':'hanger','roll-up-banner':'tall','x-frame-banner':'tall','flags':'flag','vinyl-banners':'wide','yard-signs':'sign','a-frame-signs':'sign','real-estate-signs':'realty','car-magnets':'magnet'}[id]||'print';}
 
 /* ================= BUSINESS CARDS ================= */
 function cardBack(c,th,style=0){const bg=style===1?th.light:th.bg,ink=style===1?th.ink:(onDark(bg)?'#ffffff':th.ink),acc=th.accent===bg?th.ink:th.accent;
@@ -376,10 +376,59 @@ const CATALOG={
 {const gen=genCatalog(TH);for(const [fam,list] of Object.entries(gen))CATALOG[fam]=(CATALOG[fam]||[]).concat(list);
  // picker names in fa / fr / es (template names are looked up through t())
  try{for(const list of Object.values(gen))for(const tp of list)if(!DICT[tp.name])DICT[tp.name]=tp.i18n;for(const [k,v] of Object.entries(CATEGORY_I18N))if(!DICT[k])DICT[k]=v;}catch{}}
-const FAMILY_LAYOUTS={card:CARD,print:PRINT,hanger:HANGER,tall:TALL,flag:FLAG,wide:WIDE,sign:SIGN,vehicle:VEH,apparel:APP,hat:HAT};
+/* ================= REAL ESTATE SIGNS & CAR MAGNETS (brokerage colour styles) ================= */
+// Colour styles in the spirit of common Canadian brokerage signage. No brokerage names or logos are used:
+// agents upload their brokerage's approved logo and wording.
+const RE_COPY=(o={})=>({company:'YOUR BROKERAGE',short:'FOR SALE',tagline:'Real Estate Brokerage',headline:'FOR SALE',sub:'Independently owned and operated',bullets:[],offer:'OPEN HOUSE',offerSub:'Sat & Sun · 2–4 PM',cta:'CALL TODAY',person:'Jordan Lee',role:'Sales Representative',big:'FOR SALE',price:'',feats:[],...o});
+const RE_THEMES={
+ reRedBlue:{n:'Red & blue classic',fa:'قرمز و آبی کلاسیک',bg:'#d71e28',accent:'#003da5',accent2:'#ffffff',dark:'#0c1f4a',head:'Montserrat',hb:true,body:'Montserrat'},
+ reBlackGold:{n:'Black & gold',fa:'مشکی و طلایی',bg:'#1c1c1c',accent:'#b9a46b',accent2:'#e6dcc0',dark:'#111111',head:'Oswald',hb:false,body:'Montserrat'},
+ reRoyalRed:{n:'Royal red',fa:'قرمز سلطنتی',bg:'#d10a2e',accent:'#111111',accent2:'#ffd5dc',dark:'#111111',head:'Raleway',hb:true,body:'Raleway'},
+ reNavyRed:{n:'Navy & red',fa:'سرمه‌ای و قرمز',bg:'#0b3c84',accent:'#d6202a',accent2:'#cfe0ff',dark:'#08214a',head:'Archivo',hb:true,body:'Archivo'},
+ reNavySky:{n:'Deep navy & sky',fa:'سرمه‌ای و آسمانی',bg:'#0a2463',accent:'#3e92cc',accent2:'#d8e9f7',dark:'#061638',head:'Playfair Display',hb:true,body:'Lato'},
+ reRedGrey:{n:'Bold red & grey',fa:'قرمز و طوسی',bg:'#b40101',accent:'#58595b',accent2:'#f3d2d2',dark:'#2b2b2b',head:'Bebas Neue',hb:false,body:'Barlow'},
+ reSlate:{n:'Slate & silver',fa:'سنگی و نقره‌ای',bg:'#2e3a4b',accent:'#9aa7b8',accent2:'#e3e8ef',dark:'#1b2430',head:'Josefin Sans',hb:true,body:'Josefin Sans'},
+ reForest:{n:'Forest & gold',fa:'سبز جنگلی و طلایی',bg:'#0f5132',accent:'#c8a95b',accent2:'#e9f3ec',dark:'#0a3321',head:'Libre Baskerville',hb:true,body:'Lato'},
+ reBlueOrange:{n:'Blue & orange',fa:'آبی و نارنجی',bg:'#164a9c',accent:'#f2892b',accent2:'#dbe7fb',dark:'#0e2f63',head:'Poppins',hb:true,body:'Poppins'},
+ reTeal:{n:'Modern teal',fa:'فیروزه‌ای مدرن',bg:'#00788a',accent:'#ff6b57',accent2:'#d6f1f4',dark:'#06343b',head:'Outfit',hb:true,body:'Outfit'},
+ reBurgundy:{n:'Burgundy & cream',fa:'زرشکی و کرم',bg:'#7a1f2b',accent:'#c9a66b',accent2:'#f6efe4',dark:'#3d0f15',head:'Cormorant Garamond',hb:true,body:'Montserrat'},
+ reMono:{n:'Black & white',fa:'سیاه و سفید',bg:'#111111',accent:'#111111',accent2:'#e6e6e6',dark:'#111111',head:'Anton',hb:false,body:'Inter'}
+};
+for(const [k,v] of Object.entries(RE_THEMES))TH[k]={cat:'realestate',bg:v.bg,ink:'#1a1a1a',accent:v.accent,accent2:v.accent2,soft:v.accent2,muted:'#6b7280',light:'#ffffff',dark:v.dark,head:v.head,hb:v.hb,body:v.body,icon:'house',icon2:'key',copy:RE_COPY()};
+const RE_TXT=(th,big)=>big||th.copy.big;
+const REALTY={
+ band(c,th,big){return {bg:'#ffffff',layers:[rect(0,0,1,.24,th.bg),txt(th.copy.company,{x:.5,y:.045,size:.1,font:th.head,bold:th.hb,color:'#ffffff',spacing:.06,maxW:.9}),txt(th.copy.tagline.toUpperCase(),{x:.5,y:.165,size:.035,font:th.body,bold:true,color:th.accent2,spacing:.2,maxW:.86}),
+  txt(RE_TXT(th,big),{x:.5,y:.29,size:.19,font:th.head,bold:th.hb,color:th.bg,maxW:.9}),txt(th.copy.person,{x:.5,y:.56,size:.075,font:th.body,bold:true,color:th.ink,maxW:.86}),txt(th.copy.role,{x:.5,y:.66,size:.04,font:th.body,color:th.muted,maxW:.86}),
+  rect(0,.75,1,.25,th.accent),txt(CONTACT.phone,{x:.5,y:.79,size:.12,font:th.body,bold:true,color:'#ffffff',maxW:.9})]};},
+ split(c,th,big){const cx=.69;return {bg:'#ffffff',layers:[rect(0,0,.38,1,th.bg),icon(c,th.icon,.19,.28,.3,'#ffffff'),txt(th.copy.company,{x:.19,y:.5,size:.06,font:th.head,bold:th.hb,color:'#ffffff',maxW:.32}),txt(th.copy.tagline,{x:.19,y:.62,size:.032,font:th.body,color:th.accent2,maxW:.32}),
+  txt(RE_TXT(th,big),{x:cx,y:.09,size:.16,font:th.head,bold:th.hb,color:th.bg,maxW:.56}),hline(.53,.35,.32,th.accent,.012),txt(th.copy.person,{x:cx,y:.41,size:.08,font:th.body,bold:true,color:th.ink,maxW:.56}),txt(th.copy.role,{x:cx,y:.52,size:.04,font:th.body,color:th.muted,maxW:.56}),
+  txt(CONTACT.phone,{x:cx,y:.63,size:.1,font:th.body,bold:true,color:th.accent===th.bg?th.ink:th.accent,maxW:.56}),txt(CONTACT.web,{x:cx,y:.84,size:.04,font:th.body,color:th.muted,maxW:.56})]};},
+ agent(c,th,big){const cx=.66;return {bg:'#ffffff',layers:[rect(0,0,1,.26,th.bg),txt(RE_TXT(th,big),{x:.5,y:.035,size:.16,font:th.head,bold:th.hb,color:'#ffffff',maxW:.9}),
+  dot(c,.21,.6,.44,th.accent2),dot(c,.21,.6,.4,'#eef0f3'),txt('YOUR PHOTO',{x:.21,y:.575,size:.035,font:th.body,bold:true,color:th.muted,maxW:.3}),
+  txt(th.copy.person,{x:cx,y:.33,size:.085,font:th.head,bold:th.hb,color:th.ink,maxW:.58}),txt(th.copy.role,{x:cx,y:.455,size:.04,font:th.body,color:th.muted,maxW:.58}),txt(CONTACT.phone,{x:cx,y:.55,size:.11,font:th.body,bold:true,color:th.bg,maxW:.6}),
+  txt(th.copy.company,{x:cx,y:.75,size:.05,font:th.body,bold:true,color:th.accent===th.bg?th.ink:th.accent,spacing:.15,maxW:.58}),rect(0,.93,1,.07,th.accent)]};},
+ stripes(c,th,big){return {bg:'#ffffff',layers:[rect(0,0,1,.1,th.bg),rect(0,.1,1,.028,th.accent),txt(th.copy.company,{x:.5,y:.18,size:.065,font:th.head,bold:th.hb,color:th.bg,spacing:.12,maxW:.88}),
+  txt(RE_TXT(th,big),{x:.5,y:.3,size:.2,font:th.head,bold:th.hb,color:th.ink,maxW:.9}),txt(th.copy.person+' · '+th.copy.role,{x:.5,y:.58,size:.05,font:th.body,bold:true,color:th.ink,maxW:.86}),txt(CONTACT.phone,{x:.5,y:.68,size:.11,font:th.body,bold:true,color:th.bg,maxW:.88}),
+  rect(0,.872,1,.028,th.accent),rect(0,.9,1,.1,th.bg)]};},
+ lux(c,th,big){const g=th.accent===th.bg?'#c9a14a':th.accent;return {bg:th.dark,layers:[rect(.035,.05,.93,.9,g,{outline:c.mn*.5}),txt(big?big:'For Sale',{x:.5,y:.11,size:.2,font:'Great Vibes',color:g,maxW:.84}),hline(.36,.41,.28,g,.006),
+  txt(th.copy.company,{x:.5,y:.45,size:.06,font:'Playfair Display',bold:true,color:'#ffffff',spacing:.12,maxW:.84}),txt(th.copy.person,{x:.5,y:.58,size:.055,font:th.body,color:'#ffffff',maxW:.84}),txt(CONTACT.phone,{x:.5,y:.7,size:.1,font:th.body,bold:true,color:g,maxW:.84})]};},
+ sold(c,th){return {bg:'#ffffff',layers:[rect(0,0,1,.54,th.bg),txt('SOLD',{x:.5,y:.04,size:.34,font:th.head,bold:th.hb,color:'#ffffff',maxW:.9}),txt(th.copy.person,{x:.5,y:.6,size:.08,font:th.body,bold:true,color:th.ink,maxW:.86}),
+  txt(CONTACT.phone,{x:.5,y:.72,size:.1,font:th.body,bold:true,color:th.accent===th.bg?th.ink:th.accent,maxW:.86}),txt(th.copy.company,{x:.5,y:.88,size:.04,font:th.body,bold:true,color:th.muted,spacing:.2,maxW:.86})]};},
+ openhouse(c,th){return {bg:'#ffffff',layers:[rect(0,0,1,.18,th.bg),txt(th.copy.company,{x:.5,y:.045,size:.075,font:th.head,bold:th.hb,color:'#ffffff',spacing:.1,maxW:.88}),txt('OPEN HOUSE',{x:.5,y:.24,size:.17,font:th.head,bold:th.hb,color:th.bg,maxW:.9}),
+  txt(th.copy.offerSub,{x:.5,y:.48,size:.075,font:th.body,bold:true,color:th.accent===th.bg?th.ink:th.accent,maxW:.86}),icon(c,'arrow',.5,.7,.22,th.accent),txt(CONTACT.phone,{x:.5,y:.84,size:.075,font:th.body,bold:true,color:th.ink,maxW:.86})]};},
+ lease(c,th){return REALTY.band(c,th,'FOR LEASE');},
+ comingsoon(c,th){return REALTY.stripes(c,th,'COMING SOON');},
+ magnet(c,th){return {bg:'#ffffff',layers:[rect(0,0,.07,1,th.bg),rect(.07,0,.018,1,th.accent),txt(th.copy.company,{x:.54,y:.08,size:.08,font:th.head,bold:th.hb,color:th.bg,spacing:.08,maxW:.8}),
+  txt(th.copy.person,{x:.54,y:.27,size:.13,font:th.head,bold:th.hb,color:th.ink,maxW:.8}),txt(th.copy.role,{x:.54,y:.46,size:.05,font:th.body,color:th.muted,maxW:.8}),txt(CONTACT.phone,{x:.54,y:.58,size:.15,font:th.body,bold:true,color:th.bg,maxW:.82}),txt(CONTACT.web,{x:.54,y:.84,size:.05,font:th.body,color:th.muted,maxW:.8})]};}
+};
+const RE_LAYOUT_NAMES={band:['For sale · top band','فروش · نوار بالا'],split:['For sale · side panel','فروش · پنل کناری'],agent:['For sale · agent photo','فروش · عکس مشاور'],stripes:['For sale · stripes','فروش · نوارها'],lux:['For sale · luxury frame','فروش · قاب لوکس'],sold:['Sold','فروخته شد'],openhouse:['Open house','اوپن هاوس'],lease:['For lease','اجاره'],comingsoon:['Coming soon','به‌زودی'],magnet:['Agent car magnet','مگنت خودرو مشاور']};
+const RE_LIST=(lays)=>{const out=[];for(const [k,v] of Object.entries(RE_THEMES))for(const lay of lays){const name=`${RE_LAYOUT_NAMES[lay][0]} — ${v.n}`;out.push({id:`realty-${lay}-${k}`,fam:'realty',lay,theme:k,name,cat:'realestate',tags:`realtor realty real estate brokerage sign ${lay} ${v.n.toLowerCase()}`});try{if(!DICT[name])DICT[name]={fa:`${RE_LAYOUT_NAMES[lay][1]} — ${v.fa}`,fr:name,es:name};}catch{}}return out;};
+CATALOG.realty=RE_LIST(['band','split','agent','stripes','lux','sold','openhouse','lease','comingsoon']).concat(CATALOG.sign);
+CATALOG.magnet=RE_LIST(['magnet','band','split','agent','stripes','lux']).concat(CATALOG.sign);
+const FAMILY_LAYOUTS={card:CARD,print:PRINT,hanger:HANGER,tall:TALL,flag:FLAG,wide:WIDE,sign:SIGN,vehicle:VEH,apparel:APP,hat:HAT,realty:REALTY,magnet:REALTY};
 
 export function templatesFor(product){return CATALOG[templateFamily(product)]||[];}
-export function templateFonts(tp){const th=TH[tp.theme];return [...new Set([th.head,th.body,th.script].filter(Boolean).concat(tp.gen?genFonts(tp):tp.fam==='apparel'||tp.fam==='hat'?['Alfa Slab One','Anton','Kaushan Script','Manrope','Great Vibes']:[]))];}
+export function templateFonts(tp){const th=TH[tp.theme];return [...new Set([th.head,th.body,th.script].filter(Boolean).concat(tp.gen?genFonts(tp):tp.fam==='apparel'||tp.fam==='hat'?['Alfa Slab One','Anton','Kaushan Script','Manrope','Great Vibes']:tp.fam==='realty'?['Great Vibes','Playfair Display']:[]))];}
 
 // ctx: {W,H (inches), bleed, fold, sideKey, garmentDark}
 export function buildTemplate(tp,ctx){const th=TH[tp.theme];const c={...ctx,r:ctx.W/ctx.H,mn:Math.min(ctx.W,ctx.H)};c.dark=!!ctx.garmentDark;c.ink=c.dark?'#ffffff':'#151515';

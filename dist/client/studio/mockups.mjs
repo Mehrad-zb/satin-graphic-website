@@ -85,6 +85,31 @@ async function yardSigns(model,arts){const W=1600,H=1100,[c,ctx]=canvas(W,H),ran
   for(let i=0;i<140;i++){const x=cx-w*.45+rand()*w*.9,y=ground-6+rand()*18,l=10+rand()*22*scale;ctx.strokeStyle=rand()>.4?'#3f6d24':'#8db85c';ctx.lineWidth=1.6*scale;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+(rand()-.5)*8,y-l*.6,x+(rand()-.5)*10,y-l);ctx.stroke();}
   if(label){ctx.fillStyle='#ffffffe0';ctx.font='600 26px Inter, Arial, sans-serif';ctx.textAlign='center';ctx.fillText(t(label),cx,H-28);}}
  return c.toDataURL('image/png');}
+// Real estate sign hanging from a white post-and-arm frame on a front lawn (front, plus the back when printed).
+async function realtySign(model,arts){const W=1600,H=1100,[c,ctx]=canvas(W,H),rand=rng(23);const sky=ctx.createLinearGradient(0,0,0,600);sky.addColorStop(0,'#b9d5ec');sky.addColorStop(1,'#eef3f6');ctx.fillStyle=sky;ctx.fillRect(0,0,W,600);
+ ctx.save();ctx.filter='blur(12px)';ctx.fillStyle='#d8d2c8';ctx.fillRect(820,250,640,330);ctx.fillStyle='#8a5a44';ctx.beginPath();ctx.moveTo(790,260);ctx.lineTo(1140,90);ctx.lineTo(1490,260);ctx.closePath();ctx.fill();ctx.fillStyle='#6f8fae';for(const x of [880,1040,1260])ctx.fillRect(x,330,110,120);ctx.fillStyle='#5b3b2b';ctx.fillRect(1150,400,80,180);
+ for(let i=0;i<22;i++){ctx.fillStyle=['#5d7f4a','#4f7140','#6c8d52','#46663a'][i%4];ctx.beginPath();ctx.ellipse(i*80-30,560-rand()*70,90+rand()*50,70+rand()*40,0,0,Math.PI*2);ctx.fill();}ctx.restore();
+ const lawn=ctx.createLinearGradient(0,580,0,H);lawn.addColorStop(0,'#82aa55');lawn.addColorStop(1,'#4b7a2c');ctx.fillStyle=lawn;ctx.fillRect(0,580,W,H-580);for(let i=0;i<2400;i++){const y=580+Math.pow(rand(),.7)*(H-580),x=rand()*W,l=4+(y-580)/26*rand();ctx.strokeStyle=rand()>.5?'#3f6d24aa':'#9cc46aa0';ctx.lineWidth=1+(y-580)/300;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+(rand()-.5)*6,y-l);ctx.stroke();}
+ const signs=arts[1]?[[arts[0],330,560,.9,'Front'],[arts[1],1080,520,.8,'Back']]:[[arts[0],560,600,1.05,null]];
+ for(const [art,x0,w0,s,label] of signs){const [w,h]=fit(art,w0*s,w0*s*.95),post=x0-60*s,armY=250*s+60,ground=1000,top=armY+46*s,left=post+70*s;
+  ctx.save();ctx.fillStyle='#1f3a1250';ctx.filter='blur(14px)';ctx.beginPath();ctx.ellipse(post+w*.45,ground+4,w*.6,22*s,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  const pw=26*s;const g=ctx.createLinearGradient(post-pw/2,0,post+pw/2,0);g.addColorStop(0,'#dfe3e6');g.addColorStop(.5,'#ffffff');g.addColorStop(1,'#c7ccd1');ctx.fillStyle=g;ctx.fillRect(post-pw/2,armY-30*s,pw,ground-armY+30*s);ctx.fillStyle='#ffffff';ctx.fillRect(post-pw/2-5*s,armY-44*s,pw+10*s,16*s);
+  const arm=ctx.createLinearGradient(0,armY-10*s,0,armY+12*s);arm.addColorStop(0,'#ffffff');arm.addColorStop(1,'#cfd4d8');ctx.fillStyle=arm;ctx.fillRect(post-pw/2,armY-11*s,w+110*s,22*s);
+  ctx.strokeStyle='#6b7178';ctx.lineWidth=3*s;for(const hx of [left+w*.12,left+w*.88]){ctx.beginPath();ctx.moveTo(hx,armY+10*s);ctx.lineTo(hx,top+8*s);ctx.stroke();ctx.beginPath();ctx.arc(hx,top+10*s,5*s,0,Math.PI*2);ctx.stroke();}
+  ctx.save();ctx.shadowColor='#00000045';ctx.shadowBlur=22;ctx.shadowOffsetX=12;ctx.shadowOffsetY=12;ctx.fillStyle='#e9ecef';ctx.fillRect(left,top,w,h);ctx.restore();ctx.drawImage(art,left,top,w,h);
+  const sh=ctx.createLinearGradient(left,top,left+w,top+h);sh.addColorStop(0,'#ffffff30');sh.addColorStop(.45,'#ffffff00');sh.addColorStop(1,'#00000016');ctx.fillStyle=sh;ctx.fillRect(left,top,w,h);
+  for(let i=0;i<120;i++){const x=post-60+rand()*120,y=ground-4+rand()*14,l=10+rand()*22*s;ctx.strokeStyle=rand()>.4?'#3f6d24':'#8db85c';ctx.lineWidth=1.6*s;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+(rand()-.5)*8,y-l*.6,x+(rand()-.5)*10,y-l);ctx.stroke();}
+  if(label){ctx.fillStyle='#ffffffe0';ctx.font='600 26px Inter, Arial, sans-serif';ctx.textAlign='center';ctx.fillText(t(label),left+w/2,H-28);}}
+ return c.toDataURL('image/png');}
+// Car magnet on the front door of a white SUV photo, at its real size against the vehicle length.
+async function carMagnet(model,arts){const product=PRODUCTS.find(p=>p.id===model.productId),d=dimensions(product,model.options),a=VEHICLE_ART['suv-midsize-compact']['driver-side'],L=173.4,Hh=66.5;
+ const photo=await load('/studio/mockups/vehicles/p/suv-midsize-compact-driver-side.webp');const [bx,by,bw]=a,k=bw/L,bh=Hh*k;const cr=[a[3],a[4],a[5],a[6]];
+ const [c,ctx]=canvas(cr[2],cr[3]+70);ctx.fillStyle='#eceef1';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(photo,cr[0],cr[1],cr[2],cr[3],0,0,cr[2],cr[3]);
+ const art=arts[0],w=d.width*k,h=d.height*k,cx=bx+bw*.43-cr[0],cy=by+bh*.6-cr[1];
+ ctx.save();ctx.shadowColor='#00000040';ctx.shadowBlur=6;ctx.shadowOffsetY=2;ctx.fillStyle='#fff';ctx.fillRect(cx-w/2,cy-h/2,w,h);ctx.restore();ctx.drawImage(art,cx-w/2,cy-h/2,w,h);
+ const g=ctx.createLinearGradient(0,cy-h/2,0,cy+h/2);g.addColorStop(0,'#ffffff26');g.addColorStop(.5,'#ffffff00');g.addColorStop(1,'#0000001a');ctx.fillStyle=g;ctx.fillRect(cx-w/2,cy-h/2,w,h);
+ ctx.fillStyle='#6b7280';ctx.font='500 22px Inter, Arial, sans-serif';ctx.textAlign='center';ctx.fillText(t('Shown at real size on a mid-size SUV front door'),c.width/2,c.height-24);
+ return c.toDataURL('image/png');}
 // Roll-up banner on a retractable stand in a softly lit room.
 async function rollUp(model,arts){const W=1400,H=1100,[c,ctx]=canvas(W,H);const wall=ctx.createLinearGradient(0,0,0,860);wall.addColorStop(0,'#eef0f3');wall.addColorStop(1,'#dfe2e7');ctx.fillStyle=wall;ctx.fillRect(0,0,W,860);for(const x of [260,700,1140]){const l=ctx.createRadialGradient(x,0,10,x,120,420);l.addColorStop(0,'#ffffffcc');l.addColorStop(1,'#ffffff00');ctx.fillStyle=l;ctx.fillRect(x-420,0,840,700);}const floor=ctx.createLinearGradient(0,860,0,H);floor.addColorStop(0,'#c9cdd3');floor.addColorStop(1,'#b3b8bf');ctx.fillStyle=floor;ctx.fillRect(0,860,W,H-860);ctx.fillStyle='#ffffff80';ctx.fillRect(0,858,W,3);
  const art=arts[0],[w,h]=fit(art,700,840),x=(W-w)/2,y=960-h-46;ctx.save();ctx.fillStyle='#0000002e';ctx.filter='blur(18px)';ctx.beginPath();ctx.ellipse(W/2,978,w*.62,26,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.fillStyle='#00000014';ctx.filter='blur(22px)';ctx.fillRect(x+30,y+20,w,h);ctx.filter='none';
@@ -175,5 +200,5 @@ export async function photoMockups(model,arts,options={}){const product=PRODUCTS
 
 // arts: array indexed by side (canvas or null). Returns a PNG data URL.
 export async function renderMockup(model,arts,options={}){const id=model.productId;if(id.startsWith('vehicle-'))return vehicleScene(model,arts);if(id.startsWith('apparel-'))return apparelScene(model,arts,options.photoFor,options.background);try{const shots=await photoMockups(model,arts,options);if(shots.length)return stack(shots.map(s=>s.canvas),options.background);}catch(e){console.warn('Photo mockup failed',e);}
- if(id==='business-cards')return businessCards(model,arts);if(id==='flyers'||id==='postcards')return sheets(model,arts);if(id==='brochures')return brochure(model,arts);if(id==='door-hangers')return doorHangers(model,arts);if(id==='yard-signs')return yardSigns(model,arts);if(id==='roll-up-banner')return rollUp(model,arts);
+ if(id==='business-cards')return businessCards(model,arts);if(id==='flyers'||id==='postcards')return sheets(model,arts);if(id==='brochures')return brochure(model,arts);if(id==='door-hangers')return doorHangers(model,arts);if(id==='yard-signs')return yardSigns(model,arts);if(id==='real-estate-signs')return realtySign(model,arts);if(id==='car-magnets')return carMagnet(model,arts);if(id==='roll-up-banner')return rollUp(model,arts);
  if(['a-frame-signs','x-frame-banner','flags'].includes(id))return photoScene(id,arts[0],arts[1]);return flatGeneric(model,arts);}
