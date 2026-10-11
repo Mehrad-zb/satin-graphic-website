@@ -760,3 +760,6 @@ main :is(.grid,.split,.in,.cfg,.row,.service-request)>*{min-width:0} main :is(h1
 @media(max-width:420px){.right .login-btn{padding:0 9px;font-size:13px}.right [data-language]{max-width:84px}}
 /* RTL: keep the Google wordmark letters in their natural order */
 html[dir=rtl] .google-word{direction:ltr;unicode-bidi:isolate}
+
+/* vehicle mock-ups (Our Work, wrap designs, fleet line-up): show the whole vehicle with a little room around it, never crop the front or back */
+img[src*="/portfolio/images/"],img[src*="/wrap-designs/"],img[src*="fleet-lineup"]{object-fit:contain!important;object-position:center!important;background:#f3f4f6;padding:4%!important;box-sizing:border-box}
