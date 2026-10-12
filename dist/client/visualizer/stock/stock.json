@@ -43,6 +43,193 @@
 "w": 1536,
 "h": 1024,
 "angle": "3/4 front"
+},
+{
+"id": "mercedes-g-class",
+"make": "Mercedes-Benz",
+"model": "G-Class",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "mercedes-c-class",
+"make": "Mercedes-Benz",
+"model": "C-Class",
+"body": "sedan",
+"est": "sedan",
+"quote": "Sedan",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "audi-q8",
+"make": "Audi",
+"model": "Q8",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "porsche-911",
+"make": "Porsche",
+"model": "911",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "lamborghini-urus",
+"make": "Lamborghini",
+"model": "Urus",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "range-rover-sport",
+"make": "Land Rover",
+"model": "Range Rover Sport",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "ford-f150",
+"make": "Ford",
+"model": "F-150",
+"body": "pickup",
+"est": "pickup-truck",
+"quote": "Pickup Truck",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "ram-1500",
+"make": "Ram",
+"model": "1500",
+"body": "pickup",
+"est": "pickup-truck",
+"quote": "Pickup Truck",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "ford-mustang",
+"make": "Ford",
+"model": "Mustang",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "dodge-charger",
+"make": "Dodge",
+"model": "Charger",
+"body": "sedan",
+"est": "sedan",
+"quote": "Sedan",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "chevrolet-corvette",
+"make": "Chevrolet",
+"model": "Corvette",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "jeep-wrangler",
+"make": "Jeep",
+"model": "Wrangler",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "toyota-rav4",
+"make": "Toyota",
+"model": "RAV4",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "honda-civic",
+"make": "Honda",
+"model": "Civic",
+"body": "sedan",
+"est": "sedan",
+"quote": "Sedan",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "lexus-rx",
+"make": "Lexus",
+"model": "RX",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "hyundai-ioniq-5",
+"make": "Hyundai",
+"model": "Ioniq 5",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "nissan-gtr",
+"make": "Nissan",
+"model": "GT-R",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
 }
 ]
 }

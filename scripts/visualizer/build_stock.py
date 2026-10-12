@@ -85,14 +85,20 @@ for car in cars:
   # locate the same plate in the white photo by edge matching, keep that out of the paint and inpaint the sliver it left.
   fix = np.zeros((H, W), bool); plates = []
   Lk = Bk.mean(-1); satk = Bk.max(-1) - Bk.min(-1)
-  lab, n = ndimage.label((Lk > 0.6) & (satk < 0.12))
   gw = cv2.magnitude(cv2.Sobel(Wt.mean(-1), cv2.CV_32F, 1, 0), cv2.Sobel(Wt.mean(-1), cv2.CV_32F, 0, 1))
   gk = cv2.magnitude(cv2.Sobel(Lk, cv2.CV_32F, 1, 0), cv2.Sobel(Lk, cv2.CV_32F, 0, 1))
+  # bright, neutral and flat; the plate's own edge cuts it off from a chrome / silver bumper around it
+  lab, n = ndimage.label(cv2.morphologyEx(((Lk > 0.6) & (satk < 0.12) & (gk < 0.25)).astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)))
   for i, sl in enumerate(ndimage.find_objects(lab), 1):
     if sl is None: continue
     comp = lab[sl] == i; h_, w_ = comp.shape; cy = (sl[0].start + sl[0].stop) / 2
     if comp.sum() < 600 or not (1.6 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
-    if not paint[sl].any() and not (dd[sl] > 0.06).any(): continue
+    vals = Lk[sl][comp]
+    if vals.mean() < 0.68 or vals.std() > 0.08: continue  # a blank plate is evenly white; chrome trim is not
+    if (sl[1].start + sl[1].stop) / 2 > x0 + 0.45 * (x1 - x0) or w_ > 0.22 * (x1 - x0): continue  # front plate: the car faces left
+    # grow back the 1-2 px rim the flatness test removed, so the outline matches the real plate edge
+    g = np.zeros((H, W), np.uint8); g[sl] = comp; g = cv2.dilate(g, np.ones((5, 5), np.uint8))
+    sl = ndimage.find_objects(g)[0]; comp = g[sl] > 0; h_, w_ = comp.shape
     m, r = 6, 28
     ty0, ty1, tx0, tx1 = sl[0].start - m, sl[0].stop + m, sl[1].start - m, sl[1].stop + m
     sy0, sy1, sx0, sx1 = ty0 - r, ty1 + r, tx0 - r, tx1 + r

@@ -2,7 +2,7 @@
    2D photo recolouring of our own studio vehicle photos. Each vehicle ships:
    <id>.webp (photo on the studio backdrop), <id>-maps.webp (R: paint shading, G: reflections, B: studio horizon map)
    and <id>-mask.webp (R: paint, G: glass, B: wheel faces). Rebuild with scripts/visualizer/build_cars.py; film list: visualizer/films.json. */
-import { vehicleFromPhoto, splitCar, feather, blur } from './photo-maps.mjs';
+import { vehicleFromPhoto, splitCar, feather, blur, refineMask } from './photo-maps.mjs';
 const BASE = '/visualizer/';
 const BRAND_LOGOS = { '3m': '/satin/img/brands/3m.svg', avery: '/satin/img/brands/avery-dennison.png', kpmf: '/satin/img/brands/kpmf.png', oracal: '/satin/img/brands/orafol.svg' };
 const W = 1600, H = 900;
@@ -444,6 +444,55 @@ export async function mount(root, opts = {}) {
     }
     return best.mask;
   }
+  /* wheels and number plates are part of SAM's "car" but must not be wrapped: probe the lower body with single clicks and
+     keep the candidates that look like a wheel (round, touching the bottom) or a plate (a flat rectangle) */
+  async function findParts(id, w, h, car) {
+    const c = stats(car, w, h), excl = new Uint8Array(w * h); let wheels = 0, plates = 0;
+    if (!c.n) return { excl, wheels, plates };
+    let low = null, lowG = null, lw = 0, lh = 0, ms = 0, probes = 0, windows = 0;
+    // paint brightness reference (median of the lower-middle body)
+    const ref = []; for (let y = Math.round(c.y0 + c.bh * .5); y < c.y0 + c.bh * .72; y += 3) for (let x = Math.round(c.x0 + c.bw * .25); x < c.x0 + c.bw * .75; x += 3) { const i = y * w + x; if (car[i]) { const p = i * 4; ref.push((upl.rgba[p] * .299 + upl.rgba[p + 1] * .587 + upl.rgba[p + 2] * .114) / 255); } }
+    ref.sort((a, b) => a - b); const pl = ref.length ? ref[ref.length >> 1] : .5;
+    const probesAt = [];
+    for (const fy of [.84, .7]) for (let fx = .08; fx < .96; fx += .12) probesAt.push([fx, fy, 'low']);
+    for (const fy of [.2, .32]) for (let fx = .3; fx < .9; fx += .12) probesAt.push([fx, fy, 'top']);
+    for (const [fx, fy, band] of probesAt) {
+      const x = Math.round(c.x0 + c.bw * fx), y = Math.round(c.y0 + c.bh * fy);
+      if (!car[y * w + x] || (low && low[Math.floor(y * lh / h) * lw + Math.floor(x * lw / w)])) continue;
+      if (lowG && lowG[Math.floor(y * lh / h) * lw + Math.floor(x * lw / w)]) continue;
+      const m = await ask({ type: 'decode', id, points: [[x / w, y / h, 1]], lowres: true }); ms += m.ms || 0; probes++;
+      if (!low) { lw = m.w; lh = m.h; low = new Uint8Array(lw * lh); lowG = new Uint8Array(lw * lh); }
+      const sx = lw / w, sy = lh / h, cx0 = c.x0 * sx, cx1 = c.x1 * sx, cy0 = c.y0 * sy, cy1 = c.y1 * sy, cbw = cx1 - cx0, cbh = cy1 - cy0, cn = c.n * sx * sy;
+      let best = null;
+      if (band === 'top') { // a window: compact part above the waist whose brightness clearly differs from the paint
+        for (let k = 0; k < 3; k++) {
+          const mk = planeOf(m, k), t = stats(mk, lw, lh); if (!t.n || m.scores[k] < .6) continue;
+          const bw = t.bw + 1, bh = t.bh + 1, area = t.n / cn, cyr = ((t.y0 + t.y1) / 2 - cy0) / cbh;
+          if (area < .012 || area > .16 || bw / bh > 5 || bw / bh < .5 || t.n / (bw * bh) < .4 || cyr > .5) continue;
+          let L = 0, q = 0; for (let j = 0; j < mk.length; j += 2) if (mk[j]) { const X = Math.min(w - 1, Math.round((j % lw) / sx)), Y = Math.min(h - 1, Math.round(((j / lw) | 0) / sy)), p = (Y * w + X) * 4; L += (upl.rgba[p] * .299 + upl.rgba[p + 1] * .587 + upl.rgba[p + 2] * .114) / 255; q++; }
+          L /= Math.max(1, q);
+          if ((pl < .35 && L > pl + .1) || (pl >= .35 && L < pl - .25)) { if (!best || t.n > best.n) best = { mk, n: t.n }; }
+        }
+        if (best) { windows++; for (let j = 0; j < lowG.length; j++) if (best.mk[j]) lowG[j] = 255; }
+        continue;
+      }
+      for (let k = 0; k < 3; k++) {
+        const mk = planeOf(m, k), t = stats(mk, lw, lh); if (!t.n || m.scores[k] < .55) continue;
+        const bw = t.bw + 1, bh = t.bh + 1, fill = t.n / (bw * bh), asp = bw / bh, area = t.n / cn;
+        const wheel = area > .012 && area < .2 && asp > .4 && asp < 1.45 && fill > .55 && fill < .93 && cy1 - t.y1 < cbh * .15;
+        const plate = area > .002 && area < .05 && asp > 1.5 && asp < 5.5 && fill > .8 && (t.y0 + t.y1) / 2 > cy0 + cbh * .35;
+        if ((wheel || plate) && (!best || t.n > best.n)) best = { mk, n: t.n, wheel };
+      }
+      if (!best) continue;
+      best.wheel ? wheels++ : plates++;
+      for (let j = 0; j < low.length; j++) if (best.mk[j]) low[j] = 255;
+    }
+    const up = src => { const o = new Uint8Array(w * h); for (let y = 0; y < h; y++) { const ly = Math.min(lh - 1, Math.floor(y * lh / h)) * lw; for (let x = 0; x < w; x++) o[y * w + x] = src[ly + Math.min(lw - 1, Math.floor(x * lw / w))]; } const r = refineMask(upl.rgba, w, h, o); for (let i = 0; i < r.length; i++) o[i] = r[i] && car[i] ? 255 : 0; return o; };
+    if (wheels + plates) excl.set(up(low)); // back to full resolution, snapped to the photo's edges
+    const glass = windows ? up(lowG) : null;
+    console.info('[wv] probes', probes, 'decoder', Math.round(ms / Math.max(1, probes)), 'ms each');
+    return { excl, wheels, plates, windows, glass };
+  }
   function photoVehicle() {
     const v = vehicleFromPhoto(upl.rgba, upl.w, upl.h, feather(upl.paint, upl.w, upl.h, Math.max(1, Math.round(upl.w / 900))), upl.glass);
     upl.v = v; return v;
@@ -478,7 +527,12 @@ export async function mount(root, opts = {}) {
       const car = await findCar(id, w, h);
       if (upl?.id !== id) return;
       if (!car) { upHide(); setEdit(true, 'empty'); toast(t('We could not find the car automatically. Tap the car to select it.')); upl.paint = new Uint8Array(w * h); upl.glass = new Uint8Array(w * h); return; }
-      const sp = splitCar(rgba, w, h, car); upl.paint = sp.paint; upl.glass = sp.glass;
+      const carR = refineMask(rgba, w, h, car), t1 = performance.now();
+      const parts = await findParts(id, w, h, carR);
+      if (upl?.id !== id) return;
+      const sp = splitCar(rgba, w, h, carR); upl.paint = sp.paint; upl.glass = sp.glass;
+      for (let j = 0; j < sp.paint.length; j++) { if (parts.excl[j]) sp.paint[j] = 0; if (parts.glass && parts.glass[j]) { sp.paint[j] = 0; sp.glass[j] = 255; } }
+      console.info('[wv] parts', parts.wheels, 'wheels', parts.plates, 'plates', parts.windows, 'windows', Math.round(performance.now() - t1), 'ms');
       await new Promise(r => setTimeout(r, 30)); // let the message paint before the heavy maths
       current = photoVehicle(); layout(current); paint(); upHide();
       toast(t('Done! Use Edit selection if a panel is missing.'));
@@ -519,7 +573,7 @@ export async function mount(root, opts = {}) {
       // the part under the finger: best-scoring candidate that is not the whole photo
       let k = -1; for (let j = 0; j < 3; j++) { const n = stats(planeOf(m, j), w, h).frac; if (n > .0004 && n < .6 && (k < 0 || m.scores[j] > m.scores[k])) k = j; }
       if (k < 0) { toast(t('Nothing found there. Try tapping the middle of the panel.')); return; }
-      const mk = planeOf(m, k);
+      const mk = refineMask(upl.rgba, w, h, planeOf(m, k));
       upl.hist.push([upl.paint.slice(), upl.glass.slice()]); if (upl.hist.length > 15) upl.hist.shift();
       for (let i = 0; i < total; i++) if (mk[i]) { if (emode === 'add') { upl.paint[i] = 255; upl.glass[i] = 0; } else upl.paint[i] = 0; }
       if (emode === 'remove' && y < .6) { // windows taken out of the paint can still take tint

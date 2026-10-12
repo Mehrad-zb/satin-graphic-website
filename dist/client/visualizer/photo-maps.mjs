@@ -9,7 +9,7 @@ const hash = (x, y) => { let n = (x * 374761393 + y * 668265263) | 0; n = (n ^ (
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
 /** Separable box blur ×3 (≈ gaussian) of a W×H float field. Running sums, row-major in both passes (cache friendly). */
-export function blur(src, w, h, rx, ry = rx) {
+export function blur(src, w, h, rx, ry = rx, iters = 3) {
   rx = Math.round(rx); ry = Math.round(ry);
   const a = Float32Array.from(src), b = new Float32Array(a.length), acc = new Float64Array(w);
   const hpass = (inp, out, r) => {
@@ -30,8 +30,20 @@ export function blur(src, w, h, rx, ry = rx) {
       for (let x = 0; x < w; x++) { out[o + x] = acc[x] * d; acc[x] += inp[ra + x] - inp[rr + x]; }
     }
   };
-  for (let k = 0; k < 3; k++) { hpass(a, b, rx); vpass(b, a, ry); }
+  for (let k = 0; k < iters; k++) { hpass(a, b, rx); vpass(b, a, ry); }
   return a;
+}
+/** Snap a coarse 0/255 mask (Segment Anything works at 256 px) to the photo's real edges with a guided filter
+ *  (He et al.), using the colour photo's luminance as the guide. Returns a new 0/255 mask. */
+export function refineMask(rgba, W, H, mask, r = Math.max(2, Math.round(Math.max(W, H) / 260)), eps = 4e-4) {
+  const N = W * H, I = new Float32Array(N), p = new Float32Array(N), II = new Float32Array(N), Ip = new Float32Array(N);
+  for (let i = 0, q = 0; i < N; i++, q += 4) { const v = (rgba[q] * .299 + rgba[q + 1] * .587 + rgba[q + 2] * .114) / 255; I[i] = v; p[i] = mask[i] ? 1 : 0; II[i] = v * v; Ip[i] = v * p[i]; }
+  const mI = blur(I, W, H, r, r, 1), mp = blur(p, W, H, r, r, 1), mII = blur(II, W, H, r, r, 1), mIp = blur(Ip, W, H, r, r, 1);
+  const A = new Float32Array(N), B = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const a = (mIp[i] - mI[i] * mp[i]) / (mII[i] - mI[i] * mI[i] + eps); A[i] = a; B[i] = mp[i] - a * mI[i]; }
+  const mA = blur(A, W, H, r, r, 1), mB = blur(B, W, H, r, r, 1), out = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const q = mA[i] * I[i] + mB[i]; out[i] = q > .5 ? 255 : 0; }
+  return out;
 }
 /** Blur that only averages inside the mask (normalised convolution) so dark surroundings don't bleed into panel edges. */
 function maskedBlur(v, m, w, h, r) {
@@ -128,14 +140,30 @@ export function splitCar(rgba, W, H, car) {
     let isGlass = false, isTyre = false;
     if (light) { // light paint: windows and tyres are clearly darker than the paint
       if (ry < .55 && lum[i] < pl - .28 && sat[i] < .35) isGlass = true;
-      if (ry > .62 && lum[i] < .2 && sat[i] < .3) isTyre = true;
+      if (ry > .55 && lum[i] < Math.min(.36, pl * .5) && sat[i] < .35) isTyre = true; // tyres and dark wheel faces
     } else { // dark paint: glass is usually a little bluer/greener or lighter (reflections of interior/sky) — keep conservative
       if (ry < .5 && dist > .35 && sat[i] < .25 && lum[i] > pl + .25) isGlass = true;
       if (ry > .7 && lum[i] < .08) isTyre = true;
     }
     if (isGlass) glass[i] = 255; else if (!isTyre) paint[i] = 255;
   }
-  return { paint: open(cleanMask(paint, W, H, Math.max(1, Math.round(bw / 400))), W, H), glass: cleanMask(glass, W, H, 1), color: [pr, pg, pb], box: [x0, y0, x1, y1] };
+  // windows are big compact blobs; thin bright streaks are reflections on the paint (dark cars) and stay paint
+  const blobs = keepBlobs(cleanMask(glass, W, H, 1), W, H, n * .004, bw * .025);
+  for (let i = 0; i < N0; i++) if (glass[i] && !blobs[i] && car[i] >= 128 && !(light ? false : (((i / W) | 0) - y0) / bh > .7 && lum[i] < .08)) paint[i] = 255;
+  return { paint: open(cleanMask(paint, W, H, Math.max(1, Math.round(bw / 400))), W, H), glass: blobs, color: [pr, pg, pb], box: [x0, y0, x1, y1] };
+}
+// keep connected components (4-neighbour) with enough area and thickness
+function keepBlobs(m, W, H, minArea, minSide) {
+  const lab = new Int32Array(m.length), out = new Uint8Array(m.length), stack = new Int32Array(m.length);
+  for (let s = 0; s < m.length; s++) {
+    if (!m[s] || lab[s]) continue;
+    let top = 0, n = 0, x0 = W, x1 = 0, y0 = H, y1 = 0; stack[top++] = s; lab[s] = s + 1; const members = [];
+    while (top) { const i = stack[--top], x = i % W, y = (i / W) | 0; members.push(i); n++; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      for (const j of [i - 1, i + 1, i - W, i + W]) if (j >= 0 && j < m.length && m[j] && !lab[j] && Math.abs((j % W) - x) <= 1) { lab[j] = s + 1; stack[top++] = j; } }
+    const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+    if (n >= minArea && Math.min(bw, bh) >= minSide && n / (bw * bh) > .22) for (const i of members) out[i] = 255;
+  }
+  return out;
 }
 // morphological helpers on 0/255 masks
 function dilate(m, W, H, r) { // square max filter, separable
