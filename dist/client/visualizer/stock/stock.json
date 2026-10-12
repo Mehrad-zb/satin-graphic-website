@@ -1,0 +1,48 @@
+{
+"cars": [
+{
+"id": "tesla-model-y",
+"make": "Tesla",
+"model": "Model Y",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "tesla-model-3",
+"make": "Tesla",
+"model": "Model 3",
+"body": "sedan",
+"est": "sedan",
+"quote": "Tesla / EV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "bmw-m4",
+"make": "BMW",
+"model": "M4",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "bmw-x5",
+"make": "BMW",
+"model": "X5",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+}
+]
+}

@@ -7,7 +7,12 @@ const ILL_DIR = new URL('../../dist/client/satin/img/mascots/', import.meta.url)
 const ILL = { 'pipe-pal-plumbing': 'beaver-plumber', 'drain-hero': 'beaver-plumber', 'sparky-electric': 'fox-electrician', 'bright-spark-electrical': 'fox-electrician', 'live-wire-electric': 'fox-electrician',
   'cool-breeze-hvac': 'polarbear-hvac', 'comfort-zone-heating': 'polarbear-hvac', 'max-build-construction': 'bulldog-builder', 'reno-ready': 'bulldog-builder', 'roof-buddy': 'bulldog-builder',
   'paint-pro-rollo': 'raccoon-painter', 'colour-crew-painting': 'raccoon-painter', 'fresh-cut-landscaping': 'bear-landscaper', 'green-thumb-lawn': 'bear-landscaper',
-  'glossy-floors-epoxy': 'panther-epoxy', 'epoxy-pro-garage': 'panther-epoxy', 'resin-shine': 'panther-epoxy', 'party-pop-events': 'flamingo-events', 'balloon-bliss': 'flamingo-events', 'gala-decor': 'flamingo-events' };
+  'glossy-floors-epoxy': 'panther-epoxy', 'epoxy-pro-garage': 'panther-epoxy', 'resin-shine': 'panther-epoxy', 'party-pop-events': 'flamingo-events', 'balloon-bliss': 'flamingo-events', 'gala-decor': 'flamingo-events',
+  'hammer-time-carpentry': 'lion-carpenter', 'sawyer-woodworks': 'lion-carpenter', 'fine-finish-millwork': 'lion-carpenter', 'kitchen-craft': 'wolf-kitchen', 'cabinet-co': 'wolf-kitchen',
+  'burger-buddy-truck': 'bear-chef', 'chef-on-wheels': 'bear-chef', 'grill-master-bbq': 'bear-chef', 'slice-life-pizza': 'cat-pizza', 'brew-bros-coffee': 'owl-barista',
+  'sweet-tooth-bakery': 'bunny-baker', 'sweet-celebrations': 'bunny-baker', 'sparkle-squad-cleaning': 'panda-cleaner', 'fresh-n-clean-maids': 'panda-cleaner', 'carpet-care-pros': 'panda-cleaner',
+  'bug-guard-pest': 'armadillo-pest', 'box-it-movers': 'gorilla-mover', 'junk-gone': 'gorilla-mover', 'swift-courier': 'eagle-courier', 'home-sweet-realty': 'retriever-realtor',
+  'paws-and-play': 'dalmatian-pets', 'flex-fit-gym': 'bull-gym', 'drive-smart-school': 'cheetah-driving', 'auto-spa-detailing': 'otter-detailing' };
 const illCache = {};
 function illImage(key) {
   if (!illCache[key]) { const buf = fs.readFileSync(ILL_DIR + key + '.png'); illCache[key] = { uri: 'data:image/png;base64,' + buf.toString('base64'), w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) }; }
