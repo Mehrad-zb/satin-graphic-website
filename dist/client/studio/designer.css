@@ -283,3 +283,18 @@ html.cv-app .scw:not(.open){display:none!important}
 .studio-cv.cv-mobile .cv-empty>b{background:#ffffffd9;border-radius:6px;padding:1px 8px}
 .studio-cv.cv-mobile .cv-empty.cv-empty-pinned{position:absolute;bottom:auto;z-index:6}
 /* Vehicle picker (studio home): bodies grouped by type */.studio-picker-sub{font-size:16px;font-weight:650;color:#4b4f58;margin:22px 0 12px}.studio-picker-vehicles .studio-picker-grid img{object-fit:contain;background:#e9ebee}.cv-vehicle-spec{margin:-4px 0 4px;font-size:13px}
+/* Studio landing: categories first, then the products of one category (?cat=) */
+.studio-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin:8px 0 40px}
+.studio-cat{display:flex;flex-direction:column;border:1px solid var(--line,#e2e6ed);border-radius:18px;overflow:hidden;background:var(--card,#fff);color:inherit;text-decoration:none;transition:transform .18s,box-shadow .18s,border-color .18s}
+.studio-cat:hover{transform:translateY(-3px);box-shadow:0 18px 40px -22px rgb(15 26 44/.45);border-color:transparent}
+.studio-cat-img{display:block;aspect-ratio:4/3;background:#f1f3f6;overflow:hidden}
+.studio-cat-img img{width:100%;height:100%;object-fit:cover;display:block}
+.studio-cat-text{display:flex;flex-direction:column;gap:6px;padding:16px 18px 18px}
+.studio-cat-text b{font-size:19px;line-height:1.2;color:var(--ink,#172335)}
+.studio-cat-text small{font-size:14px;line-height:1.45;color:var(--mut,#5f6c80)}
+.studio-cat-text em{font-style:normal;font-weight:650;font-size:14px;color:var(--accent,#c91c50);margin-top:4px}
+.studio-crumb{display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--mut,#5f6c80);margin-bottom:6px}
+.studio-crumb a{color:var(--accent,#c91c50);text-decoration:none;font-weight:600}
+.studio-cat-back{margin:28px 0 40px}.studio-cat-back a{font-weight:650;color:var(--accent,#c91c50);text-decoration:none}
+.studio-mega-intro a{display:inline-block;margin-top:10px;font-weight:650;font-size:14px;color:var(--accent,#c91c50);text-decoration:none}
+@media(max-width:600px){.studio-cats{grid-template-columns:1fr 1fr;gap:12px}.studio-cat-text{padding:12px}.studio-cat-text b{font-size:15.5px}.studio-cat-text small{display:none}.studio-cat-text em{font-size:12.5px}}

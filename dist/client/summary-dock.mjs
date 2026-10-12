@@ -49,12 +49,15 @@ export function mountSummaryDock(box, o = {}) {
     fr = 0;
     const a = panel();
     if (!a || !a.querySelector(':scope > .sum-foot')) return;
-    if (innerWidth <= 800) { a.style.removeProperty('--sum-fit'); return; }
-    const top = Math.max(a.getBoundingClientRect().top, parseFloat(getComputedStyle(a).top) || 0);
-    a.style.setProperty('--sum-fit', Math.max(300, Math.round(innerHeight - top - 16)) + 'px');
+    if (innerWidth <= 800) { a.style.removeProperty('--sum-fit'); a.style.removeProperty('--sum-stick'); return; }
+    // the panel keeps its natural height (no inner scrolling): while it fits under the header it sticks
+    // there; when it is taller than the screen it scrolls with the page and sticks by its bottom edge
+    const navTop = parseFloat(getComputedStyle(a).getPropertyValue('--sum-top')) || 170;
+    a.style.setProperty('--sum-stick', Math.round(Math.min(navTop, innerHeight - a.offsetHeight - 16)) + 'px');
   };
   const req = () => { if (!fr) fr = requestAnimationFrame(fit); };
   addEventListener('scroll', req, { passive: true }); addEventListener('resize', req);
+  try { const pa = panel(); if (pa && 'ResizeObserver' in window) new ResizeObserver(req).observe(pa); } catch {}
 
   let raf = 0;
   const update = () => {
