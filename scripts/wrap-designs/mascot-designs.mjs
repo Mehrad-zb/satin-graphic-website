@@ -1,6 +1,18 @@
 // 44 mascot wrap designs (flat cartoon characters from dist/client/studio/mascots.mjs) for
 // /satin/shop/vehicle-wrap-designs/<slug>. Same contract as art.mjs: draw(slug, W, H, {mirror, zone}) → SVG.
 import { mascotMarkup, shade } from '../../dist/client/studio/mascots.mjs';
+import fs from 'node:fs';
+// Illustrated (AI-generated, original) characters used instead of the flat mascot where one exists for the trade.
+const ILL_DIR = new URL('../../dist/client/satin/img/mascots/', import.meta.url).pathname;
+const ILL = { 'pipe-pal-plumbing': 'beaver-plumber', 'drain-hero': 'beaver-plumber', 'sparky-electric': 'fox-electrician', 'bright-spark-electrical': 'fox-electrician', 'live-wire-electric': 'fox-electrician',
+  'cool-breeze-hvac': 'polarbear-hvac', 'comfort-zone-heating': 'polarbear-hvac', 'max-build-construction': 'bulldog-builder', 'reno-ready': 'bulldog-builder', 'roof-buddy': 'bulldog-builder',
+  'paint-pro-rollo': 'raccoon-painter', 'colour-crew-painting': 'raccoon-painter', 'fresh-cut-landscaping': 'bear-landscaper', 'green-thumb-lawn': 'bear-landscaper',
+  'glossy-floors-epoxy': 'panther-epoxy', 'epoxy-pro-garage': 'panther-epoxy', 'resin-shine': 'panther-epoxy', 'party-pop-events': 'flamingo-events', 'balloon-bliss': 'flamingo-events', 'gala-decor': 'flamingo-events' };
+const illCache = {};
+function illImage(key) {
+  if (!illCache[key]) { const buf = fs.readFileSync(ILL_DIR + key + '.png'); illCache[key] = { uri: 'data:image/png;base64,' + buf.toString('base64'), w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) }; }
+  return illCache[key];
+}
 const FONT = "Inter, 'Inter Display', Arial, Helvetica, sans-serif";
 
 // slug, name, industry, colour name, [a, b], mascot, layout, services line, description, background ('light' | 'a' | 'dark')
@@ -153,11 +165,16 @@ export function mascotArt(d, W, H, o = {}) {
   // Characters with "natural" colours (food, wood, kraft, skin) keep their own body colour and take the brand colour as accent.
   const NAT = { burgie: [null, null], slice: [null, main], chef: [null, main], pup: [null, main], boxy: [null, main], hammy: [null, null], saw: [null, null], cuppa: ['#ffffff', main], glossy: [main, null] };
   const [mc, mb] = d.mc || d.mb ? [d.mc, d.mb] : NAT[d.m] || [main, null];
-  const mascot = `<g id="mascot" transform="translate(${mx - s / 2} ${my - s / 2}) scale(${s / 100})">${mascotMarkup(d.m, mc, mb)}</g>`;
+  let mascot = `<g id="mascot" transform="translate(${mx - s / 2} ${my - s / 2}) scale(${s / 100})">${mascotMarkup(d.m, mc, mb)}</g>`;
+  const illKey = ILL[d.slug]; let badgeOut = badge;
+  if (illKey) { // full-colour illustrated character, a little larger and without the round badge
+    const im = illImage(illKey), hh = s * 1.32, ww = hh * im.w / im.h;
+    mascot = `<image id="mascot" x="${mx - ww / 2}" y="${my - hh * .52}" width="${ww}" height="${hh}" href="${im.uri}" preserveAspectRatio="xMidYMid meet"/>`; badgeOut = dark ? `<circle cx="${mx}" cy="${my}" r="${hh * .5}" fill="#ffffff" opacity=".92"/><circle cx="${mx}" cy="${my}" r="${hh * .5}" fill="none" stroke="${lum(a) > .3 ? a : b}" stroke-width="${hh * .02}"/>` : '';
+  }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
 <title>${d.name.replace(/&/g, '&amp;')} — vehicle wrap design (${o.mirror ? 'passenger' : 'driver'} side)</title>
 <g id="background"><rect width="${W}" height="${H}" fill="${base}"/></g>
-<g id="graphics"${o.mirror ? ` transform="matrix(-1 0 0 1 ${W} 0)"` : ''}>${L(W, H, a, b, { mx, my })}${badge}${mascot}</g>
+<g id="graphics"${o.mirror ? ` transform="matrix(-1 0 0 1 ${W} 0)"` : ''}>${L(W, H, a, b, { mx, my })}${badgeOut}${mascot}</g>
 ${card(W, H, Z, !!o.mirror, d, dark)}
 </svg>`;
 }

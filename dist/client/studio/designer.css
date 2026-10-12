@@ -299,3 +299,4 @@ html.cv-app .scw:not(.open){display:none!important}
 .studio-mega-intro a{display:inline-block;margin-top:10px;font-weight:650;font-size:14px;color:var(--accent,#c91c50);text-decoration:none}
 @media(max-width:600px){.studio-cats{grid-template-columns:1fr 1fr;gap:12px}.studio-cat-text{padding:12px}.studio-cat-text b{font-size:15.5px}.studio-cat-text small{display:none}.studio-cat-text em{font-size:12.5px}}
 .cv-mascots button svg{width:86%;height:86%}
+.cv-art-mascots{grid-template-columns:repeat(3,minmax(0,1fr))}.cv-art-mascots button{padding:4px;min-width:0;overflow:hidden;background:#fff;border:1px solid #e6e8ee}.cv-art-mascots img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}

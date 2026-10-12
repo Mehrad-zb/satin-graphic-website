@@ -213,3 +213,16 @@ export function mascotMarkup(key, a, b) { const m = C[key]; if (!m) return ''; r
 /** Stand-alone SVG string. */
 export function mascotSVG(key, a, b, size = 100) { return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${size}" height="${size}">${mascotMarkup(key, a, b)}</svg>`; }
 export { lumOf };
+
+// Illustrated (raster) mascot characters, original AI-generated artwork for Satin Graphic, transparent PNG in
+// /satin/img/mascots/<key>.png (thumbnail <key>-220.webp). Design Studio adds them as an uploaded image layer.
+export const ART_MASCOTS = [
+  { key: 'fox-electrician', label: 'Fox electrician', tags: 'electrical electrician' },
+  { key: 'beaver-plumber', label: 'Beaver plumber', tags: 'plumbing plumber drains' },
+  { key: 'polarbear-hvac', label: 'Polar bear HVAC technician', tags: 'hvac heating cooling' },
+  { key: 'bulldog-builder', label: 'Bulldog builder', tags: 'construction roofing contractor renovation' },
+  { key: 'raccoon-painter', label: 'Raccoon painter', tags: 'painting painter' },
+  { key: 'bear-landscaper', label: 'Bear landscaper', tags: 'landscaping lawn garden' },
+  { key: 'panther-epoxy', label: 'Panther epoxy installer', tags: 'epoxy floors coating' },
+  { key: 'flamingo-events', label: 'Flamingo event planner', tags: 'events party decor balloons' },
+];
