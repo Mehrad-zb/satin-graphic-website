@@ -230,6 +230,50 @@
 "w": 1536,
 "h": 1024,
 "angle": "3/4 front"
+},
+{
+"id": "toyota-supra",
+"make": "Toyota",
+"model": "GR Supra",
+"body": "coupe",
+"est": "sedan",
+"quote": "Coupe / sports car",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "ford-transit",
+"make": "Ford",
+"model": "Transit",
+"body": "van",
+"est": "transit-van",
+"quote": "Transit Van",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "mercedes-sprinter",
+"make": "Mercedes-Benz",
+"model": "Sprinter",
+"body": "van",
+"est": "sprinter-van",
+"quote": "Sprinter Van",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
+},
+{
+"id": "cadillac-escalade",
+"make": "Cadillac",
+"model": "Escalade",
+"body": "suv",
+"est": "suv",
+"quote": "SUV",
+"w": 1536,
+"h": 1024,
+"angle": "3/4 front"
 }
 ]
 }

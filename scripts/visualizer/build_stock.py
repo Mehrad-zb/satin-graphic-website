@@ -14,7 +14,10 @@ enc = lambda a: (np.clip(a, 0, 1) * 255 + 0.5).astype(np.uint8)
 cars = json.load(open(os.path.join(SRC, 'cars.json')))
 # Satin Graphic wordmark printed on the (blank) front plate, like a dealer plate
 LOGO = np.asarray(Image.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../dist/client/satin/img/logo.optimized.webp')).convert('RGB')).astype(np.float32) / 255
-def plate_logo(img, pc):
+def plate_logo(img, pc, alt=None):
+  # the white photo can show an empty (dark) plate holder where the black photo has a blank plate: use that plate
+  if alt is not None and img[pc].mean() < 0.45 and alt[pc].mean() > 0.6:
+    a = cv2.GaussianBlur(pc.astype(np.float32), (0, 0), 0.8)[..., None]; img = img * (1 - a) + alt * a
   cs, _ = cv2.findContours(pc.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
   if not cs: return img
   c = max(cs, key=cv2.contourArea); peri = cv2.arcLength(c, True); quad = None
@@ -117,6 +120,17 @@ for car in cars:
     if score > 0.2: pc = np.roll(np.roll(pc, dy, 0), dx, 1)
     plates.append(pc)
     fix |= pk & ~pw; paint &= ~pw; paint |= pk & ~pw & ndimage.binary_dilation(paint, iterations=3)
+  if not plates:  # the black edit painted the plate too: find the blank plate in the white photo itself
+    Lw8 = Wt.mean(-1); satw = Wt.max(-1) - Wt.min(-1)
+    lab, n = ndimage.label(cv2.morphologyEx(((Lw8 > 0.6) & (satw < 0.12) & (gw < 0.15)).astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)))
+    for i, sl in enumerate(ndimage.find_objects(lab), 1):
+      if sl is None: continue
+      comp = lab[sl] == i; h_, w_ = comp.shape; cy = (sl[0].start + sl[0].stop) / 2
+      if comp.sum() < 600 or not (1.6 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
+      if (sl[1].start + sl[1].stop) / 2 > x0 + 0.45 * (x1 - x0) or w_ > 0.22 * (x1 - x0): continue
+      g = np.zeros((H, W), np.uint8); g[sl] = comp; g = cv2.dilate(g, np.ones((5, 5), np.uint8)) > 0
+      print('  plate (white photo)', sl[1].start, sl[0].start, w_, h_)
+      plates.append(g); paint &= ~cv2.dilate(g.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
   # fill pin-holes in the paint (badges, sensors are kept out only if they are big)
   filled = ndimage.binary_fill_holes(paint)
   holes = filled & ~paint
@@ -140,7 +154,7 @@ for car in cars:
   maps = np.dstack([enc(np.sqrt(np.clip(D, 0, 1.3) / 1.3)), enc(np.sqrt(S)), enc(E)])
   maps[pf < 0.01] = 0
   photo = Wt.copy()
-  for pc in plates: photo = plate_logo(photo, pc)
+  for pc in plates: photo = plate_logo(photo, pc, Bk)
   Image.fromarray(enc(photo)).save(os.path.join(OUT, slug + '.webp'), quality=90, method=6)
   Image.fromarray(maps).save(os.path.join(OUT, slug + '-maps.webp'), lossless=True, quality=100, method=6)
   Image.fromarray(np.dstack([enc(pf), enc(cv2.GaussianBlur(glass.astype(np.float32), (0, 0), 0.8)), np.zeros((H, W), np.uint8)])).save(os.path.join(OUT, slug + '-mask.webp'), lossless=True, quality=100, method=6)
