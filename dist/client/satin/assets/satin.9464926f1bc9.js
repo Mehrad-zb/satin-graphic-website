@@ -369,6 +369,28 @@ const WRAP_DESIGNS = [
   { slug: "drive-smart-school", name: "Drive Smart School", style: "Mascot", ind: "Driving School", col: "Red / Blue", c: ["#e8314a", "#2457d6"], d: "A friendly car mascot on a road stripe — made for driving schools." },
   { slug: "swift-courier", name: "Swift Courier", style: "Mascot", ind: "Logistics", col: "Yellow / Black", c: ["#ffc61a", "#16181d"], d: "A parcel mascot with speed stripes for courier and delivery vans." },
   { slug: "auto-spa-detailing", name: "Auto Spa Detailing", style: "Mascot", ind: "Auto Services", col: "Blue / Silver", c: ["#1f7ae0", "#c3cad2"], d: "Foam bubbles and a shiny car mascot for mobile detailers." },
+  { slug: "neon-shards", name: "Neon Shards", style: "Abstract", ind: "Car styling", col: "Purple / Cyan", c: ["#2b1055", "#00d4ff"], d: "Low-poly shards fading from deep purple to electric cyan with hot-pink highlights." },
+  { slug: "ember-shards", name: "Ember Shards", style: "Abstract", ind: "Car styling", col: "Black / Orange", c: ["#141414", "#ff5a1f"], d: "Faceted low-poly panels burning from black into molten orange." },
+  { slug: "liquid-flow", name: "Liquid Flow", style: "Abstract", ind: "Car styling", col: "Navy / Teal", c: ["#0b1630", "#14d9c5"], d: "Flowing liquid ribbons in teal and violet over midnight navy." },
+  { slug: "halftone-rush", name: "Halftone Rush", style: "Abstract", ind: "Car styling", col: "White / Red", c: ["#f5f5f5", "#e8314a"], d: "Comic-style halftone dots growing toward the rear — bold and clean." },
+  { slug: "glitch-signal", name: "Glitch Signal", style: "Abstract", ind: "Car styling", col: "Black / Neon", c: ["#0d0f12", "#00f0ff"], d: "Digital glitch bars in neon cyan and magenta on gloss black." },
+  { slug: "topo-lines", name: "Topo Lines", style: "Abstract", ind: "Car styling", col: "Grey / Orange", c: ["#2a2f38", "#8e99a6"], d: "Topographic contour lines with orange index lines — an adventure look." },
+  { slug: "brush-storm", name: "Brush Storm", style: "Abstract", ind: "Car styling", col: "White / Multi-colour", c: ["#f7f7f5", "#2457d6"], d: "Huge painterly brush strokes in primary colours." },
+  { slug: "hex-fade", name: "Hex Fade", style: "Abstract", ind: "Car styling", col: "Graphite / Lime", c: ["#1f2329", "#3a4250"], d: "Hexagon grid dissolving toward the front with lime accents." },
+  { slug: "woodland-camo", name: "Woodland Camo", style: "Camo", ind: "Car styling", col: "Green / Brown", c: ["#5b6b3a", "#2f3a22"], d: "Classic four-colour woodland camo, sized for a full car." },
+  { slug: "urban-camo", name: "Urban Camo", style: "Camo", ind: "Car styling", col: "Grey / Black", c: ["#9aa1a8", "#5b6168"], d: "City-grey camo blobs — understated and tough." },
+  { slug: "arctic-camo", name: "Arctic Camo", style: "Camo", ind: "Car styling", col: "White / Ice blue", c: ["#eef3f7", "#c7d6e2"], d: "Snow-white camo with ice-blue and slate shapes." },
+  { slug: "digital-camo", name: "Digital Camo", style: "Camo", ind: "Car styling", col: "Desert / Brown", c: ["#c8b48a", "#a48b5f"], d: "Pixelated desert digital camo." },
+  { slug: "neon-pixel-camo", name: "Neon Pixel Camo", style: "Camo", ind: "Car styling", col: "Black / Neon", c: ["#121417", "#2a2e35"], d: "Digital camo in black with neon pink and cyan pixels." },
+  { slug: "le-mans-stripes", name: "Le Mans Stripes", style: "Sport", ind: "Car styling", col: "White / Blue", c: ["#ffffff", "#1f4fd1"], d: "Endurance-racing twin stripes with a number roundel." },
+  { slug: "retro-80s", name: "Retro 80s", style: "Sport", ind: "Car styling", col: "White / Sunset", c: ["#f5f2ea", "#ffc61a"], d: "Three-tone eighties stripes kicking up over the rear wheel." },
+  { slug: "sunset-gt", name: "Sunset GT", style: "Sport", ind: "Car styling", col: "Purple / Orange", c: ["#2b1055", "#e8314a"], d: "Sunset gradient with white speed lines — synthwave GT." },
+  { slug: "checker-rush", name: "Checker Rush", style: "Sport", ind: "Car styling", col: "Yellow / Black", c: ["#ffd400", "#16181d"], d: "A chequered flag breaking apart toward the front." },
+  { slug: "carbon-strike", name: "Carbon Strike", style: "Sport", ind: "Car styling", col: "Carbon / Red", c: ["#1b1d21", "#e8314a"], d: "Carbon-weave print with a red strike — track-day ready." },
+  { slug: "rally-blocks", name: "Rally Blocks", style: "Sport", ind: "Car styling", col: "White / Blue / Red", c: ["#f5f5f5", "#1f4fd1"], d: "Angular rally colour blocks with speed slashes." },
+  { slug: "cosmic-nebula", name: "Cosmic Nebula", style: "Art", ind: "Car styling", col: "Space / Violet", c: ["#06071a", "#7c3aed"], d: "A starfield and glowing nebula clouds across the whole car." },
+  { slug: "great-wave", name: "Great Wave", style: "Art", ind: "Car styling", col: "Blue / White", c: ["#f3ead7", "#1d4e89"], d: "Stylised ocean waves with white foam crests, in classic print colours." },
+  { slug: "paint-explosion", name: "Paint Explosion", style: "Art", ind: "Car styling", col: "White / Multi-colour", c: ["#f7f7f5", "#ff2e88"], d: "Paint splashes and drips in pink, blue and yellow." },
 ];
 const DESIGN_DIRECTIONS = [["As shown", null], ["Signal Blue", ["#2563c9", "#9cc0ff"]], ["Brass", ["#8a6a2b", "#e3c27a"]], ["Forest", ["#22412f", "#7fb48a"]], ["Ember", ["#a3281f", "#f08a5d"]]];
 const TEMPLATE_DB = {
@@ -938,6 +960,138 @@ const SEO = {
   "/shop/vehicle-wrap-designs/abstract-flow": {
     "title": "Abstract Flow Wrap Design Toronto | Satin Graphic",
     "description": "Abstract Flow in Vaughan and Toronto/GTA. Explore options, project details and estimates from Satin Graphic. Request a quote for your project.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/neon-shards": {
+    "title": "Neon Shards Wrap Design Toronto | Satin Graphic",
+    "description": "Neon Shards — Low-poly shards fading from deep purple to electric cyan with hot-pink highlights. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/ember-shards": {
+    "title": "Ember Shards Wrap Design Toronto | Satin Graphic",
+    "description": "Ember Shards — Faceted low-poly panels burning from black into molten orange. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/liquid-flow": {
+    "title": "Liquid Flow Wrap Design Toronto | Satin Graphic",
+    "description": "Liquid Flow — Flowing liquid ribbons in teal and violet over midnight navy. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/halftone-rush": {
+    "title": "Halftone Rush Wrap Design Toronto | Satin Graphic",
+    "description": "Halftone Rush — Comic-style halftone dots growing toward the rear — bold and clean. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/glitch-signal": {
+    "title": "Glitch Signal Wrap Design Toronto | Satin Graphic",
+    "description": "Glitch Signal — Digital glitch bars in neon cyan and magenta on gloss black. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/topo-lines": {
+    "title": "Topo Lines Wrap Design Toronto | Satin Graphic",
+    "description": "Topo Lines — Topographic contour lines with orange index lines — an adventure look. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/brush-storm": {
+    "title": "Brush Storm Wrap Design Toronto | Satin Graphic",
+    "description": "Brush Storm — Huge painterly brush strokes in primary colours. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/hex-fade": {
+    "title": "Hex Fade Wrap Design Toronto | Satin Graphic",
+    "description": "Hex Fade — Hexagon grid dissolving toward the front with lime accents. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/woodland-camo": {
+    "title": "Woodland Camo Wrap Design Toronto | Satin Graphic",
+    "description": "Woodland Camo — Classic four-colour woodland camo, sized for a full car. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/urban-camo": {
+    "title": "Urban Camo Wrap Design Toronto | Satin Graphic",
+    "description": "Urban Camo — City-grey camo blobs — understated and tough. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/arctic-camo": {
+    "title": "Arctic Camo Wrap Design Toronto | Satin Graphic",
+    "description": "Arctic Camo — Snow-white camo with ice-blue and slate shapes. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/digital-camo": {
+    "title": "Digital Camo Wrap Design Toronto | Satin Graphic",
+    "description": "Digital Camo — Pixelated desert digital camo. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/neon-pixel-camo": {
+    "title": "Neon Pixel Camo Wrap Design Toronto | Satin Graphic",
+    "description": "Neon Pixel Camo — Digital camo in black with neon pink and cyan pixels. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/le-mans-stripes": {
+    "title": "Le Mans Stripes Wrap Design Toronto | Satin Graphic",
+    "description": "Le Mans Stripes — Endurance-racing twin stripes with a number roundel. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/retro-80s": {
+    "title": "Retro 80s Wrap Design Toronto | Satin Graphic",
+    "description": "Retro 80s — Three-tone eighties stripes kicking up over the rear wheel. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sunset-gt": {
+    "title": "Sunset GT Wrap Design Toronto | Satin Graphic",
+    "description": "Sunset GT — Sunset gradient with white speed lines — synthwave GT. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/checker-rush": {
+    "title": "Checker Rush Wrap Design Toronto | Satin Graphic",
+    "description": "Checker Rush — A chequered flag breaking apart toward the front. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/carbon-strike": {
+    "title": "Carbon Strike Wrap Design Toronto | Satin Graphic",
+    "description": "Carbon Strike — Carbon-weave print with a red strike — track-day ready. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/rally-blocks": {
+    "title": "Rally Blocks Wrap Design Toronto | Satin Graphic",
+    "description": "Rally Blocks — Angular rally colour blocks with speed slashes. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/cosmic-nebula": {
+    "title": "Cosmic Nebula Wrap Design Toronto | Satin Graphic",
+    "description": "Cosmic Nebula — A starfield and glowing nebula clouds across the whole car. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/great-wave": {
+    "title": "Great Wave Wrap Design Toronto | Satin Graphic",
+    "description": "Great Wave — Stylised ocean waves with white foam crests, in classic print colours. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/paint-explosion": {
+    "title": "Paint Explosion Wrap Design Toronto | Satin Graphic",
+    "description": "Paint Explosion — Paint splashes and drips in pink, blue and yellow. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
     "image": "home-video-poster",
     "noindex": false
   },

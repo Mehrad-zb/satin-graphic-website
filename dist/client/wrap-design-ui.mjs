@@ -25,7 +25,7 @@ const rank = f => { const i = FILE_INFO.findIndex(([re]) => re.test(f)); return 
 function views(slug, m, configured) {
   const d = m?.designs?.[slug], out = [];
   for (const src of configured?.images || []) out.push({src, srcset: '', caption: configured.name || 'Design photo', w: 1600, h: 900, own: true});
-  if (d) for (const v of m.views) { const x = d.views[v.key]; if (!x) continue; out.push({key: v.key, src: `${BASE}${slug}/${v.key}-${x.widths.at(-1)}.webp`, srcset: x.widths.map(w => `${BASE}${slug}/${v.key}-${w}.webp ${w}w`).join(', '), caption: v.caption, w: x.w, h: x.h}); }
+  if (d) for (const v of m.views) { const x = d.views[v.key]; if (!x) continue; out.push({key: v.key, src: `${BASE}${slug}/${v.key}-${x.widths.at(-1)}.webp`, srcset: x.widths.map(w => `${BASE}${slug}/${v.key}-${w}.webp ${w}w`).join(', '), caption: x.caption || v.caption, w: x.w, h: x.h}); }
   return out;
 }
 const img = (v, sizes, attrs = '') => `<img src="${esc(v.src)}" ${v.srcset ? `srcset="${esc(v.srcset)}" sizes="${sizes}"` : ''} width="${v.w}" height="${v.h}" alt="${esc(v.caption)}" decoding="async" ${attrs}>`;

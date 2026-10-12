@@ -21,6 +21,10 @@ const BODIES = {
   sprinter: { label: 'High-roof cargo van', zone: { u0: .42, u1: .93, v0: .12, v1: .42, m: { side: .64 } }, size: '170 × 75 in' },
   van: { label: 'Mid-roof cargo van', zone: { u0: .42, u1: .93, v0: .16, v1: .46, m: { side: .64 } }, size: '150 × 62 in' },
   pickup: { label: 'Crew-cab pickup', zone: { u0: .29, u1: .63, v0: .30, v1: .52, m: { u: .705, v: .37, s: .27 } }, size: '230 × 46 in' },
+  coupe: { label: 'Coupe', zone: { u0: .3, u1: .7, v0: .3, v1: .6 }, size: 'full car' },
+  sedan: { label: 'Sedan', zone: { u0: .3, u1: .7, v0: .3, v1: .6 }, size: 'full car' },
+  tesla: { label: 'Electric sedan', zone: { u0: .3, u1: .7, v0: .3, v1: .6 }, size: 'full car' },
+  suv: { label: 'SUV', zone: { u0: .3, u1: .7, v0: .3, v1: .6 }, size: 'full car' },
   minivan: { label: 'Minivan', zone: { u0: .31, u1: .72, v0: .42, v1: .68, m: { u: .85, v: .52, s: .32 } }, size: '200 × 45 in' },
 };
 const VIEWS = [
@@ -32,6 +36,17 @@ const VIEWS = [
   { key: 'detail', car: 'sprinter', mirror: false, crop: [560, 170, 900, 600], caption: 'Detail · branding panel (actual pixels)', widths: [640, 900] },
   { key: 'layout', flat: true, caption: 'Flat layout · driver side panel (vector)', widths: [640, 1100, 1600] },
 ];
+// Full-car art / livery designs (Abstract, Camo, Sport, Art collections) are shown on cars instead of vans.
+const LIV_VIEWS = [
+  { key: 'hero', car: 'coupe', mirror: false, caption: 'Driver side · coupe', widths: [640, 1100, 1600] },
+  { key: 'passenger', car: 'coupe', mirror: true, caption: 'Passenger side · coupe', widths: [640, 1100, 1600] },
+  { key: 'sedan', car: 'sedan', mirror: false, caption: 'Driver side · sedan', widths: [640, 1100, 1600] },
+  { key: 'tesla', car: 'tesla', mirror: false, artMirror: true, caption: 'Passenger side · electric sedan', widths: [640, 1100, 1600] }, // photo faces right
+  { key: 'suv', car: 'suv', mirror: false, caption: 'Driver side · SUV', widths: [640, 1100, 1600] },
+  { key: 'pickup', car: 'pickup', mirror: false, caption: 'Driver side · pickup', widths: [640, 1100, 1600] },
+  { key: 'detail', car: 'coupe', mirror: false, crop: [420, 300, 900, 600], caption: 'Detail · actual pixels', widths: [640, 900] },
+  { key: 'layout', flat: true, caption: 'Flat layout · driver side (vector)', widths: [640, 1100, 1600] },
+];
 const only = process.argv.slice(2);
 const b64 = f => 'data:image/webp;base64,' + fs.readFileSync(f).toString('base64');
 const browser = await chromium.launch();
@@ -40,7 +55,7 @@ await page.setContent('<!doctype html><body style="margin:0"></body>');
 const cars = {};
 for (const c of Object.keys(BODIES)) cars[c] = { photo: b64(CARS + c + '.webp'), mask: b64(CARS + c + '-mask.webp') };
 fs.mkdirSync(OUT, { recursive: true }); fs.mkdirSync(PKG, { recursive: true });
-const manifest = { generated: new Date().toISOString().slice(0, 10), views: VIEWS.map(v => ({ key: v.key, caption: v.caption, widths: v.widths })), designs: {} };
+const manifest = { generated: new Date().toISOString().slice(0, 10), views: [...VIEWS, ...LIV_VIEWS.filter(l => !VIEWS.some(v => v.key === l.key))].map(v => ({ key: v.key, caption: v.caption, widths: v.widths })), designs: {} };
 const resize = (src, dst, widths, crop) => execFileSync('python3', ['-c', `
 import sys,json
 from PIL import Image
@@ -56,7 +71,7 @@ for (const d of DESIGNS) {
   if (only.length && !only.includes(d.slug)) continue;
   const dir = OUT + d.slug + '/'; fs.mkdirSync(dir, { recursive: true });
   const entry = manifest.designs[d.slug] = { name: d.name, colours: d.c, views: {} };
-  for (const v of VIEWS) {
+  for (const v of (d.livery ? LIV_VIEWS : VIEWS)) {
     let png;
     if (v.flat) {
       const W = 2400, H = Math.round(2400 * 54 / 144), svg = art(d.slug, W, H, { zone: BODIES.sprinter.zone });
@@ -80,7 +95,7 @@ for (const d of DESIGNS) {
         for (let y = 0; y < Hc; y++) for (let x = 0; x < Wc; x++) { const i = (y * Wc + x) * 4, r = px[i]; if (r > 128) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
         return { box: [x0, y0, x1 - x0 + 1, y1 - y0 + 1] };
       }, { car: cars[v.car], svgFor: null, mirror: v.mirror });
-      const [bx, by, bw, bh] = png.box, svg = art(d.slug, bw, bh, { mirror: v.mirror, zone: body.zone });
+      const [bx, by, bw, bh] = png.box, svg = art(d.slug, bw, bh, { mirror: v.artMirror ?? v.mirror, zone: body.zone });
       png = await page.evaluate(async ({ car, svg, mirror, box }) => {
         const load = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
         const [photo, mask, a] = await Promise.all([load(car.photo), load(car.mask), load('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg))]);
@@ -99,7 +114,7 @@ for (const d of DESIGNS) {
     const tmp = TMP + '/' + d.slug + '-' + v.key + '.png'; fs.writeFileSync(tmp, Buffer.from(png.split(',')[1], 'base64'));
     for (const f of fs.readdirSync(dir)) if (f.startsWith(v.key + '-')) fs.unlinkSync(dir + f);
     const [w, h] = resize(tmp, dir + v.key, v.widths, v.crop);
-    entry.views[v.key] = { w, h, widths: v.widths.map(x => Math.min(x, w)).filter((x, i, a) => a.indexOf(x) === i) };
+    entry.views[v.key] = { w, h, widths: v.widths.map(x => Math.min(x, w)).filter((x, i, a) => a.indexOf(x) === i), ...(d.livery ? { caption: v.caption } : {}) };
   }
   // ---- private download package ----
   const pk = TMP + '/' + d.slug; fs.mkdirSync(pk, { recursive: true });

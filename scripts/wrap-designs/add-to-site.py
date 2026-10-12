@@ -5,14 +5,16 @@ admin pages.json and the sitemap. Idempotent: designs already present are skippe
 import json, os, re, shutil, subprocess
 ROOT = '/home/claude/gh-satin'
 C = ROOT + '/dist/client'
-designs = json.loads(subprocess.check_output(['node', '-e', "import('./scripts/wrap-designs/mascot-designs.mjs').then(m=>console.log(JSON.stringify(m.MASCOT_DESIGNS)))"], cwd=ROOT))
-TR = json.load(open(ROOT + '/scripts/wrap-designs/mascot-i18n.json'))
+import sys
+MOD, EXP, I18N = (sys.argv[1:4] if len(sys.argv) > 3 else ('mascot-designs.mjs', 'MASCOT_DESIGNS', 'mascot-i18n.json'))
+designs = json.loads(subprocess.check_output(['node', '-e', f"import('./scripts/wrap-designs/{MOD}').then(m=>console.log(JSON.stringify(m.{EXP}.map(({{c,...d}})=>({{...d,c:c.slice(0,2)}})))))"], cwd=ROOT))
+TR = json.load(open(ROOT + '/scripts/wrap-designs/' + I18N))
 js = lambda v: json.dumps(v, ensure_ascii=False)
 
 # 1. bundle: WRAP_DESIGNS + SEO
 B = C + '/satin/assets/satin.9464926f1bc9.js'; s = open(B).read()
-anchor = s.index('  { slug: "abstract-flow"'); end = s.index('\n', anchor) + 1
-add = ''.join(f'  {{ slug: {js(d["slug"])}, name: {js(d["name"])}, style: "Mascot", ind: {js(d["ind"])}, col: {js(d["col"])}, c: {js(d["c"])}, d: {js(d["d"])} }},\n' for d in designs if f'slug: "{d["slug"]}"' not in s)
+anchor = s.index('const WRAP_DESIGNS = ['); end = s.index('\n];', anchor) + 1
+add = ''.join(f'  {{ slug: {js(d["slug"])}, name: {js(d["name"])}, style: {js(d["style"])}, ind: {js(d["ind"])}, col: {js(d["col"])}, c: {js(d["c"])}, d: {js(d["d"])} }},\n' for d in designs if f'slug: "{d["slug"]}"' not in s)
 s = s[:end] + add + s[end:]
 seo_anchor = s.index('  "/shop/vehicle-wrap-designs/abstract-flow": {'); seo_end = s.index('  },\n', seo_anchor) + 5
 seo = ''.join(f'  "/shop/vehicle-wrap-designs/{d["slug"]}": {{\n    "title": {js(d["name"] + " Wrap Design Toronto | Satin Graphic")},\n    "description": {js(d["name"] + " — " + d["d"] + " Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.")},\n    "image": "home-video-poster",\n    "noindex": false\n  }},\n' for d in designs if f'"/shop/vehicle-wrap-designs/{d["slug"]}"' not in s)
@@ -27,7 +29,7 @@ for f in [C + '/studio/model.mjs', ROOT + '/dist/server/studio-model.mjs']:
         depth += {'{': 1, '}': -1}.get(m[j], 0)
         if depth == 0: break
     tpl = m[i:j + 1]
-    i2 = m.index('{"id":"design-abstract-flow"'); depth = 0
+    i2 = m.index('{"id":"design-auto-spa-detailing"') if 'design-auto-spa-detailing' in m else m.index('{"id":"design-abstract-flow"'); depth = 0
     for k in range(i2, len(m)):
         depth += {'{': 1, '}': -1}.get(m[k], 0)
         if depth == 0: break
