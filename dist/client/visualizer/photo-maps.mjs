@@ -107,12 +107,12 @@ export function vehicleFromPhoto(rgba, W, H, paint, glass = null) {
   for (let k = 0; k < N; k++) E[k] = Math.min(1, Math.max(0, (.18 + .72 * (1 - Y[k]) ** 1.3) * (.55 + .45 * Math.min(1, D[k])) + .5 * S[k]));
   const pick = arr => { const o = new Float32Array(N); for (let k = 0; k < N; k++) o[k] = arr[paintIdx[k]]; return o; };
   const sc = carW / 1330; // blur radii relative to our 1600 px studio frame
-  const S5 = pick(blur(Sfull, W, H, 3 * sc)), S14 = pick(blur(Sfull, W, H, 8 * sc)), SX = pick(blur(Sfull, W, H, 14 * sc, 1));
+  const S5 = pick(blur(Sfull, W, H, 3 * sc)), S14 = pick(blur(Sfull, W, H, 8 * sc)), SX = pick(blur(Sfull, W, H, 14 * sc, 1)), S40 = pick(blur(Sfull, W, H, 22 * sc));
   const streak = new Float32Array(N0); for (let i = 0; i < N0; i++) streak[i] = hash(i % W, (i / W) | 0);
   const BR = pick(blur(streak, W, H, 22 * sc, 0));
   const gl = []; if (glass) for (let i = 0; i < N0; i++) if (glass[i] > 3) gl.push(i);
   const GM = new Float32Array(gl.length); for (let k = 0; k < gl.length; k++) GM[k] = glass[gl[k]] / 255;
-  return { W, H, base: rgba, paint: paintIdx, glass: Uint32Array.from(gl), rim: new Uint32Array(0), D, S, E, M, X, Y, R, S5, S14, SX, BR, RM: new Float32Array(0), RL: new Float32Array(0), GM, photo: true, baseL };
+  return { W, H, base: rgba, paint: paintIdx, glass: Uint32Array.from(gl), rim: new Uint32Array(0), D, S, E, M, X, Y, R, S5, S14, SX, S40, BR, RM: new Float32Array(0), RL: new Float32Array(0), GM, photo: true, baseL };
 }
 
 /** Split a SAM "whole car" mask into paint / glass / tyres with colour + position heuristics.

@@ -1,27 +1,1228 @@
 [
-{"id":"tesla-model-y","make":"Tesla","model":"Model Y","body":"suv","est":"suv","quote":"SUV"},
-{"id":"tesla-model-3","make":"Tesla","model":"Model 3","body":"sedan","est":"sedan","quote":"Tesla / EV"},
-{"id":"bmw-m4","make":"BMW","model":"M4","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"bmw-x5","make":"BMW","model":"X5","body":"suv","est":"suv","quote":"SUV"},
-{"id":"mercedes-g-class","make":"Mercedes-Benz","model":"G-Class","body":"suv","est":"suv","quote":"SUV"},
-{"id":"mercedes-c-class","make":"Mercedes-Benz","model":"C-Class","body":"sedan","est":"sedan","quote":"Sedan"},
-{"id":"audi-q8","make":"Audi","model":"Q8","body":"suv","est":"suv","quote":"SUV"},
-{"id":"porsche-911","make":"Porsche","model":"911","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"lamborghini-urus","make":"Lamborghini","model":"Urus","body":"suv","est":"suv","quote":"SUV"},
-{"id":"range-rover-sport","make":"Land Rover","model":"Range Rover Sport","body":"suv","est":"suv","quote":"SUV"},
-{"id":"ford-f150","make":"Ford","model":"F-150","body":"pickup","est":"pickup-truck","quote":"Pickup Truck"},
-{"id":"ram-1500","make":"Ram","model":"1500","body":"pickup","est":"pickup-truck","quote":"Pickup Truck"},
-{"id":"ford-mustang","make":"Ford","model":"Mustang","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"dodge-charger","make":"Dodge","model":"Charger","body":"sedan","est":"sedan","quote":"Sedan"},
-{"id":"chevrolet-corvette","make":"Chevrolet","model":"Corvette","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"jeep-wrangler","make":"Jeep","model":"Wrangler","body":"suv","est":"suv","quote":"SUV"},
-{"id":"toyota-rav4","make":"Toyota","model":"RAV4","body":"suv","est":"suv","quote":"SUV"},
-{"id":"honda-civic","make":"Honda","model":"Civic","body":"sedan","est":"sedan","quote":"Sedan"},
-{"id":"lexus-rx","make":"Lexus","model":"RX","body":"suv","est":"suv","quote":"SUV"},
-{"id":"hyundai-ioniq-5","make":"Hyundai","model":"Ioniq 5","body":"suv","est":"suv","quote":"SUV"},
-{"id":"nissan-gtr","make":"Nissan","model":"GT-R","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"toyota-supra","make":"Toyota","model":"GR Supra","body":"coupe","est":"sedan","quote":"Coupe / sports car"},
-{"id":"ford-transit","make":"Ford","model":"Transit","body":"van","est":"transit-van","quote":"Transit Van"},
-{"id":"mercedes-sprinter","make":"Mercedes-Benz","model":"Sprinter","body":"van","est":"sprinter-van","quote":"Sprinter Van"},
-{"id":"cadillac-escalade","make":"Cadillac","model":"Escalade","body":"suv","est":"suv","quote":"SUV"}
+ {
+  "id": "tesla-model-y",
+  "make": "Tesla",
+  "model": "Model Y",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "tesla-model-3",
+  "make": "Tesla",
+  "model": "Model 3",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV"
+ },
+ {
+  "id": "bmw-m4",
+  "make": "BMW",
+  "model": "M4",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "bmw-x5",
+  "make": "BMW",
+  "model": "X5",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "mercedes-g-class",
+  "make": "Mercedes-Benz",
+  "model": "G-Class",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "mercedes-c-class",
+  "make": "Mercedes-Benz",
+  "model": "C-Class",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan"
+ },
+ {
+  "id": "audi-q8",
+  "make": "Audi",
+  "model": "Q8",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "porsche-911",
+  "make": "Porsche",
+  "model": "911",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "lamborghini-urus",
+  "make": "Lamborghini",
+  "model": "Urus",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "range-rover-sport",
+  "make": "Land Rover",
+  "model": "Range Rover Sport",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "ford-f150",
+  "make": "Ford",
+  "model": "F-150",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck"
+ },
+ {
+  "id": "ram-1500",
+  "make": "Ram",
+  "model": "1500",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck"
+ },
+ {
+  "id": "ford-mustang",
+  "make": "Ford",
+  "model": "Mustang",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "dodge-charger",
+  "make": "Dodge",
+  "model": "Charger",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan"
+ },
+ {
+  "id": "chevrolet-corvette",
+  "make": "Chevrolet",
+  "model": "Corvette",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "jeep-wrangler",
+  "make": "Jeep",
+  "model": "Wrangler",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "toyota-rav4",
+  "make": "Toyota",
+  "model": "RAV4",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "honda-civic",
+  "make": "Honda",
+  "model": "Civic",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan"
+ },
+ {
+  "id": "lexus-rx",
+  "make": "Lexus",
+  "model": "RX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "hyundai-ioniq-5",
+  "make": "Hyundai",
+  "model": "Ioniq 5",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "nissan-gtr",
+  "make": "Nissan",
+  "model": "GT-R",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "toyota-supra",
+  "make": "Toyota",
+  "model": "GR Supra",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car"
+ },
+ {
+  "id": "ford-transit",
+  "make": "Ford",
+  "model": "Transit",
+  "body": "van",
+  "est": "transit-van",
+  "quote": "Transit Van"
+ },
+ {
+  "id": "mercedes-sprinter",
+  "make": "Mercedes-Benz",
+  "model": "Sprinter",
+  "body": "van",
+  "est": "sprinter-van",
+  "quote": "Sprinter Van"
+ },
+ {
+  "id": "cadillac-escalade",
+  "make": "Cadillac",
+  "model": "Escalade",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV"
+ },
+ {
+  "id": "tesla-model-s",
+  "make": "Tesla",
+  "model": "Model S",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV",
+  "prompt": "Tesla Model S sedan (current generation)"
+ },
+ {
+  "id": "tesla-model-x",
+  "make": "Tesla",
+  "model": "Model X",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Tesla Model X SUV"
+ },
+ {
+  "id": "tesla-cybertruck",
+  "make": "Tesla",
+  "model": "Cybertruck",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Tesla Cybertruck pickup with a gloss white wrapped body"
+ },
+ {
+  "id": "bmw-3-series",
+  "make": "BMW",
+  "model": "3 Series",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "BMW 3 Series sedan (G20, M Sport)"
+ },
+ {
+  "id": "bmw-5-series",
+  "make": "BMW",
+  "model": "5 Series",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "BMW 5 Series sedan (G60, M Sport)"
+ },
+ {
+  "id": "bmw-x3",
+  "make": "BMW",
+  "model": "X3",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "BMW X3 SUV (current generation, M Sport)"
+ },
+ {
+  "id": "bmw-x7",
+  "make": "BMW",
+  "model": "X7",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "BMW X7 SUV (M Sport)"
+ },
+ {
+  "id": "bmw-i4",
+  "make": "BMW",
+  "model": "i4",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV",
+  "prompt": "BMW i4 gran coupe"
+ },
+ {
+  "id": "mercedes-e-class",
+  "make": "Mercedes-Benz",
+  "model": "E-Class",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Mercedes-Benz E-Class sedan (current generation, AMG Line)"
+ },
+ {
+  "id": "mercedes-s-class",
+  "make": "Mercedes-Benz",
+  "model": "S-Class",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Mercedes-Benz S-Class sedan (W223)"
+ },
+ {
+  "id": "mercedes-gle",
+  "make": "Mercedes-Benz",
+  "model": "GLE",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Mercedes-Benz GLE SUV (AMG Line)"
+ },
+ {
+  "id": "mercedes-glc",
+  "make": "Mercedes-Benz",
+  "model": "GLC",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Mercedes-Benz GLC SUV (current generation)"
+ },
+ {
+  "id": "audi-a4",
+  "make": "Audi",
+  "model": "A4",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Audi A4 sedan (S line)"
+ },
+ {
+  "id": "audi-a5",
+  "make": "Audi",
+  "model": "A5 Sportback",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Audi A5 Sportback"
+ },
+ {
+  "id": "audi-q5",
+  "make": "Audi",
+  "model": "Q5",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Audi Q5 SUV (S line)"
+ },
+ {
+  "id": "audi-q7",
+  "make": "Audi",
+  "model": "Q7",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Audi Q7 SUV (S line)"
+ },
+ {
+  "id": "audi-e-tron-gt",
+  "make": "Audi",
+  "model": "RS e-tron GT",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV",
+  "prompt": "Audi RS e-tron GT"
+ },
+ {
+  "id": "porsche-cayenne",
+  "make": "Porsche",
+  "model": "Cayenne",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Porsche Cayenne SUV (current generation)"
+ },
+ {
+  "id": "porsche-macan",
+  "make": "Porsche",
+  "model": "Macan",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Porsche Macan SUV"
+ },
+ {
+  "id": "porsche-taycan",
+  "make": "Porsche",
+  "model": "Taycan",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV",
+  "prompt": "Porsche Taycan sedan"
+ },
+ {
+  "id": "porsche-panamera",
+  "make": "Porsche",
+  "model": "Panamera",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Porsche Panamera (current generation)"
+ },
+ {
+  "id": "porsche-cayman",
+  "make": "Porsche",
+  "model": "718 Cayman",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Porsche 718 Cayman GTS"
+ },
+ {
+  "id": "lamborghini-huracan",
+  "make": "Lamborghini",
+  "model": "Hurac\u00e1n",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Lamborghini Hurac\u00e1n EVO coupe"
+ },
+ {
+  "id": "lamborghini-aventador",
+  "make": "Lamborghini",
+  "model": "Aventador",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Lamborghini Aventador S coupe"
+ },
+ {
+  "id": "lamborghini-revuelto",
+  "make": "Lamborghini",
+  "model": "Revuelto",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Lamborghini Revuelto coupe"
+ },
+ {
+  "id": "range-rover",
+  "make": "Land Rover",
+  "model": "Range Rover",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Range Rover (current generation, L460)"
+ },
+ {
+  "id": "land-rover-defender",
+  "make": "Land Rover",
+  "model": "Defender",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Land Rover Defender 110"
+ },
+ {
+  "id": "range-rover-velar",
+  "make": "Land Rover",
+  "model": "Range Rover Velar",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Range Rover Velar"
+ },
+ {
+  "id": "range-rover-evoque",
+  "make": "Land Rover",
+  "model": "Range Rover Evoque",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Range Rover Evoque"
+ },
+ {
+  "id": "land-rover-discovery",
+  "make": "Land Rover",
+  "model": "Discovery",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Land Rover Discovery (current generation)"
+ },
+ {
+  "id": "ford-bronco",
+  "make": "Ford",
+  "model": "Bronco",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Ford Bronco 4-door with a black hardtop"
+ },
+ {
+  "id": "ford-explorer",
+  "make": "Ford",
+  "model": "Explorer",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Ford Explorer SUV (current generation)"
+ },
+ {
+  "id": "ford-ranger",
+  "make": "Ford",
+  "model": "Ranger",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Ford Ranger pickup truck, crew cab (current generation)"
+ },
+ {
+  "id": "ford-super-duty",
+  "make": "Ford",
+  "model": "Super Duty",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Ford F-250 Super Duty pickup truck, crew cab"
+ },
+ {
+  "id": "ford-escape",
+  "make": "Ford",
+  "model": "Escape",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Ford Escape SUV (current generation)"
+ },
+ {
+  "id": "ram-2500",
+  "make": "Ram",
+  "model": "2500",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Ram 2500 Heavy Duty pickup truck, crew cab"
+ },
+ {
+  "id": "ram-trx",
+  "make": "Ram",
+  "model": "1500 TRX",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Ram 1500 TRX pickup truck"
+ },
+ {
+  "id": "ram-promaster",
+  "make": "Ram",
+  "model": "ProMaster",
+  "body": "sprinter",
+  "est": "sprinter-van",
+  "quote": "Sprinter Van",
+  "prompt": "Ram ProMaster cargo van, high roof"
+ },
+ {
+  "id": "dodge-challenger",
+  "make": "Dodge",
+  "model": "Challenger",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Dodge Challenger coupe"
+ },
+ {
+  "id": "dodge-durango",
+  "make": "Dodge",
+  "model": "Durango",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Dodge Durango SUV"
+ },
+ {
+  "id": "dodge-hornet",
+  "make": "Dodge",
+  "model": "Hornet",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Dodge Hornet compact SUV"
+ },
+ {
+  "id": "chevrolet-silverado",
+  "make": "Chevrolet",
+  "model": "Silverado",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Chevrolet Silverado 1500 pickup truck, crew cab"
+ },
+ {
+  "id": "chevrolet-tahoe",
+  "make": "Chevrolet",
+  "model": "Tahoe",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Chevrolet Tahoe SUV (current generation)"
+ },
+ {
+  "id": "chevrolet-camaro",
+  "make": "Chevrolet",
+  "model": "Camaro",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Chevrolet Camaro SS coupe"
+ },
+ {
+  "id": "chevrolet-equinox",
+  "make": "Chevrolet",
+  "model": "Equinox",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Chevrolet Equinox SUV"
+ },
+ {
+  "id": "chevrolet-express",
+  "make": "Chevrolet",
+  "model": "Express",
+  "body": "van",
+  "est": "transit-van",
+  "quote": "Transit Van",
+  "prompt": "Chevrolet Express cargo van"
+ },
+ {
+  "id": "jeep-grand-cherokee",
+  "make": "Jeep",
+  "model": "Grand Cherokee",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Jeep Grand Cherokee (current generation)"
+ },
+ {
+  "id": "jeep-gladiator",
+  "make": "Jeep",
+  "model": "Gladiator",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Jeep Gladiator pickup with a black hardtop"
+ },
+ {
+  "id": "jeep-compass",
+  "make": "Jeep",
+  "model": "Compass",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Jeep Compass SUV"
+ },
+ {
+  "id": "jeep-grand-wagoneer",
+  "make": "Jeep",
+  "model": "Grand Wagoneer",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Jeep Grand Wagoneer"
+ },
+ {
+  "id": "toyota-camry",
+  "make": "Toyota",
+  "model": "Camry",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Toyota Camry sedan (current generation)"
+ },
+ {
+  "id": "toyota-corolla",
+  "make": "Toyota",
+  "model": "Corolla",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Toyota Corolla sedan (current generation)"
+ },
+ {
+  "id": "toyota-tacoma",
+  "make": "Toyota",
+  "model": "Tacoma",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Toyota Tacoma pickup truck, double cab (current generation)"
+ },
+ {
+  "id": "toyota-tundra",
+  "make": "Toyota",
+  "model": "Tundra",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Toyota Tundra pickup truck, crew cab (current generation)"
+ },
+ {
+  "id": "toyota-highlander",
+  "make": "Toyota",
+  "model": "Highlander",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Toyota Highlander SUV"
+ },
+ {
+  "id": "toyota-4runner",
+  "make": "Toyota",
+  "model": "4Runner",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Toyota 4Runner SUV"
+ },
+ {
+  "id": "honda-accord",
+  "make": "Honda",
+  "model": "Accord",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Honda Accord sedan (current generation)"
+ },
+ {
+  "id": "honda-cr-v",
+  "make": "Honda",
+  "model": "CR-V",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Honda CR-V SUV (current generation)"
+ },
+ {
+  "id": "honda-pilot",
+  "make": "Honda",
+  "model": "Pilot",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Honda Pilot SUV (current generation)"
+ },
+ {
+  "id": "honda-hr-v",
+  "make": "Honda",
+  "model": "HR-V",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Honda HR-V SUV (current generation)"
+ },
+ {
+  "id": "honda-odyssey",
+  "make": "Honda",
+  "model": "Odyssey",
+  "body": "minivan",
+  "est": "minivan",
+  "quote": "Minivan",
+  "prompt": "Honda Odyssey minivan"
+ },
+ {
+  "id": "lexus-es",
+  "make": "Lexus",
+  "model": "ES",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Lexus ES sedan"
+ },
+ {
+  "id": "lexus-is",
+  "make": "Lexus",
+  "model": "IS",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Lexus IS sedan (F Sport)"
+ },
+ {
+  "id": "lexus-nx",
+  "make": "Lexus",
+  "model": "NX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Lexus NX SUV (current generation)"
+ },
+ {
+  "id": "lexus-gx",
+  "make": "Lexus",
+  "model": "GX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Lexus GX SUV (current generation)"
+ },
+ {
+  "id": "lexus-lx",
+  "make": "Lexus",
+  "model": "LX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Lexus LX 600 SUV"
+ },
+ {
+  "id": "hyundai-elantra",
+  "make": "Hyundai",
+  "model": "Elantra",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Hyundai Elantra sedan (current generation)"
+ },
+ {
+  "id": "hyundai-tucson",
+  "make": "Hyundai",
+  "model": "Tucson",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Hyundai Tucson SUV (current generation)"
+ },
+ {
+  "id": "hyundai-santa-fe",
+  "make": "Hyundai",
+  "model": "Santa Fe",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Hyundai Santa Fe SUV (current generation)"
+ },
+ {
+  "id": "hyundai-palisade",
+  "make": "Hyundai",
+  "model": "Palisade",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Hyundai Palisade SUV"
+ },
+ {
+  "id": "hyundai-ioniq-6",
+  "make": "Hyundai",
+  "model": "Ioniq 6",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Tesla / EV",
+  "prompt": "Hyundai Ioniq 6 sedan"
+ },
+ {
+  "id": "nissan-rogue",
+  "make": "Nissan",
+  "model": "Rogue",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Nissan Rogue SUV (current generation)"
+ },
+ {
+  "id": "nissan-altima",
+  "make": "Nissan",
+  "model": "Altima",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Nissan Altima sedan"
+ },
+ {
+  "id": "nissan-z",
+  "make": "Nissan",
+  "model": "Z",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Nissan Z coupe (current generation)"
+ },
+ {
+  "id": "nissan-frontier",
+  "make": "Nissan",
+  "model": "Frontier",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Nissan Frontier pickup truck, crew cab (current generation)"
+ },
+ {
+  "id": "nissan-pathfinder",
+  "make": "Nissan",
+  "model": "Pathfinder",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Nissan Pathfinder SUV (current generation)"
+ },
+ {
+  "id": "cadillac-ct5",
+  "make": "Cadillac",
+  "model": "CT5",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Cadillac CT5 sedan"
+ },
+ {
+  "id": "cadillac-lyriq",
+  "make": "Cadillac",
+  "model": "Lyriq",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Cadillac Lyriq electric SUV"
+ },
+ {
+  "id": "cadillac-xt5",
+  "make": "Cadillac",
+  "model": "XT5",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Cadillac XT5 SUV"
+ },
+ {
+  "id": "cadillac-xt4",
+  "make": "Cadillac",
+  "model": "XT4",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Cadillac XT4 SUV"
+ },
+ {
+  "id": "kia-telluride",
+  "make": "Kia",
+  "model": "Telluride",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Kia Telluride SUV"
+ },
+ {
+  "id": "kia-sportage",
+  "make": "Kia",
+  "model": "Sportage",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Kia Sportage SUV (current generation)"
+ },
+ {
+  "id": "kia-sorento",
+  "make": "Kia",
+  "model": "Sorento",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Kia Sorento SUV (current generation)"
+ },
+ {
+  "id": "kia-k5",
+  "make": "Kia",
+  "model": "K5",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Kia K5 sedan"
+ },
+ {
+  "id": "kia-ev6",
+  "make": "Kia",
+  "model": "EV6",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Kia EV6 crossover"
+ },
+ {
+  "id": "kia-carnival",
+  "make": "Kia",
+  "model": "Carnival",
+  "body": "minivan",
+  "est": "minivan",
+  "quote": "Minivan",
+  "prompt": "Kia Carnival minivan"
+ },
+ {
+  "id": "mazda-3",
+  "make": "Mazda",
+  "model": "Mazda3",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Mazda3 sedan"
+ },
+ {
+  "id": "mazda-cx-5",
+  "make": "Mazda",
+  "model": "CX-5",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Mazda CX-5 SUV"
+ },
+ {
+  "id": "mazda-cx-50",
+  "make": "Mazda",
+  "model": "CX-50",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Mazda CX-50 SUV"
+ },
+ {
+  "id": "mazda-cx-90",
+  "make": "Mazda",
+  "model": "CX-90",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Mazda CX-90 SUV"
+ },
+ {
+  "id": "mazda-mx-5",
+  "make": "Mazda",
+  "model": "MX-5 Miata",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Mazda MX-5 Miata RF"
+ },
+ {
+  "id": "volkswagen-golf-gti",
+  "make": "Volkswagen",
+  "model": "Golf GTI",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Volkswagen Golf GTI (Mk8)"
+ },
+ {
+  "id": "volkswagen-jetta",
+  "make": "Volkswagen",
+  "model": "Jetta",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Volkswagen Jetta sedan"
+ },
+ {
+  "id": "volkswagen-tiguan",
+  "make": "Volkswagen",
+  "model": "Tiguan",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Volkswagen Tiguan SUV"
+ },
+ {
+  "id": "volkswagen-atlas",
+  "make": "Volkswagen",
+  "model": "Atlas",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Volkswagen Atlas SUV"
+ },
+ {
+  "id": "volkswagen-id4",
+  "make": "Volkswagen",
+  "model": "ID.4",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Volkswagen ID.4 electric SUV"
+ },
+ {
+  "id": "gmc-sierra",
+  "make": "GMC",
+  "model": "Sierra",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "GMC Sierra 1500 pickup truck, crew cab (Denali)"
+ },
+ {
+  "id": "gmc-yukon",
+  "make": "GMC",
+  "model": "Yukon",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "GMC Yukon Denali SUV"
+ },
+ {
+  "id": "gmc-canyon",
+  "make": "GMC",
+  "model": "Canyon",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "GMC Canyon pickup truck, crew cab (current generation)"
+ },
+ {
+  "id": "gmc-acadia",
+  "make": "GMC",
+  "model": "Acadia",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "GMC Acadia SUV (current generation)"
+ },
+ {
+  "id": "gmc-hummer-ev",
+  "make": "GMC",
+  "model": "Hummer EV",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "GMC Hummer EV pickup"
+ },
+ {
+  "id": "acura-integra",
+  "make": "Acura",
+  "model": "Integra",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Acura Integra (current generation)"
+ },
+ {
+  "id": "acura-tlx",
+  "make": "Acura",
+  "model": "TLX",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Acura TLX sedan"
+ },
+ {
+  "id": "acura-rdx",
+  "make": "Acura",
+  "model": "RDX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Acura RDX SUV"
+ },
+ {
+  "id": "acura-mdx",
+  "make": "Acura",
+  "model": "MDX",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Acura MDX SUV"
+ },
+ {
+  "id": "subaru-wrx",
+  "make": "Subaru",
+  "model": "WRX",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Subaru WRX sedan (current generation)"
+ },
+ {
+  "id": "subaru-outback",
+  "make": "Subaru",
+  "model": "Outback",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Subaru Outback wagon"
+ },
+ {
+  "id": "subaru-forester",
+  "make": "Subaru",
+  "model": "Forester",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Subaru Forester SUV"
+ },
+ {
+  "id": "subaru-brz",
+  "make": "Subaru",
+  "model": "BRZ",
+  "body": "coupe",
+  "est": "sedan",
+  "quote": "Coupe / sports car",
+  "prompt": "Subaru BRZ coupe"
+ },
+ {
+  "id": "volvo-xc90",
+  "make": "Volvo",
+  "model": "XC90",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Volvo XC90 SUV"
+ },
+ {
+  "id": "volvo-xc60",
+  "make": "Volvo",
+  "model": "XC60",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Volvo XC60 SUV"
+ },
+ {
+  "id": "volvo-s60",
+  "make": "Volvo",
+  "model": "S60",
+  "body": "sedan",
+  "est": "sedan",
+  "quote": "Sedan",
+  "prompt": "Volvo S60 sedan"
+ },
+ {
+  "id": "rivian-r1s",
+  "make": "Rivian",
+  "model": "R1S",
+  "body": "suv",
+  "est": "suv",
+  "quote": "SUV",
+  "prompt": "Rivian R1S electric SUV"
+ },
+ {
+  "id": "rivian-r1t",
+  "make": "Rivian",
+  "model": "R1T",
+  "body": "pickup",
+  "est": "pickup-truck",
+  "quote": "Pickup Truck",
+  "prompt": "Rivian R1T electric pickup"
+ }
 ]

@@ -19,34 +19,8 @@ export const VEHICLES = [
   { id: 'van', name: 'Cargo van', quote: 'Transit Van', est: 'transit-van' },
   { id: 'sprinter', name: 'High-roof van', quote: 'Sprinter Van', est: 'sprinter-van' },
 ];
-/* Make → model → closest body style we have a photo for. */
-const MODELS = {
-  Acura: { Integra: 'sedan', TLX: 'sedan', RDX: 'suv', MDX: 'suv' },
-  Audi: { A4: 'sedan', A6: 'sedan', RS5: 'coupe', R8: 'coupe', Q5: 'suv', Q7: 'suv', 'e-tron GT': 'tesla' },
-  BMW: { '3 Series': 'sedan', '5 Series': 'sedan', M3: 'sedan', M4: 'coupe', i4: 'tesla', X3: 'suv', X5: 'suv', X7: 'suvxl' },
-  Cadillac: { CT5: 'sedan', Lyriq: 'suv', Escalade: 'suvxl' },
-  Chevrolet: { Malibu: 'sedan', Camaro: 'coupe', Corvette: 'coupe', Equinox: 'suv', Tahoe: 'suvxl', Suburban: 'suvxl', Colorado: 'pickup', Silverado: 'pickup', Express: 'van' },
-  Chrysler: { '300': 'sedan', Pacifica: 'minivan' },
-  Dodge: { Charger: 'sedan', Challenger: 'coupe', Durango: 'suv', 'Grand Caravan': 'minivan' },
-  Ford: { Mustang: 'coupe', Escape: 'suv', Bronco: 'suv', Explorer: 'suv', Expedition: 'suvxl', Ranger: 'pickup', 'F-150': 'pickup', 'Super Duty': 'pickup', 'Transit Connect': 'van', Transit: 'van', 'Transit high roof': 'sprinter' },
-  GMC: { Terrain: 'suv', Yukon: 'suvxl', Canyon: 'pickup', Sierra: 'pickup', Savana: 'van' },
-  Honda: { Civic: 'sedan', Accord: 'sedan', 'CR-V': 'suv', Pilot: 'suv', Odyssey: 'minivan', Ridgeline: 'pickup' },
-  Hyundai: { Elantra: 'sedan', Sonata: 'sedan', 'Ioniq 6': 'tesla', Tucson: 'suv', 'Santa Fe': 'suv', Palisade: 'suv', 'Ioniq 5': 'suv' },
-  Jeep: { Wrangler: 'suv', 'Grand Cherokee': 'suv', Wagoneer: 'suvxl', Gladiator: 'pickup' },
-  Kia: { Forte: 'sedan', K5: 'sedan', Sportage: 'suv', Sorento: 'suv', Telluride: 'suv', EV6: 'suv', Carnival: 'minivan' },
-  Lexus: { IS: 'sedan', ES: 'sedan', NX: 'suv', RX: 'suv', GX: 'suvxl', LX: 'suvxl' },
-  Mazda: { Mazda3: 'sedan', 'MX-5': 'coupe', 'CX-5': 'suv', 'CX-50': 'suv', 'CX-90': 'suv' },
-  'Mercedes-Benz': { 'C-Class': 'sedan', 'E-Class': 'sedan', 'S-Class': 'sedan', 'AMG GT': 'coupe', GLC: 'suv', GLE: 'suv', GLS: 'suvxl', 'G-Class': 'suvxl', Metris: 'van', Sprinter: 'sprinter' },
-  Nissan: { Sentra: 'sedan', Altima: 'sedan', Z: 'coupe', Rogue: 'suv', Pathfinder: 'suv', Frontier: 'pickup', Titan: 'pickup', NV200: 'van' },
-  Porsche: { '911': 'coupe', Cayman: 'coupe', Taycan: 'tesla', Macan: 'suv', Cayenne: 'suv' },
-  Ram: { '1500': 'pickup', '2500': 'pickup', 'ProMaster City': 'van', ProMaster: 'sprinter' },
-  Rivian: { R1S: 'suv', R1T: 'pickup' },
-  Subaru: { Impreza: 'sedan', WRX: 'sedan', BRZ: 'coupe', Crosstrek: 'suv', Forester: 'suv', Outback: 'suv' },
-  Tesla: { 'Model 3': 'tesla', 'Model S': 'tesla', 'Model Y': 'suv', 'Model X': 'suv', Cybertruck: 'pickup' },
-  Toyota: { Corolla: 'sedan', Camry: 'sedan', 'GR Supra': 'coupe', 'GR86': 'coupe', RAV4: 'suv', Highlander: 'suv', '4Runner': 'suv', Sequoia: 'suvxl', Tacoma: 'pickup', Tundra: 'pickup', Sienna: 'minivan' },
-  Volkswagen: { Jetta: 'sedan', Golf: 'sedan', Tiguan: 'suv', Atlas: 'suv', 'ID.4': 'suv' },
-  Volvo: { S60: 'sedan', XC60: 'suv', XC90: 'suv' },
-};
+/* Make → model → stock photo, filled from visualizer/stock/stock.json at mount. */
+const MODELS = {};
 const FINISHES = [
   ['gloss', 'Gloss'], ['gloss-metallic', 'Gloss Metallic'], ['satin', 'Satin'], ['satin-metallic', 'Satin Metallic'], ['matte', 'Matte'], ['matte-metallic', 'Matte Metallic'],
   ['pearl', 'Pearl'], ['diamond', 'Diamond'], ['chrome', 'Chrome'], ['brushed', 'Brushed'], ['colorflow', 'Colour-flow'], ['carbon', 'Carbon'],
@@ -99,7 +73,7 @@ export function loadVehicle(id) {
     }
     for (let k = 0; k < N; k++) { const i = paint[k]; X[k] = (i % W - x0) / Math.max(1, x1 - x0); Y[k] = (((i / W) | 0) - y0) / Math.max(1, y1 - y0); }
     const pick = arr => { const o = new Float32Array(N); for (let k = 0; k < N; k++) o[k] = arr[paint[k]]; return o; };
-    const S5 = pick(blur(Sfull, W, H, 3, 3)), S14 = pick(blur(Sfull, W, H, 8, 8)), SX = pick(blur(Sfull, W, H, 14, 1));
+    const S5 = pick(blur(Sfull, W, H, 3, 3)), S14 = pick(blur(Sfull, W, H, 8, 8)), SX = pick(blur(Sfull, W, H, 14, 1)), S40 = pick(blur(Sfull, W, H, 22, 22));
     // directional brushed-metal streaks (long in x, fine in y)
     const streak = new Float32Array(W * H); for (let i = 0; i < W * H; i++) streak[i] = hash(i % W, (i / W) | 0);
     const BR = pick(blur(streak, W, H, 22, 0));
@@ -109,7 +83,7 @@ export function loadVehicle(id) {
     rmax.sort((a, b) => a - b); const rnorm = 1 / Math.max(.05, rmax[Math.floor(rmax.length * .9)] || 1);
     for (let k = 0; k < RL.length; k++) RL[k] = Math.min(1.3, RL[k] * rnorm);
     const GM = new Float32Array(glass.length); for (let k = 0; k < glass.length; k++) GM[k] = mk[glass[k] * 4 + 1] / 255;
-    return { W, H, base, paint: Uint32Array.from(paint), glass: Uint32Array.from(glass), rim: Uint32Array.from(rim), D, S, E, M, X, Y, R, S5, S14, SX, BR, RM, RL, GM };
+    return { W, H, base, paint: Uint32Array.from(paint), glass: Uint32Array.from(glass), rim: Uint32Array.from(rim), D, S, E, M, X, Y, R, S5, S14, SX, S40, BR, RM, RL, GM };
   });
   cache.set(id, p); p.catch(() => cache.delete(id));
   return p;
@@ -123,7 +97,7 @@ export function render(v, out, st) {
   const metal = /metallic/.test(fin), sheen = fin.startsWith('satin') ? 1 : fin.startsWith('matte') ? 2 : 0;
   const pearlC = hueShift(c, lum > .5 ? 28 : 40);
   const chromeTint = (() => { const m = Math.max(c[0], c[1], c[2], .001); return [c[0] / m, c[1] / m, c[2] / m].map(x => .25 + .75 * x); })();
-  const { paint, D, S, E, M, X, Y, R, S5, S14, SX, BR } = v;
+  const { paint, D, S, E, M, X, Y, R, S5, S14, SX, S40, BR } = v;
   for (let k = 0; k < paint.length; k++) {
     const p = paint[k] * 4, d = D[k], n = R[k];
     let r, g, b, spec, cr = c[0], cg = c[1], cb = c[2];
@@ -137,8 +111,12 @@ export function render(v, out, st) {
       r = chromeTint[0] * val; g = chromeTint[1] * val; b = chromeTint[2] * val;
     } else {
       let dif = d, sp;
-      if (fin === 'matte' || fin === 'matte-metallic' || (fin === 'colorflow' && /matt/i.test(f.name))) { dif = .32 + .68 * d; sp = .1 * S14[k] + .012; }
-      else if (sheen === 1 || fin === 'pearl' || fin === 'brushed' || (fin === 'colorflow' && flowSatin)) { dif = .07 + .93 * d; sp = (fin === 'brushed' ? .45 * SX[k] : .42 * S5[k]) + .006; }
+      // rough films scatter the clear-coat's ~4% Fresnel reflection broadly: a neutral sheen that follows the light each
+      // panel receives (D) and faces the studio ceiling (E). Invisible on light colours, it is what shapes matte/satin black.
+      // Their reflections are the gloss reflections blurred wide: soft gradients that follow the panels, dark where nothing reflects.
+      const shine = d * (.6 + .4 * E[k]), wide = S40 ? S40[k] : S14[k];
+      if (fin === 'matte' || fin === 'matte-metallic' || (fin === 'colorflow' && /matt/i.test(f.name))) { dif = .32 + .68 * d; sp = .62 * wide + .1 * S14[k] + .012 * shine + .003; }
+      else if (sheen === 1 || fin === 'pearl' || fin === 'brushed' || (fin === 'colorflow' && flowSatin)) { dif = .07 + .93 * d; sp = (fin === 'brushed' ? .45 * SX[k] + .3 * wide : .32 * S14[k] + .4 * wide + .22 * S5[k]) + .008 * shine + .002; }
       else sp = S[k];
       if (metal || fin === 'brushed') { // metallic flake + flop: brighter facing panels, darker edges, coloured highlights
         const flake = (n - .5) * (fin.startsWith('matte') ? .22 : .16);
@@ -202,8 +180,8 @@ export async function mount(root, opts = {}) {
   for (const c of stock) { MODELS[c.make] = MODELS[c.make] || {}; MODELS[c.make][c.model] = 'stock:' + c.id; }
   const films = data.films, brands = data.brands, byId = Object.fromEntries(films.map(f => [f.id, f]));
   const q = new URLSearchParams(location.search);
-  const isStudio = id => VEHICLES.some(v => v.id === id);
-  const valid = id => isStudio(id) || !!stockById[id];
+  const isStudio = () => false; // the old side-view studio bodies are retired: every car is a real model photo
+  const valid = id => !!stockById[id];
   const st = {
     vehicle: valid(q.get('vehicle')) ? q.get('vehicle') : stock.length ? 'stock:' + stock[0].id : 'tesla',
     film: byId[q.get('film')] || byId['3m-s12'] || films[0],
@@ -267,9 +245,8 @@ export async function mount(root, opts = {}) {
     <div class="wv-row"><h2 class="wv-h">${esc(t('Your car'))}</h2><div class="wv-cars" data-wv-cars>
       <button type="button" class="wv-upcard" data-wv-upload><span class="wv-upicon">${icon('<path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3M12 4v12M7 9l5-5 5 5"/>')}</span><span>${esc(t('Upload your car'))}</span><small>${esc(t('JPG or PNG photo'))}</small></button>
       <button type="button" class="wv-mine" data-v="upload" data-wv-mine hidden><img data-wv-mineimg alt="" width="150" height="70"><span>${esc(t('Your photo'))}</span></button>
-      ${stock.map(c => `<button type="button" class="wv-stockcar" data-v="stock:${esc(c.id)}" aria-pressed="${'stock:' + c.id === st.vehicle}"><img src="${BASE}stock/${esc(c.id)}-thumb.webp" alt="" width="150" height="70" loading="lazy"><span>${esc(c.make)} <b>${esc(c.model)}</b></span></button>`).join('')}
+      ${stock.map(c => `<button type="button" class="wv-stockcar" data-make="${esc(c.make)}" data-v="stock:${esc(c.id)}" aria-pressed="${'stock:' + c.id === st.vehicle}"><img src="${BASE}stock/${esc(c.id)}-thumb.webp" alt="" width="150" height="70" loading="lazy"><span>${esc(c.make)} <b>${esc(c.model)}</b></span></button>`).join('')}
     </div></div>
-    <div class="wv-row"><h2 class="wv-h">${esc(t('Body style'))}</h2><div class="wv-cars" data-wv-cars>${VEHICLES.map(v => `<button type="button" data-v="${v.id}" aria-pressed="${v.id === st.vehicle}"><img src="${BASE}cars/${v.id}-thumb.webp" alt="" width="150" height="70" loading="lazy"><span>${esc(t(v.name))}</span></button>`).join('')}</div></div>
     <div class="wv-row" data-wv-wheelrow><h2 class="wv-h">${esc(t('Wheels'))}</h2><div class="wv-wheels" data-wv-wheels>${WHEELS.map(([k, n, w]) => `<button type="button" data-v="${k}" aria-pressed="${k === st.wheel}"><span class="wv-rim" style="--rim:${w ? w[0] : '#a3a6a9'}"></span>${esc(t(n))}</button>`).join('')}</div></div>
     <p class="wv-est"><a data-wv-est href="/satin/vehicle-wraps/estimator/">${esc(t('Open the price estimator'))} →</a></p>
   </div>`;
@@ -280,6 +257,7 @@ export async function mount(root, opts = {}) {
   const beforeCv = $('[data-wv-before]'), selCv = $('[data-wv-sel]'), baEl = $('[data-wv-ba]'), baH = $('[data-wv-ba-h]');
   const buf = document.createElement('canvas'); buf.width = W; buf.height = H; const bctx = buf.getContext('2d');
   let current = null, frame = 0, seq = 0, compare = false, editing = false, emode = 'add', beforeKey = '';
+  let makeFilter = '';
   let upl = null; // the visitor's own photo: { id, w, h, rgba, paint, glass, hist, thumb }
   const filmLabel = f => `${brands[f.brand].name} ${f.name}${f.code ? ' (' + f.code + ')' : ''}`;
   const flipped = () => st.side === 'passenger' && isStudio(st.vehicle);
@@ -312,9 +290,9 @@ export async function mount(root, opts = {}) {
     box.innerHTML = [...groups.entries()].sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0])).map(([fam, fs]) => `<h3 class="wv-fam">${esc(fam)}</h3>${fs.map(f => `<button type="button" role="option" class="wv-film" data-film="${esc(f.id)}" aria-selected="${f.id === st.film.id}"><span class="wv-sw" style="background:${swatchBG(f)}"></span><span class="wv-fn"><b>${esc(f.name)}</b><small>${esc(brands[f.brand].name)} · ${esc((FINISHES.find(x => x[0] === f.finish) || [, f.finish])[1])}</small>${f.code ? `<small class="wv-code">${esc(f.code)}</small>` : ''}</span></button>`).join('')}`).join('');
   }
   function vehInfo() {
-    if (st.vehicle === 'upload') { const b = MODELS[st.make]?.[st.model], s = b && (stockById[b] || VEHICLES.find(v => v.id === b)); return { name: t('Your photo'), quote: s ? s.quote : 'Sedan', est: s ? s.est : '' }; }
+    if (st.vehicle === 'upload') { const b = MODELS[st.make]?.[st.model], s = b && stockById[b]; return { name: t('Your photo'), quote: s ? s.quote : 'Sedan', est: s ? s.est : '' }; }
     const s = stockById[st.vehicle]; if (s) return { name: s.make + ' ' + s.model, quote: s.quote, est: s.est };
-    return VEHICLES.find(v => v.id === st.vehicle) || VEHICLES[0];
+    const c0 = stock[0] || { make: '', model: '', quote: 'Sedan', est: 'sedan' }; return { name: c0.make + ' ' + c0.model, quote: c0.quote, est: c0.est };
   }
   function syncUI() {
     const f = st.film, b = brands[f.brand];
@@ -325,6 +303,7 @@ export async function mount(root, opts = {}) {
     $$('[data-film]').forEach(x => x.setAttribute('aria-selected', String(x.dataset.film === f.id)));
     for (const [sel, val] of [['[data-wv-tint]', st.tint], ['[data-wv-wheels]', st.wheel], ['[data-wv-cars]', st.vehicle], ['[data-wv-side-toggle]', st.side], ['[data-wv-brand]', st.brand], ['[data-wv-finish]', st.finish], ['[data-wv-family]', st.family]])
       $$(sel + ' [data-v]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === val)));
+    $$('.wv-stockcar').forEach(b => { b.hidden = !!makeFilter && b.dataset.make !== makeFilter; }); // the car row follows a brand picked in the menu
     const veh = vehInfo();
     $('[data-wv-est]').href = (location.pathname.match(/^\/satin\/(fa|fr|es)\//) ? location.pathname.slice(0, 10) : '/satin/') + 'vehicle-wraps/estimator/' + (veh.est ? veh.est + '/' : '');
     const p = new URLSearchParams(); if (st.vehicle !== 'upload') p.set('vehicle', st.vehicle); p.set('film', f.id);
@@ -369,7 +348,7 @@ export async function mount(root, opts = {}) {
     } catch (e) { console.error(e); toast(t('This vehicle could not load. Please try again.')); }
     finally { if (my === seq) spin.hidden = true; }
     // warm the next likely choices
-    const ids = [...stock.map(c => 'stock:' + c.id), ...VEHICLES.map(v => v.id)], at = ids.indexOf(id);
+    const ids = stock.map(c => 'stock:' + c.id), at = ids.indexOf(id);
     if (at >= 0) ids.slice(at + 1, at + 3).forEach((n, i) => setTimeout(() => loadVehicle(n).catch(() => {}), 1500 + i * 1500));
   }
   let tt; function toast(msg) { const el = $('[data-wv-toast]'); el.textContent = msg; el.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('on'), 2600); }
@@ -620,11 +599,16 @@ export async function mount(root, opts = {}) {
   for (const ev of ['dragleave', 'drop']) wrap.addEventListener(ev, () => wrap.classList.remove('drop'));
   wrap.addEventListener('drop', e => { const f = e.dataTransfer?.files?.[0]; if (f) { e.preventDefault(); handleFile(f); } });
   $('[data-wv-search]').addEventListener('input', e => { st.search = e.target.value; drawList(); });
-  $('[data-wv-make]').addEventListener('change', e => { st.make = e.target.value; st.model = ''; fillModels(); syncUI(); });
+  $('[data-wv-make]').addEventListener('change', e => {
+    st.make = makeFilter = e.target.value; st.model = '';
+    const first = st.make && Object.entries(MODELS[st.make] || {})[0]; // jump straight to that brand's first model
+    if (first && st.vehicle !== 'upload') { st.model = first[0]; fillModels(); setVehicle(first[1]); $('[data-wv-cars] [data-v="' + first[1] + '"]')?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); return; }
+    fillModels(); syncUI();
+  });
   $('[data-wv-model]').addEventListener('change', e => {
     if (e.target.value === '__other') { const m = prompt(t('Model')); st.model = (m || '').trim().slice(0, 60); fillModels(); syncUI(); return; }
     st.model = e.target.value; const body = MODELS[st.make]?.[st.model];
-    if (body && body !== st.vehicle && st.vehicle !== 'upload') setVehicle(body); else syncUI();
+    if (body && body !== st.vehicle && st.vehicle !== 'upload') { setVehicle(body); $('[data-wv-cars] [data-v="' + body + '"]')?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); } else syncUI();
   });
   $('[data-wv-year]').addEventListener('change', e => { st.year = e.target.value; syncUI(); });
   function setSheet(open) { const side = $('[data-wv-side]'); side.classList.toggle('open', open); $('[data-wv-sheet]').setAttribute('aria-expanded', String(open)); document.documentElement.classList.toggle('wv-sheet-open', open); if (open) { const iv = setInterval(() => { if (!section.isConnected || !side.classList.contains('open')) { clearInterval(iv); if (!section.isConnected) document.documentElement.classList.remove('wv-sheet-open'); } }, 800); } }
