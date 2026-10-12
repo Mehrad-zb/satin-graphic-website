@@ -18,10 +18,10 @@ const PKG = path.resolve(ROOT, '../hp/php/satin-new/wrap-designs/');
 const TMP = fs.mkdtempSync('/tmp/wrapdesigns-');
 // Text zones (u = 0 front → 1 rear, v = 0 top → 1 bottom of the paint box) and the template size each body uses.
 const BODIES = {
-  sprinter: { label: 'High-roof cargo van', zone: { u0: .42, u1: .93, v0: .12, v1: .42 }, size: '170 × 75 in' },
-  van: { label: 'Mid-roof cargo van', zone: { u0: .42, u1: .93, v0: .16, v1: .46 }, size: '150 × 62 in' },
-  pickup: { label: 'Crew-cab pickup', zone: { u0: .29, u1: .63, v0: .30, v1: .52 }, size: '230 × 46 in' },
-  minivan: { label: 'Minivan', zone: { u0: .31, u1: .72, v0: .42, v1: .68 }, size: '200 × 45 in' },
+  sprinter: { label: 'High-roof cargo van', zone: { u0: .42, u1: .93, v0: .12, v1: .42, m: { side: .64 } }, size: '170 × 75 in' },
+  van: { label: 'Mid-roof cargo van', zone: { u0: .42, u1: .93, v0: .16, v1: .46, m: { side: .64 } }, size: '150 × 62 in' },
+  pickup: { label: 'Crew-cab pickup', zone: { u0: .29, u1: .63, v0: .30, v1: .52, m: { u: .705, v: .37, s: .27 } }, size: '230 × 46 in' },
+  minivan: { label: 'Minivan', zone: { u0: .31, u1: .72, v0: .42, v1: .68, m: { u: .85, v: .52, s: .32 } }, size: '200 × 45 in' },
 };
 const VIEWS = [
   { key: 'hero', car: 'sprinter', mirror: false, caption: 'Driver side · high-roof van', widths: [640, 1100, 1600] },

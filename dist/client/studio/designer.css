@@ -298,3 +298,4 @@ html.cv-app .scw:not(.open){display:none!important}
 .studio-cat-back{margin:28px 0 40px}.studio-cat-back a{font-weight:650;color:var(--accent,#c91c50);text-decoration:none}
 .studio-mega-intro a{display:inline-block;margin-top:10px;font-weight:650;font-size:14px;color:var(--accent,#c91c50);text-decoration:none}
 @media(max-width:600px){.studio-cats{grid-template-columns:1fr 1fr;gap:12px}.studio-cat-text{padding:12px}.studio-cat-text b{font-size:15.5px}.studio-cat-text small{display:none}.studio-cat-text em{font-size:12.5px}}
+.cv-mascots button svg{width:86%;height:86%}

@@ -325,6 +325,50 @@ const WRAP_DESIGNS = [
   { slug: "commercial-clean", name: "Commercial Clean", style: "Commercial", ind: "Trades & services", col: "Brand colours", c: ["#2b4c6f", "#d9e2ec"], d: "Artwork built around your logo, services and phone number." },
   { slug: "sport-stripe", name: "Sport Stripe", style: "Sport", ind: "General", col: "Multi-colour", c: ["#e8314a", "#2563c9"], d: "Performance-inspired stripes and angled graphics." },
   { slug: "abstract-flow", name: "Abstract Flow", style: "Abstract", ind: "General", col: "Multi-colour", c: ["#d42d80", "#3b82f6"], d: "Bold shapes and expressive colour that work on any trade." },
+  { slug: "pipe-pal-plumbing", name: "Pipe Pal Plumbing", style: "Mascot", ind: "Plumbing", col: "Blue / Yellow", c: ["#1f7ae0", "#ffc61a"], d: "A friendly water-drop mascot with a wrench riding blue waves — easy to spot in any driveway." },
+  { slug: "drain-hero", name: "Drain Hero", style: "Mascot", ind: "Plumbing", col: "Navy / Teal", c: ["#16325c", "#1fc8c8"], d: "Bold navy rear panel and a drop mascot ready for emergency calls." },
+  { slug: "sparky-electric", name: "Sparky Electric", style: "Mascot", ind: "Electrical", col: "Yellow / Charcoal", c: ["#ffd400", "#262c36"], d: "A light-bulb electrician on a high-voltage burst — bright, friendly and impossible to miss." },
+  { slug: "bright-spark-electrical", name: "Bright Spark Electrical", style: "Mascot", ind: "Electrical", col: "Blue / Yellow", c: ["#2457d6", "#ffd400"], d: "Speed stripes in royal blue and yellow with the Sparky mascot up front." },
+  { slug: "live-wire-electric", name: "Live Wire Electric", style: "Mascot", ind: "Electrical", col: "Black / Orange", c: ["#ff7a1a", "#16181d"], d: "A charcoal band with orange accents — a strong, professional look for electrical fleets." },
+  { slug: "cool-breeze-hvac", name: "Cool Breeze HVAC", style: "Mascot", ind: "HVAC", col: "Ice blue / Red", c: ["#4fb4ff", "#e8314a"], d: "Hot-and-cold split with an ice-cube mascot — says HVAC at a glance." },
+  { slug: "comfort-zone-heating", name: "Comfort Zone Heating", style: "Mascot", ind: "HVAC", col: "Orange / Navy", c: ["#ff6a1a", "#1b2d55"], d: "A cheerful flame mascot on a deep-navy panel for heating specialists." },
+  { slug: "roof-buddy", name: "Roof Buddy", style: "Mascot", ind: "Roofing", col: "Red / Charcoal", c: ["#d62f3d", "#2a2f38"], d: "Rooftop chevrons and a smiling house mascot for roofing crews." },
+  { slug: "reno-ready", name: "Reno Ready", style: "Mascot", ind: "Renovation", col: "Red / Grey", c: ["#e23140", "#8e99a6"], d: "A toolbox mascot on a clean red band — perfect for handyman and reno trucks." },
+  { slug: "max-build-construction", name: "Max Build Construction", style: "Mascot", ind: "Construction", col: "Yellow / Black", c: ["#ffc21a", "#16181d"], d: "Hazard-stripe base and a hard-hat builder mascot for construction fleets." },
+  { slug: "fresh-cut-landscaping", name: "Fresh Cut Landscaping", style: "Mascot", ind: "Landscaping", col: "Green / Lime", c: ["#2f9e44", "#a8dd5a"], d: "Rolling green hills and a sprout mascot for lawn and garden crews." },
+  { slug: "green-thumb-lawn", name: "Green Thumb Lawn", style: "Mascot", ind: "Landscaping", col: "Forest / Yellow", c: ["#1d6b3a", "#ffd23f"], d: "Forest-green rear block with a sunny accent stripe and the Sprout mascot." },
+  { slug: "paint-pro-rollo", name: "Paint Pro", style: "Mascot", ind: "Painting", col: "Blue / White", c: ["#2f5cff", "#ffffff"], d: "Paint splashes and a roller mascot — fun and clearly a painting company." },
+  { slug: "colour-crew-painting", name: "Colour Crew Painting", style: "Mascot", ind: "Painting", col: "Magenta / Yellow", c: ["#d42d80", "#ffc61a"], d: "Bright paint drips from the roofline with the Rollo mascot." },
+  { slug: "glossy-floors-epoxy", name: "Glossy Floors Epoxy", style: "Mascot", ind: "Epoxy", col: "Purple / Silver", c: ["#7b4dff", "#c3cad2"], d: "A glossy pour mascot with liquid drips — made for epoxy floor installers." },
+  { slug: "epoxy-pro-garage", name: "Epoxy Pro Garage", style: "Mascot", ind: "Epoxy", col: "Orange / Charcoal", c: ["#ff7a1a", "#2a2f38"], d: "Charcoal body with flake-floor speckles and an orange pour mascot." },
+  { slug: "resin-shine", name: "Resin Shine", style: "Mascot", ind: "Epoxy", col: "Teal / Black", c: ["#13b5b1", "#16181d"], d: "Glossy teal swooshes for resin and coating specialists." },
+  { slug: "party-pop-events", name: "Party Pop Events", style: "Mascot", ind: "Events & Decor", col: "Pink / Yellow", c: ["#ff4f7b", "#ffd23f"], d: "Confetti everywhere and a balloon mascot for party and event companies." },
+  { slug: "balloon-bliss", name: "Balloon Bliss", style: "Mascot", ind: "Events & Decor", col: "Purple / Gold", c: ["#7c4dff", "#ffc845"], d: "Floating circles in purple and gold with a cheerful balloon." },
+  { slug: "sweet-celebrations", name: "Sweet Celebrations", style: "Mascot", ind: "Events & Decor", col: "Pink / Blue", c: ["#ff8fc0", "#3fb0ff"], d: "Pastel confetti and a cupcake mascot for event styling and dessert tables." },
+  { slug: "gala-decor", name: "Gala Decor", style: "Mascot", ind: "Events & Decor", col: "Black / Gold", c: ["#d9a63a", "#121214"], d: "Elegant black with gold stars — a classy mascot wrap for decor studios." },
+  { slug: "hammer-time-carpentry", name: "Hammer Time Carpentry", style: "Mascot", ind: "Carpentry & Kitchens", col: "Wood / Grey", c: ["#c98a4b", "#5b6470"], d: "Warm wood-grain planks with a hammer mascot for carpenters." },
+  { slug: "sawyer-woodworks", name: "Sawyer Woodworks", style: "Mascot", ind: "Carpentry & Kitchens", col: "Orange / Charcoal", c: ["#e8a03c", "#2a2f38"], d: "Saw-tooth stripes and a saw mascot in workshop orange." },
+  { slug: "kitchen-craft", name: "Kitchen Craft", style: "Mascot", ind: "Carpentry & Kitchens", col: "Teal / Cream", c: ["#2f6f73", "#e9dcc6"], d: "Backsplash tiles and a cabinet mascot for kitchen installers." },
+  { slug: "cabinet-co", name: "Cabinet Co.", style: "Mascot", ind: "Carpentry & Kitchens", col: "Navy / Oak", c: ["#1f3556", "#d6b07a"], d: "Navy and oak — a refined mascot design for cabinet makers." },
+  { slug: "fine-finish-millwork", name: "Fine Finish Millwork", style: "Mascot", ind: "Carpentry & Kitchens", col: "Black / Gold", c: ["#d4a24a", "#121214"], d: "Black and gold band with the Hammy mascot for high-end finishing carpenters." },
+  { slug: "burger-buddy-truck", name: "Burger Buddy Truck", style: "Mascot", ind: "Food & Restaurants", col: "Red / Yellow", c: ["#e8314a", "#ffc61a"], d: "A burger mascot on a diner checker band — made for food trucks." },
+  { slug: "slice-life-pizza", name: "Slice of Life Pizza", style: "Mascot", ind: "Food & Restaurants", col: "Red / Cream", c: ["#d62f3d", "#ffc845"], d: "Classic red checker and a pizza-slice mascot for pizzerias and delivery cars." },
+  { slug: "brew-bros-coffee", name: "Brew Bros Coffee", style: "Mascot", ind: "Food & Restaurants", col: "Brown / Cream", c: ["#7a4a2a", "#f3e2c7"], d: "Coffee-coloured waves and a smiling cup for cafes and coffee trucks." },
+  { slug: "sweet-tooth-bakery", name: "Sweet Tooth Bakery", style: "Mascot", ind: "Food & Restaurants", col: "Pink / Mint", c: ["#ff7fb0", "#6fd6b8"], d: "Pastel bubbles and a cupcake mascot for bakeries and dessert delivery." },
+  { slug: "chef-on-wheels", name: "Chef on Wheels", style: "Mascot", ind: "Food & Restaurants", col: "Red / Black", c: ["#e8314a", "#1c1d22"], d: "A chef mascot with fast stripes for catering vans." },
+  { slug: "grill-master-bbq", name: "Grill Master BBQ", style: "Mascot", ind: "Food & Restaurants", col: "Orange / Black", c: ["#ff6a1a", "#16181d"], d: "Flames along the bottom and a fire mascot for barbecue trucks." },
+  { slug: "sparkle-squad-cleaning", name: "Sparkle Squad Cleaning", style: "Mascot", ind: "Cleaning", col: "Teal / Pink", c: ["#1fb5b5", "#ff5aa5"], d: "Soap bubbles and a cleaning mascot with a spray bottle." },
+  { slug: "fresh-n-clean-maids", name: "Fresh n Clean Maids", style: "Mascot", ind: "Cleaning", col: "Pink / Sky blue", c: ["#ff5aa5", "#39b4ff"], d: "Fresh waves and a spray-bottle mascot for maid services." },
+  { slug: "carpet-care-pros", name: "Carpet Care Pros", style: "Mascot", ind: "Cleaning", col: "Purple / Teal", c: ["#6a3fd4", "#1fc8c8"], d: "Purple rear block with a teal stripe and the Squirt mascot." },
+  { slug: "bug-guard-pest", name: "Bug Guard Pest Control", style: "Mascot", ind: "Pest Control", col: "Green / Navy", c: ["#2fb36b", "#1f2a44"], d: "A shield mascot that says “protected” — clean and trustworthy for pest control." },
+  { slug: "box-it-movers", name: "Box It Movers", style: "Mascot", ind: "Moving & Junk", col: "Red / Kraft", c: ["#e23140", "#d9a066"], d: "A cardboard-box mascot with motion stripes for moving trucks." },
+  { slug: "junk-gone", name: "Junk Gone", style: "Mascot", ind: "Moving & Junk", col: "Green / Black", c: ["#3bbf4a", "#16181d"], d: "Bold green and black for junk-removal trucks, with the Boxy mascot." },
+  { slug: "home-sweet-realty", name: "Home Sweet Realty", style: "Mascot", ind: "Real Estate", col: "Navy / Gold", c: ["#1f3556", "#d4a24a"], d: "A smiling-house mascot on navy and gold for agents and brokerages." },
+  { slug: "paws-and-play", name: "Paws & Play", style: "Mascot", ind: "Pets", col: "Orange / Teal", c: ["#ff8a3d", "#1fb5b5"], d: "Paw prints and a puppy mascot for groomers, walkers and pet shops." },
+  { slug: "flex-fit-gym", name: "Flex Fit Gym", style: "Mascot", ind: "Fitness", col: "Orange / Black", c: ["#ff5a1f", "#16181d"], d: "A strong dumbbell mascot with energetic stripes for gyms and trainers." },
+  { slug: "drive-smart-school", name: "Drive Smart School", style: "Mascot", ind: "Driving School", col: "Red / Blue", c: ["#e8314a", "#2457d6"], d: "A friendly car mascot on a road stripe — made for driving schools." },
+  { slug: "swift-courier", name: "Swift Courier", style: "Mascot", ind: "Logistics", col: "Yellow / Black", c: ["#ffc61a", "#16181d"], d: "A parcel mascot with speed stripes for courier and delivery vans." },
+  { slug: "auto-spa-detailing", name: "Auto Spa Detailing", style: "Mascot", ind: "Auto Services", col: "Blue / Silver", c: ["#1f7ae0", "#c3cad2"], d: "Foam bubbles and a shiny car mascot for mobile detailers." },
 ];
 const DESIGN_DIRECTIONS = [["As shown", null], ["Signal Blue", ["#2563c9", "#9cc0ff"]], ["Brass", ["#8a6a2b", "#e3c27a"]], ["Forest", ["#22412f", "#7fb48a"]], ["Ember", ["#a3281f", "#f08a5d"]]];
 const TEMPLATE_DB = {
@@ -894,6 +938,270 @@ const SEO = {
   "/shop/vehicle-wrap-designs/abstract-flow": {
     "title": "Abstract Flow Wrap Design Toronto | Satin Graphic",
     "description": "Abstract Flow in Vaughan and Toronto/GTA. Explore options, project details and estimates from Satin Graphic. Request a quote for your project.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/pipe-pal-plumbing": {
+    "title": "Pipe Pal Plumbing Wrap Design Toronto | Satin Graphic",
+    "description": "Pipe Pal Plumbing — A friendly water-drop mascot with a wrench riding blue waves — easy to spot in any driveway. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/drain-hero": {
+    "title": "Drain Hero Wrap Design Toronto | Satin Graphic",
+    "description": "Drain Hero — Bold navy rear panel and a drop mascot ready for emergency calls. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sparky-electric": {
+    "title": "Sparky Electric Wrap Design Toronto | Satin Graphic",
+    "description": "Sparky Electric — A light-bulb electrician on a high-voltage burst — bright, friendly and impossible to miss. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/bright-spark-electrical": {
+    "title": "Bright Spark Electrical Wrap Design Toronto | Satin Graphic",
+    "description": "Bright Spark Electrical — Speed stripes in royal blue and yellow with the Sparky mascot up front. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/live-wire-electric": {
+    "title": "Live Wire Electric Wrap Design Toronto | Satin Graphic",
+    "description": "Live Wire Electric — A charcoal band with orange accents — a strong, professional look for electrical fleets. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/cool-breeze-hvac": {
+    "title": "Cool Breeze HVAC Wrap Design Toronto | Satin Graphic",
+    "description": "Cool Breeze HVAC — Hot-and-cold split with an ice-cube mascot — says HVAC at a glance. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/comfort-zone-heating": {
+    "title": "Comfort Zone Heating Wrap Design Toronto | Satin Graphic",
+    "description": "Comfort Zone Heating — A cheerful flame mascot on a deep-navy panel for heating specialists. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/roof-buddy": {
+    "title": "Roof Buddy Wrap Design Toronto | Satin Graphic",
+    "description": "Roof Buddy — Rooftop chevrons and a smiling house mascot for roofing crews. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/reno-ready": {
+    "title": "Reno Ready Wrap Design Toronto | Satin Graphic",
+    "description": "Reno Ready — A toolbox mascot on a clean red band — perfect for handyman and reno trucks. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/max-build-construction": {
+    "title": "Max Build Construction Wrap Design Toronto | Satin Graphic",
+    "description": "Max Build Construction — Hazard-stripe base and a hard-hat builder mascot for construction fleets. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/fresh-cut-landscaping": {
+    "title": "Fresh Cut Landscaping Wrap Design Toronto | Satin Graphic",
+    "description": "Fresh Cut Landscaping — Rolling green hills and a sprout mascot for lawn and garden crews. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/green-thumb-lawn": {
+    "title": "Green Thumb Lawn Wrap Design Toronto | Satin Graphic",
+    "description": "Green Thumb Lawn — Forest-green rear block with a sunny accent stripe and the Sprout mascot. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/paint-pro-rollo": {
+    "title": "Paint Pro Wrap Design Toronto | Satin Graphic",
+    "description": "Paint Pro — Paint splashes and a roller mascot — fun and clearly a painting company. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/colour-crew-painting": {
+    "title": "Colour Crew Painting Wrap Design Toronto | Satin Graphic",
+    "description": "Colour Crew Painting — Bright paint drips from the roofline with the Rollo mascot. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/glossy-floors-epoxy": {
+    "title": "Glossy Floors Epoxy Wrap Design Toronto | Satin Graphic",
+    "description": "Glossy Floors Epoxy — A glossy pour mascot with liquid drips — made for epoxy floor installers. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/epoxy-pro-garage": {
+    "title": "Epoxy Pro Garage Wrap Design Toronto | Satin Graphic",
+    "description": "Epoxy Pro Garage — Charcoal body with flake-floor speckles and an orange pour mascot. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/resin-shine": {
+    "title": "Resin Shine Wrap Design Toronto | Satin Graphic",
+    "description": "Resin Shine — Glossy teal swooshes for resin and coating specialists. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/party-pop-events": {
+    "title": "Party Pop Events Wrap Design Toronto | Satin Graphic",
+    "description": "Party Pop Events — Confetti everywhere and a balloon mascot for party and event companies. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/balloon-bliss": {
+    "title": "Balloon Bliss Wrap Design Toronto | Satin Graphic",
+    "description": "Balloon Bliss — Floating circles in purple and gold with a cheerful balloon. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sweet-celebrations": {
+    "title": "Sweet Celebrations Wrap Design Toronto | Satin Graphic",
+    "description": "Sweet Celebrations — Pastel confetti and a cupcake mascot for event styling and dessert tables. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/gala-decor": {
+    "title": "Gala Decor Wrap Design Toronto | Satin Graphic",
+    "description": "Gala Decor — Elegant black with gold stars — a classy mascot wrap for decor studios. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/hammer-time-carpentry": {
+    "title": "Hammer Time Carpentry Wrap Design Toronto | Satin Graphic",
+    "description": "Hammer Time Carpentry — Warm wood-grain planks with a hammer mascot for carpenters. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sawyer-woodworks": {
+    "title": "Sawyer Woodworks Wrap Design Toronto | Satin Graphic",
+    "description": "Sawyer Woodworks — Saw-tooth stripes and a saw mascot in workshop orange. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/kitchen-craft": {
+    "title": "Kitchen Craft Wrap Design Toronto | Satin Graphic",
+    "description": "Kitchen Craft — Backsplash tiles and a cabinet mascot for kitchen installers. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/cabinet-co": {
+    "title": "Cabinet Co. Wrap Design Toronto | Satin Graphic",
+    "description": "Cabinet Co. — Navy and oak — a refined mascot design for cabinet makers. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/fine-finish-millwork": {
+    "title": "Fine Finish Millwork Wrap Design Toronto | Satin Graphic",
+    "description": "Fine Finish Millwork — Black and gold band with the Hammy mascot for high-end finishing carpenters. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/burger-buddy-truck": {
+    "title": "Burger Buddy Truck Wrap Design Toronto | Satin Graphic",
+    "description": "Burger Buddy Truck — A burger mascot on a diner checker band — made for food trucks. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/slice-life-pizza": {
+    "title": "Slice of Life Pizza Wrap Design Toronto | Satin Graphic",
+    "description": "Slice of Life Pizza — Classic red checker and a pizza-slice mascot for pizzerias and delivery cars. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/brew-bros-coffee": {
+    "title": "Brew Bros Coffee Wrap Design Toronto | Satin Graphic",
+    "description": "Brew Bros Coffee — Coffee-coloured waves and a smiling cup for cafes and coffee trucks. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sweet-tooth-bakery": {
+    "title": "Sweet Tooth Bakery Wrap Design Toronto | Satin Graphic",
+    "description": "Sweet Tooth Bakery — Pastel bubbles and a cupcake mascot for bakeries and dessert delivery. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/chef-on-wheels": {
+    "title": "Chef on Wheels Wrap Design Toronto | Satin Graphic",
+    "description": "Chef on Wheels — A chef mascot with fast stripes for catering vans. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/grill-master-bbq": {
+    "title": "Grill Master BBQ Wrap Design Toronto | Satin Graphic",
+    "description": "Grill Master BBQ — Flames along the bottom and a fire mascot for barbecue trucks. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/sparkle-squad-cleaning": {
+    "title": "Sparkle Squad Cleaning Wrap Design Toronto | Satin Graphic",
+    "description": "Sparkle Squad Cleaning — Soap bubbles and a cleaning mascot with a spray bottle. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/fresh-n-clean-maids": {
+    "title": "Fresh n Clean Maids Wrap Design Toronto | Satin Graphic",
+    "description": "Fresh n Clean Maids — Fresh waves and a spray-bottle mascot for maid services. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/carpet-care-pros": {
+    "title": "Carpet Care Pros Wrap Design Toronto | Satin Graphic",
+    "description": "Carpet Care Pros — Purple rear block with a teal stripe and the Squirt mascot. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/bug-guard-pest": {
+    "title": "Bug Guard Pest Control Wrap Design Toronto | Satin Graphic",
+    "description": "Bug Guard Pest Control — A shield mascot that says “protected” — clean and trustworthy for pest control. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/box-it-movers": {
+    "title": "Box It Movers Wrap Design Toronto | Satin Graphic",
+    "description": "Box It Movers — A cardboard-box mascot with motion stripes for moving trucks. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/junk-gone": {
+    "title": "Junk Gone Wrap Design Toronto | Satin Graphic",
+    "description": "Junk Gone — Bold green and black for junk-removal trucks, with the Boxy mascot. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/home-sweet-realty": {
+    "title": "Home Sweet Realty Wrap Design Toronto | Satin Graphic",
+    "description": "Home Sweet Realty — A smiling-house mascot on navy and gold for agents and brokerages. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/paws-and-play": {
+    "title": "Paws & Play Wrap Design Toronto | Satin Graphic",
+    "description": "Paws & Play — Paw prints and a puppy mascot for groomers, walkers and pet shops. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/flex-fit-gym": {
+    "title": "Flex Fit Gym Wrap Design Toronto | Satin Graphic",
+    "description": "Flex Fit Gym — A strong dumbbell mascot with energetic stripes for gyms and trainers. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/drive-smart-school": {
+    "title": "Drive Smart School Wrap Design Toronto | Satin Graphic",
+    "description": "Drive Smart School — A friendly car mascot on a road stripe — made for driving schools. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/swift-courier": {
+    "title": "Swift Courier Wrap Design Toronto | Satin Graphic",
+    "description": "Swift Courier — A parcel mascot with speed stripes for courier and delivery vans. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
+    "image": "home-video-poster",
+    "noindex": false
+  },
+  "/shop/vehicle-wrap-designs/auto-spa-detailing": {
+    "title": "Auto Spa Detailing Wrap Design Toronto | Satin Graphic",
+    "description": "Auto Spa Detailing — Foam bubbles and a shiny car mascot for mobile detailers. Ready-made vehicle wrap design from Satin Graphic, Vaughan & Toronto.",
     "image": "home-video-poster",
     "noindex": false
   },
@@ -3702,7 +4010,7 @@ PAGES.wrapDesigns = () => ({
       <div class="row"><span>Style</span><div class="tabs" style="margin:0" data-f="style">${["All styles", "Abstract", "Commercial", "Sport"].map((s, i) => `<button type="button" data-val="${s}" aria-pressed="${i === 0}">${s}</button>`).join("")}</div></div>
       <div class="row"><span>Industry</span><div class="tabs" style="margin:0" data-f="ind">${["All industries", ...new Set(WRAP_DESIGNS.map(d => d.ind))].map((s, i) => `<button type="button" data-val="${s}" aria-pressed="${i === 0}">${s}</button>`).join("")}</div></div>
       <div class="row"><span>Colour</span><div class="tabs" style="margin:0" data-f="col">${["All colours", ...new Set(WRAP_DESIGNS.map(d => d.col))].map((s, i) => `<button type="button" data-val="${s}" aria-pressed="${i === 0}">${s}</button>`).join("")}</div></div></div>
-      ${secHead("Discover your next wrap", `<span data-count>12</span> designs ready to adapt.`, "Digital file $149 · printed & installed quoted")}
+      ${secHead("Discover your next wrap", `<span data-count>${WRAP_DESIGNS.length}</span> designs ready to adapt.`, "Digital file $149 · printed & installed quoted")}
       <div class="grid g3" data-designs id="designs">${WRAP_DESIGNS.map(d => `<a class="card" href="${href("/shop/vehicle-wrap-designs/" + d.slug)}" data-style="${d.style}" data-ind="${d.ind}" data-col="${d.col}">${art("design", { c: d.c, veh: ["van", "pickup", "box"][hash(d.slug) % 3], text: d.name.toUpperCase(), tag: false })}<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip">${d.style}</span><span class="chip">${d.col}</span></div><h3>${d.name}</h3><p>${d.d}</p><div class="foot"><span class="tiny">${d.ind}</span><span class="price">$149</span></div></a>`).join("")}</div>
       <div class="empty" data-empty hidden>No designs match those filters. Try a different style or colour.</div>`) +
     faqSec("designs", { title: "How ready-made designs work.", cls: "alt" }) +

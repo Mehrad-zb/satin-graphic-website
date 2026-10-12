@@ -3,6 +3,7 @@
 // Driver side: the vehicle faces left (u = 0 is the front). mirror=true lays the same design out for the
 // passenger side (front on the right) while keeping all type readable. Text is placeholder branding
 // ("YOUR LOGO", phone, web) because every design is re-branded for the customer.
+import { MASCOT_DESIGNS, mascotArt } from './mascot-designs.mjs';
 export const DESIGNS = [
   { slug: 'delivery-dash', name: 'Delivery Dash', style: 'Sport', c: ['#f26b3a', '#5a5f66'] },
   { slug: 'real-estate-modern', name: 'Real Estate Modern', style: 'Commercial', c: ['#111111', '#c9a24a'] },
@@ -16,6 +17,7 @@ export const DESIGNS = [
   { slug: 'commercial-clean', name: 'Commercial Clean', style: 'Commercial', c: ['#2b4c6f', '#d9e2ec'] },
   { slug: 'sport-stripe', name: 'Sport Stripe', style: 'Sport', c: ['#e8314a', '#2563c9'] },
   { slug: 'abstract-flow', name: 'Abstract Flow', style: 'Abstract', c: ['#d42d80', '#3b82f6'] },
+  ...MASCOT_DESIGNS,
 ];
 const FONT = "Inter, 'Inter Display', Arial, Helvetica, sans-serif";
 const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255; };
@@ -103,6 +105,7 @@ const ACCENT = { 'electric-volt': '#f5d000', 'real-estate-modern': '#c9a24a', 'f
 
 export function art(slug, W, H, o = {}) {
   const d = DESIGNS.find(x => x.slug === slug); if (!d) throw Error('unknown design ' + slug);
+  if (d.m) return mascotArt(d, W, H, o);
   const z = o.zone || { u0: .44, u1: .94, v0: .16, v1: .52 };
   const dark = DARK.has(slug), ink = dark ? '#ffffff' : '#141414';
   const accent = ACCENT[slug] || (lum(d.c[0]) > .7 ? '#141414' : d.c[0]);
