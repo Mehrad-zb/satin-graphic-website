@@ -4787,3 +4787,12 @@ if(!globalThis.__PRERENDER__){fetch('/api/pricing').then(r=>r.ok?r.json():null).
 if(!globalThis.__PRERENDER__&&!window.frameElement){const chat=()=>setTimeout(()=>(window.requestIdleCallback||setTimeout)(()=>import('/chat-widget.mjs').catch(()=>{}),{timeout:2500}),1200);if(document.readyState==='complete')chat();else addEventListener('load',chat,{once:true});}
 
 })();
+
+/* Internal links always point at the canonical trailing-slash URL (/satin/x/) so crawlers never follow a 301 hop
+   ("Page with redirect" in Search Console). Runs on the first render and on every later DOM update. */
+(function () {
+  const fixOne = a => { const h = a.getAttribute("href") || ""; const m = h.match(/^(https:\/\/(?:www\.)?satingraphic\.ca)?(\/satin(?:\/[^?#]*)?)([?#].*)?$/); if (!m) return; const b = m[2]; if (b.endsWith("/") || /\.[a-z0-9]{2,5}$/i.test(b)) return; a.setAttribute("href", (m[1] || "") + b + "/" + (m[3] || "")); };
+  const fix = root => { if (!root || root.nodeType !== 1 && root.nodeType !== 9) return; if (root.matches?.("a[href]")) fixOne(root); root.querySelectorAll?.("a[href]").forEach(fixOne); };
+  const start = () => { fix(document); new MutationObserver(ms => { for (const m of ms) { if (m.type === "attributes") fixOne(m.target); else m.addedNodes.forEach(fix); } }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] }); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
