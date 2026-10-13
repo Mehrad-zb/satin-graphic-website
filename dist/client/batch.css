@@ -281,3 +281,6 @@ html:not(#_) .hdr .nav [data-mega="wraps"]{background:var(--nav-wraps-bg,transpa
 html:not(#_) .hdr .nav [data-mega="wraps"] .chev{color:inherit!important}
 html:not(#_) .hdr .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){background:var(--nav-wraps-hover-bg,var(--accent-soft,var(--bg-2)))!important;color:var(--nav-wraps-hover-ink,var(--ink))!important}
 
+
+/* estimator photos: whole vehicle, never cropped */
+.art.photo img[src*="/img/est-"]{object-fit:contain!important;padding:2% 3%}

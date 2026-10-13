@@ -74,6 +74,32 @@ for car in cars:
   carm = cv2.morphologyEx(carm.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8)).astype(bool)
   ys, xs = np.where(paint); y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
   ch = y1 - y0
+  # wheels: the black edit sometimes darkens the rims too, so spokes look like paint. A tyre stays dark in both
+  # photos and closes a ring around its rim: fill that ring and keep the whole wheel disc out of the paint.
+  Lws = Wt.mean(-1); Lbs = Bk.mean(-1)
+  dark = cv2.morphologyEx(((Lws < 0.24) & (Lbs < 0.24) & carm).astype(np.uint8), cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8)).astype(bool)
+  holes = (ndimage.binary_fill_holes(dark) & ~dark).astype(np.uint8)
+  # the rim shows as several holes (spokes between dark gaps): group nearby holes, take each group's hull
+  grp = cv2.morphologyEx(holes, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (31, 31)))
+  lab, n = ndimage.label(grp); wheels = np.zeros((H, W), np.uint8); wcy = []
+  for i, sl in enumerate(ndimage.find_objects(lab), 1):
+    if sl is None: continue
+    pts = np.argwhere((lab[sl] == i) & (holes[sl] > 0))
+    if len(pts) < 200: continue
+    hull = np.zeros(lab[sl].shape, np.uint8); cv2.fillConvexPoly(hull, cv2.convexHull(pts[:, ::-1].astype(np.int32)), 1)
+    h_, w_ = hull.shape; cy = (sl[0].start + sl[0].stop) / 2
+    if h_ > 0.14 * ch and cy > y0 + 0.5 * ch and 0.35 < w_ / h_ < 1.6 and hull.mean() > 0.55 and holes[sl][hull > 0].mean() > 0.25:
+      wheels[sl] |= hull; wcy.append(cy)
+  wheels = wheels.astype(bool)
+  if wcy:
+    wheels = cv2.dilate(wheels.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)
+    paint &= ~wheels
+    # floor reflections that differ between the two photos: small paint islands lying wholly below the wheel centres
+    lab, n = ndimage.label(paint); tot = paint.sum(); line = min(wcy)
+    for i, sl in enumerate(ndimage.find_objects(lab), 1):
+      if sl is not None and sl[0].start > line and (lab[sl] == i).sum() < 0.05 * tot: paint[sl] &= lab[sl] != i
+    print('  wheels', len(wcy))
+    ys, xs = np.where(paint); y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max(); ch = y1 - y0
   # glass: large dark, unpainted regions in the upper half of the car (for window tint)
   non = (carm & ~paint & (L < 0.6) & (sat < 0.18)).astype(np.uint8)
   non = cv2.morphologyEx(non, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
@@ -95,7 +121,7 @@ for car in cars:
   for i, sl in enumerate(ndimage.find_objects(lab), 1):
     if sl is None: continue
     comp = lab[sl] == i; h_, w_ = comp.shape; cy = (sl[0].start + sl[0].stop) / 2
-    if comp.sum() < 600 or not (1.6 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
+    if comp.sum() < 600 or not (1.3 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
     vals = Lk[sl][comp]
     if vals.mean() < 0.68 or vals.std() > 0.08: continue  # a blank plate is evenly white; chrome trim is not
     if (sl[1].start + sl[1].stop) / 2 > x0 + 0.45 * (x1 - x0) or w_ > 0.22 * (x1 - x0): continue  # front plate: the car faces left
@@ -126,7 +152,7 @@ for car in cars:
     for i, sl in enumerate(ndimage.find_objects(lab), 1):
       if sl is None: continue
       comp = lab[sl] == i; h_, w_ = comp.shape; cy = (sl[0].start + sl[0].stop) / 2
-      if comp.sum() < 600 or not (1.6 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
+      if comp.sum() < 600 or not (1.3 < w_ / max(1, h_) < 6) or comp.mean() < 0.7 or not (y0 + 0.3 * ch < cy < y1): continue
       if (sl[1].start + sl[1].stop) / 2 > x0 + 0.45 * (x1 - x0) or w_ > 0.22 * (x1 - x0): continue
       g = np.zeros((H, W), np.uint8); g[sl] = comp; g = cv2.dilate(g, np.ones((5, 5), np.uint8)) > 0
       print('  plate (white photo)', sl[1].start, sl[0].start, w_, h_)

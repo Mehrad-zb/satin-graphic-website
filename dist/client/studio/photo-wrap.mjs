@@ -5,16 +5,18 @@
 // car's own shading. Nothing is uploaded until the customer submits the design; then the original photo, the photo
 // mock-up and the panel corners travel with the order like any other studio upload.
 import {DICT,t,language} from './i18n.mjs';
+import {paintHex} from './mockups.mjs';
 
 // Pinned model sources (only fetched when the customer opens this feature).
 export const MP_VERSION='0.10.14';
 export const MP_BASE=`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}`;
 export const MP_MODEL='https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite';
-const AI_TIMEOUT=8000,MAX_PHOTO=2400,MASK_MAX=640,VIEW_MAX=1400,DOCK_W=380;
+const AI_TIMEOUT=8000,SAM_TIMEOUT=120000,MAX_PHOTO=2400,MASK_MAX=640,VIEW_MAX=1400,DOCK_W=380;
 const PASCAL_VEHICLES=[6,7]; // DeepLab v3 (PASCAL VOC): 6 = bus, 7 = car
 const NOTE_START='[Customer vehicle photo]',NOTE_END='[/Customer vehicle photo]';
 
 Object.assign(DICT,{
+ 'Loading the AI model…':{fa:'در حال بارگذاری هوش مصنوعی…',fr:'Chargement du modèle d’IA…',es:'Cargando el modelo de IA…'},
  'Use my vehicle photo':{fa:'استفاده از عکس خودروی من',fr:'Utiliser la photo de mon véhicule',es:'Usar la foto de mi vehículo'},
  'My vehicle photo':{fa:'عکس خودروی من',fr:'Photo de mon véhicule',es:'Foto de mi vehículo'},
  'Your vehicle photo':{fa:'عکس خودروی شما',fr:'Photo de votre véhicule',es:'Foto de su vehículo'},
@@ -141,17 +143,34 @@ async function detect(){
  const W=S.photo.width,H=S.photo.height,k=Math.min(1,MASK_MAX/Math.max(W,H)),mw=Math.max(8,Math.round(W*k)),mh=Math.max(8,Math.round(H*k));
  const small=document.createElement('canvas');small.width=mw;small.height=mh;small.getContext('2d').drawImage(S.photo,0,0,mw,mh);
  const px=small.getContext('2d',{willReadFrequently:true}).getImageData(0,0,mw,mh).data;
- let cand=null,method='cv';
+ let cand=null,method='cv',res=null;
+ // first choice: the wrap visualizer's segmentation model (finds the body, wheels, plates and windows); MediaPipe and classic CV are fallbacks
+ try{res=await Promise.race([samBody(mw,mh),new Promise(r=>setTimeout(()=>r(null),SAM_TIMEOUT))]);if(res)method='ai';}catch(e){console.warn('Vehicle AI unavailable',e);res=null;}
+ if(token!==detect.n)return;
+ if(!res){busy(t('Finding your vehicle…'));
  try{cand=await Promise.race([aiMask(small,mw,mh),new Promise(r=>setTimeout(()=>r(null),AI_TIMEOUT))]);if(cand)method='ai';}catch{cand=null;}
  if(token!==detect.n)return;
  if(!cand)cand=salientObject(px,mw,mh);
- let res=cand?vehicleBody(px,mw,mh,cand):null;
+ res=cand?vehicleBody(px,mw,mh,cand):null;}
  if(!res){method='manual';res={mask:new Uint8Array(mw*mh).fill(255),box:null};}
  S.mask=res.mask;S.mw=mw;S.mh=mh;S.method=method;
  S.box=res.box?[res.box[0]/k,res.box[1]/k,res.box[2]/k,res.box[3]/k]:null;S.autoQuad=res.quad?res.quad.map(([x,y])=>[x/k,y/k]):null;
  S.quad=defaultQuad();computeRef();bump();busy('');
  note(method==='ai'?t('Vehicle found automatically. Drag the corners to fine-tune.'):method==='cv'?t('We estimated where your vehicle is. Drag the four corners to the ends of the body.'):t('Place the four corners on the ends of the vehicle body.'));
  renderEditor();
+}
+// The visualizer's model (SlimSAM, loaded once and cached by the browser): painted body at mask size, its box and side corners.
+async function samBody(mw,mh){
+ const m=await import('/visualizer/sam-detect.mjs');
+ const r=await m.detectVehicle(S.photo,{onProgress:(stage,pct)=>busy(stage==='load'?t('Loading the AI model…')+(pct!=null&&pct<100?' '+pct+'%':''):t('Finding your vehicle…'))});
+ if(!r)return null;
+ let mask=new Uint8Array(mw*mh),n=0;
+ for(let y=0;y<mh;y++){const sy=Math.min(r.h-1,Math.floor((y+.5)*r.h/mh));for(let x=0;x<mw;x++){const sx=Math.min(r.w-1,Math.floor((x+.5)*r.w/mw));if(r.paint[sy*r.w+sx]){mask[y*mw+x]=255;n++;}}}
+ if(n<mw*mh*.01)return null;
+ mask=dilate(erode(mask,mw,mh,1),mw,mh,1);
+ let bx0=mw,by0=mh,bx1=-1,by1=-1;for(let y=0;y<mh;y++)for(let x=0;x<mw;x++)if(mask[y*mw+x]){if(x<bx0)bx0=x;if(x>bx1)bx1=x;if(y<by0)by0=y;if(y>by1)by1=y;}
+ if(bx1<0)return null;
+ return {mask,box:[bx0,by0,bx1+1,by1+1],quad:hullQuad(mask,mw,mh,bx0,bx1+1)};
 }
 // Browser-side segmentation (MediaPipe Tasks Vision + DeepLab v3, PASCAL classes). Returns a 0/255 mask at mask size, or null.
 async function aiMask(canvas,mw,mh){
@@ -250,7 +269,7 @@ function artSig(){const d=A.design(),s=d.sides[S.view];return S.view+'|'+(s?JSON
 async function ensureArt(max){const sig=artSig();if(art.data&&art.sig===sig&&art.max>=max)return true;if(art.busy){art.want=sig;await art.busy;return ensureArt(max);}
  art.busy=(async()=>{try{const c=await A.art(S.view,max);const g=c.getContext('2d',{willReadFrequently:true});art.data=g.getImageData(0,0,c.width,c.height);art.sig=sig;art.max=max;const b=A.design().sides[S.view]?.background||'#ffffff';art.bg=[1,3,5].map(i=>parseInt(b.slice(i,i+2),16));}catch(e){console.warn('photo-wrap art',e);}finally{art.busy=null;}})();
  await art.busy;return !!art.data;}
-function printBg(){if(S.bg!==null)return S.bg;const b=(A.design().sides[S.view]?.background||'#ffffff').toLowerCase();return !['#ffffff','#1e2023'].includes(b);}
+function printBg(){if(S.bg!==null)return S.bg;const b=(A.design().sides[S.view]?.background||'#ffffff').toLowerCase();return b!==paintHex(A.design().options)&&!['#ffffff','#1e2023'].includes(b);}
 // Draw the photo with the artwork projected into the quad, clipped by the mask, keeping the car's shading.
 function project(dst,full=false){
  const W=S.photo.width,H=S.photo.height,k=dst.width/W,g=dst.getContext('2d',{willReadFrequently:true});

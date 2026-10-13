@@ -459,7 +459,7 @@ export async function mount(root, opts = {}) {
         const mk = planeOf(m, k), t = stats(mk, lw, lh); if (!t.n || m.scores[k] < .55) continue;
         const bw = t.bw + 1, bh = t.bh + 1, fill = t.n / (bw * bh), asp = bw / bh, area = t.n / cn;
         const wheel = area > .012 && area < .2 && asp > .4 && asp < 1.45 && fill > .55 && fill < .93 && cy1 - t.y1 < cbh * .15;
-        const plate = area > .002 && area < .05 && asp > 1.5 && asp < 5.5 && fill > .8 && (t.y0 + t.y1) / 2 > cy0 + cbh * .35;
+        const plate = area > .002 && area < .05 && asp > 1.5 && asp < 4.5 && bh < cbh * .12 && fill > .8 && (t.y0 + t.y1) / 2 > cy0 + cbh * .35;
         if ((wheel || plate) && (!best || t.n > best.n)) best = { mk, n: t.n, wheel };
       }
       if (!best) continue;
