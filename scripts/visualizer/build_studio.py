@@ -28,16 +28,33 @@ def specs():
 SPEC = specs()
 
 def align(Wt, Bk):
-  # the generative edit can nudge the whole picture a few pixels: undo a pure translation found on edge maps
+  # the generative edit can nudge, and sometimes slightly rescale, the whole picture: a translation found on edge maps,
+  # or an affine fit of the blurred outlines when the edit clearly rescaled the vehicle
   def edges(a):
     g = cv2.GaussianBlur(a.mean(-1), (0, 0), 1.5)
     return cv2.magnitude(cv2.Sobel(g, cv2.CV_32F, 1, 0), cv2.Sobel(g, cv2.CV_32F, 0, 1))
-  (dx, dy), resp = cv2.phaseCorrelate(edges(Wt).astype(np.float64), edges(Bk).astype(np.float64))
-  if resp > 0.05 and abs(dx) < 25 and abs(dy) < 25 and (abs(dx) > 0.5 or abs(dy) > 0.5):
-    M = np.float32([[1, 0, -dx], [0, 1, -dy]])
-    Bk = cv2.warpAffine(Bk, M, (Bk.shape[1], Bk.shape[0]), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-    return Bk, (round(dx, 1), round(dy, 1))
-  return Bk, (0, 0)
+  eW, eB = edges(Wt), edges(Bk)
+  (dx, dy), resp = cv2.phaseCorrelate(eW.astype(np.float64), eB.astype(np.float64))
+  if not (resp > 0.05 and abs(dx) < 25 and abs(dy) < 25): dx = dy = 0.0
+  s = 0.5
+  tW = cv2.resize(cv2.GaussianBlur(eW, (0, 0), 3), None, fx=s, fy=s); tB = cv2.resize(cv2.GaussianBlur(eB, (0, 0), 3), None, fx=s, fy=s)
+  w0 = np.float32([[1, 0, dx * s], [0, 1, dy * s]])
+  base = cv2.computeECC(tW, cv2.warpAffine(tB, w0, (tW.shape[1], tW.shape[0]), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP))
+  def apply(w):
+    w = w.copy(); w[:, 2] /= s
+    return cv2.warpAffine(Bk, w, (Bk.shape[1], Bk.shape[0]), flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP, borderMode=cv2.BORDER_REPLICATE)
+  best = (apply(w0), (round(dx, 1), round(dy, 1)))
+  if abs(dx) <= 0.5 and abs(dy) <= 0.5: best = (Bk, (0, 0))
+  try:
+    cc, w1 = cv2.findTransformECC(tW, tB, w0.copy(), cv2.MOTION_AFFINE, (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 200, 1e-5), None, 5)
+    sx, sy = np.hypot(*w1[:, 0]), np.hypot(*w1[:, 1])
+    if cc > base + 0.03 and 0.8 < sx < 1.25 and 0.8 < sy < 1.25 and abs(w1[0, 1]) < 0.05 and abs(w1[1, 0]) < 0.05:
+      # only a clearly rescaled edit: small scale fits trade one fringe for another, translation is as good there
+      if max(abs(sx - 1), abs(sy - 1)) > 0.12 and cc > base + 0.15:
+        best = (apply(w1), f'affine s=({sx:.3f},{sy:.3f}) t=({w1[0, 2] / s:.1f},{w1[1, 2] / s:.1f}) cc {base:.2f}->{cc:.2f}')
+  except cv2.error:
+    pass
+  return best
 
 def build(body, view):
   wp = os.path.join(SRC, f'satin-st-{body}-{view}-white.png'); bp = os.path.join(SRC, f'satin-st-{body}-{view}-black.png')
@@ -110,8 +127,19 @@ def build(body, view):
     ytop = int(np.median(tops)) if len(tops) else int(np.where(paint.any(1))[0].min())
     ew = plen * sp.get('width', 80) / sp.get('length', 220)
     ybot = int(ytop + ew * 1.04)
-    paint[ybot + 4:] = False; carm = carm.copy(); carm[ybot + 12:] = False
+    # below the expected near edge keep only clear paint (the near side panel the camera sees in perspective), never the
+    # weaker floor shadow; nothing further than 12% of the width past it
+    yl = min(H, int(ybot + 0.12 * ew)); weak = dd < 0.3
+    paint[ybot + 4:] &= ~weak[ybot + 4:]; paint[yl:] = False
+    lab, n = ndimage.label(paint)
+    if n:
+      sizes = ndimage.sum(paint, lab, range(1, n + 1)); big = np.zeros(n + 1, bool); big[1:] = sizes > max(1500, 0.02 * sizes.max()); paint = big[lab]
+    carm = carm.copy(); carm[yl + 8:] = False
     top_box = [float(px0), float(ytop), float(plen), float(ew)]
+  # the silhouette is the vehicle only: pieces of it holding next to no paint are stray marks on the floor
+  lab, n = ndimage.label(carm)
+  if n > 1:
+    sizes = ndimage.sum(paint, lab, range(1, n + 1)); keep = np.zeros(n + 1, bool); keep[1:] = sizes > 0.02 * sizes.max(); carm = keep[lab]; paint &= carm
   # small specks and pin-holes
   paint = cv2.morphologyEx(paint.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8)).astype(bool)
   lab, n = ndimage.label(~paint & carm)
