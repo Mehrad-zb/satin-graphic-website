@@ -24,10 +24,14 @@ def specs():
   import subprocess
   js = "import('./model.mjs').then(m=>{const o={};for(const p of m.PRODUCTS)for(const b of p.bodies||[])o[b.id]=b.spec;console.log(JSON.stringify(o));})"
   out = subprocess.run(['node', '-e', js], cwd=os.path.join(os.path.dirname(__file__), '..', '..', 'dist', 'client', 'studio'), capture_output=True, text=True).stdout
-  return json.loads(out)
+  o = json.loads(out)
+  # bodies not yet in the model (added once their photos are built)
+  for bodies in json.load(open(os.path.join(os.path.dirname(__file__), 'studio-new-bodies.json'))).values():
+    for b in bodies: o.setdefault(b['id'], b['spec'])
+  return o
 SPEC = specs()
 
-def align(Wt, Bk):
+def align(Wt, Bk, force=False):
   # the generative edit can nudge, and sometimes slightly rescale, the whole picture: a translation found on edge maps,
   # or an affine fit of the blurred outlines when the edit clearly rescaled the vehicle
   def edges(a):
@@ -50,7 +54,9 @@ def align(Wt, Bk):
     sx, sy = np.hypot(*w1[:, 0]), np.hypot(*w1[:, 1])
     if cc > base + 0.03 and 0.8 < sx < 1.25 and 0.8 < sy < 1.25 and abs(w1[0, 1]) < 0.05 and abs(w1[1, 0]) < 0.05:
       # only a clearly rescaled edit: small scale fits trade one fringe for another, translation is as good there
-      if max(abs(sx - 1), abs(sy - 1)) > 0.12 and cc > base + 0.15:
+      dev = max(abs(sx - 1), abs(sy - 1))
+      # a clearly rescaled edit, or a near-pure shift the phase correlation missed (outlines fit far better)
+      if (force and cc > base + 0.1) or (dev > 0.12 and cc > base + 0.15) or (dev < 0.03 and cc > base + 0.25):
         best = (apply(w1), f'affine s=({sx:.3f},{sy:.3f}) t=({w1[0, 2] / s:.1f},{w1[1, 2] / s:.1f}) cc {base:.2f}->{cc:.2f}')
   except cv2.error:
     pass
@@ -63,7 +69,8 @@ def build(body, view):
   if Wi.size != SIZE: Wi = Wi.resize(SIZE, Image.LANCZOS)
   if Bi.size != SIZE: Bi = Bi.resize(SIZE, Image.LANCZOS)
   Wt = np.asarray(Wi).astype(np.float32) / 255; Bk = np.asarray(Bi).astype(np.float32) / 255
-  Bk, shift = align(Wt, Bk)
+  # STUDIO_AFFINE=body:view,... forces the affine fit for an edit the reviewer saw was moved and resized
+  Bk, shift = align(Wt, Bk, f'{body}:{view}' in os.environ.get('STUDIO_AFFINE', '').split(','))
   H, W = Wt.shape[:2]
   dd = lin(Wt).mean(-1) - lin(Bk).mean(-1)
   L = Wt.mean(-1); Lb = Bk.mean(-1); sat = Wt.max(-1) - Wt.min(-1)
@@ -117,6 +124,14 @@ def build(body, view):
     lab, n = ndimage.label(paint)
     if n:
       sizes = ndimage.sum(paint, lab, range(1, n + 1)); big = np.zeros(n + 1, bool); big[1:] = sizes > max(600, 0.01 * sizes.max()); paint = big[lab]
+  if view in ('driver-side', 'passenger-side'):
+    # a strip of floor under the sills (the edit moved the car a little) is a separate piece low down: not paint
+    lab, n = ndimage.label(paint)
+    if n > 1:
+      objs = ndimage.find_objects(lab); biggest = 1 + int(np.argmax(ndimage.sum(paint, lab, range(1, n + 1)))); bottom = objs[biggest - 1][0].stop
+      for k, sl in enumerate(objs, 1):
+        if sl is not None and k != biggest and sl[0].start >= bottom - 3:  # wholly below the body
+          paint[sl] &= lab[sl] != k
   if view == 'top':
     # the black edit also darkens the floor shadow, which then looks like paint. The far side of the body (top of the
     # picture) has no shadow: take that edge and the body's length, and the real width/length ratio gives the near side.
