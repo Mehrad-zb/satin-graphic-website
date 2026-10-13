@@ -126,10 +126,15 @@ def build(body, view):
     tops = np.array([np.argmax(c) for c in mid.T if c.any()])
     ytop = int(np.median(tops)) if len(tops) else int(np.where(paint.any(1))[0].min())
     ew = plen * sp.get('width', 80) / sp.get('length', 220)
-    ybot = int(ytop + ew * 1.04)
+    ybot = int(ytop + ew * 1.04); over = 0.12
+    if body.startswith('trailer'):
+      # a box trailer's near edge is crisp and its generated proportions stray from the spec: measure it
+      seg = cv2.morphologyEx(mid.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((9, 1), np.uint8)).astype(bool)[ytop + 5:]
+      bots = np.array([ytop + 5 + (np.argmin(c) if not c.all() else len(c)) for c in seg.T if c[0]])  # end of the run from the far edge
+      if len(bots): ew = float(np.median(bots) - ytop); ybot = int(ytop + ew); over = 0.05
     # below the expected near edge keep only clear paint (the near side panel the camera sees in perspective), never the
     # weaker floor shadow; nothing further than 12% of the width past it
-    yl = min(H, int(ybot + 0.12 * ew)); weak = dd < 0.3
+    yl = min(H, int(ybot + over * ew)); weak = dd < 0.3
     paint[ybot + 4:] &= ~weak[ybot + 4:]; paint[yl:] = False
     lab, n = ndimage.label(paint)
     if n:
