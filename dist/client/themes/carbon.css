@@ -17,7 +17,7 @@ html[data-theme="dark"]:not([data-style="classic"]){
   --shadow-lg:0 2px 6px rgb(0 0 0/.35),0 40px 80px -20px rgb(0 0 0/.7);
   color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#121116;--bg-2:#18171d;--bg-3:#222128;--card:#1a191f;
     --ink:#ffffff;--ink-2:#c9c8d1;--mut:#9897a3;--line:#2d2c35;--line-soft:#222128;

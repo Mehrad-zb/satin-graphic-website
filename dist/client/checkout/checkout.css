@@ -74,3 +74,35 @@
 .digital-dl .btn{flex:none}
 .digital-wait{font-size:14px;color:var(--muted,#5b6474);max-width:260px}
 .digital-note{font-size:13.5px;color:var(--muted,#5b6474);max-width:620px;margin:8px auto 18px}
+/* always light (phones in dark mode must not repaint the checkout) */
+:root{color-scheme:only light}
+.field input,.field select,.coupon-form input,#job-name{background-color:#fff;color:#172337;-webkit-text-fill-color:#172337}
+.field input::placeholder,.coupon-form input::placeholder{color:#7a8597;-webkit-text-fill-color:#7a8597;opacity:1}
+.field,.consent,fieldset,legend,.check{color:#172337}
+/* pickup or delivery */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.mode-card{position:relative;display:block;cursor:pointer}
+.mode-card input{position:absolute;opacity:0;width:1px;height:1px}
+.mode-body{display:flex;align-items:flex-start;gap:14px;height:100%;padding:20px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:#172337;transition:border-color .15s,box-shadow .15s}
+.mode-card:hover .mode-body{border-color:#9fb0c6}
+.mode-card input:focus-visible+.mode-body{outline:3px solid #df749b;outline-offset:3px}
+.mode-card input:checked+.mode-body{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:#fff6f9}
+.mode-icon{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#f2f5f9;color:#172337}
+.mode-card input:checked+.mode-body .mode-icon{background:#ffe3ec;color:#bc0043}
+.mode-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mode-text strong{font-size:17px}
+.mode-tag{align-self:flex-start;font-size:12px;font-weight:700;color:#0f6b46;background:#e5f5ec;border-radius:999px;padding:2px 10px}
+.mode-card:last-child .mode-tag{color:#172337;background:#eef2f7}
+.mode-text small{font-size:13px;color:var(--muted);line-height:1.45}
+.mode-check{margin-left:auto;flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #b8c4d4;background:#fff}
+.mode-card input:checked+.mode-body .mode-check{border:7px solid var(--accent)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:16px;margin:22px 0 0;min-width:0}
+fieldset legend{font-weight:600;padding:0 6px}
+fieldset .check{display:flex;align-items:center;gap:10px;min-height:40px;font-size:15px;cursor:pointer}
+fieldset .check input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+fieldset [data-billing-fields]{margin-top:14px}
+.rate.off{cursor:not-allowed;background:#f7f9fc;color:#7b889b}
+.rate.off strong{color:#53627a}
+.rate-tag{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#53627a;background:#e9eef5;border-radius:999px;padding:3px 10px}
+.linkish{border:0;background:none;padding:0;font:inherit;color:#bc0043;text-decoration:underline;cursor:pointer}
+@media(max-width:620px){.mode-grid{grid-template-columns:1fr}.mode-body{padding:16px}}

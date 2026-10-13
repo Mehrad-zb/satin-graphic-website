@@ -26,6 +26,7 @@ const FA = {
   'Your email is confirmed. Welcome!': 'ایمیل شما تأیید شد. خوش آمدید!', 'Confirm password': 'تکرار رمز', 'Passwords do not match.': 'رمزها یکسان نیستند.',
   'Saved designs': 'طرح‌های ذخیره‌شده', 'Edit': 'ویرایش', 'Order this design': 'سفارش این طرح', 'Download PDF': 'دانلود PDF', 'Mockup PNG': 'پیش‌نمایش PNG', 'Delete': 'حذف',
   'Approved': 'تأیید شده', 'Draft': 'پیش‌نویس', 'No saved designs yet.': 'هنوز طرحی ذخیره نکرده‌اید.', 'Open Design Studio': 'باز کردن استودیو طراحی', 'Delete this design?': 'این طرح حذف شود؟',
+  'Cancel order': 'لغو سفارش', 'Keep order': 'سفارش بماند', 'Cancel this order?': 'این سفارش لغو شود؟', 'Order cancelled.': 'سفارش لغو شد.', 'Pickup': 'تحویل حضوری',
   'I agree to the': 'با این موارد موافقم:', 'Terms': 'شرایط', 'Privacy Policy': 'حریم خصوصی', 'Customer area': 'ناحیهٔ مشتری',
 };
 const t = s => (LANG === 'fa' && FA[s]) || s;
@@ -58,7 +59,7 @@ async function api(path, data) {
 }
 function ensureCss() {
   if (document.querySelector('link[data-account-css]')) return;
-  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/account-ui.css?v=2'; l.dataset.accountCss = ''; document.head.append(l);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = '/account-ui.css?v=3'; l.dataset.accountCss = ''; document.head.append(l);
 }
 const msgBox = (el, text, ok = false) => { if (el) el.innerHTML = text ? `<div class="acct-msg ${ok ? 'ok' : 'err'}" role="${ok ? 'status' : 'alert'}">${esc(text)}</div>` : ''; };
 async function busy(btn, fn) { const old = btn?.textContent; if (btn) { btn.disabled = true; } try { await fn(); } finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = old; } } }
@@ -139,7 +140,7 @@ async function accountView(host, q) {
     <div class="acct-layout"><nav class="acct-nav" aria-label="${t('Your account')}">${TABS.map(([k, l]) => `<a href="${BASE}/account/?tab=${k}" data-tab="${k}" ${k === tab ? 'aria-current="page"' : ''}>${t(l)}</a>`).join('')}<button type="button" data-logout>${t('Sign out')}</button></nav>
     <div class="acct-main" data-main><p class="small">${t('Loading…')}</p></div></div></div></section>`;
   host.querySelectorAll('[data-tab]').forEach(a => a.addEventListener('click', e => { if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); go({ tab: a.dataset.tab }); accountView(host, new URLSearchParams(location.search)); }));
-  host.querySelector('[data-logout]').onclick = async () => { try { await api('logout', {}); } catch { } setHint(false); ME = null; OVERVIEW = null; location.assign(BASE + '/'); };
+  host.querySelector('[data-logout]').onclick = async () => { try { await api('logout', {}); } catch { } setHint(false); ME = null; OVERVIEW = null; await forgetBrowserCart(); location.assign(BASE + '/'); };
   const main = host.querySelector('[data-main]');
   const flash = q.get('welcome') ? t('Your email is confirmed. Welcome!') : q.get('reset') ? 'Your new password is saved.' : ERRORS[q.get('error')] || '';
   try {
@@ -154,6 +155,34 @@ async function accountView(host, q) {
     main.innerHTML = `<div class="acct-msg err">${esc(e.message)}</div>`;
   }
   main.querySelectorAll('[data-open-order]').forEach(a => a.addEventListener('click', e => { if (e.metaKey || e.ctrlKey) return; e.preventDefault(); go({ order: a.dataset.openOrder }); accountView(host, new URLSearchParams(location.search)); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
+  main.querySelectorAll('[data-cancel-order]').forEach(b => b.addEventListener('click', () => cancelOrder(b, host)));
+}
+/* ---------------- cancel an unpaid order ---------------- */
+function confirmDialog({ title, text, yes, no }) {
+  return new Promise(resolve => {
+    const d = document.createElement('dialog'); d.className = 'acct-dialog'; d.setAttribute('aria-labelledby', 'acct-dialog-title');
+    d.innerHTML = `<form method="dialog"><h2 id="acct-dialog-title">${esc(title)}</h2><p>${esc(text)}</p><div class="acct-dialog-acts"><button class="btn ghost" value="no" autofocus>${esc(no)}</button><button class="btn red" value="yes">${esc(yes)}</button></div></form>`;
+    d.addEventListener('close', () => { resolve(d.returnValue === 'yes'); d.remove(); });
+    document.body.append(d); d.showModal();
+  });
+}
+async function cancelOrder(btn, host) {
+  const ref = btn.dataset.ref || '';
+  const ok = await confirmDialog({ title: t('Cancel this order?') + (ref ? ' ' + ref : ''), text: 'This order has not been paid. Cancelling it cannot be undone — to get these items later, you would place a new order.', yes: t('Cancel order'), no: t('Keep order') });
+  if (!ok) return;
+  await busy(btn, async () => {
+    try {
+      await api('orders/cancel', { id: btn.dataset.cancelOrder });
+      OVERVIEW = await api('overview');
+      await accountView(host, new URLSearchParams(location.search));
+      host.querySelector('[data-main]')?.insertAdjacentHTML('afterbegin', `<div class="acct-msg ok" role="status">${esc(t('Order cancelled.'))} ${esc(ref)} — we emailed you a confirmation.</div>`);
+    } catch (e) { const box = btn.closest('.acct-block')?.querySelector('[data-ro-msg]') || host.querySelector('[data-main]'); box?.insertAdjacentHTML('afterbegin', `<div class="acct-msg err" role="alert">${esc(e.message)}</div>`); }
+  });
+}
+/* Signing out: this browser forgets the cart (it stays in the account and comes back at the next sign-in) and empties its checkout. */
+async function forgetBrowserCart() {
+  try { (await import('/cart-sync.mjs')).forgetCart(); } catch { try { localStorage.removeItem('sg-cart'); localStorage.removeItem('sg-cart-synced'); } catch { } }
+  try { const r = await fetch('/api/checkout/draft', { credentials: 'same-origin' }); if (r.ok) { const d = await r.json(); if (d.draft?.items?.length && !d.draft.submitted) await fetch('/api/checkout/new', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ revision: d.revision }) }); } } catch { }
 }
 const chip = (text, cls = '') => `<span class="acct-chip ${cls}">${esc(t(text))}</span>`;
 const stageChip = s => chip(STAGE_LABEL[s] || s, s === 'cancelled' ? 'bad' : s === 'completed' || s === 'ready' ? 'good' : 'info');
@@ -162,7 +191,7 @@ const orderLink = o => `<a class="link" href="${BASE}/account/?order=${encodeURI
 function ordersTable(list) {
   if (!list.length) return `<div class="acct-empty"><p>${t('No orders yet.')}</p><a class="btn sm" href="${BASE}/print-shop/">${t('Start an order')}</a></div>`;
   return `<div class="acct-table" role="table"><div class="acct-tr acct-th" role="row"><span>${t('Order')}</span><span>${t('Date')}</span><span>${t('Items')}</span><span>${t('Status')}</span><span>${t('Payment')}</span><span class="num">${t('Total')}</span></div>
-    ${list.map(o => `<div class="acct-tr" role="row"><span data-l="${t('Order')}">${orderLink(o)}</span><span data-l="${t('Date')}">${day(o.createdAt)}</span><span data-l="${t('Items')}" class="acct-items">${esc(o.items.slice(0, 2).join(', '))}${o.count > 2 ? ` +${o.count - 2}` : ''}</span><span data-l="${t('Status')}">${stageChip(o.stage)}</span><span data-l="${t('Payment')}">${payChip(o.payment)}</span><span data-l="${t('Total')}" class="num"><b>${money(o.total, o.currency)}</b></span></div>`).join('')}</div>`;
+    ${list.map(o => `<div class="acct-tr" role="row"><span data-l="${t('Order')}">${orderLink(o)}</span><span data-l="${t('Date')}">${day(o.createdAt)}</span><span data-l="${t('Items')}" class="acct-items">${esc(o.items.slice(0, 2).join(', '))}${o.count > 2 ? ` +${o.count - 2}` : ''}</span><span data-l="${t('Status')}">${stageChip(o.stage)}</span><span data-l="${t('Payment')}">${payChip(o.payment)}${o.cancellable ? `<button type="button" class="acct-cancel" data-cancel-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Cancel order')}</button>` : ''}</span><span data-l="${t('Total')}" class="num"><b>${money(o.total, o.currency)}</b></span></div>`).join('')}</div>`;
 }
 function dashboard(main) {
   const o = OVERVIEW.orders, inv = OVERVIEW.invoices;
@@ -194,15 +223,15 @@ async function orderView(main, id, host) {
   const fileUrl = (f, inline) => `/api/customer/file?order=${encodeURIComponent(o.id)}&id=${encodeURIComponent(f.id)}${inline ? '&inline=1' : ''}`;
   const a = o.address || {};
   main.innerHTML = `<p><a class="link" href="${BASE}/account/?tab=orders" data-back>← ${t('Back to orders')}</a></p>
-    <div class="acct-block"><div class="acct-bh"><div><h2>${t('Order')} ${esc(o.reference)}</h2><p class="small">${day(o.createdAt)} · ${o.count} ${t('Items').toLowerCase()}</p></div><div class="acct-acts">${payChip(o.payment)} ${o.payUrl ? `<a class="btn sm red" href="${esc(o.payUrl)}" rel="noopener">${t('Pay now')}</a>` : ''}<button class="btn sm ghost" data-reorder>${t('Re-order')}</button></div></div>
+    <div class="acct-block"><div class="acct-bh"><div><h2>${t('Order')} ${esc(o.reference)}</h2><p class="small">${day(o.createdAt)} · ${o.count} ${t('Items').toLowerCase()}</p></div><div class="acct-acts">${payChip(o.payment)} ${o.payUrl ? `<a class="btn sm red" href="${esc(o.payUrl)}" rel="noopener">${t('Pay now')}</a>` : ''}${o.cancellable ? `<button class="btn sm ghost acct-danger" data-cancel-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Cancel order')}</button>` : ''}<button class="btn sm ghost" data-reorder>${t('Re-order')}</button></div></div>
     ${steps}<div data-ro-msg></div></div>
     <div class="acct-block">${o.items.map(i => `<div class="acct-item"><div class="acct-thumbs">${i.images.length ? i.images.slice(0, 3).map(f => `<a href="${fileUrl(f, true)}" target="_blank" rel="noopener" title="${esc(f.name)}"><img src="${fileUrl(f, true)}" alt="${esc(f.role)}" loading="lazy"></a>`).join('') : `<div class="acct-noimg">${i.files.length ? 'PDF' : '—'}</div>`}</div>
-      <div class="acct-idet"><h3>${esc(i.jobName || i.name)}</h3>${i.jobName ? `<p class="tiny">${esc(i.name)}</p>` : ''}<p class="small">${t('Quantity')}: ${esc(i.quantity)}${i.width && i.width !== '—' ? ` · ${t('Size')}: ${esc(i.width)} × ${esc(i.height)} in` : ''}${i.sides ? ` · ${esc(i.sides)} side(s)` : ''}</p>
+      <div class="acct-idet"><h3>${esc(i.jobName || i.name)}</h3>${i.jobName ? `<p class="tiny">${esc(i.name)}</p>` : ''}${i.choices.some(c => /^Unit \d+$/.test(c.label)) ? '' : `<p class="small">${t('Quantity')}: ${esc(i.quantity)}${i.width && i.width !== '—' ? ` · ${t('Size')}: ${esc(i.width)} × ${esc(i.height)} in` : ''}${i.sides ? ` · ${esc(i.sides)} side(s)` : ''}</p>`}
         ${i.choices.length ? `<ul class="acct-choices">${i.choices.map(c => `<li><span>${esc(c.label)}</span> ${esc(c.text)}</li>`).join('')}</ul>` : ''}${i.designRequested ? `<p class="tiny">${t('Design service requested')}</p>` : ''}
         ${i.files.length ? `<p class="acct-files">${i.files.map(f => `<a class="link" href="${fileUrl(f, false)}">${esc(f.name)}</a>`).join(' ')}</p>` : ''}${i.download ? `<div class="acct-dl"><a class="btn sm red" href="${esc(i.download.url)}" download>${t('Download file')}</a><span class="tiny">${esc(i.download.name)}${i.download.material ? ' · ' + esc(i.download.material) : ''} · ${t('secure link, valid 14 days')}</span></div>` : i.downloadPending ? `<p class="tiny">${t('Your file is being prepared — we will email the download link within 1 business day.')}</p>` : ''}${i.path ? `<p><a class="link" href="${esc(i.path)}">Order this product again with changes</a></p>` : ''}</div>
       <div class="acct-iprice">${money(i.price, o.currency)}</div></div>`).join('')}
     <div class="acct-totals"><div><span>${t('Subtotal')}</span><b>${money(o.subtotal)}</b></div>${o.discount ? `<div><span>${t('Discount')} ${esc(o.coupon)}</span><b>−${money(o.discount)}</b></div>` : ''}<div><span>${t('Shipping')} ${o.shippingMethod ? '· ' + esc(o.shippingMethod) : ''}</span><b>${money(o.shipping)}</b></div><div><span>${t('Tax')} ${o.taxRate ? o.taxRate + '%' : ''}</span><b>${money(o.tax)}</b></div><div class="grand"><span>${t('Total')} · CAD</span><b>${money(o.total)}</b></div></div></div>
-    <div class="acct-block acct-addr"><h3>${t('Delivery')}</h3><p class="small">${esc(a.name || '')}${a.company ? '<br>' + esc(a.company) : ''}<br>${esc(a.street1 || '')} ${esc(a.street2 || '')}<br>${esc(a.city || '')}${a.state ? ', ' + esc(a.state) : ''} ${esc(a.zip || '')}${a.phone ? '<br>' + esc(a.phone) : ''}</p>${o.notes ? `<p class="small"><b>Notes:</b> ${esc(o.notes)}</p>` : ''}<p class="tiny">Questions about this order? Call (905) 962-6222 or email info@satingraphic.ca with reference ${esc(o.reference)}.</p></div>`;
+    <div class="acct-block acct-addr"><h3>${t(o.pickup ? 'Pickup' : 'Delivery')}</h3><p class="small">${esc(a.name || '')}${a.company ? '<br>' + esc(a.company) : ''}<br>${o.pickup && !a.street1 ? 'Pickup at Satin · 50 Viceroy Rd, Unit 22–23, Vaughan, ON' : `${esc(a.street1 || '')} ${esc(a.street2 || '')}<br>${esc(a.city || '')}${a.state ? ', ' + esc(a.state) : ''} ${esc(a.zip || '')}`}${a.phone ? '<br>' + esc(a.phone) : ''}</p>${o.notes ? `<p class="small"><b>Notes:</b> ${esc(o.notes)}</p>` : ''}<p class="tiny">Questions about this order? Call (905) 962-6222 or email info@satingraphic.ca with reference ${esc(o.reference)}.</p></div>`;
   main.querySelector('[data-back]').addEventListener('click', e => { e.preventDefault(); host.querySelector('[data-tab="orders"]').click(); });
   const rb = main.querySelector('[data-reorder]');
   rb.addEventListener('click', () => busy(rb, async () => {

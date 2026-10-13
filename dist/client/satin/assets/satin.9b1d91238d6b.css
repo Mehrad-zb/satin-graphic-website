@@ -16,7 +16,8 @@
   --ease:cubic-bezier(.22,.68,.2,1);
   --max:1200px; --gut:clamp(16px,4vw,40px); --nav-h:68px;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+:root{color-scheme:only light} /* the public site is always light, whatever the device theme */
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */:root:not([data-theme="light"]){
   --bg:#0f0f10; --bg-2:#17171a; --bg-3:#222226; --card:#141416;
   --ink:#f1f1f1; --ink-2:#cfcfcf; --mut:#9a9a9f; --line:#2e2e33; --line-soft:#232327;
   --btn:#f1f1f1; --btn-ink:#111;
@@ -82,7 +83,7 @@ a:hover .arrow,button:hover .arrow{transform:translateX(3px)}
 .logo{display:flex;align-items:center;height:28px;flex-shrink:0}
 .logo img{height:24px;width:auto}
 :root[data-theme="dark"] .logo img,:root[data-theme="dark"] .dlogo,:root[data-theme="dark"] .flogo{filter:invert(1) hue-rotate(180deg) brightness(1.15)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo img,:root:not([data-theme="light"]) .dlogo,:root:not([data-theme="light"]) .flogo{filter:invert(1) hue-rotate(180deg) brightness(1.15)}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */:root:not([data-theme="light"]) .logo img,:root:not([data-theme="light"]) .dlogo,:root:not([data-theme="light"]) .flogo{filter:invert(1) hue-rotate(180deg) brightness(1.15)}}
 .nav{display:flex;gap:2px;margin-left:12px}
 .nav>button,.nav>a{height:38px;padding:0 12px;border-radius:9px;font-size:14px;font-weight:550;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s}
 .nav>button:hover,.nav>a:hover,.nav>button[aria-expanded="true"]{background:var(--bg-2);color:var(--ink)}
@@ -321,6 +322,16 @@ ol.steps-list{padding:0;margin:0}
 .cart-item .d{font-size:13px;color:var(--mut)}
 .ok-big{width:56px;height:56px;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center}
 .ok-big svg{width:26px;height:26px}
+/* "Added to cart" dialog (Cart.added in the bundle) */
+.cart-added{display:flex;flex-direction:column;gap:14px}
+.cart-added-title{margin:0}
+.cart-added-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg-2)}
+.cart-added-item b{min-width:0;overflow-wrap:anywhere}
+.cart-added-price{display:flex;flex-direction:column;align-items:flex-end;text-align:right;white-space:nowrap}
+.cart-added-price strong{font-size:18px}.cart-added-price small{font-size:12px;color:var(--mut)}
+.cart-added-count{margin:0;color:var(--mut)}
+.cart-added-actions .btn{min-height:48px;flex:1 1 180px;justify-content:center}
+@media(max-width:480px){.cart-added-item{flex-direction:column}.cart-added-price{align-items:flex-start;text-align:left}.cart-added-actions{flex-direction:column-reverse;align-items:stretch}.cart-added-actions .btn{flex:none;width:100%}}
 
 /* toast */
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;font-size:14px;z-index:100;opacity:0;transition:opacity .25s,transform .3s var(--ease);pointer-events:none;display:flex;gap:8px;align-items:center}

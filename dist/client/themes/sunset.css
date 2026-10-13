@@ -1,7 +1,7 @@
 /* Theme: Sunset — warm peach and apricot pages, burnt-orange to rose gradient buttons, soft sun glows behind heroes,
    rounded cards and a deep plum footer. Used with /themes/_base-modern.css. Pure appearance. */
-@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
-@media (prefers-color-scheme:light){
+/* dark-mode import removed: the public site is always light */
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#fffaf5;--bg-2:#fff1e6;--bg-3:#ffe3cf;--card:#ffffff;
     --ink:#2b1610;--ink-2:#5b3a2e;--mut:#7d5a4b;--line:#f1d8c6;--line-soft:#f8e8dc;
@@ -15,7 +15,7 @@
     --btn:#2b1610;--btn-ink:#ffffff;
     --accent:#e4570f;--accent-2:#d63f6c;--accent-soft:#ffe6d6;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#1a0f0c;--bg-2:#22140f;--bg-3:#2e1b14;--card:#251611;--ink:#fff3ea;--ink-2:#efd2c2;--mut:#bf9c8b;--line:#3d261d;--line-soft:#2d1b15;
     --btn:#ff8a4c;--btn-ink:#1a0f0c;--accent:#ff8a4c;--accent-2:#ff6b8f;--accent-soft:rgb(255 138 76/.15);--vv-accent-ink:#ffa070;--vv-on-accent:#1a0f0c;--vv-num-end:#ff6b8f;
@@ -43,7 +43,7 @@ html:not([data-style="classic"]){
   --ss-grad:linear-gradient(135deg,#d9480f,#c42d63);
 }
 /* in the visitor's dark mode, repaint the light-only surfaces of forms, configurators and checkout */
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
 html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
@@ -76,7 +76,7 @@ html:not([data-style="classic"]) .eyebrow::before{background:var(--ss-grad);widt
 html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]) .counter-item b{background:linear-gradient(120deg,var(--ink) 25%,#d9480f 60%,#c42d63);-webkit-background-clip:text;background-clip:text;color:transparent}
 html:not([data-style="classic"]) .hhero h1 .red{background:linear-gradient(100deg,#d9480f,#c42d63);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 /* logo files have a white background: multiply drops it onto the peach page */
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
 html:not([data-style="classic"]):not([data-theme="dark"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}
 }
 html[data-theme="light"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}

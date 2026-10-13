@@ -3,9 +3,9 @@
    Used with /themes/_base-modern.css. Decoration only: blobs are pseudo-elements (pointer-events:none) and stay still
    for visitors who prefer reduced motion. */
 /* in the visitor's dark mode, repaint the light-only surfaces of forms, configurators and checkout */
-@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
+/* dark-mode import removed: the public site is always light */
 
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#f1efea;--bg-2:#e9e6df;--bg-3:#e1ddd4;--card:#ffffff;
     --ink:#1f1f1f;--ink-2:#444746;--mut:#5f6368;--line:#dcd7cc;--line-soft:#e6e2da;
@@ -36,7 +36,7 @@ html:not([data-style="classic"]){
   --lb-cream:#e6e1d6;--lb-blob-o:.75;
   --lb-grad:linear-gradient(90deg,#3367e6,#9b3fd0 55%,#d6307a);
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#141413;--bg-2:#1c1b1a;--bg-3:#262523;--card:#1f1e1d;--ink:#f1efea;--ink-2:#cfccc5;--mut:#9e9b94;--line:#34332f;--line-soft:#282725;
     --btn:#f1efea;--btn-ink:#1f1f1f;--accent:#8ab4ff;--accent-2:#f08bd4;--accent-soft:rgb(138 180 255/.14);
@@ -67,7 +67,7 @@ html:not([data-style="classic"]) .home-numbers b,html:not([data-style="classic"]
 
 /* the logo files have a white background: multiply drops it onto the cream page (dark mode: the site inverts it, screen drops the black) */
 html:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:multiply}
-@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:screen}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html:not([data-style="classic"]):not([data-theme="light"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:screen}}
 html[data-theme="dark"]:not([data-style="classic"]) :is(.hdr .logo img,.dlogo){mix-blend-mode:screen}
 
 /* ---------- header ---------- */
@@ -141,7 +141,7 @@ html:not([data-style="classic"]) :is(.rule-artwork,.reference-cfg .rule-artwork)
 html:not([data-style="classic"]) .artwork-consent{background:var(--bg)}
 /* gradient word highlight: the end of each hero headline line melts from ink into blue → magenta */
 html:not([data-style="classic"]) :is(.hhero,.phero) h1{width:fit-content;max-width:100%;background:linear-gradient(100deg,var(--ink) 0 52%,#3367e6 74%,#b5307f 94%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(100deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(100deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
 html[data-theme="dark"]:not([data-style="classic"]) :is(.hhero,.phero) h1{background-image:linear-gradient(100deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}
 /* checkout keeps its own light layout; only its pink accents follow the theme */
 html:not([data-style="classic"]) .checkout-wrap :is(.steps .active button,.item-tabs .selected,.rate:has(input:checked)){background:var(--accent-soft);color:var(--vv-accent-ink)}
@@ -149,7 +149,7 @@ html:not([data-style="classic"]) .checkout-footer{background:var(--bg-2);border-
 html:not([data-style="classic"]) .checkout-wrap a:not(.btn){color:var(--vv-accent-ink)}
 /* chat widget: the brand colour is near-black here, so its icon/button text must be white */
 html:not([data-style="classic"]) .scw :is(.scw-launch,.scw-btn,.scw-send){color:#fff}
-@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .scw{--vv-chat:#3d3c39}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html:not([data-style="classic"]):not([data-theme="light"]) .scw{--vv-chat:#3d3c39}}
 html[dir=rtl]:not([data-style="classic"]) :is(.hhero,.phero) h1{background-image:linear-gradient(260deg,var(--ink) 0 52%,#3367e6 74%,#b5307f 94%)}
-@media (prefers-color-scheme:dark){html[dir=rtl]:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(260deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html[dir=rtl]:not([data-style="classic"]):not([data-theme="light"]) :is(.hhero,.phero) h1{background-image:linear-gradient(260deg,var(--ink) 0 52%,#8ab4ff 74%,#f08bd4 94%)}}
 html:not([data-style="classic"]) .scw-launch{box-shadow:0 10px 30px rgb(31 31 31/.3),0 0 0 2px var(--bg)}

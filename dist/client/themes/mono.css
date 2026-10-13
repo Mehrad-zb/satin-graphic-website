@@ -1,8 +1,8 @@
 /* Theme: Mono — pure black & white editorial: serif display headlines, uppercase small labels, hairline rules,
    square black buttons, flat bordered cards and a black footer. Inverted in the visitor's dark mode.
    Used with /themes/_base-modern.css. Pure appearance (system serif fonts, nothing extra is downloaded). */
-@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
-@media (prefers-color-scheme:light){
+/* dark-mode import removed: the public site is always light */
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f3f3f1;--bg-3:#e8e8e5;--card:#ffffff;
     --ink:#000000;--ink-2:#222222;--mut:#555555;--line:#cfcfcc;--line-soft:#e6e6e3;
@@ -18,7 +18,7 @@
     --accent:#000000;--accent-2:#444444;--accent-soft:#ededeb;
     --mo-edge:#000000;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#0a0a0a;--bg-2:#141414;--bg-3:#1f1f1f;--card:#0f0f0f;--ink:#ffffff;--ink-2:#dddddd;--mut:#a6a6a6;--line:#3a3a3a;--line-soft:#262626;
     --btn:#ffffff;--btn-ink:#000000;--accent:#ffffff;--accent-2:#cccccc;--accent-soft:rgb(255 255 255/.1);--vv-accent-ink:#ffffff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
@@ -42,7 +42,7 @@ html:not([data-style="classic"]){
   --vv-shadow-sm:none;--vv-shadow-md:none;--vv-shadow-lg:none;
   --vv-ring:0 0 0 3px rgb(0 0 0/.25);--vv-radius:0px;--vv-btn-r:0px;--vv-sel-line:#000000;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
 html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}

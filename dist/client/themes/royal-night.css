@@ -12,7 +12,7 @@ html[data-theme="dark"]:not([data-style="classic"]){
   --good:#5fd3a0;--good-soft:#0f2a2a;--glass:rgb(10 14 36/.84);
   color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#0a0e24;--bg-2:#0f1530;--bg-3:#18204a;--card:#121a3c;
   --ink:#f6f2ff;--ink-2:#cfcbe8;--mut:#9f9bc4;--line:#262f63;--line-soft:#1a2150;

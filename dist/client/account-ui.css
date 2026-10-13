@@ -145,3 +145,15 @@
 
 .acct-dl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:8px}
 .acct-dl .tiny{word-break:break-word}
+/* cancel an unpaid order */
+.acct-cancel{display:inline-flex;align-items:center;min-height:36px;margin:6px 0 0 6px;padding:4px 12px;border:1px solid #f1c4bf;border-radius:999px;background:#fff;color:#b42318;font:inherit;font-size:12px;font-weight:650;cursor:pointer}
+.acct-cancel:hover{background:#fff5f4;border-color:#b42318}
+.acct-acts .acct-danger{border-color:#f1c4bf}
+.acct-dialog{border:0;border-radius:18px;padding:0;width:min(440px,calc(100% - 32px));background:#fff;color:#182333;box-shadow:0 24px 60px rgba(20,20,20,.25)}
+.acct-dialog::backdrop{background:rgba(15,20,30,.45)}
+.acct-dialog form{display:flex;flex-direction:column;gap:12px;padding:24px}
+.acct-dialog h2{margin:0;font-size:20px}
+.acct-dialog p{margin:0;color:#4a5568;font-size:15px;line-height:1.5}
+.acct-dialog-acts{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px}
+.acct-dialog-acts .btn{min-height:44px}
+@media(max-width:480px){.acct-dialog-acts{flex-direction:column-reverse}.acct-dialog-acts .btn{width:100%;justify-content:center}}

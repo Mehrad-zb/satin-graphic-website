@@ -1,7 +1,7 @@
 /* Theme: Yellow & Navy — bold yellow accents on deep navy. Navy header + footer, yellow buttons with navy text.
    Used with /themes/_base-modern.css. Colour tokens + a few contrast fixes (yellow is never used as text on white). */
 @import url("/themes/_dark-header.css");
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f4f6fa;--bg-3:#e9eef5;--card:#ffffff;
     --ink:#0b1f3a;--ink-2:#2c3e5c;--mut:#5a6b85;--line:#dfe5ee;--line-soft:#edf1f6;
@@ -25,7 +25,7 @@ html:not([data-style="classic"]){
   --vv-radius:16px;--vv-btn-r:12px;--vv-sel-line:#e0a800;
 }
 /* dark mode: navy surfaces, yellow accent can be used as text */
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#07152a;--bg-2:#0b1f3a;--bg-3:#12305a;--card:#0d2342;--ink:#f3f6fb;--ink-2:#c9d3e3;--mut:#8fa0ba;--line:#1e3557;--line-soft:#172c4c;
     --btn:#ffc72c;--btn-ink:#0b1f3a;--accent:#ffc72c;--accent-2:#ffb81c;--accent-soft:rgb(255 199 44/.14);--vv-accent-ink:#ffc72c;--vv-num-end:#ffc72c;--vv-hdr-dark:#06142a;--vv-ftr-bg:#06142a;

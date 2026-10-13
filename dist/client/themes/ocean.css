@@ -1,5 +1,5 @@
 /* Theme: Clean Ocean — ocean blue + teal on crisp white, deep-sea navy footer. Used with /themes/_base-modern.css. */
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f2f8fb;--bg-3:#e4f0f6;--card:#ffffff;
     --ink:#0b2233;--ink-2:#30475a;--mut:#5d7384;--line:#dce8ef;--line-soft:#ebf3f7;
@@ -21,7 +21,7 @@ html:not([data-style="classic"]){
   --vv-ftr-glow:rgb(0 180 216/.2);
   --vv-radius:22px;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#06141c;--bg-2:#0b1e29;--bg-3:#122a37;--card:#0a1a24;--line:#1b3443;--line-soft:#142a37;
     --accent:#38bdf8;--accent-2:#22d3ee;--accent-soft:rgb(56 189 248/.14);--vv-accent-ink:#5cc8f8;--vv-on-accent:#06141c;--vv-num-end:#38bdf8;

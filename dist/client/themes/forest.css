@@ -1,5 +1,5 @@
 /* Theme: Forest — emerald green with a deep forest footer and warm off-white sections. Used with /themes/_base-modern.css. */
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f3f7f4;--bg-3:#e6efe9;--card:#ffffff;
     --ink:#10241b;--ink-2:#33473d;--mut:#5f7268;--line:#dde7e1;--line-soft:#ecf2ee;
@@ -21,7 +21,7 @@ html:not([data-style="classic"]){
   --vv-ftr-glow:rgb(76 195 138/.18);
   --vv-radius:18px;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#0a1410;--bg-2:#10201a;--bg-3:#172b22;--card:#0e1b16;--line:#1f3a2e;--line-soft:#172d24;
     --accent:#4cc38a;--accent-2:#6fd6a4;--accent-soft:rgb(76 195 138/.14);--vv-accent-ink:#5fd09a;--vv-on-accent:#0a1410;--vv-num-end:#4cc38a;

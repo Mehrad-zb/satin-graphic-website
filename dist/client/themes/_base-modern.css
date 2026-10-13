@@ -56,9 +56,9 @@ html:not([data-style="classic"]) .hdr .nav>a.studio-nav{background:transparent;c
 html:not([data-style="classic"]) .hdr .nav>a.studio-nav:hover{background:var(--accent-soft)}
 html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]{background:var(--vv-wraps-bg)!important;color:var(--vv-wraps-ink)!important;border-radius:999px!important;padding:0 16px!important;font-weight:700!important}
 html:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:is(:hover,[aria-expanded="true"],:focus-visible){background:var(--accent)!important;color:var(--vv-on-accent)!important;box-shadow:0 8px 20px -8px color-mix(in srgb,var(--accent) 70%,transparent)!important}
-@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]){background:#f1f1f1!important;color:var(--vv-navy)!important}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]){background:#f1f1f1!important;color:var(--vv-navy)!important}}
 html[data-theme="dark"]:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]){background:#f1f1f1!important;color:var(--vv-navy)!important}
-@media (prefers-color-scheme:dark){html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]) .chev{color:var(--vv-navy)!important}}
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */html:not([data-style="classic"]):not([data-theme="light"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]) .chev{color:var(--vv-navy)!important}}
 html[data-theme="dark"]:not([data-style="classic"]) .hdr .nav [data-mega="wraps"]:not(:hover):not([aria-expanded="true"]) .chev{color:var(--vv-navy)!important}
 html:not([data-style="classic"]) .hdr .icon-btn{border-radius:999px;background:var(--card);border:1px solid var(--line)}
 html:not([data-style="classic"]) .hdr .icon-btn:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));color:var(--vv-accent-ink)}

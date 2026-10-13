@@ -1,7 +1,7 @@
 /* Theme: Midnight Gold — dark luxe. Near-black header, footer and call-to-action bands with warm gold accents,
    ivory page background in light mode, deep black in dark mode. Used with /themes/_base-modern.css. */
 @import url("/themes/_dark-header.css");
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#fbfaf7;--bg-2:#f3f0e8;--bg-3:#e9e4d8;--card:#ffffff;
     --ink:#121317;--ink-2:#3a3b42;--mut:#6b6a70;--line:#e4dfd3;--line-soft:#efebe2;
@@ -25,7 +25,7 @@ html:not([data-style="classic"]){
   --vv-ftr-glow:rgb(201 162 39/.18);--vv-chat:#121317;
   --vv-radius:14px;--vv-btn-r:10px;--vv-sel-line:#b8921f;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#0b0b0e;--bg-2:#131318;--bg-3:#1c1c22;--card:#131318;--ink:#f4f1ea;--ink-2:#cfcabb;--mut:#959185;--line:#2a2a31;--line-soft:#1f1f25;
     --btn:#e0bd55;--btn-ink:#121317;--accent:#e0bd55;--accent-2:#f1d27a;--accent-soft:rgb(224 189 85/.13);--vv-accent-ink:#e0bd55;--vv-num-end:#e0bd55;

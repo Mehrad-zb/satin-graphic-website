@@ -4542,10 +4542,24 @@ function footer() {
 }
 
 /* ---------- cart ---------- */
+/* Signed-in customers: the cart follows the account across devices (/cart-sync.mjs ↔ /api/customer/cart). */
+const signedInHint = () => /(?:^|;\s*)satin_acct=1/.test(document.cookie);
+const cartSync = () => signedInHint() ? import("/cart-sync.mjs") : null;
+Object.entries({"Added to cart":{fr:"Ajouté au panier",es:"Añadido al carrito",fa:"به سبد خرید اضافه شد"},"Go to cart":{fr:"Voir le panier",es:"Ir al carrito",fa:"رفتن به سبد خرید"},"Continue shopping":{fr:"Continuer mes achats",es:"Seguir comprando",fa:"ادامهٔ خرید"},"Price pending":{fr:"Prix à confirmer",es:"Precio pendiente",fa:"قیمت در انتظار تأیید"},"Estimated · incl. tax · CAD":{fr:"Estimation · taxes incluses · CAD",es:"Estimado · impuestos incluidos · CAD",fa:"برآورد · با مالیات · دلار کانادا"},"Your cart":{fr:"Votre panier",es:"Tu carrito",fa:"سبد خرید شما"},"item in your cart":{fr:"article dans votre panier",es:"artículo en tu carrito",fa:"کالا در سبد خرید شما"},"items in your cart":{fr:"articles dans votre panier",es:"artículos en tu carrito",fa:"کالا در سبد خرید شما"}}).forEach(([k,v])=>TRANSLATIONS[k]={...(TRANSLATIONS[k]||{}),...v});trIdx=null;trLower=null;
 const Cart = {
   items: store.get("sg-cart", []),
-  save() { store.set("sg-cart", this.items); const n = this.items.length; document.querySelectorAll("[data-cart-n]").forEach(b => { b.textContent = n; b.dataset.n = n; }); },
-  add(it) { this.items.push({ ...it, id: Date.now() + Math.random() }); this.save(); toast(`${it.name} added to cart`); const b = document.querySelector("[data-cart]"); b && b.classList.remove("bump"); void (b && b.offsetWidth); b && b.classList.add("bump"); },
+  save(quiet) { store.set("sg-cart", this.items); this.badge(); if (!quiet) cartSync()?.then(m => m.scheduleCartPush()).catch(() => { }); },
+  badge() { const n = this.items.length; document.querySelectorAll("[data-cart-n]").forEach(b => { b.textContent = n; b.dataset.n = n; }); },
+  add(it) { this.items.push({ ...it, id: Date.now() + Math.random() }); this.save(); const b = document.querySelector("[data-cart]"); b && b.classList.remove("bump"); void (b && b.offsetWidth); b && b.classList.add("bump"); this.added(it); },
+  /* "Added to cart" dialog after every add: go to the cart (checkout for payable items, else the quote cart) or keep shopping */
+  added(it) {
+    const price = it.pricePending ? tr("Price pending") : it.total ? money2(it.total) : "", n = this.items.length;
+    openModal(`<div class="cart-added" role="document"><span class="ok-big cart-added-icon">${icon("check")}</span><h2 class="d3 cart-added-title" id="cart-added-title">${esc(tr("Added to cart"))}</h2>
+      <div class="cart-added-item"><b>${esc(it.name || "")}</b>${price ? `<span class="cart-added-price"><strong>${esc(price)}</strong>${it.pricePending ? "" : `<small>${esc(tr("Estimated · incl. tax · CAD"))}</small>`}</span>` : ""}</div>
+      <p class="small cart-added-count">${n} ${esc(tr(n === 1 ? "item in your cart" : "items in your cart"))}</p>
+      <div class="mfoot cart-added-actions"><button type="button" class="btn ghost" data-close data-cart-continue>${esc(tr("Continue shopping"))}</button><button type="button" class="btn" data-cart-go>${esc(tr("Go to cart"))} ${arrowSm()}</button></div></div>`);
+    const m = document.getElementById("modal"); m.setAttribute("aria-labelledby", "cart-added-title"); setTimeout(() => m.querySelector("[data-cart-go]")?.focus(), 80);
+  },
   remove(id) { this.items = this.items.filter(i => i.id != id); this.save(); },
   open() {
     if(this.items.some(i=>i.pricing&&!i.pricePending)){location.assign("/satin/checkout/");return;}
@@ -4563,7 +4577,7 @@ function openModal(html, wide) {
   const m = document.getElementById("modal"); m.querySelector(".box").className = "box" + (wide ? " wide" : ""); m.querySelector("[data-mbody]").innerHTML = localizedHTML(html);
   m.classList.add("open"); document.body.style.overflow = "hidden"; setTimeout(() => (m.querySelector("input,select,button:not(.close)") || m.querySelector(".close")).focus(), 60);
 }
-function closeModal() { document.getElementById("modal").classList.remove("open"); document.body.style.overflow = ""; }
+function closeModal() { const m = document.getElementById("modal"); m.classList.remove("open"); m.removeAttribute("aria-labelledby"); document.body.style.overflow = ""; }
 
 /* ---------- quote wizard ---------- */
 const Q = { svc: "", details: {}, step: 0, contact: {}, fromCart: false };
@@ -4784,7 +4798,7 @@ async function render(hydrate = false) {
   const { path, query, anchor, full } = parseLocation();
   if(LANG!=='en'&&!globalThis.__PRERENDER__)await loadContentTranslations(LANG);
   if(!PORTFOLIO&&isPortfolioPath(path))await loadPortfolio();
-  if(oldLanguage!==LANG){document.querySelector('[data-review-carousel]')?._cleanup?.();document.querySelector('[data-video-story]')?._cleanup?.();document.getElementById('app').innerHTML=appHTML();hydrate=false;Cart.save();bindForms(document.querySelector('.ftr'));}
+  if(oldLanguage!==LANG){document.querySelector('[data-review-carousel]')?._cleanup?.();document.querySelector('[data-video-story]')?._cleanup?.();document.getElementById('app').innerHTML=appHTML();hydrate=false;Cart.save(true);bindForms(document.querySelector('.ftr'));}
   const [fn, params] = match(path);
   let page = ['/login','/register','/account'].includes(path)?{title:path==='/account'?'My account':'Log in',html:'<section class="sec"><div class="wrap"><p class="small">Loading…</p></div></section>',init:m=>import('/account-ui.mjs').then(x=>x.mount(m,path)).catch(e=>{console.error(e);m.querySelector('.page-enter').innerHTML='<section class="sec"><div class="wrap"><p>Accounts are temporarily unavailable. Please reload the page.</p></div></section>';})}:serviceUI.customPage(path) || (fn ? fn(params, query) : null);  if (!page && !hydrate) { if (FIRST_RENDER && document.querySelector('#main .page-enter')) hydrate = true; else { location.replace(location.href); return; } } if (!page) page = PAGES.notFound(); const keepHead=hydrate; const serverPage=hydrate&&page.title===PAGES.notFound().title&&!/not found/i.test(document.title);
   page=localizedPage(path,page);
@@ -4864,7 +4878,11 @@ function boot() {
   const app = document.getElementById("app");
   const hydrate = !/^(\/print-shop$|\/wallpaper|\/vehicle-wraps|\/auto-detailing|\/window-graphics|\/apparel|\/shop\/vehicle-templates|\/portfolio)/.test(parseLocation().path) && !migrated && !location.search && app.dataset.prerenderPath === parseLocation().path && !!document.getElementById("main");
   if (!document.getElementById("main")) app.innerHTML = appHTML();
-  Cart.save();bindForms(document.querySelector('.ftr'));
+  Cart.save(true);bindForms(document.querySelector('.ftr'));
+  /* cart shared across the customer's devices: merge the account cart into this browser once per page, and after every change */
+  addEventListener('satin-cart-synced',e=>{if(Array.isArray(e.detail?.items)){Cart.items=e.detail.items;Cart.badge();}});
+  addEventListener('storage',e=>{if(e.key==='sg-cart'){Cart.items=store.get('sg-cart',[]);Cart.badge();}});
+  cartSync()?.then(m=>m.syncCart()).catch(()=>{});
   document.addEventListener('change',e=>{
     if(e.target.matches('[data-language]')){
       const {path,query,anchor}=parseLocation(),code=e.target.value;
@@ -4876,6 +4894,7 @@ function boot() {
     const t = e.target;
     const q = t.closest("[data-quote]"); if (q) { e.preventDefault(); closeMega(); openQuote(q.dataset.quote, q.dataset.details || "",false,q.dataset.estimate||""); return; }
     if (t.closest("[data-mega]")) { openMega(t.closest("[data-mega]").dataset.mega); return; }
+    if (t.closest("[data-cart-go]")) { closeModal(); Cart.open(); return; }
     if (t.closest("[data-cart]")) { Cart.open(); return; }
     if (t.closest("[data-rm]")) { Cart.remove(t.closest("[data-rm]").dataset.rm); Cart.open(); return; }
     if (t.closest("[data-print-checkout]")) { location.assign("/satin/checkout/"); return; }

@@ -1,8 +1,8 @@
 /* Theme: Galaxy — inspired by Samsung's website: crisp white pages, black text, bold sans headlines,
    black pill buttons with white text, full-width light-grey hero banners, rounded card grids, thin dividers
    and a deep blue accent for links. No Samsung fonts or artwork are loaded. Used with /themes/_base-modern.css. */
-@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
-@media (prefers-color-scheme:light){
+/* dark-mode import removed: the public site is always light */
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f4f4f4;--bg-3:#eaeaea;--card:#ffffff;
     --ink:#000000;--ink-2:#313131;--mut:#5f5f5f;--line:#dddddd;--line-soft:#ececec;
@@ -16,7 +16,7 @@
     --btn:#000000;--btn-ink:#ffffff;
     --accent:#1428a0;--accent-2:#2189ff;--accent-soft:#e8ebf8;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#000000;--bg-2:#121212;--bg-3:#1f1f1f;--card:#161616;--ink:#ffffff;--ink-2:#d6d6d6;--mut:#a0a0a0;--line:#333333;--line-soft:#222222;
     --btn:#ffffff;--btn-ink:#000000;--accent:#6e8cff;--accent-2:#2189ff;--accent-soft:rgb(110 140 255/.16);--vv-accent-ink:#8ea6ff;--vv-on-accent:#000000;--vv-num-end:#ffffff;
@@ -91,7 +91,7 @@ html:not([data-style="classic"]) .cta .btn:not(.ghost):hover{background:#e6e6e6;
 
 html:not([data-style="classic"]) .ftr .news .btn{background:var(--btn);color:var(--btn-ink)}
 html:not([data-style="classic"]) .ftr .news .inp{background:var(--vv-ftr-field);border:1px solid var(--vv-ftr-field-line)}
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::before,html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::after{display:none}
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
@@ -109,7 +109,7 @@ html[data-theme="light"]:not([data-style="classic"]) .ftr :is(.flogo,.logo img){
 html[data-theme="light"]:not([data-style="classic"]) .ftr .btn.ghost{color:var(--vv-ftr-head);border-color:var(--vv-ftr-btn-line)}
 html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp{color:var(--vv-ftr-head)}
 html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
 html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}

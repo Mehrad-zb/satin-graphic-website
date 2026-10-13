@@ -2,8 +2,8 @@
    font stack, huge tight-tracked headlines, a thin translucent blurred header, blue pill links and buttons,
    black full-bleed call-to-action tiles and lots of whitespace. No Apple fonts or artwork are loaded.
    Used with /themes/_base-modern.css. Pure appearance. */
-@import url("/themes/_dark-surfaces.css") (prefers-color-scheme:dark);
-@media (prefers-color-scheme:light){
+/* dark-mode import removed: the public site is always light */
+@media all{/* was (prefers-color-scheme:light) */
   :where(html:not([data-style="classic"]):not([data-theme="dark"])):root{
     --bg:#ffffff;--bg-2:#f5f5f7;--bg-3:#e8e8ed;--card:#ffffff;
     --ink:#1d1d1f;--ink-2:#424245;--mut:#6e6e73;--line:#d2d2d7;--line-soft:#e8e8ed;
@@ -17,7 +17,7 @@
     --btn:#0071e3;--btn-ink:#ffffff;
     --accent:#0071e3;--accent-2:#2997ff;--accent-soft:#e8f1fc;
 }
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
   html:not([data-style="classic"]):not([data-theme="light"]){
     --bg:#000000;--bg-2:#101012;--bg-3:#1d1d1f;--card:#1c1c1e;--ink:#f5f5f7;--ink-2:#d2d2d7;--mut:#a1a1a6;--line:#38383d;--line-soft:#232326;
     --btn:#0a84ff;--btn-ink:#ffffff;--accent:#0a84ff;--accent-2:#2997ff;--accent-soft:rgb(41 151 255/.16);--vv-accent-ink:#2997ff;--vv-on-accent:#ffffff;--vv-num-end:#2997ff;
@@ -108,7 +108,7 @@ html:not([data-style="classic"]) .cta .btn.ghost{color:#2997ff;border-color:#299
 html:not([data-style="classic"]) .ftr .col a{font-size:12.5px}
 html:not([data-style="classic"]) .ftr .news .btn{background:var(--accent);color:#fff}
 html:not([data-style="classic"]) .ftr .news .inp{background:var(--vv-ftr-field);border:1px solid var(--vv-ftr-field-line)}
-@media (prefers-color-scheme:light){
+@media all{/* was (prefers-color-scheme:light) */
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr{background:var(--vv-ftr-bg);color:var(--vv-ftr-ink);--ink:var(--vv-ftr-head);border-top:1px solid var(--vv-ftr-line)}
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::before,html:not([data-style="classic"]):not([data-theme="dark"]) .ftr::after{display:none}
 html:not([data-style="classic"]):not([data-theme="dark"]) .ftr :is(h2,h4){color:var(--vv-ftr-head)}
@@ -128,7 +128,7 @@ html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp{color:var(-
 html[data-theme="light"]:not([data-style="classic"]) .ftr .news .inp::placeholder{color:var(--vv-ftr-mut)}
 
 /* dark mode: Apple-style true black with the logo inverted */
-@media (prefers-color-scheme:dark){
+@media not all{/* was (prefers-color-scheme:dark): the public site is always light */
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.process-story,.home-reviews){background:var(--bg)}
 html:not([data-style="classic"]):not([data-theme="light"]) .video-story{background:var(--bg)!important;border-color:transparent}
 html:not([data-style="classic"]):not([data-theme="light"]) :is(.video-stick,.video-stage){background:transparent!important}
