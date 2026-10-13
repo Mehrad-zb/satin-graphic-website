@@ -2269,6 +2269,21 @@ const TRANSLATIONS = {
     "es": "Cesta de presupuesto",
     "fa": "سبد درخواست قیمت"
   },
+  "Shopping cart": {
+    "fr": "Panier",
+    "es": "Carrito",
+    "fa": "سبد خرید"
+  },
+  "Choose a product, set your options and press “Add to cart” — your items will show up here.": {
+    "fr": "Choisissez un produit, réglez vos options et appuyez sur « Ajouter au panier » — vos articles apparaîtront ici.",
+    "es": "Elige un producto, ajusta tus opciones y pulsa «Añadir al carrito»: tus artículos aparecerán aquí.",
+    "fa": "یک محصول انتخاب کنید، گزینه‌ها را تنظیم کنید و «افزودن به سبد خرید» را بزنید — اقلام شما اینجا نمایش داده می‌شوند."
+  },
+  "Your shopping cart is empty": {
+    "fr": "Votre panier est vide",
+    "es": "Tu carrito está vacío",
+    "fa": "سبد خرید شما خالی است"
+  },
   "Your quote cart is empty": {
     "fr": "Votre panier est vide",
     "es": "Tu cesta está vacía",
@@ -4564,11 +4579,11 @@ const Cart = {
   open() {
     if(this.items.some(i=>i.pricing&&!i.pricePending)){location.assign("/satin/checkout/");return;}
     const total = this.items.reduce((a, i) => a + (i.total || 0), 0);
-    openModal(`<div><span class="eyebrow">Quote cart</span><h2 class="d3" style="margin-top:8px">${this.items.length ? `${this.items.length} item${this.items.length > 1 ? "s" : ""} to quote` : "Your quote cart is empty"}</h2></div>
+    openModal(`<div><span class="eyebrow">${this.items.length ? "Quote cart" : "Shopping cart"}</span><h2 class="d3" style="margin-top:8px">${this.items.length ? `${this.items.length} item${this.items.length > 1 ? "s" : ""} to quote` : "Your shopping cart is empty"}</h2></div>
       ${this.items.length ? `<div>${this.items.map(i => `<div class="cart-item"><div><b>${esc(i.name)}</b><div class="d">${(i.lines || []).map(esc).join(" · ")}</div></div><div style="text-align:right"><span class="price">${i.pricePending?"Price pending":i.total ? money2(i.total) : "Quoted"}</span><br><button class="tiny link" data-rm="${i.id}">Remove</button></div></div>`).join("")}</div>
       <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="small">${this.items.some(i=>i.pricePending)?"Known charges · other prices pending":"Estimated total"}</span><b style="font-size:26px">${money2(total)}</b></div>
       <div class="mfoot"><button class="btn ghost" data-close>Keep browsing</button>${this.items.some(i=>i.pricing?.ruleId?.startsWith("print-"))?`<button class="btn" data-print-checkout>Print checkout</button>`:""}<button class="btn ghost" data-cart-quote>Request quote for these items ${arrowSm()}</button></div>`
-      : `<p class="small">Configure a product on any page and choose “Add to quote cart”. Everything you add is sent as one quote request.</p><div class="mfoot"><span></span>${A("/print-shop", "Browse the print shop", "btn")}</div>`}`);
+      : `<p class="small">Choose a product, set your options and press “Add to cart” — your items will show up here.</p><div class="mfoot"><span></span>${A("/print-shop", "Browse the print shop", "btn")}</div>`}`);
   },
 };
 
