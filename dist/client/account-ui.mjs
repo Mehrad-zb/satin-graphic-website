@@ -26,7 +26,7 @@ const FA = {
   'Your email is confirmed. Welcome!': 'ایمیل شما تأیید شد. خوش آمدید!', 'Confirm password': 'تکرار رمز', 'Passwords do not match.': 'رمزها یکسان نیستند.',
   'Saved designs': 'طرح‌های ذخیره‌شده', 'Edit': 'ویرایش', 'Order this design': 'سفارش این طرح', 'Download PDF': 'دانلود PDF', 'Mockup PNG': 'پیش‌نمایش PNG', 'Delete': 'حذف',
   'Approved': 'تأیید شده', 'Draft': 'پیش‌نویس', 'No saved designs yet.': 'هنوز طرحی ذخیره نکرده‌اید.', 'Open Design Studio': 'باز کردن استودیو طراحی', 'Delete this design?': 'این طرح حذف شود؟',
-  'Cancel order': 'لغو سفارش', 'Keep order': 'سفارش بماند', 'Cancel this order?': 'این سفارش لغو شود؟', 'Order cancelled.': 'سفارش لغو شد.', 'Pickup': 'تحویل حضوری',
+  'Delete order': 'حذف سفارش', 'Delete': 'حذف', 'Keep order': 'سفارش بماند', 'Delete this unpaid order?': 'این سفارش پرداخت‌نشده حذف شود؟', 'Order deleted.': 'سفارش حذف شد.', 'This order was never paid. Deleting it removes it from your account and cannot be undone — to get these items later, place a new order.': 'این سفارش پرداخت نشده. با حذف، از حساب شما پاک می‌شود و قابل برگشت نیست — برای خرید دوباره، سفارش جدید ثبت کنید.', 'Pickup': 'تحویل حضوری',
   'I agree to the': 'با این موارد موافقم:', 'Terms': 'شرایط', 'Privacy Policy': 'حریم خصوصی', 'Customer area': 'ناحیهٔ مشتری',
 };
 const t = s => (LANG === 'fa' && FA[s]) || s;
@@ -155,9 +155,9 @@ async function accountView(host, q) {
     main.innerHTML = `<div class="acct-msg err">${esc(e.message)}</div>`;
   }
   main.querySelectorAll('[data-open-order]').forEach(a => a.addEventListener('click', e => { if (e.metaKey || e.ctrlKey) return; e.preventDefault(); go({ order: a.dataset.openOrder }); accountView(host, new URLSearchParams(location.search)); window.scrollTo({ top: 0, behavior: 'smooth' }); }));
-  main.querySelectorAll('[data-cancel-order]').forEach(b => b.addEventListener('click', () => cancelOrder(b, host)));
+  main.querySelectorAll('[data-delete-order]').forEach(b => b.addEventListener('click', () => deleteOrder(b, host)));
 }
-/* ---------------- cancel an unpaid order ---------------- */
+/* ---------------- delete an unpaid order (paid / completed orders stay as history) ---------------- */
 function confirmDialog({ title, text, yes, no }) {
   return new Promise(resolve => {
     const d = document.createElement('dialog'); d.className = 'acct-dialog'; d.setAttribute('aria-labelledby', 'acct-dialog-title');
@@ -166,16 +166,17 @@ function confirmDialog({ title, text, yes, no }) {
     document.body.append(d); d.showModal();
   });
 }
-async function cancelOrder(btn, host) {
+async function deleteOrder(btn, host) {
   const ref = btn.dataset.ref || '';
-  const ok = await confirmDialog({ title: t('Cancel this order?') + (ref ? ' ' + ref : ''), text: 'This order has not been paid. Cancelling it cannot be undone — to get these items later, you would place a new order.', yes: t('Cancel order'), no: t('Keep order') });
+  const ok = await confirmDialog({ title: t('Delete this unpaid order?') + (ref ? ' ' + ref : ''), text: t('This order was never paid. Deleting it removes it from your account and cannot be undone — to get these items later, place a new order.'), yes: t('Delete order'), no: t('Keep order') });
   if (!ok) return;
   await busy(btn, async () => {
     try {
-      await api('orders/cancel', { id: btn.dataset.cancelOrder });
+      await api('orders/delete', { id: btn.dataset.deleteOrder });
       OVERVIEW = await api('overview');
+      if (new URLSearchParams(location.search).get('order')) go({ tab: 'orders' });
       await accountView(host, new URLSearchParams(location.search));
-      host.querySelector('[data-main]')?.insertAdjacentHTML('afterbegin', `<div class="acct-msg ok" role="status">${esc(t('Order cancelled.'))} ${esc(ref)} — we emailed you a confirmation.</div>`);
+      host.querySelector('[data-main]')?.insertAdjacentHTML('afterbegin', `<div class="acct-msg ok" role="status">${esc(t('Order deleted.'))} ${esc(ref)}</div>`);
     } catch (e) { const box = btn.closest('.acct-block')?.querySelector('[data-ro-msg]') || host.querySelector('[data-main]'); box?.insertAdjacentHTML('afterbegin', `<div class="acct-msg err" role="alert">${esc(e.message)}</div>`); }
   });
 }
@@ -191,7 +192,7 @@ const orderLink = o => `<a class="link" href="${BASE}/account/?order=${encodeURI
 function ordersTable(list) {
   if (!list.length) return `<div class="acct-empty"><p>${t('No orders yet.')}</p><a class="btn sm" href="${BASE}/print-shop/">${t('Start an order')}</a></div>`;
   return `<div class="acct-table" role="table"><div class="acct-tr acct-th" role="row"><span>${t('Order')}</span><span>${t('Date')}</span><span>${t('Items')}</span><span>${t('Status')}</span><span>${t('Payment')}</span><span class="num">${t('Total')}</span></div>
-    ${list.map(o => `<div class="acct-tr" role="row"><span data-l="${t('Order')}">${orderLink(o)}</span><span data-l="${t('Date')}">${day(o.createdAt)}</span><span data-l="${t('Items')}" class="acct-items">${esc(o.items.slice(0, 2).join(', '))}${o.count > 2 ? ` +${o.count - 2}` : ''}</span><span data-l="${t('Status')}">${stageChip(o.stage)}</span><span data-l="${t('Payment')}">${payChip(o.payment)}${o.cancellable ? `<button type="button" class="acct-cancel" data-cancel-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Cancel order')}</button>` : ''}</span><span data-l="${t('Total')}" class="num"><b>${money(o.total, o.currency)}</b></span></div>`).join('')}</div>`;
+    ${list.map(o => `<div class="acct-tr" role="row"><span data-l="${t('Order')}">${orderLink(o)}</span><span data-l="${t('Date')}">${day(o.createdAt)}</span><span data-l="${t('Items')}" class="acct-items">${esc(o.items.slice(0, 2).join(', '))}${o.count > 2 ? ` +${o.count - 2}` : ''}</span><span data-l="${t('Status')}">${stageChip(o.stage)}</span><span data-l="${t('Payment')}">${payChip(o.payment)}${o.deletable ? `<button type="button" class="acct-cancel" data-delete-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Delete')}</button>` : ''}</span><span data-l="${t('Total')}" class="num"><b>${money(o.total, o.currency)}</b></span></div>`).join('')}</div>`;
 }
 function dashboard(main) {
   const o = OVERVIEW.orders, inv = OVERVIEW.invoices;
@@ -223,7 +224,7 @@ async function orderView(main, id, host) {
   const fileUrl = (f, inline) => `/api/customer/file?order=${encodeURIComponent(o.id)}&id=${encodeURIComponent(f.id)}${inline ? '&inline=1' : ''}`;
   const a = o.address || {};
   main.innerHTML = `<p><a class="link" href="${BASE}/account/?tab=orders" data-back>← ${t('Back to orders')}</a></p>
-    <div class="acct-block"><div class="acct-bh"><div><h2>${t('Order')} ${esc(o.reference)}</h2><p class="small">${day(o.createdAt)} · ${o.count} ${t('Items').toLowerCase()}</p></div><div class="acct-acts">${payChip(o.payment)} ${o.payUrl ? `<a class="btn sm red" href="${esc(o.payUrl)}" rel="noopener">${t('Pay now')}</a>` : ''}${o.cancellable ? `<button class="btn sm ghost acct-danger" data-cancel-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Cancel order')}</button>` : ''}<button class="btn sm ghost" data-reorder>${t('Re-order')}</button></div></div>
+    <div class="acct-block"><div class="acct-bh"><div><h2>${t('Order')} ${esc(o.reference)}</h2><p class="small">${day(o.createdAt)} · ${o.count} ${t('Items').toLowerCase()}</p></div><div class="acct-acts">${payChip(o.payment)} ${o.payUrl ? `<a class="btn sm red" href="${esc(o.payUrl)}" rel="noopener">${t('Pay now')}</a>` : ''}${o.deletable ? `<button class="btn sm ghost acct-danger" data-delete-order="${esc(o.id)}" data-ref="${esc(o.reference)}">${t('Delete order')}</button>` : ''}<button class="btn sm ghost" data-reorder>${t('Re-order')}</button></div></div>
     ${steps}<div data-ro-msg></div></div>
     <div class="acct-block">${o.items.map(i => `<div class="acct-item"><div class="acct-thumbs">${i.images.length ? i.images.slice(0, 3).map(f => `<a href="${fileUrl(f, true)}" target="_blank" rel="noopener" title="${esc(f.name)}"><img src="${fileUrl(f, true)}" alt="${esc(f.role)}" loading="lazy"></a>`).join('') : `<div class="acct-noimg">${i.files.length ? 'PDF' : '—'}</div>`}</div>
       <div class="acct-idet"><h3>${esc(i.jobName || i.name)}</h3>${i.jobName ? `<p class="tiny">${esc(i.name)}</p>` : ''}${i.choices.some(c => /^Unit \d+$/.test(c.label)) ? '' : `<p class="small">${t('Quantity')}: ${esc(i.quantity)}${i.width && i.width !== '—' ? ` · ${t('Size')}: ${esc(i.width)} × ${esc(i.height)} in` : ''}${i.sides ? ` · ${esc(i.sides)} side(s)` : ''}</p>`}
