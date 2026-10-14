@@ -1,12 +1,167 @@
 {
-  "vehicle-pickup": [
-    {"id": "pickup-ram-crew", "name": "Full-size pickup — crew cab, 5′7″ bed (Ram 1500 size)", "type": "Pickups", "spec": {"length": 232.9, "height": 77.6, "width": 82.1}, "price": {"vehicle_0": "Crew", "vehicle_1": "Short"}},
-    {"id": "pickup-tacoma-double", "name": "Mid-size pickup — double cab, short bed (Tacoma size)", "type": "Pickups", "spec": {"length": 213.0, "height": 74.6, "width": 77.9}, "price": {"vehicle_0": "Double", "vehicle_1": "Short"}},
-    {"id": "pickup-hd-crew", "name": "Heavy-duty pickup — crew cab, 6.75 ft bed (F-250 size)", "type": "Pickups", "spec": {"length": 250.0, "height": 80.3, "width": 80.0}, "price": {"vehicle_0": "Crew", "vehicle_1": "Medium"}}
-  ],
-  "vehicle-suv": [
-    {"id": "suv-tahoe", "name": "Full-size SUV (Tahoe size)", "type": "SUVs", "spec": {"length": 211.3, "height": 76.3, "width": 81.0}, "price": {"vehicle_0": "Full-size"}},
-    {"id": "suv-explorer", "name": "Mid-size 3-row SUV (Explorer size)", "type": "SUVs", "spec": {"length": 198.7, "height": 69.8, "width": 78.9}, "price": {"vehicle_0": "Mid-size"}},
-    {"id": "suv-rav4", "name": "Compact SUV (RAV4 size)", "type": "SUVs", "spec": {"length": 180.9, "height": 67.0, "width": 73.0}, "price": {"vehicle_0": "Mid-size"}}
-  ]
+"vehicle-pickup": [
+{
+"id": "pickup-ram-crew",
+"name": "Full-size pickup — crew cab, 5′7″ bed (Ram 1500 size)",
+"type": "Pickups",
+"spec": {
+"length": 232.9,
+"height": 77.6,
+"width": 82.1
+},
+"price": {
+"vehicle_0": "Crew",
+"vehicle_1": "Short"
+}
+},
+{
+"id": "pickup-tacoma-double",
+"name": "Mid-size pickup — double cab, short bed (Tacoma size)",
+"type": "Pickups",
+"spec": {
+"length": 213.0,
+"height": 74.6,
+"width": 77.9
+},
+"price": {
+"vehicle_0": "Double",
+"vehicle_1": "Short"
+}
+},
+{
+"id": "pickup-hd-crew",
+"name": "Heavy-duty pickup — crew cab, 6.75 ft bed (F-250 size)",
+"type": "Pickups",
+"spec": {
+"length": 250.0,
+"height": 80.3,
+"width": 80.0
+},
+"price": {
+"vehicle_0": "Crew",
+"vehicle_1": "Medium"
+}
+}
+],
+"vehicle-suv": [
+{
+"id": "suv-tahoe",
+"name": "Full-size SUV (Tahoe size)",
+"type": "SUVs",
+"spec": {
+"length": 211.3,
+"height": 76.3,
+"width": 81.0
+},
+"price": {
+"vehicle_0": "Full-size"
+}
+},
+{
+"id": "suv-explorer",
+"name": "Mid-size 3-row SUV (Explorer size)",
+"type": "SUVs",
+"spec": {
+"length": 198.7,
+"height": 69.8,
+"width": 78.9
+},
+"price": {
+"vehicle_0": "Mid-size"
+}
+},
+{
+"id": "suv-rav4",
+"name": "Compact SUV (RAV4 size)",
+"type": "SUVs",
+"spec": {
+"length": 180.9,
+"height": 67.0,
+"width": 73.0
+},
+"price": {
+"vehicle_0": "Mid-size"
+}
+}
+],
+"vehicle-sedan": [
+{
+"id": "sedan-camry",
+"name": "Toyota Camry",
+"type": "Cars",
+"spec": {
+"length": 193.5,
+"height": 56.9,
+"width": 72.4
+},
+"price": {
+"vehicle_0": "Mid-size"
+}
+},
+{
+"id": "sedan-civic",
+"name": "Honda Civic",
+"type": "Cars",
+"spec": {
+"length": 184.0,
+"height": 55.7,
+"width": 70.9
+},
+"price": {
+"vehicle_0": "Compact"
+}
+},
+{
+"id": "sedan-corolla",
+"name": "Toyota Corolla",
+"type": "Cars",
+"spec": {
+"length": 182.5,
+"height": 56.5,
+"width": 70.1
+},
+"price": {
+"vehicle_0": "Compact"
+}
+},
+{
+"id": "sedan-accord",
+"name": "Honda Accord",
+"type": "Cars",
+"spec": {
+"length": 195.7,
+"height": 57.1,
+"width": 73.3
+},
+"price": {
+"vehicle_0": "Mid-size"
+}
+},
+{
+"id": "sedan-elantra",
+"name": "Hyundai Elantra",
+"type": "Cars",
+"spec": {
+"length": 184.1,
+"height": 55.7,
+"width": 71.9
+},
+"price": {
+"vehicle_0": "Compact"
+}
+},
+{
+"id": "sedan-bmw3",
+"name": "BMW 3 Series",
+"type": "Cars",
+"spec": {
+"length": 185.7,
+"height": 56.8,
+"width": 71.9
+},
+"price": {
+"vehicle_0": "Mid-size"
+}
+}
+]
 }
