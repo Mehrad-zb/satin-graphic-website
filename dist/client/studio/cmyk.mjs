@@ -1,8 +1,9 @@
 // CMYK output for print files (no dependencies).
 // rgbToCmyk: device conversion with full grey-component replacement (neutral greys and black print with K only,
 // at most two process colours + K, total ink ≤ 200 %). No ICC profile is applied; the shop's RIP may fine-tune.
-// encodeCMYKJpeg: baseline JPEG encoder for 4-component (CMYK) images, Adobe convention (APP14, transform 0,
-// inverted samples) — embed in PDF with /ColorSpace /DeviceCMYK /Decode [1 0 1 0 1 0 1 0].
+// encodeCMYKJpeg: baseline JPEG encoder for 4-component (CMYK) images with plain (non-inverted) ink samples and no
+// Adobe APP14 marker — embed in PDF with /ColorSpace /DeviceCMYK and no /Decode. (The Adobe-inverted variant is read
+// as a negative by Illustrator and CorelDRAW, so it is no longer written; pdf.mjs still reads older files correctly.)
 // The same conversion is implemented in PHP (print_pdf.php, ppdf_cmyk) for server-side fallbacks.
 
 /** 0–255 RGB → 0–255 ink amounts [C, M, Y, K]. */
@@ -33,8 +34,8 @@ export async function encodeCMYKJpeg(width,height,read,quality=92){
  const byte=b=>{grow(1);buf[pos++]=b;},word=w=>{byte(w>>8&255);byte(w&255);},bytes=a=>{grow(a.length);for(const b of a)buf[pos++]=b;};
  let acc=0,nb=0;// bit accumulator
  const bits=(code,len)=>{acc=(acc<<len)|code;nb+=len;while(nb>=8){const b=(acc>>(nb-8))&255;nb-=8;grow(2);buf[pos++]=b;if(b===255)buf[pos++]=0;}acc&=(1<<nb)-1;};
- // headers: SOI, APP14 Adobe (transform 0 = CMYK as stored), DQT, SOF0 (4 × 1×1), DHT, SOS
- word(0xFFD8);word(0xFFEE);word(14);bytes([0x41,0x64,0x6F,0x62,0x65]);word(100);word(0);word(0);byte(0);
+ // headers: SOI, DQT, SOF0 (4 × 1×1), DHT, SOS — no APP14: samples are plain ink amounts (0 = no ink)
+ word(0xFFD8);
  word(0xFFDB);word(67);byte(0);bytes(table);
  word(0xFFC0);word(20);byte(8);word(height);word(width);byte(4);for(let c=1;c<=4;c++){byte(c);byte(0x11);byte(0);}
  word(0xFFC4);word(2+17+12+17+162);byte(0);for(let k=1;k<=16;k++)byte(DC_N[k]);bytes(DC_V);byte(0x10);for(let k=1;k<=16;k++)byte(AC_N[k]);bytes(AC_V);
@@ -53,7 +54,7 @@ export async function encodeCMYKJpeg(width,height,read,quality=92){
  let last=performance.now();
  for(let y0=0;y0<height;y0+=8){const rows=Math.min(8,height-y0),strip=read(y0,rows),rowBytes=width*4;
   for(let x0=0;x0<width;x0+=8)for(let c=0;c<4;c++){
-   for(let yy=0;yy<8;yy++){const row=(yy<rows?yy:rows-1)*rowBytes;for(let xx=0;xx<8;xx++){const x=x0+xx<width?x0+xx:width-1;D[yy*8+xx]=127-strip[row+x*4+c];}}// Adobe CMYK: samples are stored inverted (255 − ink), level-shifted by 128
+   for(let yy=0;yy<8;yy++){const row=(yy<rows?yy:rows-1)*rowBytes;for(let xx=0;xx<8;xx++){const x=x0+xx<width?x0+xx:width-1;D[yy*8+xx]=strip[row+x*4+c]-128;}}// plain CMYK ink, level-shifted by 128
    dc[c]=block(dc[c]);}
   if(performance.now()-last>40){await new Promise(r=>setTimeout(r,0));last=performance.now();}}
  if(nb>0)bits((1<<(8-nb))-1,8-nb);word(0xFFD9);

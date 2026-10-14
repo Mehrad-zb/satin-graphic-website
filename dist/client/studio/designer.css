@@ -334,3 +334,7 @@ html.cv-app .scw:not(.open){display:none!important}
 .studio-vcats .cv-chip.on{border-color:#172335}
 .studio-picker-vehicles section[hidden]{display:none}
 .cv-vpick .cv-vcats{flex-wrap:wrap;overflow:visible}
+/* vehicle: reuse the other side's design */
+.cv-empty .cv-empty-copy{flex-wrap:wrap;justify-content:center;margin:2px 0 4px}
+.cv-empty .cv-empty-copy .cv-primary{background:var(--cv-accent,#e0115f);border-color:var(--cv-accent,#e0115f);color:#fff;font-weight:650}
+.cv-empty .cv-empty-copy .cv-primary:hover{filter:brightness(.95)}

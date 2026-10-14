@@ -41,3 +41,18 @@
 .reference-cfg .unit-add{min-height:44px}
 .reference-cfg .unit-help{margin:0;color:var(--mut,#5f6c80)}
 @media(max-width:600px){.reference-cfg .units-list .reference-measurements,.reference-cfg .unit-first .reference-measurements{grid-template-columns:repeat(3,minmax(0,1fr))}.reference-cfg .unit-add{width:100%;justify-content:center}}
+
+/* panels / units on the regular product form (vehicle wrap prints) */
+.rule-fields .unit-card{display:flex;flex-direction:column;gap:10px}
+.rule-fields .unit-first.has-units,.rule-fields .units-list .unit-card{border:1px solid var(--line,#dbe2eb);border-radius:12px;padding:14px;background:var(--card,#fff)}
+.rule-fields .units-list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.rule-fields .unit-head{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:28px}
+.rule-fields .unit-name{font-size:14px}
+.rule-fields .unit-remove{border:1px solid var(--line,#dbe2eb);background:#fff;color:#b42318;border-radius:999px;padding:8px 14px;min-height:40px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.rule-fields .unit-remove:hover{border-color:#b42318;background:#fff5f4}
+.rule-fields .units-add{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:12px}
+.rule-fields .unit-add{min-height:44px}
+.rule-fields .unit-help{margin:0;color:var(--mut,#5f6c80)}
+.rule-fields .reference-measurements{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rule-fields .reference-measurements .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+@media(max-width:600px){.rule-fields .unit-add{width:100%;justify-content:center}.rule-fields .reference-measurements{gap:8px}}
