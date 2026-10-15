@@ -75,6 +75,10 @@ export function loadVehicle(id) {
     for (let k = 0; k < N; k++) { const i = paint[k]; X[k] = (i % W - x0) / Math.max(1, x1 - x0); Y[k] = (((i / W) | 0) - y0) / Math.max(1, y1 - y0); }
     const pick = arr => { const o = new Float32Array(N); for (let k = 0; k < N; k++) o[k] = arr[paint[k]]; return o; };
     const S5 = pick(blur(Sfull, W, H, 3, 3)), S14 = pick(blur(Sfull, W, H, 8, 8)), SX = pick(blur(Sfull, W, H, 14, 1)), S40 = pick(blur(Sfull, W, H, 22, 22));
+    // mask-normalised soft reflections for satin / matte: blurred only inside the paint, so panel edges stay crisp and nothing leaks from the background
+    const Mfull = new Float32Array(W * H); for (let k = 0; k < N; k++) Mfull[paint[k]] = 1;
+    const nblur = r => { const a = blur(Sfull, W, H, r, r), m = blur(Mfull, W, H, r, r), o = new Float32Array(N); for (let k = 0; k < N; k++) { const i = paint[k]; o[k] = a[i] / Math.max(.05, m[i]); } return o; };
+    const N3 = nblur(2), N10 = nblur(5), N24 = nblur(11);
     // directional brushed-metal streaks (long in x, fine in y)
     const streak = new Float32Array(W * H); for (let i = 0; i < W * H; i++) streak[i] = hash(i % W, (i / W) | 0);
     const BR = pick(blur(streak, W, H, 22, 0));
@@ -84,7 +88,7 @@ export function loadVehicle(id) {
     rmax.sort((a, b) => a - b); const rnorm = 1 / Math.max(.05, rmax[Math.floor(rmax.length * .9)] || 1);
     for (let k = 0; k < RL.length; k++) RL[k] = Math.min(1.3, RL[k] * rnorm);
     const GM = new Float32Array(glass.length); for (let k = 0; k < glass.length; k++) GM[k] = mk[glass[k] * 4 + 1] / 255;
-    return { W, H, base, paint: Uint32Array.from(paint), glass: Uint32Array.from(glass), rim: Uint32Array.from(rim), D, S, E, M, X, Y, R, S5, S14, SX, S40, BR, RM, RL, GM };
+    return { W, H, base, paint: Uint32Array.from(paint), glass: Uint32Array.from(glass), rim: Uint32Array.from(rim), D, S, E, M, X, Y, R, S5, S14, SX, S40, N3, N10, N24, BR, RM, RL, GM };
   });
   cache.set(id, p); p.catch(() => cache.delete(id));
   return p;
@@ -98,7 +102,7 @@ export function render(v, out, st) {
   const metal = /metallic/.test(fin), sheen = fin.startsWith('satin') ? 1 : fin.startsWith('matte') ? 2 : 0;
   const pearlC = hueShift(c, lum > .5 ? 28 : 40);
   const chromeTint = (() => { const m = Math.max(c[0], c[1], c[2], .001); return [c[0] / m, c[1] / m, c[2] / m].map(x => .1 + .9 * x); })();
-  const { paint, D, S, E, M, X, Y, R, S5, S14, SX, S40, BR } = v;
+  const { paint, D, S, E, M, X, Y, R, S5, S14, SX, S40, N3, N10, N24, BR } = v;
   for (let k = 0; k < paint.length; k++) {
     const p = paint[k] * 4, d = D[k], n = R[k];
     let r, g, b, spec, cr = c[0], cg = c[1], cb = c[2];
@@ -117,11 +121,16 @@ export function render(v, out, st) {
       // panel receives (D) and faces the studio ceiling (E). Invisible on light colours, it is what shapes matte/satin black.
       // Their reflections are the gloss reflections blurred wide: soft gradients that follow the panels, dark where nothing reflects.
       const shine = d * (.6 + .4 * E[k]), wide = S40 ? S40[k] : S14[k];
-      if (fin === 'matte' || fin === 'matte-metallic' || (fin === 'colorflow' && /matt/i.test(f.name))) { dif = .32 + .68 * d; sp = .62 * wide + .1 * S14[k] + .012 * shine + .003; }
-      else if (sheen === 1 || fin === 'pearl' || fin === 'brushed' || (fin === 'colorflow' && flowSatin)) { dif = .07 + .93 * d; sp = (fin === 'brushed' ? .45 * SX[k] + .3 * wide : .32 * S14[k] + .4 * wide + .22 * S5[k]) + .008 * shine + .002; }
+      // Real matte / satin wraps keep crisp panel shapes and body lines; only the reflections soften. So the shading comes
+      // from the sharp diffuse map (D) with full contrast, plus a soft sky sheen on upward panels (E) and reflections
+      // blurred only inside the paint (N*): satin shows soft but defined highlight bands, matte only a faint glow.
+      const top = Math.min(1, Math.max(0, (E[k] - .3) / .55)), dc = d < 1 ? d : 1;
+      if (fin === 'matte' || fin === 'matte-metallic' || (fin === 'colorflow' && /matt/i.test(f.name))) { dif = .06 + .94 * Math.pow(d, 1.15); sp = .06 * Math.pow(top, 1.6) * dc + .05 * N24[k] + .06 * N10[k] + .12 * Math.pow(N3[k], 1.3) + .004; }
+      else if (fin === 'brushed') { dif = .07 + .93 * d; sp = .45 * SX[k] + .3 * wide + .008 * shine + .002; }
+      else if (sheen === 1 || fin === 'pearl' || (fin === 'colorflow' && flowSatin)) { dif = .03 + .97 * Math.pow(d, 1.25); sp = .07 * top * top * dc + .16 * N10[k] + .34 * N3[k] + .12 * S[k] + .003; }
       else sp = S[k];
       if (metal || fin === 'brushed') { // metallic flake + flop: brighter facing panels, darker edges, coloured highlights
-        const flake = (n - .5) * (fin.startsWith('matte') ? .22 : .16);
+        const flake = (n - .5) * (fin.startsWith('matte') ? .07 : .12);
         dif = dif * (1 + flake) * (.8 + .3 * Math.min(1, d));
         if (fin === 'brushed') dif *= .82 + .36 * BR[k];
         sp *= 1.1;
@@ -491,7 +500,7 @@ export async function mount(root, opts = {}) {
     const id = 'u' + Date.now();
     const empty = new Float32Array(0);
     upl = { id, w, h, rgba, paint: null, glass: null, hist: [] };
-    upl.v = { W: w, H: h, base: rgba, paint: new Uint32Array(0), glass: new Uint32Array(0), rim: new Uint32Array(0), D: empty, S: empty, E: empty, M: empty, X: empty, Y: empty, R: empty, S5: empty, S14: empty, SX: empty, BR: empty, RM: empty, RL: empty, GM: empty, photo: true };
+    upl.v = { W: w, H: h, base: rgba, paint: new Uint32Array(0), glass: new Uint32Array(0), rim: new Uint32Array(0), D: empty, S: empty, E: empty, M: empty, X: empty, Y: empty, R: empty, S5: empty, S14: empty, SX: empty, N3: empty, N10: empty, N24: empty, BR: empty, RM: empty, RL: empty, GM: empty, photo: true };
     st.make = st.model = ''; $('[data-wv-make]').value = ''; fillModels();
     const mine = $('[data-wv-mine]'); mine.hidden = false; $('[data-wv-mineimg]').src = th.toDataURL('image/jpeg', .8);
     setCompare(false); await setVehicle('upload'); mine.scrollIntoView?.({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });

@@ -3740,7 +3740,7 @@ function bindColorScrub(root) {
 PAGES.visualizer = () => ({
   title: "Wrap Visualizer",
   html: `<section class="wv" data-wrap-visualizer data-lang="${LANG}"><div class="wv-app" data-wv-app><p class="wv-loading">Loading the visualizer…</p></div></section>`+seoBlock('visualizer'),
-  init: m => import("/visualizer/visualizer.mjs").then(x => { const host = m.querySelector("[data-wrap-visualizer]"); if (!host) return; host.outerHTML = x.pageHTML(LANG); return x.mount(m.querySelector("[data-wrap-visualizer]"), { lang: LANG }); }).catch(e => console.error("Visualizer failed", e))
+  init: m => import("/visualizer/visualizer.mjs?v=ms1015").then(x => { const host = m.querySelector("[data-wrap-visualizer]"); if (!host) return; host.outerHTML = x.pageHTML(LANG); return x.mount(m.querySelector("[data-wrap-visualizer]"), { lang: LANG }); }).catch(e => console.error("Visualizer failed", e))
 });
 PAGES.colorChange = () => ({
   title: "Color Change Wrap",
