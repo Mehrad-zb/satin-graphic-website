@@ -4,7 +4,7 @@
    and <id>-mask.webp (R: paint, G: glass, B: wheel faces). Rebuild with scripts/visualizer/build_cars.py; film list: visualizer/films.json. */
 import { vehicleFromPhoto, splitCar, feather, blur, refineMask } from './photo-maps.mjs';
 const BASE = '/visualizer/';
-const AV = '20261015'; // asset version: bump when vehicle photos / maps are rebuilt so browsers fetch the new ones
+const AV = '202610151540'; // asset version: bump when vehicle photos / maps are rebuilt so browsers fetch the new ones
 const BRAND_LOGOS = { '3m': '/satin/img/brands/3m.svg', avery: '/satin/img/brands/avery-dennison.png', kpmf: '/satin/img/brands/kpmf.png', oracal: '/satin/img/brands/orafol.svg' };
 const W = 1600, H = 900;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
