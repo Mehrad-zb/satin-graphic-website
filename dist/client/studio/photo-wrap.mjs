@@ -202,6 +202,29 @@ function salientObject(px,w,h){
  if(a<n*.03||a>n*.92)return null;
  return fillHoles(comp,w,h);
 }
+// Edge-bounded flood fill: the background is everything reachable from the photo border without crossing a colour edge.
+// Works on plain studio / showroom backdrops and outdoor shots alike (even a white car on a white wall), then trims the
+// floor / turntable below the tyres. Tries tighter edge thresholds until the object is a plausible vehicle.
+function floodObject(px,w,h){const n=w*h,ch=[new Float32Array(n),new Float32Array(n),new Float32Array(n)];
+ for(let i=0,j=0;i<n;i++,j+=4){ch[0][i]=px[j]/255;ch[1][i]=px[j+1]/255;ch[2][i]=px[j+2]/255;}
+ const b=ch.map(c=>boxBlur(c,w,h,1)),g=new Float32Array(n);
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=y*w+x;let m=0;for(const c of b){const gx=c[i+1-w]+2*c[i+1]+c[i+1+w]-c[i-1-w]-2*c[i-1]-c[i-1+w],gy=c[i+w-1]+2*c[i+w]+c[i+w+1]-c[i-w-1]-2*c[i-w]-c[i-w+1],v=gx*gx+gy*gy;if(v>m)m=v;}g[i]=Math.sqrt(m);}
+ const sorted=Float32Array.from(g.filter((_,i)=>i%7===0)).sort(),pct=p=>sorted[Math.min(sorted.length-1,Math.floor(sorted.length*p))];
+ const L=i=>(.299*px[i*4]+.587*px[i*4+1]+.114*px[i*4+2])/255;
+ for(const [p,r,fl] of [[.6,2,.06],[.7,2,.09],[.78,2,.12]]){const th=Math.max(pct(p),fl);let e=new Uint8Array(n);for(let i=0;i<n;i++)if(g[i]>th)e[i]=255;e=dilate(e,w,h,r);for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(x<4||y<4||x>=w-4||y>=h-4)e[y*w+x]=0; // the blur darkens the frame edge: never an edge there
+  
+  const bg=new Uint8Array(n),q=new Int32Array(n);let hd=0,tl=0;const push=i=>{if(!e[i]&&!bg[i]){bg[i]=1;q[tl++]=i;}};
+  for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1);}
+  while(hd<tl){const i=q[hd++],x=i%w,y=(i-x)/w;if(x>0)push(i-1);if(x<w-1)push(i+1);if(y>0)push(i-w);if(y<h-1)push(i+w);}
+  let o=new Uint8Array(n);for(let i=0;i<n;i++)if(!bg[i])o[i]=255;o=erode(o,w,h,r);
+  let comp=largest(o,w,h,true);if(!comp)continue;comp=fillHoles(comp,w,h);
+  // trim the floor / turntable: nothing below the bottom of the tyres (lowest dark band inside the object)
+  let x0=w,x1=-1,y0=h,y1=-1;for(let i=0;i<n;i++)if(comp[i]){const x=i%w,y=(i-x)/w;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+  let tyre=-1;for(let y=y1;y>y0+(y1-y0)*.45&&tyre<0;y--){let d=0,c=0;for(let x=x0;x<=x1;x++){const i=y*w+x;if(!comp[i])continue;c++;if(L(i)<.28)d++;}if(c&&d>=Math.max(4,(x1-x0)*.03))tyre=y;}
+  if(tyre>0)for(let y=tyre+Math.max(1,Math.round(h/200));y<h;y++)for(let x=0;x<w;x++)comp[y*w+x]=0;
+  let a=0,edgeT=0;for(let i=0;i<n;i++)if(comp[i])a++;for(let x=0;x<w;x++){if(comp[x])edgeT++;if(comp[(h-1)*w+x])edgeT++;}for(let y=0;y<h;y++){if(comp[y*w])edgeT++;if(comp[y*w+w-1])edgeT++;}
+  if(a>n*.06&&a<n*.8&&edgeT<(w+h)*.35)return comp;}
+ return null;}
 // From a vehicle candidate: keep the body (dominant paint colour region, holes filled) and drop dark windows/wheels.
 function vehicleBody(px,w,h,cand){
  const n=w*h;let x0=w,y0=h,x1=-1,y1=-1,area=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(cand[y*w+x]){area++;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
@@ -271,6 +294,18 @@ async function ensureArt(max){const sig=artSig();if(art.data&&art.sig===sig&&art
  await art.busy;return !!art.data;}
 function printBg(){if(S.bg!==null)return S.bg;const b=(A.design().sides[S.view]?.background||'#ffffff').toLowerCase();return b!==paintHex(A.design().options)&&!['#ffffff','#1e2023'].includes(b);}
 // Draw the photo with the artwork projected into the quad, clipped by the mask, keeping the car's shading.
+// Edge-aware mask at the output size: the detection mask (≤640 px) is upsampled and refined with a guided filter that follows
+// the photo's own edges, so the wrap stops exactly at panel gaps, glass and wheel arches instead of blocky, blurred borders.
+let refined={key:'',data:null,mask:null};
+function refinedMask(g,W2,H2,full){const key=W2+'x'+H2+':'+(S.maskVer||0)+':'+S.mw;if(refined.key===key&&refined.mask===S.mask)return refined.data;
+ const n=W2*H2,I=new Float32Array(n),P=new Float32Array(n),px=g.getImageData(0,0,W2,H2).data,M=S.mask,mw=S.mw,mh=S.mh,kx=mw/W2,ky=mh/H2;
+ for(let y=0,i=0;y<H2;y++){const my=Math.max(0,Math.min(mh-1.001,(y+.5)*ky-.5)),y0=my|0,fy=my-y0;for(let x=0;x<W2;x++,i++){const j=i*4;I[i]=(.299*px[j]+.587*px[j+1]+.114*px[j+2])/255;const mx=Math.max(0,Math.min(mw-1.001,(x+.5)*kx-.5)),x0=mx|0,fx=mx-x0,a=y0*mw+x0;P[i]=((M[a]*(1-fx)+M[a+1]*fx)*(1-fy)+(M[a+mw]*(1-fx)+M[a+mw+1]*fx)*fy)/255;}}
+ const r=Math.max(2,Math.round(Math.max(W2,H2)/(full?320:260))),eps=.0025,II=new Float32Array(n),IP=new Float32Array(n);for(let i=0;i<n;i++){II[i]=I[i]*I[i];IP[i]=I[i]*P[i];}
+ const mI=boxBlur(I,W2,H2,r),mP=boxBlur(P,W2,H2,r),cI=boxBlur(II,W2,H2,r),cIP=boxBlur(IP,W2,H2,r),A=new Float32Array(n),B=new Float32Array(n);
+ for(let i=0;i<n;i++){const v=cI[i]-mI[i]*mI[i],cv=cIP[i]-mI[i]*mP[i];A[i]=cv/(v+eps);B[i]=mP[i]-A[i]*mI[i];}
+ const mA=boxBlur(A,W2,H2,r),mB=boxBlur(B,W2,H2,r),out=new Float32Array(n);
+ for(let i=0;i<n;i++){let q=mA[i]*I[i]+mB[i];q=(q-.3)/.4;out[i]=q<0?0:q>1?1:q*q*(3-2*q);if(P[i]<.02)out[i]=0;}
+ refined={key,data:out,mask:S.mask};return out;}
 function project(dst,full=false){
  const W=S.photo.width,H=S.photo.height,k=dst.width/W,g=dst.getContext('2d',{willReadFrequently:true});
  g.imageSmoothingQuality='high';g.drawImage(S.photo,0,0,dst.width,dst.height);
@@ -278,12 +313,11 @@ function project(dst,full=false){
  const q=S.quad.map(([x,y])=>[x*k,y*k]),Hi=inv3(squareToQuad(q));
  const bx=Math.max(0,Math.floor(Math.min(...q.map(p=>p[0])))),by=Math.max(0,Math.floor(Math.min(...q.map(p=>p[1])))),ex=Math.min(dst.width,Math.ceil(Math.max(...q.map(p=>p[0])))),ey=Math.min(dst.height,Math.ceil(Math.max(...q.map(p=>p[1]))));
  const bw=ex-bx,bh=ey-by;if(bw<1||bh<1)return;
- const img=g.getImageData(bx,by,bw,bh),d=img.data,ad=art.data.data,aw=art.data.width,ah=art.data.height,M=S.mask,mw=S.mw,mh=S.mh,mk=mw/(W*k);
+ const RM=refinedMask(g,dst.width,dst.height,full),DW=dst.width;const img=g.getImageData(bx,by,bw,bh),d=img.data,ad=art.data.data,aw=art.data.width,ah=art.data.height,M=S.mask,mw=S.mw,mh=S.mh,mk=mw/(W*k);
  const key=!printBg(),[kr,kg,kb]=art.bg,sh=S.shading,op=S.opacity,lref=S.lref,hiDen=1/Math.max(.05,1-lref);
  for(let y=0;y<bh;y++){const Y=y+by+.5;for(let x=0;x<bw;x++){const X=x+bx+.5,w=Hi[6]*X+Hi[7]*Y+Hi[8],u=(Hi[0]*X+Hi[1]*Y+Hi[2])/w,v=(Hi[3]*X+Hi[4]*Y+Hi[5])/w;if(u<0||u>1||v<0||v>1)continue;
   // mask (bilinear)
-  const mx=X*mk-.5,my=Y*mk-.5,mx0=clamp(Math.floor(mx),0,mw-1),my0=clamp(Math.floor(my),0,mh-1),mx1=Math.min(mw-1,mx0+1),my1=Math.min(mh-1,my0+1),fx=clamp(mx-mx0,0,1),fy=clamp(my-my0,0,1);
-  const m=((M[my0*mw+mx0]*(1-fx)+M[my0*mw+mx1]*fx)*(1-fy)+(M[my1*mw+mx0]*(1-fx)+M[my1*mw+mx1]*fx)*fy)/255;if(m<=.01)continue;
+  const m=RM[(y+by)*DW+x+bx];if(m<=.01)continue;
   // artwork sample (bilinear on the full-quality export, nearest for the live preview)
   let r,gg,b,a;const ax=u*aw-.5,ay=v*ah-.5;
   if(full){const x0=clamp(Math.floor(ax),0,aw-1),y0=clamp(Math.floor(ay),0,ah-1),x1=Math.min(aw-1,x0+1),y1=Math.min(ah-1,y0+1),gx=clamp(ax-x0,0,1),gy=clamp(ay-y0,0,1),i00=(y0*aw+x0)*4,i10=(y0*aw+x1)*4,i01=(y1*aw+x0)*4,i11=(y1*aw+x1)*4,w00=(1-gx)*(1-gy),w10=gx*(1-gy),w01=(1-gx)*gy,w11=gx*gy;
@@ -444,7 +478,7 @@ function bindStage(){
 }
 function paint(a,b){if(!S.mask)return;const k=S.mw/S.photo.width,wr=ed.querySelector('[data-pw-world]').getBoundingClientRect(),r=Math.max(1,S.brush/(wr.width/S.photo.width)*k),val=S.mode==='paint'?255:0,steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])*k/(r/2)));
  for(let s=0;s<=steps;s++){const cx=(a[0]+(b[0]-a[0])*s/steps)*k,cy=(a[1]+(b[1]-a[1])*s/steps)*k;for(let y=Math.max(0,Math.floor(cy-r));y<=Math.min(S.mh-1,Math.ceil(cy+r));y++)for(let x=Math.max(0,Math.floor(cx-r));x<=Math.min(S.mw-1,Math.ceil(cx+r));x++)if((x-cx)**2+(y-cy)**2<=r*r)S.mask[y*S.mw+x]=val;}
- bump();}
+ S.maskVer=(S.maskVer||0)+1;bump();}
 
 /* ---------------- dock (live preview over the studio) ---------------- */
 function syncDock(){const main=host?.querySelector('.cv-main');if(!main)return;

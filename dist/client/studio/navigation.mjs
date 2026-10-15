@@ -12,6 +12,7 @@ const CATS=[
  {key:'print',name:'Print & marketing',d:'Business cards, flyers, postcards, brochures and door hangers.',ids:['business-cards','flyers','postcards','brochures','door-hangers'],cover:'business-cards'},
  {key:'signs',name:'Signs & real estate',d:'Real estate signs, yard signs and car magnets.',ids:['real-estate-signs','yard-signs','car-magnets'],cover:'real-estate-signs'},
  {key:'banners',name:'Banners & displays',d:'Roll-up and vinyl banners, X-frames, flags and A-frame signs.',ids:['roll-up-banner','vinyl-banners','x-frame-banner','flags','a-frame-signs'],cover:'roll-up-banner'},
+ {key:'labels',name:'Labels & stickers',d:'Roll labels, sticker sheets and die-cut stickers in any shape and size.',ids:['roll-labels','sticker-sheets','die-cut-stickers'],cover:'roll-labels'},
  {key:'vehicles',name:'Vehicle wraps',d:'Sedans, vans, pickups, SUVs, trucks and trailers at real dimensions.'},
  {key:'apparel',name:'Apparel',d:'T-shirts, hoodies, polos, hats and totes.'}];
 const catURL=k=>localizedPath('/satin/design-studio')+'?cat='+k;

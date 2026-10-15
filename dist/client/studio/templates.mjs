@@ -456,7 +456,7 @@ function mirror(layers,flipOnly=false){return layers.map(l=>{const m={...l};if(l
 
 /* ---------------- spec → studio layers ---------------- */
 // measure(text,font,bold,italic,px) → width in px. dims: {width,height,bleed}. Returns layers in the studio format.
-export function realizeLayers(specs,dims,measure,newId){const W=dims.width,H=dims.height,mn=Math.min(W,H),ex=((dims.bleed||0)+.06)/W,ey=((dims.bleed||0)+.06)/H,out=[];
+export function realizeLayers(specs,dims,measure,newId,bg){const W=dims.width,H=dims.height,mn=Math.min(W,H),ex=((dims.bleed||0)+.06)/W,ey=((dims.bleed||0)+.06)/H,out=[];
  for(const s of specs){const l={id:newId(),type:s.type,rotation:0,opacity:s.opacity??1,color:s.color};
   if(s.gradient)l.gradient={to:s.gradient.to,angle:s.gradient.angle||0};if(s.radius)l.radius=s.radius;if(s.outline)l.outline=Math.max(.5,Math.min(200,s.outline));
   if(s.type==='text'){Object.assign(l,{text:s.text,font:s.font,align:s.align||'center',bold:!!s.bold,italic:!!s.italic});if(s.spacing)l.spacing=s.spacing;placeText(l,s,dims,measure);}
@@ -465,7 +465,17 @@ export function realizeLayers(specs,dims,measure,newId){const W=dims.width,H=dim
    if(s.bleed!==false&&!s.outline){if(x<=.001){w+=x+ex;x=-ex;}if(x+w>=.999)w=1+ex-x;if(y<=.001){h+=y+ey;y=-ey;}if(y+h>=.999)h=1+ey-y;}
    Object.assign(l,{x,y,w:Math.max(.001,w),h:Math.max(.001,h)});}
   out.push(l);}
- return out;}
+ return bg!==undefined?solidify(out,bg):out;}
+// Print files: template accents drawn at 50–99 % opacity print as muddy mixes where they overlap (a dark swoosh over a red one
+// turns brown) and arrive as transparency groups in Illustrator / CorelDRAW. Make them solid; faint decorations (< 50 %) over a
+// solid colour become that colour mixed in, so the printed file has no transparency. Faint ones over gradients / photos stay.
+export function solidify(layers,bg){const solid=k=>(k.type==='rect'||k.type==='circle'||k.type==='shape')&&!k.outline&&!k.gradient&&(k.opacity??1)>=1;
+ const contains=(k,px,py)=>{if(px<k.x||px>k.x+k.w||py<k.y||py>k.y+k.h)return false;if(k.type==='circle'){const dx=(px-k.x-k.w/2)/(k.w/2),dy=(py-k.y-k.h/2)/(k.h/2);return dx*dx+dy*dy<=1;}return true;};
+ layers.forEach((l,i)=>{const op=l.opacity??1;if(op>=1)return;if(op>=.5){l.opacity=1;return;}
+  const px=l.x+l.w/2,py=l.y+l.h/2;let under=bg,ok=/^#[0-9a-f]{6}$/i.test(bg||'');
+  for(let j=i-1;j>=0;j--){const k=layers[j];if(!contains(k,px,py))continue;if(solid(k)&&k.type!=='shape'){under=k.color;ok=true;}else ok=false;break;}
+  if(!ok)return;const m=c=>mix(under,c,op);l.color=m(l.color);if(l.color2)l.color2=m(l.color2);if(l.gradient)l.gradient={...l.gradient,to:m(l.gradient.to)};l.opacity=1;});
+ return layers;}
 // font size from the spec, shrunk until the text fits its max width (and max height for rotated text)
 export function placeText(l,s,dims,measure){s={x:.5,...s};const W=dims.width*100,H=dims.height*100,mn=Math.min(W,H),rot=Math.abs(s.rot||0)===90;let f=Math.max(4*100/72,Math.min(2000*100/72,s.size*mn));const lines=l.text.split('\n');
  const widthAt=f=>{let w=Math.max(f*.3,...lines.map(t=>measure(t,l.font,l.bold,l.italic,f)));if(l.spacing)w+=Math.max(0,Math.max(...lines.map(t=>[...t].length))-1)*l.spacing*f;return w*1.03;};

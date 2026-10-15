@@ -1,17 +1,23 @@
 // Minimal print-ready PDF writer for the Design Studio (no dependencies).
+// Layered pages (pdfFromRasters with page.layers): the background is a vector CMYK rectangle and every design element (text,
+// graphic, mascot, photo, shape) is its own image with a transparency mask, placed at its real position and stacked in design
+// order, each in a named PDF layer (optional content). Illustrator / CorelDRAW open them as separate objects that can be
+// selected, moved or deleted one by one; colours are CMYK (lossless Flate for drawn elements, CMYK JPEG for photos).
 // Each page holds one full-bleed raster: MediaBox/BleedBox = trim + bleed, TrimBox = trim.
 // Every image is written as DeviceCMYK: CMYK JPEGs from printRasters() are embedded as-is (DCTDecode, plain ink samples;
 // older Adobe-inverted files keep /Decode [1 0 1 0 1 0 1 0]); any other raster (PNG with transparency, RGB JPEGs) is
 // converted with rgbToCmyk (FlateDecode, transparency kept as an SMask).
 // Below each artwork page (outside the bleed box) a slug lists the design's colours as CMYK swatches; the last page is
 // the customer's mockup (which vehicle / product the artwork was designed on), also in CMYK.
-import {rgbaToCmyk,canvasToCMYKJpeg,rgbToCmyk} from './cmyk.mjs';
+import {rgbaToCmyk,canvasToCMYKJpeg,rgbToCmyk,encodeCMYKJpeg} from './cmyk.mjs';
 const enc=new TextEncoder();
 function bytesOf(dataURL){const b=atob(dataURL.slice(dataURL.indexOf(',')+1)),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
 const loadImage=src=>new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Could not read the print image.'));i.src=src;});
 async function deflate(u8){const stream=new Blob([u8]).stream().pipeThrough(new CompressionStream('deflate'));return new Uint8Array(await new Response(stream).arrayBuffer());}
 const num=n=>(Math.round(n*1000)/1000).toString();
 const pdfText=s=>'('+String(s).replace(/[^\x20-\x7e]/g,'').replace(/[\\()]/g,c=>'\\'+c)+')';
+// any text (Persian too) as a UTF-16BE hex string, for layer names
+const pdfUni=s=>'<FEFF'+[...String(s)].map(ch=>{const c=ch.codePointAt(0);if(c<0x10000)return c.toString(16).padStart(4,'0');const v=c-0x10000;return (0xD800+(v>>10)).toString(16)+(0xDC00+(v&1023)).toString(16);}).join('').toUpperCase()+'>';
 const CMYK_JPEG='/Filter /DCTDecode /ColorSpace /DeviceCMYK /BitsPerComponent 8';
 const ADOBE_DECODE=' /Decode [1 0 1 0 1 0 1 0]';
 // 4-component JPEG? (SOF component count = 4)
@@ -28,6 +34,25 @@ async function imageObject(p){const dataURL=p.image;
  const cmyk=rgbaToCmyk(px),alpha=new Uint8Array(w*h);for(let i=3,k=0;i<px.length;i+=4,k++)alpha[k]=px[i];c.width=c.height=1;
  return {w,h,data:await deflate(cmyk),dict:`/Filter /FlateDecode /ColorSpace /DeviceCMYK /BitsPerComponent 8`,smask:{data:await deflate(alpha),dict:`/Filter /FlateDecode /ColorSpace /DeviceGray /BitsPerComponent 8`}};}
 
+/**
+ * One design element rendered alone on a transparent canvas → cropped CMYK image + alpha mask.
+ * Returns null when nothing was drawn, else {img:{w,h,data,dict,smask?}, x, y} (crop offset in canvas pixels).
+ * photo=true: CMYK JPEG (photos); otherwise lossless Flate (text, shapes, mascots keep crisp edges and exact colours).
+ */
+export async function layerFromCanvas(canvas,photo=false,fill='#ffffff'){const g=canvas.getContext('2d',{willReadFrequently:true}),W=canvas.width,H=canvas.height;
+ let x0=W,y0=H,x1=-1,y1=-1;const STRIP=256;
+ for(let sy=0;sy<H;sy+=STRIP){const rows=Math.min(STRIP,H-sy),px=g.getImageData(0,sy,W,rows).data;for(let r=0;r<rows;r++){let any=false;const o=r*W*4;for(let x=0;x<W;x++)if(px[o+x*4+3]){any=true;if(x<x0)x0=x;break;}if(!any)continue;for(let x=W-1;x>=0;x--)if(px[o+x*4+3]){if(x>x1)x1=x;break;}const y=sy+r;if(y<y0)y0=y;y1=y;}}
+ if(x1<0)return null;const w=x1-x0+1,h=y1-y0+1;
+ const n=parseInt(String(fill).slice(1),16),fr=n>>16&255,fg=n>>8&255,fb=n&255;
+ const cmyk=new Uint8Array(w*h*4),alpha=new Uint8Array(w*h);let opaque=true;
+ for(let sy=0;sy<h;sy+=STRIP){const rows=Math.min(STRIP,h-sy),px=g.getImageData(x0,y0+sy,w,rows).data;for(let i=0,k=sy*w;i<px.length;i+=4,k++){const a=px[i+3];alpha[k]=a;if(a<255)opaque=false;if(!a){px[i]=fr;px[i+1]=fg;px[i+2]=fb;}}
+  rgbaToCmyk(px,cmyk.subarray(sy*w*4,(sy+rows)*w*4));}
+ let img;
+ if(photo){const data=await encodeCMYKJpeg(w,h,(yy,rows)=>cmyk.subarray(yy*w*4,(yy+rows)*w*4),92);img={w,h,data,dict:CMYK_JPEG};}
+ else img={w,h,data:await deflate(cmyk),dict:'/Filter /FlateDecode /ColorSpace /DeviceCMYK /BitsPerComponent 8'};
+ if(!opaque)img.smask={data:await deflate(alpha),dict:'/Filter /FlateDecode /ColorSpace /DeviceGray /BitsPerComponent 8'};
+ return {img,x:x0,y:y0};}
+
 /** '#rrggbb' → {hex, cmyk:[c,m,y,k] in %} with the same conversion as the print rasters. */
 export function cmykSwatch(hex){const n=parseInt(String(hex).slice(1),16);const v=rgbToCmyk(n>>16&255,n>>8&255,n&255).map(x=>Math.round(x*100/255));return {hex:String(hex).toLowerCase(),cmyk:v};}
 const cmykOp=v=>v.map(x=>num(x/100)).join(' ');
@@ -40,6 +65,8 @@ function swatchOps(list,x0,y0,size,maxW){let ops='',x=x0;const fs=Math.max(4,siz
  return ops;}
 
 // pages: [{image: data URL (CMYK or RGB jpeg / png), widthIn, heightIn, bleedIn, w?, h?, cmyk?}] → Blob (application/pdf)
+// or layered: [{widthIn, heightIn, bleedIn, background: '#rrggbb'|null, layers: [{name, xIn, yIn, wIn, hIn, img}]}] (positions
+// from the bleed box's top-left corner; img from layerFromCanvas)
 // extra: {swatches?: [{hex, cmyk}], mockup?: {image: data URL, title, lines: [text]}}
 export async function pdfFromRasters(pages,title='Design',extra={}){
  const chunks=[],offsets=[];let size=0;const push=x=>{const u=typeof x==='string'?enc.encode(x):x;chunks.push(u);size+=u.length;};
@@ -47,16 +74,38 @@ export async function pdfFromRasters(pages,title='Design',extra={}){
  push('%PDF-1.6\n');push(new Uint8Array([37,226,227,207,211,10]));
  const sw=(extra.swatches||[]).slice(0,24),font=4;
  const kids=[];let next=5;const plan=[];
- for(const p of pages){const img=await imageObject(p);const ids={page:next++,content:next++,image:next++,smask:img.smask?next++:0};kids.push(ids.page);plan.push({p,img,ids});}
+ const ocgs=[];const ocg=name=>{const id=next++;ocgs.push({id,name});return id;};
+ for(const p of pages){if(p.layers){const ids={page:next++,content:next++,bg:p.background?ocg('Background'):0,
+   layers:p.layers.map(L=>({image:next++,smask:L.img.smask?next++:0,ocg:ocg(L.name)})),sw:sw.length?ocg('CMYK colour codes'):0,cut:p.cut?ocg('CutContour (die line)'):0,cutCs:p.cut?next++:0};kids.push(ids.page);plan.push({p,ids,layered:true});continue;}
+  const img=await imageObject(p);const ids={page:next++,content:next++,image:next++,smask:img.smask?next++:0};kids.push(ids.page);plan.push({p,img,ids});}
  let mock=null;if(extra.mockup?.image){try{const img=await imageObject({image:extra.mockup.image,flatten:'#ffffff'});mock={img,ids:{page:next++,content:next++,image:next++}};kids.push(mock.ids.page);}catch(e){console.warn('mockup page',e);}}
- object(1,`<< /Type /Catalog /Pages 2 0 R >>`);
+ object(1,`<< /Type /Catalog /Pages 2 0 R${ocgs.length?` /OCProperties << /OCGs [${ocgs.map(o=>o.id+' 0 R').join(' ')}] /D << /Name (Layers) /Order [${ocgs.map(o=>o.id+' 0 R').join(' ')}] /ON [${ocgs.map(o=>o.id+' 0 R').join(' ')}] >> >>`:''} >>`);
+ for(const o of ocgs)object(o.id,`<< /Type /OCG /Name ${pdfUni(o.name)} >>`);
  object(2,`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`);
  object(3,`<< /Title ${pdfText(title)} /Creator (Satin Graphic Design Studio) /Producer (Satin Graphic Design Studio) /Subject (Print-ready artwork, DeviceCMYK) /CreationDate (D:${new Date().toISOString().replace(/[-:T]/g,'').slice(0,14)}Z) >>`);
  object(font,`<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>`);
- for(const {p,img,ids} of plan){/* pages over 200 in (vehicle sides) use /UserUnit: viewers cap page boxes at 14400 units */
+ for(const {p,img,ids,layered} of plan){
+  if(layered){const tw=(+p.widthIn)+2*(+p.bleedIn||0),th=(+p.heightIn)+2*(+p.bleedIn||0);
+   const sq=sw.length?Math.min(3,Math.max(.3,Math.min(tw,th)*.05)):0,slugIn=sw.length?sq*1.9:0;
+   const u=Math.max(1,Math.ceil(tw*72/14400),Math.ceil((th+slugIn)*72/14400)),b=(+p.bleedIn||0)*72/u,W=tw*72/u,H=th*72/u,S=slugIn*72/u,pt=v=>v*72/u;
+   let ops='';const props=[],xo=[];
+   if(ids.bg){ops+=`/OC /B0 BDC q ${cmykOp(cmykSwatch(p.background).cmyk)} k 0 ${num(S)} ${num(W)} ${num(H)} re f Q EMC\n`;props.push(`/B0 ${ids.bg} 0 R`);}
+   p.layers.forEach((L,j)=>{const x=pt(L.xIn),w=pt(L.wIn),h=pt(L.hIn),y=S+pt(th-L.yIn-L.hIn);ops+=`/OC /L${j} BDC q ${num(w)} 0 0 ${num(h)} ${num(x)} ${num(y)} cm /Im${j} Do Q EMC\n`;props.push(`/L${j} ${ids.layers[j].ocg} 0 R`);xo.push(`/Im${j} ${ids.layers[j].image} 0 R`);});
+   if(ids.cut){/* die line at the trim, spot colour "CutContour" (cutters / RIPs pick it up; it does not print) */const x0=b,y0=S+b,cw=W-2*b,ch=H-2*b,k=.5523;let path='';
+    if(p.cut.shape==='ellipse'){const rx=cw/2,ry=ch/2,cx=x0+rx,cy=y0+ry;path=`${num(cx+rx)} ${num(cy)} m ${num(cx+rx)} ${num(cy+ry*k)} ${num(cx+rx*k)} ${num(cy+ry)} ${num(cx)} ${num(cy+ry)} c ${num(cx-rx*k)} ${num(cy+ry)} ${num(cx-rx)} ${num(cy+ry*k)} ${num(cx-rx)} ${num(cy)} c ${num(cx-rx)} ${num(cy-ry*k)} ${num(cx-rx*k)} ${num(cy-ry)} ${num(cx)} ${num(cy-ry)} c ${num(cx+rx*k)} ${num(cy-ry)} ${num(cx+rx)} ${num(cy-ry*k)} ${num(cx+rx)} ${num(cy)} c h`;}
+    else{const r=Math.min(pt(p.cut.radiusIn||0),cw/2,ch/2);if(r>0){const x1=x0+cw,y1=y0+ch;path=`${num(x0+r)} ${num(y0)} m ${num(x1-r)} ${num(y0)} l ${num(x1-r+r*k)} ${num(y0)} ${num(x1)} ${num(y0+r-r*k)} ${num(x1)} ${num(y0+r)} c ${num(x1)} ${num(y1-r)} l ${num(x1)} ${num(y1-r+r*k)} ${num(x1-r+r*k)} ${num(y1)} ${num(x1-r)} ${num(y1)} c ${num(x0+r)} ${num(y1)} l ${num(x0+r-r*k)} ${num(y1)} ${num(x0)} ${num(y1-r+r*k)} ${num(x0)} ${num(y1-r)} c ${num(x0)} ${num(y0+r)} l ${num(x0)} ${num(y0+r-r*k)} ${num(x0+r-r*k)} ${num(y0)} ${num(x0+r)} ${num(y0)} c h`;}else path=`${num(x0)} ${num(y0)} ${num(cw)} ${num(ch)} re`;}
+    ops+=`/OC /CC BDC q /CS0 CS 1 SCN ${num(Math.max(.25,.5/u))} w ${path} S Q EMC\n`;props.push(`/CC ${ids.cut} 0 R`);}
+   if(ids.sw){ops+=`/OC /SW BDC\n${swatchOps(sw,0,S*.08,sq*72/u,W)}EMC\n`;props.push(`/SW ${ids.sw} 0 R`);}
+   const content=enc.encode(ops);
+   object(ids.page,`<< /Type /Page /Parent 2 0 R ${u>1?`/UserUnit ${u} `:''}/MediaBox [0 0 ${num(W)} ${num(H+S)}] /BleedBox [0 ${num(S)} ${num(W)} ${num(H+S)}] /TrimBox [${num(b)} ${num(S+b)} ${num(W-b)} ${num(H+S-b)}] /Resources << /XObject << ${xo.join(' ')} >> /Font << /F1 ${font} 0 R >> /Properties << ${props.join(' ')} >>${ids.cutCs?` /ColorSpace << /CS0 ${ids.cutCs} 0 R >>`:''} >> /Contents ${ids.content} 0 R >>`);
+   if(ids.cutCs)object(ids.cutCs,`[/Separation /CutContour /DeviceCMYK << /FunctionType 2 /Domain [0 1] /C0 [0 0 0 0] /C1 [0 1 0 0] /N 1 >>]`);
+   object(ids.content,`<< /Length ${content.length} >>`,content);
+   p.layers.forEach((L,j)=>{const im=L.img,id=ids.layers[j];object(id.image,`<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} ${im.dict}${id.smask?` /SMask ${id.smask} 0 R`:''} /Length ${im.data.length} >>`,im.data);
+    if(id.smask)object(id.smask,`<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} ${im.smask.dict} /Length ${im.smask.data.length} >>`,im.smask.data);});
+   continue;}/* pages over 200 in (vehicle sides) use /UserUnit: viewers cap page boxes at 14400 units */
   const tw=(+p.widthIn)+2*(+p.bleedIn||0),th=(+p.heightIn)+2*(+p.bleedIn||0);
   // slug under the bleed: CMYK swatches, sized to the page (never huge on a vehicle side)
-  const sq=sw.length?Math.min(1.2,Math.max(.3,Math.min(tw,th)*.05)):0,slugIn=sw.length?sq*1.9:0;
+  const sq=sw.length?Math.min(3,Math.max(.3,Math.min(tw,th)*.05)):0,slugIn=sw.length?sq*1.9:0;
   const u=Math.max(1,Math.ceil(tw*72/14400),Math.ceil((th+slugIn)*72/14400)),b=(+p.bleedIn||0)*72/u,W=tw*72/u,H=th*72/u,S=slugIn*72/u;
   let ops=`q ${num(W)} 0 0 ${num(H)} 0 ${num(S)} cm /Im0 Do Q\n`;
   if(sw.length)ops+=swatchOps(sw,0,S*.08,sq*72/u,W);

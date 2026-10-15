@@ -1,1 +1,4694 @@
-{"note":"Approximate on-screen colours for reference only. Screens vary - always confirm with a physical swatch in the shop. Product names and codes belong to their manufacturers.","brands":{"3m":{"name":"3M","line":"2080 Wrap Film"},"avery":{"name":"Avery Dennison","line":"SW900 Supreme Wrapping Film"},"kpmf":{"name":"KPMF","line":"Vinyl Wrap Films"},"oracal":{"name":"ORACAL","line":"970RA Premium Wrapping Cast"}},"films":[{"id":"3m-g10","brand":"3m","name":"Gloss White","finish":"gloss","family":"white","hex":"#f3f3f1","code":"2080-G10"},{"id":"3m-g12","brand":"3m","name":"Gloss Black","finish":"gloss","family":"black","hex":"#0d0d0f","code":"2080-G12"},{"id":"3m-g13","brand":"3m","name":"Gloss Hot Rod Red","finish":"gloss","family":"red","hex":"#b3121c","code":"2080-G13"},{"id":"3m-g14","brand":"3m","name":"Gloss Burnt Orange","finish":"gloss","family":"orange","hex":"#c8461a","code":"2080-G14"},{"id":"3m-g15","brand":"3m","name":"Gloss Bright Yellow","finish":"gloss","family":"yellow","hex":"#f2c400","code":"2080-G15"},{"id":"3m-g25","brand":"3m","name":"Gloss Sunflower","finish":"gloss","family":"yellow","hex":"#f4a900","code":"2080-G25"},{"id":"3m-g31","brand":"3m","name":"Gloss Storm Gray","finish":"gloss","family":"grey","hex":"#5d6266","code":"2080-G31"},{"id":"3m-g47","brand":"3m","name":"Gloss Intense Blue","finish":"gloss","family":"blue","hex":"#0f3f95","code":"2080-G47"},{"id":"3m-g53","brand":"3m","name":"Gloss Flame Red","finish":"gloss","family":"red","hex":"#d0201f","code":"2080-G53"},{"id":"3m-g55","brand":"3m","name":"Gloss Lemon Sting","finish":"gloss","family":"yellow","hex":"#e3e02a","code":"2080-G55"},{"id":"3m-g77","brand":"3m","name":"Gloss Sky Blue","finish":"gloss","family":"blue","hex":"#4f9fd6","code":"2080-G77"},{"id":"3m-g79","brand":"3m","name":"Gloss Light Ivory","finish":"gloss","family":"white","hex":"#ece3cc","code":"2080-G79"},{"id":"3m-g83","brand":"3m","name":"Gloss Dark Red","finish":"gloss","family":"red","hex":"#6e0f17","code":"2080-G83"},{"id":"3m-g336","brand":"3m","name":"Gloss Green Envy","finish":"gloss","family":"green","hex":"#3f8a2c","code":"2080-G336"},{"id":"3m-g337","brand":"3m","name":"Gloss Blue Raspberry","finish":"gloss","family":"blue","hex":"#1f63c6","code":"2080-G337"},{"id":"3m-g363","brand":"3m","name":"Gloss Dragon Fire Red","finish":"gloss","family":"red","hex":"#a5151d","code":"2080-G363"},{"id":"3m-gloss-kelly-green","brand":"3m","name":"Gloss Kelly Green","finish":"gloss","family":"green","hex":"#127a3a"},{"id":"3m-gloss-fiery-orange","brand":"3m","name":"Gloss Fiery Orange","finish":"gloss","family":"orange","hex":"#e8601c"},{"id":"3m-gloss-cosmic-blue","brand":"3m","name":"Gloss Cosmic Blue","finish":"gloss","family":"blue","hex":"#16244f"},{"id":"3m-gloss-plum-explosion","brand":"3m","name":"Gloss Plum Explosion","finish":"gloss","family":"purple","hex":"#4a1f4d"},{"id":"3m-gloss-hot-pink","brand":"3m","name":"Gloss Hot Pink","finish":"gloss","family":"pink","hex":"#d1347a"},{"id":"3m-g120","brand":"3m","name":"Gloss White Aluminum","finish":"gloss-metallic","family":"silver","hex":"#c9cbcc","code":"2080-G120"},{"id":"3m-g201","brand":"3m","name":"Gloss Anthracite","finish":"gloss-metallic","family":"grey","hex":"#3b3f43","code":"2080-G201"},{"id":"3m-g211","brand":"3m","name":"Gloss Charcoal Metallic","finish":"gloss-metallic","family":"grey","hex":"#2c2e31","code":"2080-G211"},{"id":"3m-g212","brand":"3m","name":"Gloss Black Metallic","finish":"gloss-metallic","family":"black","hex":"#16171a","code":"2080-G212"},{"id":"3m-g378","brand":"3m","name":"Gloss Blue Metallic","finish":"gloss-metallic","family":"blue","hex":"#1f4f9a","code":"2080-G378"},{"id":"3m-gloss-deep-blue-metallic","brand":"3m","name":"Gloss Deep Blue Metallic","finish":"gloss-metallic","family":"blue","hex":"#13264f"},{"id":"3m-gloss-red-metallic","brand":"3m","name":"Gloss Red Metallic","finish":"gloss-metallic","family":"red","hex":"#8e1420"},{"id":"3m-gloss-liquid-copper","brand":"3m","name":"Gloss Liquid Copper","finish":"gloss-metallic","family":"copper","hex":"#9b5232"},{"id":"3m-gloss-gold-metallic","brand":"3m","name":"Gloss Gold Metallic","finish":"gloss-metallic","family":"gold","hex":"#a5843f"},{"id":"3m-gloss-atomic-teal","brand":"3m","name":"Gloss Atomic Teal","finish":"gloss-metallic","family":"green","hex":"#127a7c"},{"id":"3m-s10","brand":"3m","name":"Satin White","finish":"satin","family":"white","hex":"#ececea","code":"2080-S10"},{"id":"3m-s12","brand":"3m","name":"Satin Black","finish":"satin","family":"black","hex":"#151517","code":"2080-S12"},{"id":"3m-s51","brand":"3m","name":"Satin Battleship Gray","finish":"satin","family":"grey","hex":"#6c7175","code":"2080-S51"},{"id":"3m-s196","brand":"3m","name":"Satin Apple Green","finish":"satin","family":"green","hex":"#6ca83a","code":"2080-S196"},{"id":"3m-s271","brand":"3m","name":"Satin Thundercloud","finish":"satin","family":"grey","hex":"#4e545a","code":"2080-S271"},{"id":"3m-s347","brand":"3m","name":"Satin Perfect Blue","finish":"satin","family":"blue","hex":"#1d4c9e","code":"2080-S347"},{"id":"3m-s363","brand":"3m","name":"Satin Smoldering Red","finish":"satin","family":"red","hex":"#8c1a1d","code":"2080-S363"},{"id":"3m-satin-key-west","brand":"3m","name":"Satin Key West","finish":"satin","family":"blue","hex":"#3aa6b9"},{"id":"3m-satin-dark-gray","brand":"3m","name":"Satin Dark Gray","finish":"satin","family":"grey","hex":"#3a3d41"},{"id":"3m-s120","brand":"3m","name":"Satin White Aluminum","finish":"satin-metallic","family":"silver","hex":"#c3c5c6","code":"2080-S120"},{"id":"3m-satin-ocean-shimmer","brand":"3m","name":"Satin Ocean Shimmer","finish":"satin-metallic","family":"blue","hex":"#2a5d86"},{"id":"3m-satin-canyon-copper","brand":"3m","name":"Satin Canyon Copper","finish":"satin-metallic","family":"copper","hex":"#8b5a3c"},{"id":"3m-satin-vampire-red","brand":"3m","name":"Satin Vampire Red","finish":"satin-metallic","family":"red","hex":"#5e1418"},{"id":"3m-satin-gold-dust-black","brand":"3m","name":"Satin Gold Dust Black","finish":"satin-metallic","family":"black","hex":"#24211c"},{"id":"3m-sp10","brand":"3m","name":"Satin Pearl White","finish":"pearl","family":"white","hex":"#eeece6","code":"2080-SP10"},{"id":"3m-satin-frozen-vanilla","brand":"3m","name":"Satin Frozen Vanilla","finish":"pearl","family":"white","hex":"#e8e3d6"},{"id":"3m-m10","brand":"3m","name":"Matte White","finish":"matte","family":"white","hex":"#e9e9e7","code":"2080-M10"},{"id":"3m-m12","brand":"3m","name":"Matte Black","finish":"matte","family":"black","hex":"#1a1a1c","code":"2080-M12"},{"id":"3m-m13","brand":"3m","name":"Matte Red","finish":"matte","family":"red","hex":"#a2181f","code":"2080-M13"},{"id":"3m-m21","brand":"3m","name":"Matte Silver","finish":"matte-metallic","family":"silver","hex":"#a4a7aa","code":"2080-M21"},{"id":"3m-m22","brand":"3m","name":"Matte Deep Black","finish":"matte","family":"black","hex":"#0e0e10","code":"2080-M22"},{"id":"3m-m203","brand":"3m","name":"Matte Red Metallic","finish":"matte-metallic","family":"red","hex":"#7b1a1f","code":"2080-M203"},{"id":"3m-m211","brand":"3m","name":"Matte Charcoal Metallic","finish":"matte-metallic","family":"grey","hex":"#3d4044","code":"2080-M211"},{"id":"3m-m227","brand":"3m","name":"Matte Blue Metallic","finish":"matte-metallic","family":"blue","hex":"#2a4b7c","code":"2080-M227"},{"id":"3m-m230","brand":"3m","name":"Matte Gray Aluminum","finish":"matte-metallic","family":"grey","hex":"#7d8083","code":"2080-M230"},{"id":"3m-m261","brand":"3m","name":"Matte Dark Gray","finish":"matte","family":"grey","hex":"#45484c","code":"2080-M261"},{"id":"3m-matte-pine-green-metallic","brand":"3m","name":"Matte Pine Green Metallic","finish":"matte-metallic","family":"green","hex":"#2f4a39"},{"id":"3m-matte-military-green","brand":"3m","name":"Matte Military Green","finish":"matte","family":"green","hex":"#4f5638"},{"id":"3m-matte-brown-metallic","brand":"3m","name":"Matte Brown Metallic","finish":"matte-metallic","family":"brown","hex":"#4c3a2e"},{"id":"3m-br120","brand":"3m","name":"Brushed Aluminum","finish":"brushed","family":"silver","hex":"#b9bcbe","code":"2080-BR120"},{"id":"3m-br201","brand":"3m","name":"Brushed Steel","finish":"brushed","family":"grey","hex":"#7a7e82","code":"2080-BR201"},{"id":"3m-br212","brand":"3m","name":"Brushed Black Metallic","finish":"brushed","family":"black","hex":"#2a2b2e","code":"2080-BR212"},{"id":"3m-br230","brand":"3m","name":"Brushed Titanium","finish":"brushed","family":"grey","hex":"#8e8a84","code":"2080-BR230"},{"id":"3m-cfs12","brand":"3m","name":"Carbon Fiber Black","finish":"carbon","family":"black","hex":"#1b1c1f","code":"2080-CFS12"},{"id":"3m-cfs201","brand":"3m","name":"Carbon Fiber Anthracite","finish":"carbon","family":"grey","hex":"#34373b","code":"2080-CFS201"},{"id":"3m-sp59","brand":"3m","name":"Satin Flip Psychedelic","finish":"colorflow","family":"flip","hex":"#7a3d8c","code":"2080-SP59","hex2":"#2f8a6a"},{"id":"3m-sp236","brand":"3m","name":"Satin Flip Volcanic Flare","finish":"colorflow","family":"flip","hex":"#9a2a2a","code":"2080-SP236","hex2":"#b8892a"},{"id":"3m-sp277","brand":"3m","name":"Satin Flip Glacial Frost","finish":"colorflow","family":"flip","hex":"#c9d6dc","code":"2080-SP277","hex2":"#8fa6c7"},{"id":"3m-sp280","brand":"3m","name":"Satin Flip Ghost Pearl","finish":"colorflow","family":"flip","hex":"#e9e6e6","code":"2080-SP280","hex2":"#b9a8d6"},{"id":"3m-gp278","brand":"3m","name":"Gloss Flip Deep Space","finish":"colorflow","family":"flip","hex":"#1d1f3d","code":"2080-GP278","hex2":"#5a2a6e"},{"id":"avery-gloss-white","brand":"avery","name":"Gloss White","finish":"gloss","family":"white","hex":"#f2f2f0"},{"id":"avery-gloss-black","brand":"avery","name":"Gloss Black","finish":"gloss","family":"black","hex":"#0e0e10"},{"id":"avery-gloss-carmine-red","brand":"avery","name":"Gloss Carmine Red","finish":"gloss","family":"red","hex":"#a9141f"},{"id":"avery-gloss-cardinal-red","brand":"avery","name":"Gloss Cardinal Red","finish":"gloss","family":"red","hex":"#7e1219"},{"id":"avery-gloss-soft-red","brand":"avery","name":"Gloss Soft Red","finish":"gloss","family":"red","hex":"#c9302c"},{"id":"avery-gloss-orange","brand":"avery","name":"Gloss Orange","finish":"gloss","family":"orange","hex":"#e05a14"},{"id":"avery-gloss-bright-orange","brand":"avery","name":"Gloss Bright Orange","finish":"gloss","family":"orange","hex":"#f0761e"},{"id":"avery-gloss-yellow","brand":"avery","name":"Gloss Yellow","finish":"gloss","family":"yellow","hex":"#f3c300"},{"id":"avery-gloss-grass-green","brand":"avery","name":"Gloss Grass Green","finish":"gloss","family":"green","hex":"#3a8f2f"},{"id":"avery-gloss-dark-green","brand":"avery","name":"Gloss Dark Green","finish":"gloss","family":"green","hex":"#14402c"},{"id":"avery-gloss-lime-green","brand":"avery","name":"Gloss Lime Green","finish":"gloss","family":"green","hex":"#8dc63f"},{"id":"avery-gloss-blue","brand":"avery","name":"Gloss Blue","finish":"gloss","family":"blue","hex":"#1450a8"},{"id":"avery-gloss-light-blue","brand":"avery","name":"Gloss Light Blue","finish":"gloss","family":"blue","hex":"#5aa3d9"},{"id":"avery-gloss-dark-blue","brand":"avery","name":"Gloss Dark Blue","finish":"gloss","family":"blue","hex":"#14234d"},{"id":"avery-gloss-purple","brand":"avery","name":"Gloss Purple","finish":"gloss","family":"purple","hex":"#4f2a7a"},{"id":"avery-gloss-pink","brand":"avery","name":"Gloss Pink","finish":"gloss","family":"pink","hex":"#e46aa0"},{"id":"avery-gloss-grey","brand":"avery","name":"Gloss Grey","finish":"gloss","family":"grey","hex":"#6e7377"},{"id":"avery-gloss-rock-grey","brand":"avery","name":"Gloss Rock Grey","finish":"gloss","family":"grey","hex":"#4a4e52"},{"id":"avery-gloss-brown","brand":"avery","name":"Gloss Brown","finish":"gloss","family":"brown","hex":"#4a3022"},{"id":"avery-gloss-sand","brand":"avery","name":"Gloss Sand","finish":"gloss","family":"brown","hex":"#c2ae8a"},{"id":"avery-gloss-metallic-black","brand":"avery","name":"Gloss Metallic Black","finish":"gloss-metallic","family":"black","hex":"#17181b"},{"id":"avery-gloss-metallic-dark-grey","brand":"avery","name":"Gloss Metallic Dark Grey","finish":"gloss-metallic","family":"grey","hex":"#3a3d41"},{"id":"avery-gloss-metallic-silver","brand":"avery","name":"Gloss Metallic Silver","finish":"gloss-metallic","family":"silver","hex":"#b8bbbe"},{"id":"avery-gloss-metallic-quicksilver","brand":"avery","name":"Gloss Metallic Quicksilver","finish":"gloss-metallic","family":"silver","hex":"#9ea2a6"},{"id":"avery-gloss-metallic-blue","brand":"avery","name":"Gloss Metallic Blue","finish":"gloss-metallic","family":"blue","hex":"#1d4891"},{"id":"avery-gloss-metallic-dark-blue","brand":"avery","name":"Gloss Metallic Dark Blue","finish":"gloss-metallic","family":"blue","hex":"#152a55"},{"id":"avery-gloss-metallic-red","brand":"avery","name":"Gloss Metallic Red","finish":"gloss-metallic","family":"red","hex":"#8f1520"},{"id":"avery-gloss-metallic-green","brand":"avery","name":"Gloss Metallic Green","finish":"gloss-metallic","family":"green","hex":"#23573a"},{"id":"avery-gloss-metallic-gold","brand":"avery","name":"Gloss Metallic Gold","finish":"gloss-metallic","family":"gold","hex":"#a5873f"},{"id":"avery-gloss-metallic-bronze","brand":"avery","name":"Gloss Metallic Bronze","finish":"gloss-metallic","family":"bronze","hex":"#7a5532"},{"id":"avery-gloss-metallic-purple","brand":"avery","name":"Gloss Metallic Purple","finish":"gloss-metallic","family":"purple","hex":"#4b2a6b"},{"id":"avery-gloss-metallic-pink","brand":"avery","name":"Gloss Metallic Pink","finish":"gloss-metallic","family":"pink","hex":"#c4557f"},{"id":"avery-satin-black","brand":"avery","name":"Satin Black","finish":"satin","family":"black","hex":"#161618"},{"id":"avery-satin-white","brand":"avery","name":"Satin White","finish":"satin","family":"white","hex":"#ebebe9"},{"id":"avery-satin-dark-grey","brand":"avery","name":"Satin Dark Grey","finish":"satin","family":"grey","hex":"#3c3f43"},{"id":"avery-satin-grey","brand":"avery","name":"Satin Grey","finish":"satin","family":"grey","hex":"#73777b"},{"id":"avery-satin-khaki-green","brand":"avery","name":"Satin Khaki Green","finish":"satin","family":"green","hex":"#6b6a4c"},{"id":"avery-satin-dark-basalt","brand":"avery","name":"Satin Dark Basalt","finish":"satin","family":"grey","hex":"#2e3134"},{"id":"avery-satin-metallic-black","brand":"avery","name":"Satin Metallic Black","finish":"satin-metallic","family":"black","hex":"#1c1d20"},{"id":"avery-satin-metallic-charcoal","brand":"avery","name":"Satin Metallic Charcoal","finish":"satin-metallic","family":"grey","hex":"#35383c"},{"id":"avery-satin-metallic-silver","brand":"avery","name":"Satin Metallic Silver","finish":"satin-metallic","family":"silver","hex":"#a9acaf"},{"id":"avery-satin-metallic-blue","brand":"avery","name":"Satin Metallic Blue","finish":"satin-metallic","family":"blue","hex":"#22457e"},{"id":"avery-satin-metallic-red","brand":"avery","name":"Satin Metallic Red","finish":"satin-metallic","family":"red","hex":"#7d1820"},{"id":"avery-satin-metallic-copper","brand":"avery","name":"Satin Metallic Copper","finish":"satin-metallic","family":"copper","hex":"#8a5434"},{"id":"avery-satin-metallic-bronze","brand":"avery","name":"Satin Metallic Bronze","finish":"satin-metallic","family":"bronze","hex":"#6e5136"},{"id":"avery-satin-pearl-white","brand":"avery","name":"Satin Pearl White","finish":"pearl","family":"white","hex":"#ecebe6"},{"id":"avery-satin-pearl-nightfall-blue","brand":"avery","name":"Satin Pearl Nightfall Blue","finish":"pearl","family":"blue","hex":"#1b2c56"},{"id":"avery-gloss-pearl-white","brand":"avery","name":"Gloss Pearl White","finish":"pearl","family":"white","hex":"#f1efe9"},{"id":"avery-gloss-pearl-dark-grey","brand":"avery","name":"Gloss Pearl Dark Grey","finish":"pearl","family":"grey","hex":"#3e4044"},{"id":"avery-matte-black","brand":"avery","name":"Matte Black","finish":"matte","family":"black","hex":"#1a1a1c"},{"id":"avery-matte-white","brand":"avery","name":"Matte White","finish":"matte","family":"white","hex":"#e7e7e5"},{"id":"avery-matte-grey","brand":"avery","name":"Matte Grey","finish":"matte","family":"grey","hex":"#6f7377"},{"id":"avery-matte-khaki-green","brand":"avery","name":"Matte Khaki Green","finish":"matte","family":"green","hex":"#61644a"},{"id":"avery-matte-olive-green","brand":"avery","name":"Matte Olive Green","finish":"matte","family":"green","hex":"#4a5236"},{"id":"avery-matte-red","brand":"avery","name":"Matte Red","finish":"matte","family":"red","hex":"#9a1c22"},{"id":"avery-matte-blue","brand":"avery","name":"Matte Blue","finish":"matte","family":"blue","hex":"#24488a"},{"id":"avery-matte-metallic-charcoal","brand":"avery","name":"Matte Metallic Charcoal","finish":"matte-metallic","family":"grey","hex":"#3a3c40"},{"id":"avery-matte-metallic-silver","brand":"avery","name":"Matte Metallic Silver","finish":"matte-metallic","family":"silver","hex":"#9fa2a5"},{"id":"avery-matte-metallic-brown","brand":"avery","name":"Matte Metallic Brown","finish":"matte-metallic","family":"brown","hex":"#4a392e"},{"id":"avery-matte-metallic-blue","brand":"avery","name":"Matte Metallic Blue","finish":"matte-metallic","family":"blue","hex":"#294a7a"},{"id":"avery-matte-metallic-apple-green","brand":"avery","name":"Matte Metallic Apple Green","finish":"matte-metallic","family":"green","hex":"#6f9a3a"},{"id":"avery-matte-metallic-burgundy","brand":"avery","name":"Matte Metallic Burgundy","finish":"matte-metallic","family":"red","hex":"#4e1a22"},{"id":"avery-diamond-silver","brand":"avery","name":"Diamond Silver","finish":"diamond","family":"silver","hex":"#c2c4c6"},{"id":"avery-diamond-black","brand":"avery","name":"Diamond Black","finish":"diamond","family":"black","hex":"#1b1c1f"},{"id":"avery-diamond-blue","brand":"avery","name":"Diamond Blue","finish":"diamond","family":"blue","hex":"#1e4a9a"},{"id":"avery-diamond-red","brand":"avery","name":"Diamond Red","finish":"diamond","family":"red","hex":"#9b1721"},{"id":"avery-brushed-aluminium","brand":"avery","name":"Brushed Aluminium","finish":"brushed","family":"silver","hex":"#b7babc"},{"id":"avery-brushed-steel","brand":"avery","name":"Brushed Steel","finish":"brushed","family":"grey","hex":"#7c8084"},{"id":"avery-brushed-titanium","brand":"avery","name":"Brushed Titanium","finish":"brushed","family":"grey","hex":"#8c8781"},{"id":"avery-brushed-black","brand":"avery","name":"Brushed Black","finish":"brushed","family":"black","hex":"#29292b"},{"id":"avery-brushed-bronze","brand":"avery","name":"Brushed Bronze","finish":"brushed","family":"bronze","hex":"#8a6a4a"},{"id":"avery-carbon-fiber-black","brand":"avery","name":"Carbon Fiber Black","finish":"carbon","family":"black","hex":"#1c1d20"},{"id":"avery-carbon-fiber-anthracite","brand":"avery","name":"Carbon Fiber Anthracite","finish":"carbon","family":"grey","hex":"#36393d"},{"id":"avery-colorflow-rushing-riptide","brand":"avery","name":"ColorFlow Rushing Riptide","finish":"colorflow","family":"flip","hex":"#1f5aa8","hex2":"#2f9a7c"},{"id":"avery-colorflow-lightning-ridge","brand":"avery","name":"ColorFlow Lightning Ridge","finish":"colorflow","family":"flip","hex":"#b39a3c","hex2":"#3a8a5a"},{"id":"avery-colorflow-rising-sun","brand":"avery","name":"ColorFlow Rising Sun","finish":"colorflow","family":"flip","hex":"#b02a2a","hex2":"#d29a2a"},{"id":"avery-colorflow-urban-jungle","brand":"avery","name":"ColorFlow Urban Jungle","finish":"colorflow","family":"flip","hex":"#9aa29a","hex2":"#3f6e4a"},{"id":"avery-colorflow-roaring-thunder","brand":"avery","name":"ColorFlow Roaring Thunder","finish":"colorflow","family":"flip","hex":"#6a2a8a","hex2":"#1f4f9a"},{"id":"avery-colorflow-fresh-spring","brand":"avery","name":"ColorFlow Fresh Spring","finish":"colorflow","family":"flip","hex":"#c7b44a","hex2":"#7aa83f"},{"id":"avery-conform-chrome-silver","brand":"avery","name":"Conform Chrome Silver","finish":"chrome","family":"silver","hex":"#d6d9dc"},{"id":"avery-conform-chrome-black","brand":"avery","name":"Conform Chrome Black","finish":"chrome","family":"black","hex":"#3a3c40"},{"id":"avery-conform-chrome-gold","brand":"avery","name":"Conform Chrome Gold","finish":"chrome","family":"gold","hex":"#c79a3a"},{"id":"avery-conform-chrome-blue","brand":"avery","name":"Conform Chrome Blue","finish":"chrome","family":"blue","hex":"#2a5bb0"},{"id":"avery-conform-chrome-red","brand":"avery","name":"Conform Chrome Red","finish":"chrome","family":"red","hex":"#a8202a"},{"id":"kpmf-gloss-black","brand":"kpmf","name":"Gloss Black","finish":"gloss","family":"black","hex":"#0f0f11"},{"id":"kpmf-gloss-white","brand":"kpmf","name":"Gloss White","finish":"gloss","family":"white","hex":"#f1f1ef"},{"id":"kpmf-gloss-hot-lava","brand":"kpmf","name":"Gloss Hot Lava","finish":"gloss","family":"red","hex":"#c11d22"},{"id":"kpmf-gloss-racing-red","brand":"kpmf","name":"Gloss Racing Red","finish":"gloss","family":"red","hex":"#b5141c"},{"id":"kpmf-gloss-sunset-orange","brand":"kpmf","name":"Gloss Sunset Orange","finish":"gloss","family":"orange","hex":"#e2601c"},{"id":"kpmf-gloss-sunflower-yellow","brand":"kpmf","name":"Gloss Sunflower Yellow","finish":"gloss","family":"yellow","hex":"#f2b500"},{"id":"kpmf-gloss-racing-green","brand":"kpmf","name":"Gloss Racing Green","finish":"gloss","family":"green","hex":"#13402a"},{"id":"kpmf-gloss-royal-blue","brand":"kpmf","name":"Gloss Royal Blue","finish":"gloss","family":"blue","hex":"#1a3f96"},{"id":"kpmf-gloss-nardo-grey","brand":"kpmf","name":"Gloss Nardo Grey","finish":"gloss","family":"grey","hex":"#8a8d8f"},{"id":"kpmf-gloss-battleship-grey","brand":"kpmf","name":"Gloss Battleship Grey","finish":"gloss","family":"grey","hex":"#5b6064"},{"id":"kpmf-gloss-purple","brand":"kpmf","name":"Gloss Purple","finish":"gloss","family":"purple","hex":"#47286b"},{"id":"kpmf-gloss-iron-metallic","brand":"kpmf","name":"Gloss Iron Metallic","finish":"gloss-metallic","family":"grey","hex":"#3e4145"},{"id":"kpmf-gloss-starlight-silver","brand":"kpmf","name":"Gloss Starlight Silver","finish":"gloss-metallic","family":"silver","hex":"#bcbec1"},{"id":"kpmf-gloss-ocean-blue-metallic","brand":"kpmf","name":"Gloss Ocean Blue Metallic","finish":"gloss-metallic","family":"blue","hex":"#204a82"},{"id":"kpmf-gloss-burgundy-metallic","brand":"kpmf","name":"Gloss Burgundy Metallic","finish":"gloss-metallic","family":"red","hex":"#5c1620"},{"id":"kpmf-gloss-champagne-metallic","brand":"kpmf","name":"Gloss Champagne Metallic","finish":"gloss-metallic","family":"gold","hex":"#b8a17a"},{"id":"kpmf-matt-black","brand":"kpmf","name":"Matt Black","finish":"matte","family":"black","hex":"#19191b"},{"id":"kpmf-matt-white","brand":"kpmf","name":"Matt White","finish":"matte","family":"white","hex":"#e6e6e4"},{"id":"kpmf-matt-nardo-grey","brand":"kpmf","name":"Matt Nardo Grey","finish":"matte","family":"grey","hex":"#85888a"},{"id":"kpmf-matt-army-green","brand":"kpmf","name":"Matt Army Green","finish":"matte","family":"green","hex":"#4b5336"},{"id":"kpmf-matt-midnight-blue","brand":"kpmf","name":"Matt Midnight Blue","finish":"matte","family":"blue","hex":"#1b2846"},{"id":"kpmf-matt-iron-metallic","brand":"kpmf","name":"Matt Iron Metallic","finish":"matte-metallic","family":"grey","hex":"#3c3f43"},{"id":"kpmf-matt-bronze-metallic","brand":"kpmf","name":"Matt Bronze Metallic","finish":"matte-metallic","family":"bronze","hex":"#6c5238"},{"id":"kpmf-satin-black","brand":"kpmf","name":"Satin Black","finish":"satin","family":"black","hex":"#161618"},{"id":"kpmf-satin-graphite","brand":"kpmf","name":"Satin Graphite","finish":"satin","family":"grey","hex":"#3b3e42"},{"id":"kpmf-satin-arctic-white","brand":"kpmf","name":"Satin Arctic White","finish":"satin","family":"white","hex":"#ebebe9"},{"id":"kpmf-satin-electric-blue","brand":"kpmf","name":"Satin Electric Blue","finish":"satin","family":"blue","hex":"#1d58b4"},{"id":"kpmf-satin-iridescent-black-gold","brand":"kpmf","name":"Satin Iridescent Black/Gold","finish":"pearl","family":"black","hex":"#25221c"},{"id":"kpmf-satin-iridescent-white-blue","brand":"kpmf","name":"Satin Iridescent White/Blue","finish":"pearl","family":"white","hex":"#e3e8ee"},{"id":"kpmf-matt-iridescent-blue-green","brand":"kpmf","name":"Matt Iridescent Blue/Green","finish":"colorflow","family":"flip","hex":"#24508a","hex2":"#2f8a6f"},{"id":"kpmf-gloss-iridescent-purple-gold","brand":"kpmf","name":"Gloss Iridescent Purple/Gold","finish":"colorflow","family":"flip","hex":"#55307a","hex2":"#b08c3a"},{"id":"kpmf-gloss-iridescent-red-gold","brand":"kpmf","name":"Gloss Iridescent Red/Gold","finish":"colorflow","family":"flip","hex":"#8e1f2a","hex2":"#c08a2a"},{"id":"kpmf-matt-iridescent-gold-green","brand":"kpmf","name":"Matt Iridescent Gold/Green","finish":"colorflow","family":"flip","hex":"#9a8740","hex2":"#4d7f4a"},{"id":"kpmf-brushed-aluminium","brand":"kpmf","name":"Brushed Aluminium","finish":"brushed","family":"silver","hex":"#b4b7ba"},{"id":"kpmf-brushed-gunmetal","brand":"kpmf","name":"Brushed Gunmetal","finish":"brushed","family":"grey","hex":"#5a5d61"},{"id":"kpmf-starlight-black","brand":"kpmf","name":"Starlight Black","finish":"diamond","family":"black","hex":"#1c1d22"},{"id":"kpmf-starlight-blue","brand":"kpmf","name":"Starlight Blue","finish":"diamond","family":"blue","hex":"#1c3e85"},{"id":"kpmf-carbon-black","brand":"kpmf","name":"Carbon Black","finish":"carbon","family":"black","hex":"#1c1d20"},{"id":"kpmf-mirror-chrome-silver","brand":"kpmf","name":"Mirror Chrome Silver","finish":"chrome","family":"silver","hex":"#d8dadd"},{"id":"kpmf-mirror-chrome-rose-gold","brand":"kpmf","name":"Mirror Chrome Rose Gold","finish":"chrome","family":"pink","hex":"#c98f84"},{"id":"oracal-black-gloss","brand":"oracal","name":"Black Gloss","finish":"gloss","family":"black","hex":"#0f0f11"},{"id":"oracal-white-gloss","brand":"oracal","name":"White Gloss","finish":"gloss","family":"white","hex":"#f0f0ee"},{"id":"oracal-red-gloss","brand":"oracal","name":"Red Gloss","finish":"gloss","family":"red","hex":"#b3141d"},{"id":"oracal-signal-yellow-gloss","brand":"oracal","name":"Signal Yellow Gloss","finish":"gloss","family":"yellow","hex":"#f0b400"},{"id":"oracal-pastel-orange-gloss","brand":"oracal","name":"Pastel Orange Gloss","finish":"gloss","family":"orange","hex":"#ea6a1f"},{"id":"oracal-traffic-blue-gloss","brand":"oracal","name":"Traffic Blue Gloss","finish":"gloss","family":"blue","hex":"#14468f"},{"id":"oracal-gentian-blue-gloss","brand":"oracal","name":"Gentian Blue Gloss","finish":"gloss","family":"blue","hex":"#1c3d78"},{"id":"oracal-lime-green-gloss","brand":"oracal","name":"Lime Green Gloss","finish":"gloss","family":"green","hex":"#7cb23a"},{"id":"oracal-dark-green-gloss","brand":"oracal","name":"Dark Green Gloss","finish":"gloss","family":"green","hex":"#17432d"},{"id":"oracal-telegrey-gloss","brand":"oracal","name":"Telegrey Gloss","finish":"gloss","family":"grey","hex":"#878b8e"},{"id":"oracal-dark-grey-gloss","brand":"oracal","name":"Dark Grey Gloss","finish":"gloss","family":"grey","hex":"#4b4f53"},{"id":"oracal-violet-gloss","brand":"oracal","name":"Violet Gloss","finish":"gloss","family":"purple","hex":"#5a2d7a"},{"id":"oracal-anthracite-metallic-gloss","brand":"oracal","name":"Anthracite Metallic Gloss","finish":"gloss-metallic","family":"grey","hex":"#383b3f"},{"id":"oracal-graphite-metallic-gloss","brand":"oracal","name":"Graphite Metallic Gloss","finish":"gloss-metallic","family":"grey","hex":"#4b4e52"},{"id":"oracal-silver-grey-metallic-gloss","brand":"oracal","name":"Silver Grey Metallic Gloss","finish":"gloss-metallic","family":"silver","hex":"#a9acaf"},{"id":"oracal-blue-metallic-gloss","brand":"oracal","name":"Blue Metallic Gloss","finish":"gloss-metallic","family":"blue","hex":"#22508f"},{"id":"oracal-wine-red-metallic-gloss","brand":"oracal","name":"Wine Red Metallic Gloss","finish":"gloss-metallic","family":"red","hex":"#5b1620"},{"id":"oracal-gold-metallic-gloss","brand":"oracal","name":"Gold Metallic Gloss","finish":"gloss-metallic","family":"gold","hex":"#a8883f"},{"id":"oracal-black-matt","brand":"oracal","name":"Black Matt","finish":"matte","family":"black","hex":"#1a1a1c"},{"id":"oracal-white-matt","brand":"oracal","name":"White Matt","finish":"matte","family":"white","hex":"#e5e5e3"},{"id":"oracal-grey-matt","brand":"oracal","name":"Grey Matt","finish":"matte","family":"grey","hex":"#6c7074"},{"id":"oracal-olive-matt","brand":"oracal","name":"Olive Matt","finish":"matte","family":"green","hex":"#4e5638"},{"id":"oracal-anthracite-metallic-matt","brand":"oracal","name":"Anthracite Metallic Matt","finish":"matte-metallic","family":"grey","hex":"#3c3e42"},{"id":"oracal-silver-grey-metallic-matt","brand":"oracal","name":"Silver Grey Metallic Matt","finish":"matte-metallic","family":"silver","hex":"#9c9fa2"},{"id":"oracal-copper-metallic-matt","brand":"oracal","name":"Copper Metallic Matt","finish":"matte-metallic","family":"copper","hex":"#7f5236"},{"id":"oracal-black-satin","brand":"oracal","name":"Black Satin","finish":"satin","family":"black","hex":"#161618"},{"id":"oracal-graphite-satin","brand":"oracal","name":"Graphite Satin","finish":"satin","family":"grey","hex":"#3d4044"},{"id":"oracal-shift-effect-purple-gold","brand":"oracal","name":"Shift Effect Purple/Gold","finish":"colorflow","family":"flip","hex":"#5a2f7c","hex2":"#b8923a"},{"id":"oracal-shift-effect-blue-green","brand":"oracal","name":"Shift Effect Blue/Green","finish":"colorflow","family":"flip","hex":"#1f4f96","hex2":"#2c8a6e"},{"id":"oracal-shift-effect-silver-grey","brand":"oracal","name":"Shift Effect Silver/Grey","finish":"colorflow","family":"flip","hex":"#c8cacc","hex2":"#6f7377"},{"id":"oracal-brushed-aluminium","brand":"oracal","name":"Brushed Aluminium","finish":"brushed","family":"silver","hex":"#b5b8bb"},{"id":"oracal-carbon-black","brand":"oracal","name":"Carbon Black","finish":"carbon","family":"black","hex":"#1d1e21"}]}
+{
+ "note": "Approximate on-screen colours for reference only. Screens vary - always confirm with a physical swatch in the shop. Product names and codes belong to their manufacturers.",
+ "brands": {
+  "3m": {
+   "name": "3M",
+   "line": "2080 Wrap Film"
+  },
+  "avery": {
+   "name": "Avery Dennison",
+   "line": "Supreme Wrapping Film"
+  },
+  "kpmf": {
+   "name": "KPMF",
+   "line": "Vinyl Wrap Films"
+  },
+  "oracal": {
+   "name": "ORACAL",
+   "line": "970RA Premium Wrapping Cast"
+  }
+ },
+ "films": [
+  {
+   "id": "3m-g10",
+   "brand": "3m",
+   "name": "Gloss White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#f3f3f1",
+   "code": "2080-G10"
+  },
+  {
+   "id": "3m-g12",
+   "brand": "3m",
+   "name": "Gloss Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#0d0d0f",
+   "code": "2080-G12"
+  },
+  {
+   "id": "3m-g13",
+   "brand": "3m",
+   "name": "Gloss Hot Rod Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#b3121c",
+   "code": "2080-G13"
+  },
+  {
+   "id": "3m-g14",
+   "brand": "3m",
+   "name": "Gloss Burnt Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#c8461a",
+   "code": "2080-G14"
+  },
+  {
+   "id": "3m-g15",
+   "brand": "3m",
+   "name": "Gloss Bright Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#f2c400",
+   "code": "2080-G15"
+  },
+  {
+   "id": "3m-g25",
+   "brand": "3m",
+   "name": "Gloss Sunflower",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#f4a900",
+   "code": "2080-G25"
+  },
+  {
+   "id": "3m-g31",
+   "brand": "3m",
+   "name": "Gloss Storm Gray",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#5d6266",
+   "code": "2080-G31"
+  },
+  {
+   "id": "3m-g47",
+   "brand": "3m",
+   "name": "Gloss Intense Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0f3f95",
+   "code": "2080-G47"
+  },
+  {
+   "id": "3m-g53",
+   "brand": "3m",
+   "name": "Gloss Flame Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#d0201f",
+   "code": "2080-G53"
+  },
+  {
+   "id": "3m-g55",
+   "brand": "3m",
+   "name": "Gloss Lemon Sting",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#e3e02a",
+   "code": "2080-G55"
+  },
+  {
+   "id": "3m-g77",
+   "brand": "3m",
+   "name": "Gloss Sky Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#4f9fd6",
+   "code": "2080-G77"
+  },
+  {
+   "id": "3m-g79",
+   "brand": "3m",
+   "name": "Gloss Light Ivory",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#ece3cc",
+   "code": "2080-G79"
+  },
+  {
+   "id": "3m-g83",
+   "brand": "3m",
+   "name": "Gloss Dark Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#6e0f17",
+   "code": "2080-G83"
+  },
+  {
+   "id": "3m-g336",
+   "brand": "3m",
+   "name": "Gloss Green Envy",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#3f8a2c",
+   "code": "2080-G336"
+  },
+  {
+   "id": "3m-g337",
+   "brand": "3m",
+   "name": "Gloss Blue Raspberry",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1f63c6",
+   "code": "2080-G337"
+  },
+  {
+   "id": "3m-g363",
+   "brand": "3m",
+   "name": "Gloss Dragon Fire Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#a5151d",
+   "code": "2080-G363"
+  },
+  {
+   "id": "3m-gloss-kelly-green",
+   "brand": "3m",
+   "name": "Gloss Kelly Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#127a3a"
+  },
+  {
+   "id": "3m-gloss-fiery-orange",
+   "brand": "3m",
+   "name": "Gloss Fiery Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#e8601c"
+  },
+  {
+   "id": "3m-gloss-cosmic-blue",
+   "brand": "3m",
+   "name": "Gloss Cosmic Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#16244f"
+  },
+  {
+   "id": "3m-gloss-plum-explosion",
+   "brand": "3m",
+   "name": "Gloss Plum Explosion",
+   "finish": "gloss",
+   "family": "purple",
+   "hex": "#4a1f4d"
+  },
+  {
+   "id": "3m-gloss-hot-pink",
+   "brand": "3m",
+   "name": "Gloss Hot Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#d1347a"
+  },
+  {
+   "id": "3m-g120",
+   "brand": "3m",
+   "name": "Gloss White Aluminum",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#c9cbcc",
+   "code": "2080-G120"
+  },
+  {
+   "id": "3m-g201",
+   "brand": "3m",
+   "name": "Gloss Anthracite",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#3b3f43",
+   "code": "2080-G201"
+  },
+  {
+   "id": "3m-g211",
+   "brand": "3m",
+   "name": "Gloss Charcoal Metallic",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#2c2e31",
+   "code": "2080-G211"
+  },
+  {
+   "id": "3m-g212",
+   "brand": "3m",
+   "name": "Gloss Black Metallic",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#16171a",
+   "code": "2080-G212"
+  },
+  {
+   "id": "3m-g378",
+   "brand": "3m",
+   "name": "Gloss Blue Metallic",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#1f4f9a",
+   "code": "2080-G378"
+  },
+  {
+   "id": "3m-gloss-deep-blue-metallic",
+   "brand": "3m",
+   "name": "Gloss Deep Blue Metallic",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#13264f"
+  },
+  {
+   "id": "3m-gloss-red-metallic",
+   "brand": "3m",
+   "name": "Gloss Red Metallic",
+   "finish": "gloss-metallic",
+   "family": "red",
+   "hex": "#8e1420"
+  },
+  {
+   "id": "3m-gloss-liquid-copper",
+   "brand": "3m",
+   "name": "Gloss Liquid Copper",
+   "finish": "gloss-metallic",
+   "family": "copper",
+   "hex": "#9b5232"
+  },
+  {
+   "id": "3m-gloss-gold-metallic",
+   "brand": "3m",
+   "name": "Gloss Gold Metallic",
+   "finish": "gloss-metallic",
+   "family": "gold",
+   "hex": "#a5843f"
+  },
+  {
+   "id": "3m-gloss-atomic-teal",
+   "brand": "3m",
+   "name": "Gloss Atomic Teal",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#127a7c"
+  },
+  {
+   "id": "3m-s10",
+   "brand": "3m",
+   "name": "Satin White",
+   "finish": "satin",
+   "family": "white",
+   "hex": "#ececea",
+   "code": "2080-S10"
+  },
+  {
+   "id": "3m-s12",
+   "brand": "3m",
+   "name": "Satin Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#151517",
+   "code": "2080-S12"
+  },
+  {
+   "id": "3m-s51",
+   "brand": "3m",
+   "name": "Satin Battleship Gray",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#6c7175",
+   "code": "2080-S51"
+  },
+  {
+   "id": "3m-s196",
+   "brand": "3m",
+   "name": "Satin Apple Green",
+   "finish": "satin",
+   "family": "green",
+   "hex": "#6ca83a",
+   "code": "2080-S196"
+  },
+  {
+   "id": "3m-s271",
+   "brand": "3m",
+   "name": "Satin Thundercloud",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#4e545a",
+   "code": "2080-S271"
+  },
+  {
+   "id": "3m-s347",
+   "brand": "3m",
+   "name": "Satin Perfect Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#1d4c9e",
+   "code": "2080-S347"
+  },
+  {
+   "id": "3m-s363",
+   "brand": "3m",
+   "name": "Satin Smoldering Red",
+   "finish": "satin",
+   "family": "red",
+   "hex": "#8c1a1d",
+   "code": "2080-S363"
+  },
+  {
+   "id": "3m-satin-key-west",
+   "brand": "3m",
+   "name": "Satin Key West",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#3aa6b9"
+  },
+  {
+   "id": "3m-satin-dark-gray",
+   "brand": "3m",
+   "name": "Satin Dark Gray",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#3a3d41"
+  },
+  {
+   "id": "3m-s120",
+   "brand": "3m",
+   "name": "Satin White Aluminum",
+   "finish": "satin-metallic",
+   "family": "silver",
+   "hex": "#c3c5c6",
+   "code": "2080-S120"
+  },
+  {
+   "id": "3m-satin-ocean-shimmer",
+   "brand": "3m",
+   "name": "Satin Ocean Shimmer",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#2a5d86"
+  },
+  {
+   "id": "3m-satin-canyon-copper",
+   "brand": "3m",
+   "name": "Satin Canyon Copper",
+   "finish": "satin-metallic",
+   "family": "copper",
+   "hex": "#8b5a3c"
+  },
+  {
+   "id": "3m-satin-vampire-red",
+   "brand": "3m",
+   "name": "Satin Vampire Red",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#5e1418"
+  },
+  {
+   "id": "3m-satin-gold-dust-black",
+   "brand": "3m",
+   "name": "Satin Gold Dust Black",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#24211c"
+  },
+  {
+   "id": "3m-sp10",
+   "brand": "3m",
+   "name": "Satin Pearl White",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#eeece6",
+   "code": "2080-SP10"
+  },
+  {
+   "id": "3m-satin-frozen-vanilla",
+   "brand": "3m",
+   "name": "Satin Frozen Vanilla",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#e8e3d6"
+  },
+  {
+   "id": "3m-m10",
+   "brand": "3m",
+   "name": "Matte White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#e9e9e7",
+   "code": "2080-M10"
+  },
+  {
+   "id": "3m-m12",
+   "brand": "3m",
+   "name": "Matte Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#1a1a1c",
+   "code": "2080-M12"
+  },
+  {
+   "id": "3m-m13",
+   "brand": "3m",
+   "name": "Matte Red",
+   "finish": "matte",
+   "family": "red",
+   "hex": "#a2181f",
+   "code": "2080-M13"
+  },
+  {
+   "id": "3m-m21",
+   "brand": "3m",
+   "name": "Matte Silver",
+   "finish": "matte-metallic",
+   "family": "silver",
+   "hex": "#a4a7aa",
+   "code": "2080-M21"
+  },
+  {
+   "id": "3m-m22",
+   "brand": "3m",
+   "name": "Matte Deep Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#0e0e10",
+   "code": "2080-M22"
+  },
+  {
+   "id": "3m-m203",
+   "brand": "3m",
+   "name": "Matte Red Metallic",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#7b1a1f",
+   "code": "2080-M203"
+  },
+  {
+   "id": "3m-m211",
+   "brand": "3m",
+   "name": "Matte Charcoal Metallic",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#3d4044",
+   "code": "2080-M211"
+  },
+  {
+   "id": "3m-m227",
+   "brand": "3m",
+   "name": "Matte Blue Metallic",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#2a4b7c",
+   "code": "2080-M227"
+  },
+  {
+   "id": "3m-m230",
+   "brand": "3m",
+   "name": "Matte Gray Aluminum",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#7d8083",
+   "code": "2080-M230"
+  },
+  {
+   "id": "3m-m261",
+   "brand": "3m",
+   "name": "Matte Dark Gray",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#45484c",
+   "code": "2080-M261"
+  },
+  {
+   "id": "3m-matte-pine-green-metallic",
+   "brand": "3m",
+   "name": "Matte Pine Green Metallic",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#2f4a39"
+  },
+  {
+   "id": "3m-matte-military-green",
+   "brand": "3m",
+   "name": "Matte Military Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#4f5638"
+  },
+  {
+   "id": "3m-matte-brown-metallic",
+   "brand": "3m",
+   "name": "Matte Brown Metallic",
+   "finish": "matte-metallic",
+   "family": "brown",
+   "hex": "#4c3a2e"
+  },
+  {
+   "id": "3m-br120",
+   "brand": "3m",
+   "name": "Brushed Aluminum",
+   "finish": "brushed",
+   "family": "silver",
+   "hex": "#b9bcbe",
+   "code": "2080-BR120"
+  },
+  {
+   "id": "3m-br201",
+   "brand": "3m",
+   "name": "Brushed Steel",
+   "finish": "brushed",
+   "family": "grey",
+   "hex": "#7a7e82",
+   "code": "2080-BR201"
+  },
+  {
+   "id": "3m-br212",
+   "brand": "3m",
+   "name": "Brushed Black Metallic",
+   "finish": "brushed",
+   "family": "black",
+   "hex": "#2a2b2e",
+   "code": "2080-BR212"
+  },
+  {
+   "id": "3m-br230",
+   "brand": "3m",
+   "name": "Brushed Titanium",
+   "finish": "brushed",
+   "family": "grey",
+   "hex": "#8e8a84",
+   "code": "2080-BR230"
+  },
+  {
+   "id": "3m-cfs12",
+   "brand": "3m",
+   "name": "Carbon Fiber Black",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#1b1c1f",
+   "code": "2080-CFS12"
+  },
+  {
+   "id": "3m-cfs201",
+   "brand": "3m",
+   "name": "Carbon Fiber Anthracite",
+   "finish": "carbon",
+   "family": "grey",
+   "hex": "#34373b",
+   "code": "2080-CFS201"
+  },
+  {
+   "id": "3m-sp59",
+   "brand": "3m",
+   "name": "Satin Flip Psychedelic",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#7a3d8c",
+   "code": "2080-SP59",
+   "hex2": "#2f8a6a"
+  },
+  {
+   "id": "3m-sp236",
+   "brand": "3m",
+   "name": "Satin Flip Volcanic Flare",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#9a2a2a",
+   "code": "2080-SP236",
+   "hex2": "#b8892a"
+  },
+  {
+   "id": "3m-sp277",
+   "brand": "3m",
+   "name": "Satin Flip Glacial Frost",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#c9d6dc",
+   "code": "2080-SP277",
+   "hex2": "#8fa6c7"
+  },
+  {
+   "id": "3m-sp280",
+   "brand": "3m",
+   "name": "Satin Flip Ghost Pearl",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#e9e6e6",
+   "code": "2080-SP280",
+   "hex2": "#b9a8d6"
+  },
+  {
+   "id": "3m-gp278",
+   "brand": "3m",
+   "name": "Gloss Flip Deep Space",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#1d1f3d",
+   "code": "2080-GP278",
+   "hex2": "#5a2a6e"
+  },
+  {
+   "id": "avery-sw900933x",
+   "brand": "avery",
+   "name": "Brushed Bronze",
+   "finish": "brushed",
+   "family": "bronze",
+   "hex": "#b17b5b",
+   "code": "SW900-933-X"
+  },
+  {
+   "id": "avery-sf100196s",
+   "brand": "avery",
+   "name": "Chrome Black",
+   "finish": "chrome",
+   "family": "black",
+   "hex": "#676c75",
+   "code": "SF100-196-S"
+  },
+  {
+   "id": "avery-sf100256s",
+   "brand": "avery",
+   "name": "Chrome Blue",
+   "finish": "chrome",
+   "family": "blue",
+   "hex": "#101578",
+   "code": "SF100-256-S"
+  },
+  {
+   "id": "avery-sf100604s",
+   "brand": "avery",
+   "name": "Chrome Gold",
+   "finish": "chrome",
+   "family": "gold",
+   "hex": "#857326",
+   "code": "SF100-604-S"
+  },
+  {
+   "id": "avery-sf100474s",
+   "brand": "avery",
+   "name": "Chrome Red",
+   "finish": "chrome",
+   "family": "red",
+   "hex": "#5b060d",
+   "code": "SF100-474-S"
+  },
+  {
+   "id": "avery-sf100211s",
+   "brand": "avery",
+   "name": "Chrome Rose Gold",
+   "finish": "chrome",
+   "family": "gold",
+   "hex": "#775159",
+   "code": "SF100-211-S"
+  },
+  {
+   "id": "avery-sf100843s",
+   "brand": "avery",
+   "name": "Chrome Silver",
+   "finish": "chrome",
+   "family": "silver",
+   "hex": "#969aa0",
+   "code": "SF100-843-S"
+  },
+  {
+   "id": "3m-gc451",
+   "brand": "3m",
+   "name": "Silver Chrome",
+   "finish": "chrome",
+   "family": "silver",
+   "hex": "#81858a",
+   "code": "2080-GC451"
+  },
+  {
+   "id": "avery-sw900812x",
+   "brand": "avery",
+   "name": "Brushed Aluminum",
+   "finish": "brushed",
+   "family": "grey",
+   "hex": "#848e97",
+   "code": "SW900-812-X"
+  },
+  {
+   "id": "avery-sw900813x",
+   "brand": "avery",
+   "name": "Brushed Steel",
+   "finish": "brushed",
+   "family": "grey",
+   "hex": "#939ca5",
+   "code": "SW900-813-X"
+  },
+  {
+   "id": "avery-sw900802x",
+   "brand": "avery",
+   "name": "Brushed Titanium",
+   "finish": "brushed",
+   "family": "grey",
+   "hex": "#797d87",
+   "code": "SW900-802-X"
+  },
+  {
+   "id": "avery-sw900193x",
+   "brand": "avery",
+   "name": "Brushed Black",
+   "finish": "brushed",
+   "family": "black",
+   "hex": "#5b616a",
+   "code": "SW900-193-X"
+  },
+  {
+   "id": "kpmf-k75469",
+   "brand": "kpmf",
+   "name": "Blue Black",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#11141d",
+   "code": "K75469",
+   "hex2": "#222b4b"
+  },
+  {
+   "id": "oracal-970ra173g",
+   "brand": "oracal",
+   "name": "Citrus Fury",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#8ba013",
+   "code": "970RA-173G",
+   "hex2": "#dce660"
+  },
+  {
+   "id": "oracal-970ra945g",
+   "brand": "oracal",
+   "name": "Crystal White",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#b9baba",
+   "code": "970RA-945G",
+   "hex2": "#e3e4e3"
+  },
+  {
+   "id": "oracal-970ra175g",
+   "brand": "oracal",
+   "name": "Enchanted Violet",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#5c2295",
+   "code": "970RA-175G",
+   "hex2": "#8545b7"
+  },
+  {
+   "id": "3m-sp213",
+   "brand": "3m",
+   "name": "Flip Electric Coral",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#ea9d87",
+   "code": "2080-SP213",
+   "hex2": "#f38285"
+  },
+  {
+   "id": "3m-sp264",
+   "brand": "3m",
+   "name": "Flip Golden Aurora",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#938445",
+   "code": "2080-SP264",
+   "hex2": "#9b884a"
+  },
+  {
+   "id": "oracal-970ra316g",
+   "brand": "oracal",
+   "name": "Gloss Amethyst",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#959cc3",
+   "code": "970RA-316G",
+   "hex2": "#ada7d1"
+  },
+  {
+   "id": "oracal-970ra318g",
+   "brand": "oracal",
+   "name": "Gloss Aquamarine",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#3e8f7f",
+   "code": "970RA-318G",
+   "hex2": "#73cccc"
+  },
+  {
+   "id": "oracal-970ra990g",
+   "brand": "oracal",
+   "name": "Gloss Aubergine Bronze",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#4f341e",
+   "code": "970RA-990G",
+   "hex2": "#88624e"
+  },
+  {
+   "id": "oracal-970ra905g",
+   "brand": "oracal",
+   "name": "Gloss Black Galactic Gold",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#1a1d1e",
+   "code": "970RA-905G",
+   "hex2": "#56595c"
+  },
+  {
+   "id": "oracal-970ra320g",
+   "brand": "oracal",
+   "name": "Gloss Cranberry",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#351213",
+   "code": "970RA-320G",
+   "hex2": "#74433d"
+  },
+  {
+   "id": "oracal-970ra100g",
+   "brand": "oracal",
+   "name": "Gloss Sunset Shift",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#8b1f1d",
+   "code": "970RA-100G",
+   "hex2": "#d54952"
+  },
+  {
+   "id": "oracal-970ra319g",
+   "brand": "oracal",
+   "name": "Gloss Ultramarine Violet",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#172681",
+   "code": "970RA-319G",
+   "hex2": "#5659b8"
+  },
+  {
+   "id": "kpmf-k75460",
+   "brand": "kpmf",
+   "name": "Green Black",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#13614b",
+   "code": "K75460",
+   "hex2": "#2f7b72"
+  },
+  {
+   "id": "3m-hgp221",
+   "brand": "3m",
+   "name": "High Gloss Flip Black Psychedelic",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#1b1c18",
+   "code": "2080-HGP221",
+   "hex2": "#2e2b2c"
+  },
+  {
+   "id": "3m-hgp278",
+   "brand": "3m",
+   "name": "High Gloss Flip Deep Space",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#654357",
+   "code": "2080-HGP278",
+   "hex2": "#53407f"
+  },
+  {
+   "id": "oracal-970ra155g",
+   "brand": "oracal",
+   "name": "Intergalactic Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#7f88b8",
+   "code": "970RA-155G",
+   "hex2": "#b8c0df"
+  },
+  {
+   "id": "oracal-970ra963g",
+   "brand": "oracal",
+   "name": "Jetstream Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#52728e",
+   "code": "970RA-963G",
+   "hex2": "#91b0c7"
+  },
+  {
+   "id": "oracal-970ra123g",
+   "brand": "oracal",
+   "name": "Lightning Strike",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#b79f19",
+   "code": "970RA-123G",
+   "hex2": "#e8de56"
+  },
+  {
+   "id": "oracal-970ra961g",
+   "brand": "oracal",
+   "name": "Luscious Lips",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#da4749",
+   "code": "970RA-961G",
+   "hex2": "#d2494b"
+  },
+  {
+   "id": "oracal-970ra316m",
+   "brand": "oracal",
+   "name": "Matt Amethyst",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#85909c",
+   "code": "970RA-316M",
+   "hex2": "#9e9da9"
+  },
+  {
+   "id": "oracal-970ra317m",
+   "brand": "oracal",
+   "name": "Matt Avocado",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#635f3d",
+   "code": "970RA-317M",
+   "hex2": "#819044"
+  },
+  {
+   "id": "oracal-970ra905m",
+   "brand": "oracal",
+   "name": "Matt Black Galactic Gold",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#292929",
+   "code": "970RA-905M",
+   "hex2": "#393939"
+  },
+  {
+   "id": "oracal-970ra320m",
+   "brand": "oracal",
+   "name": "Matt Cranberry",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#643436",
+   "code": "970RA-320M",
+   "hex2": "#b06f70"
+  },
+  {
+   "id": "oracal-970ra100m",
+   "brand": "oracal",
+   "name": "Matt Sunset Shift",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#9e4a1f",
+   "code": "970RA-100M",
+   "hex2": "#dc8945"
+  },
+  {
+   "id": "oracal-970ra319m",
+   "brand": "oracal",
+   "name": "Matt Ultramarine Violet",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#181d77",
+   "code": "970RA-319M",
+   "hex2": "#383bae"
+  },
+  {
+   "id": "oracal-970ra992g",
+   "brand": "oracal",
+   "name": "Pearl Green",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#a6c1b3",
+   "code": "970RA-992G",
+   "hex2": "#c0d4ca"
+  },
+  {
+   "id": "oracal-970ra315g",
+   "brand": "oracal",
+   "name": "Pearl Symphony",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#7e5969",
+   "code": "970RA-315G",
+   "hex2": "#bd9ca6"
+  },
+  {
+   "id": "kpmf-k75560",
+   "brand": "kpmf",
+   "name": "Platinum Dark Sage",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#546259",
+   "code": "K75560",
+   "hex2": "#525f56"
+  },
+  {
+   "id": "kpmf-k75465",
+   "brand": "kpmf",
+   "name": "Purple Black",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#472260",
+   "code": "K75465",
+   "hex2": "#774593"
+  },
+  {
+   "id": "kpmf-k75565",
+   "brand": "kpmf",
+   "name": "Purple Black",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#4a2e60",
+   "code": "K75565",
+   "hex2": "#57386f"
+  },
+  {
+   "id": "kpmf-k75566",
+   "brand": "kpmf",
+   "name": "Purple Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#403f8f",
+   "code": "K75566",
+   "hex2": "#594099"
+  },
+  {
+   "id": "kpmf-k75408",
+   "brand": "kpmf",
+   "name": "Red Black",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#590e12",
+   "code": "K75408",
+   "hex2": "#79242c"
+  },
+  {
+   "id": "oracal-970ra171g",
+   "brand": "oracal",
+   "name": "Riviera Rush",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#5aaa8c",
+   "code": "970RA-171G",
+   "hex2": "#69b99e"
+  },
+  {
+   "id": "oracal-970ra959g",
+   "brand": "oracal",
+   "name": "Tangerine Dream",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#b74814",
+   "code": "970RA-959G",
+   "hex2": "#eb9752"
+  },
+  {
+   "id": "oracal-970ra851g",
+   "brand": "oracal",
+   "name": "Thunderous Blue Green",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#123431",
+   "code": "970RA-851G",
+   "hex2": "#426f71"
+  },
+  {
+   "id": "oracal-970ra172g",
+   "brand": "oracal",
+   "name": "Turbo Turquoise",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#066964",
+   "code": "970RA-172G",
+   "hex2": "#43b6b1"
+  },
+  {
+   "id": "kpmf-k75473",
+   "brand": "kpmf",
+   "name": "Violet Haze",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#836a9d",
+   "code": "K75473",
+   "hex2": "#846a9e"
+  },
+  {
+   "id": "avery-sw900636o",
+   "brand": "avery",
+   "name": "Gloss Aqua Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1d779a",
+   "code": "SW900-636-O"
+  },
+  {
+   "id": "oracal-970ra178g",
+   "brand": "oracal",
+   "name": "Baltic Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#16182a",
+   "code": "970RA-178G"
+  },
+  {
+   "id": "oracal-970ra067g",
+   "brand": "oracal",
+   "name": "Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#092c53",
+   "code": "970RA-067G"
+  },
+  {
+   "id": "avery-sw900677o",
+   "brand": "avery",
+   "name": "Gloss Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#102a96",
+   "code": "SW900-677-O"
+  },
+  {
+   "id": "3m-g227",
+   "brand": "3m",
+   "name": "Blue Metallic",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#14437b",
+   "code": "2080-G227"
+  },
+  {
+   "id": "3m-g127",
+   "brand": "3m",
+   "name": "Gloss Boat Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#212835",
+   "code": "2080-G127"
+  },
+  {
+   "id": "avery-sw900656o",
+   "brand": "avery",
+   "name": "Gloss Cloudy Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#a8adc0",
+   "code": "SW900-656-O"
+  },
+  {
+   "id": "3m-g377",
+   "brand": "3m",
+   "name": "Gloss Cosmic Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#162387",
+   "code": "2080-G377"
+  },
+  {
+   "id": "avery-sw900681o",
+   "brand": "avery",
+   "name": "Gloss Dark Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#122060",
+   "code": "SW900-681-O"
+  },
+  {
+   "id": "3m-g217",
+   "brand": "3m",
+   "name": "Deep Blue Metallic",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1d3d9d",
+   "code": "2080-G217"
+  },
+  {
+   "id": "oracal-970ra547g",
+   "brand": "oracal",
+   "name": "Fjord Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0b488c",
+   "code": "970RA-547G"
+  },
+  {
+   "id": "oracal-970ra555g",
+   "brand": "oracal",
+   "name": "Glacier Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#26569d",
+   "code": "970RA-555G"
+  },
+  {
+   "id": "oracal-970ra111g",
+   "brand": "oracal",
+   "name": "GT3 Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#161a22",
+   "code": "970RA-111G"
+  },
+  {
+   "id": "3m-hg378",
+   "brand": "3m",
+   "name": "High Gloss Blue Raspberry",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#162f8e",
+   "code": "2080-HG378"
+  },
+  {
+   "id": "3m-hg77",
+   "brand": "3m",
+   "name": "High Gloss Sky Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1490c7",
+   "code": "2080-HG77"
+  },
+  {
+   "id": "oracal-970ra056g",
+   "brand": "oracal",
+   "name": "Ice Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#2682b3",
+   "code": "970RA-056G"
+  },
+  {
+   "id": "3m-g247",
+   "brand": "3m",
+   "name": "Gloss Ice Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#6583b3",
+   "code": "2080-G247"
+  },
+  {
+   "id": "oracal-970ra544g",
+   "brand": "oracal",
+   "name": "Indigo Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#112f3f",
+   "code": "970RA-544G"
+  },
+  {
+   "id": "avery-sw900699o",
+   "brand": "avery",
+   "name": "Gloss Indigo Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#112130",
+   "code": "SW900-699-O"
+  },
+  {
+   "id": "avery-sw900667o",
+   "brand": "avery",
+   "name": "Gloss Intense Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0f3cae",
+   "code": "SW900-667-O"
+  },
+  {
+   "id": "oracal-970ra049g",
+   "brand": "oracal",
+   "name": "King Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1c3b7f",
+   "code": "970RA-049G"
+  },
+  {
+   "id": "avery-sw900632o",
+   "brand": "avery",
+   "name": "Gloss Light Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0d5cb1",
+   "code": "SW900-632-O"
+  },
+  {
+   "id": "oracal-970ra564g",
+   "brand": "oracal",
+   "name": "Light Navy",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0e223a",
+   "code": "970RA-564G"
+  },
+  {
+   "id": "3m-gp272",
+   "brand": "3m",
+   "name": "Gloss Midnight Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#15283d",
+   "code": "2080-GP272"
+  },
+  {
+   "id": "oracal-970ra511g",
+   "brand": "oracal",
+   "name": "Night Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#132d63",
+   "code": "970RA-511G"
+  },
+  {
+   "id": "avery-sw900703o",
+   "brand": "avery",
+   "name": "Gloss Park Avenue Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#28949f",
+   "code": "SW900-703-O"
+  },
+  {
+   "id": "oracal-970ra572g",
+   "brand": "oracal",
+   "name": "Police Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0b4276",
+   "code": "970RA-572G"
+  },
+  {
+   "id": "oracal-970ra509g",
+   "brand": "oracal",
+   "name": "Sea Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1c5697",
+   "code": "970RA-509G"
+  },
+  {
+   "id": "avery-sw900648o",
+   "brand": "avery",
+   "name": "Gloss Sea Breeze Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#35a6b7",
+   "code": "SW900-648-O"
+  },
+  {
+   "id": "avery-sw900612o",
+   "brand": "avery",
+   "name": "Gloss Smoky Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#456d98",
+   "code": "SW900-612-O"
+  },
+  {
+   "id": "oracal-970ra057g",
+   "brand": "oracal",
+   "name": "Traffic Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1a548e",
+   "code": "970RA-057G"
+  },
+  {
+   "id": "kpmf-k75402",
+   "brand": "kpmf",
+   "name": "Atlantic Pearl",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#163ea5",
+   "code": "K75402"
+  },
+  {
+   "id": "oracal-970ra197g",
+   "brand": "oracal",
+   "name": "Azure",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#37699d",
+   "code": "970RA-197G"
+  },
+  {
+   "id": "oracal-970ra571g",
+   "brand": "oracal",
+   "name": "Ballistic Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#3f5c6b",
+   "code": "970RA-571G"
+  },
+  {
+   "id": "avery-sw900646m",
+   "brand": "avery",
+   "name": "Gloss Metallic Bright Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#1270a0",
+   "code": "SW900-646-M"
+  },
+  {
+   "id": "avery-sw900653m",
+   "brand": "avery",
+   "name": "Gloss Metallic Dark Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#192737",
+   "code": "SW900-653-M"
+  },
+  {
+   "id": "oracal-970ra192g",
+   "brand": "oracal",
+   "name": "Deep Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#071c3c",
+   "code": "970RA-192G"
+  },
+  {
+   "id": "oracal-970ra195g",
+   "brand": "oracal",
+   "name": "Dove Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#89a4b9",
+   "code": "970RA-195G"
+  },
+  {
+   "id": "kpmf-k75441",
+   "brand": "kpmf",
+   "name": "Excelsior Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#205466",
+   "code": "K75441"
+  },
+  {
+   "id": "kpmf-k75405",
+   "brand": "kpmf",
+   "name": "Indulgent Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#21518c",
+   "code": "K75405"
+  },
+  {
+   "id": "avery-sw900679m",
+   "brand": "avery",
+   "name": "Gloss Metallic Magnetic Burst",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#342e77",
+   "code": "SW900-679-M"
+  },
+  {
+   "id": "avery-sw900700m",
+   "brand": "avery",
+   "name": "Gloss Metallic Mysterious Indigo",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#31206c",
+   "code": "SW900-700-M"
+  },
+  {
+   "id": "oracal-970ra196g",
+   "brand": "oracal",
+   "name": "Night Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#15284c",
+   "code": "970RA-196G"
+  },
+  {
+   "id": "kpmf-k75452",
+   "brand": "kpmf",
+   "name": "Opulent Indigo",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#202865",
+   "code": "K75452"
+  },
+  {
+   "id": "kpmf-k75417",
+   "brand": "kpmf",
+   "name": "Twilight Sky",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#4a4a83",
+   "code": "K75417"
+  },
+  {
+   "id": "avery-sw900682o",
+   "brand": "avery",
+   "name": "Satin Dark Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#273771",
+   "code": "SW900-682-O"
+  },
+  {
+   "id": "avery-sw900633o",
+   "brand": "avery",
+   "name": "Satin Light Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#1b6ab5",
+   "code": "SW900-633-O"
+  },
+  {
+   "id": "3m-s87",
+   "brand": "3m",
+   "name": "Satin Lunar Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#5e6b77",
+   "code": "2080-S87"
+  },
+  {
+   "id": "avery-sw900616o",
+   "brand": "avery",
+   "name": "Matte Dreamline Blue",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#7187b7",
+   "code": "SW900-616-O"
+  },
+  {
+   "id": "oracal-970ra547m",
+   "brand": "oracal",
+   "name": "Fjord Blue",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#2c6ba2",
+   "code": "970RA-547M"
+  },
+  {
+   "id": "3m-m27",
+   "brand": "3m",
+   "name": "Matte Indigo",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#353842",
+   "code": "2080-M27"
+  },
+  {
+   "id": "oracal-970ra544m",
+   "brand": "oracal",
+   "name": "Indigo Blue",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#1b476b",
+   "code": "970RA-544M"
+  },
+  {
+   "id": "kpmf-k75802",
+   "brand": "kpmf",
+   "name": "Quantum Blue",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#27354c",
+   "code": "K75802"
+  },
+  {
+   "id": "3m-m67",
+   "brand": "3m",
+   "name": "Matte Riviera Blue",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#3299c8",
+   "code": "2080-M67"
+  },
+  {
+   "id": "3m-m217",
+   "brand": "3m",
+   "name": "Slate Blue Metallic",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#284387",
+   "code": "2080-M217"
+  },
+  {
+   "id": "oracal-970ra197m",
+   "brand": "oracal",
+   "name": "Azure",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#1f5478",
+   "code": "970RA-197M"
+  },
+  {
+   "id": "avery-sw900671m",
+   "brand": "avery",
+   "name": "Matte Metallic Brilliant Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#283e8c",
+   "code": "SW900-671-M"
+  },
+  {
+   "id": "kpmf-k75561",
+   "brand": "kpmf",
+   "name": "Elan Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#4b789d",
+   "code": "K75561"
+  },
+  {
+   "id": "avery-sw900643m",
+   "brand": "avery",
+   "name": "Matte Metallic Frosty Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#6290aa",
+   "code": "SW900-643-M"
+  },
+  {
+   "id": "kpmf-k75505",
+   "brand": "kpmf",
+   "name": "Iced Blue Titanium",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#25437f",
+   "code": "K75505"
+  },
+  {
+   "id": "oracal-970ra196m",
+   "brand": "oracal",
+   "name": "Night Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#223a63",
+   "code": "970RA-196M"
+  },
+  {
+   "id": "avery-sw900623m",
+   "brand": "avery",
+   "name": "Matte Metallic Night Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#22356a",
+   "code": "SW900-623-M"
+  },
+  {
+   "id": "kpmf-k75517",
+   "brand": "kpmf",
+   "name": "Palladian Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#599cc3",
+   "code": "K75517"
+  },
+  {
+   "id": "kpmf-k75562",
+   "brand": "kpmf",
+   "name": "Sinister Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#161c29",
+   "code": "K75562"
+  },
+  {
+   "id": "kpmf-k75513",
+   "brand": "kpmf",
+   "name": "Tempest Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#21283b",
+   "code": "K75513"
+  },
+  {
+   "id": "kpmf-k75544",
+   "brand": "kpmf",
+   "name": "Trenton Blue",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#3b5e7c",
+   "code": "K75544"
+  },
+  {
+   "id": "kpmf-k75578",
+   "brand": "kpmf",
+   "name": "Sapphire",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#192643",
+   "code": "K75578"
+  },
+  {
+   "id": "avery-sw900676d",
+   "brand": "avery",
+   "name": "Diamond Blue",
+   "finish": "diamond",
+   "family": "blue",
+   "hex": "#1d47aa",
+   "code": "SW900-676-D"
+  },
+  {
+   "id": "avery-sw900629s",
+   "brand": "avery",
+   "name": "Wave Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#192a82",
+   "code": "SW900-629-S",
+   "hex2": "#1f399c"
+  },
+  {
+   "id": "3m-g356",
+   "brand": "3m",
+   "name": "Gloss Atomic Teal",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#088f98",
+   "code": "2080-G356"
+  },
+  {
+   "id": "oracal-970ra689g",
+   "brand": "oracal",
+   "name": "Juniper",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#134b50",
+   "code": "970RA-689G"
+  },
+  {
+   "id": "oracal-970ra553g",
+   "brand": "oracal",
+   "name": "Lagoon",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#155e76",
+   "code": "970RA-553G"
+  },
+  {
+   "id": "oracal-970ra055g",
+   "brand": "oracal",
+   "name": "Mint",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#3faba1",
+   "code": "970RA-055G"
+  },
+  {
+   "id": "kpmf-k75413",
+   "brand": "kpmf",
+   "name": "Tidal Teal",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#214144",
+   "code": "K75413"
+  },
+  {
+   "id": "avery-sw9006329o",
+   "brand": "avery",
+   "name": "Gloss Turquoise Ocean",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0d568c",
+   "code": "SW900-6329-O"
+  },
+  {
+   "id": "kpmf-k75455",
+   "brand": "kpmf",
+   "name": "Dynamic Teal",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#23747d",
+   "code": "K75455"
+  },
+  {
+   "id": "3m-s57",
+   "brand": "3m",
+   "name": "Satin Key West",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#83ccd1",
+   "code": "2080-S57"
+  },
+  {
+   "id": "3m-s327",
+   "brand": "3m",
+   "name": "Satin Ocean Shimmer",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#1d9dbf",
+   "code": "2080-S327"
+  },
+  {
+   "id": "oracal-970ra553m",
+   "brand": "oracal",
+   "name": "Lagoon",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#228396",
+   "code": "970RA-553M"
+  },
+  {
+   "id": "oracal-970ra055m",
+   "brand": "oracal",
+   "name": "Mint",
+   "finish": "matte",
+   "family": "blue",
+   "hex": "#4ab8a1",
+   "code": "970RA-055M"
+  },
+  {
+   "id": "kpmf-k75509",
+   "brand": "kpmf",
+   "name": "Arctic Borealis",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#4e8d7e",
+   "code": "K75509"
+  },
+  {
+   "id": "kpmf-k75511",
+   "brand": "kpmf",
+   "name": "Dynamic Turquoise",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#2b9099",
+   "code": "K75511"
+  },
+  {
+   "id": "avery-sw900716s",
+   "brand": "avery",
+   "name": "Cool Teal",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#17746f",
+   "code": "SW900-716-S",
+   "hex2": "#1e7e86"
+  },
+  {
+   "id": "oracal-970ra688g",
+   "brand": "oracal",
+   "name": "Algae Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#7e9211",
+   "code": "970RA-688G"
+  },
+  {
+   "id": "oracal-970ra286g",
+   "brand": "oracal",
+   "name": "Bottle Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#23261b",
+   "code": "970RA-286G"
+  },
+  {
+   "id": "avery-sw900771o",
+   "brand": "avery",
+   "name": "Gloss Emerald Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#268973",
+   "code": "SW900-771-O"
+  },
+  {
+   "id": "oracal-970ra622g",
+   "brand": "oracal",
+   "name": "Fir Tree Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#0d201d",
+   "code": "970RA-622G"
+  },
+  {
+   "id": "oracal-970ra602g",
+   "brand": "oracal",
+   "name": "Grass Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#25942f",
+   "code": "970RA-602G"
+  },
+  {
+   "id": "avery-sw900758o",
+   "brand": "avery",
+   "name": "Gloss Grass Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#1b992b",
+   "code": "SW900-758-O"
+  },
+  {
+   "id": "3m-hg336",
+   "brand": "3m",
+   "name": "High Gloss Green Envy",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#0f6433",
+   "code": "2080-HG336"
+  },
+  {
+   "id": "3m-hg36",
+   "brand": "3m",
+   "name": "High Gloss Mantis Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#376145",
+   "code": "2080-HG36"
+  },
+  {
+   "id": "3m-g46",
+   "brand": "3m",
+   "name": "Gloss Kelly Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#1da253",
+   "code": "2080-G46"
+  },
+  {
+   "id": "oracal-970ra464g",
+   "brand": "oracal",
+   "name": "Lawn Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#247b0b",
+   "code": "970RA-464G"
+  },
+  {
+   "id": "3m-g16",
+   "brand": "3m",
+   "name": "Gloss Light Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#339e2b",
+   "code": "2080-G16"
+  },
+  {
+   "id": "avery-sw900728o",
+   "brand": "avery",
+   "name": "Gloss Light Pistachio",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#9db19c",
+   "code": "SW900-728-O"
+  },
+  {
+   "id": "avery-sw900731o",
+   "brand": "avery",
+   "name": "Gloss Lime Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#a8bc28",
+   "code": "SW900-731-O"
+  },
+  {
+   "id": "oracal-970ra612g",
+   "brand": "oracal",
+   "name": "Police Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#12653a",
+   "code": "970RA-612G"
+  },
+  {
+   "id": "avery-sw900729o",
+   "brand": "avery",
+   "name": "Gloss Smooth Sage",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#3b615d",
+   "code": "SW900-729-O"
+  },
+  {
+   "id": "kpmf-k75438",
+   "brand": "kpmf",
+   "name": "Surge Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#7bad06",
+   "code": "K75438"
+  },
+  {
+   "id": "oracal-970ra486g",
+   "brand": "oracal",
+   "name": "Tree Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#2b7125",
+   "code": "970RA-486G"
+  },
+  {
+   "id": "avery-sw900701o",
+   "brand": "avery",
+   "name": "Gloss Tropical Vacation Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#7ebb3f",
+   "code": "SW900-701-O"
+  },
+  {
+   "id": "kpmf-k75454",
+   "brand": "kpmf",
+   "name": "Dynamic Lime",
+   "finish": "gloss-metallic",
+   "family": "yellow",
+   "hex": "#99b00f",
+   "code": "K75454"
+  },
+  {
+   "id": "kpmf-k75407",
+   "brand": "kpmf",
+   "name": "Envious Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#377153",
+   "code": "K75407"
+  },
+  {
+   "id": "oracal-970ra677g",
+   "brand": "oracal",
+   "name": "Fir Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#243325",
+   "code": "970RA-677G"
+  },
+  {
+   "id": "avery-sw900762m",
+   "brand": "avery",
+   "name": "Gloss Metallic Radioactive",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#1c4d35",
+   "code": "SW900-762-M"
+  },
+  {
+   "id": "avery-sw900702o",
+   "brand": "avery",
+   "name": "Satin Jade",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#a4b7b4",
+   "code": "SW900-702-O"
+  },
+  {
+   "id": "avery-sw900712o",
+   "brand": "avery",
+   "name": "Satin Khaki Green",
+   "finish": "satin",
+   "family": "green",
+   "hex": "#6b7371",
+   "code": "SW900-712-O"
+  },
+  {
+   "id": "3m-s56",
+   "brand": "3m",
+   "name": "Satin Komodo Green",
+   "finish": "satin",
+   "family": "green",
+   "hex": "#778370",
+   "code": "2080-S56"
+  },
+  {
+   "id": "kpmf-k75806",
+   "brand": "kpmf",
+   "name": "Forest Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#2a432e",
+   "code": "K75806"
+  },
+  {
+   "id": "avery-sw900711o",
+   "brand": "avery",
+   "name": "Matte Khaki Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#7e847d",
+   "code": "SW900-711-O"
+  },
+  {
+   "id": "3m-m26",
+   "brand": "3m",
+   "name": "Matte Military Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#535f3b",
+   "code": "2080-M26"
+  },
+  {
+   "id": "oracal-970ra285m",
+   "brand": "oracal",
+   "name": "Nato Olive",
+   "finish": "matte",
+   "family": "yellow",
+   "hex": "#333527",
+   "code": "970RA-285M"
+  },
+  {
+   "id": "avery-sw900732o",
+   "brand": "avery",
+   "name": "Matte Olive Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#4e585a",
+   "code": "SW900-732-O"
+  },
+  {
+   "id": "3m-m206",
+   "brand": "3m",
+   "name": "Pine Green Metallic",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#4c776b",
+   "code": "2080-M206"
+  },
+  {
+   "id": "avery-sw900745m",
+   "brand": "avery",
+   "name": "Matte Metallic Apple Green",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#467846",
+   "code": "SW900-745-M"
+  },
+  {
+   "id": "kpmf-k75503",
+   "brand": "kpmf",
+   "name": "Dynamic Lime",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#8ea437",
+   "code": "K75503"
+  },
+  {
+   "id": "kpmf-k75507",
+   "brand": "kpmf",
+   "name": "Iced Green Titanium",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#0e6243",
+   "code": "K75507"
+  },
+  {
+   "id": "avery-sw900737m",
+   "brand": "avery",
+   "name": "Matte Metallic Moss Green",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#515f43",
+   "code": "SW900-737-M"
+  },
+  {
+   "id": "kpmf-k75542",
+   "brand": "kpmf",
+   "name": "Viper Green",
+   "finish": "matte-metallic",
+   "family": "green",
+   "hex": "#768c24",
+   "code": "K75542"
+  },
+  {
+   "id": "avery-sw900796s",
+   "brand": "avery",
+   "name": "Pearl Dark Green",
+   "finish": "pearl",
+   "family": "green",
+   "hex": "#116c64",
+   "code": "SW900-796-S"
+  },
+  {
+   "id": "kpmf-k75577",
+   "brand": "kpmf",
+   "name": "Emerald",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#112118",
+   "code": "K75577"
+  },
+  {
+   "id": "avery-sw900718x",
+   "brand": "avery",
+   "name": "Matte Rugged Combat Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#656a5a",
+   "code": "SW900-718-X"
+  },
+  {
+   "id": "avery-sw900738x",
+   "brand": "avery",
+   "name": "Matte Rugged Marsh Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#33463b",
+   "code": "SW900-738-X"
+  },
+  {
+   "id": "avery-sw900236o",
+   "brand": "avery",
+   "name": "Gloss Ambulance Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#c8bf10",
+   "code": "SW900-236-O"
+  },
+  {
+   "id": "oracal-970ra235g",
+   "brand": "oracal",
+   "name": "Canary Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#ceb218",
+   "code": "970RA-235G"
+  },
+  {
+   "id": "oracal-970ra256g",
+   "brand": "oracal",
+   "name": "Cargo Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#d99d0a",
+   "code": "970RA-256G"
+  },
+  {
+   "id": "oracal-970ra201g",
+   "brand": "oracal",
+   "name": "Crocus Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#c8a815",
+   "code": "970RA-201G"
+  },
+  {
+   "id": "avery-sw900249o",
+   "brand": "avery",
+   "name": "Gloss Dark Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#ca9314",
+   "code": "SW900-249-O"
+  },
+  {
+   "id": "oracal-970ra020g",
+   "brand": "oracal",
+   "name": "Golden Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#b27d12",
+   "code": "970RA-020G"
+  },
+  {
+   "id": "3m-hg65",
+   "brand": "3m",
+   "name": "High Gloss Citric Acid",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#a8b606",
+   "code": "2080-HG65"
+  },
+  {
+   "id": "kpmf-k75436",
+   "brand": "kpmf",
+   "name": "Honey Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#cf8b07",
+   "code": "K75436"
+  },
+  {
+   "id": "3m-g335",
+   "brand": "3m",
+   "name": "Gloss Lemon Sting",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#cbac41",
+   "code": "2080-G335"
+  },
+  {
+   "id": "oracal-970ra022g",
+   "brand": "oracal",
+   "name": "Light Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#d4a508",
+   "code": "970RA-022G"
+  },
+  {
+   "id": "oracal-970ra209g",
+   "brand": "oracal",
+   "name": "Maize Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#ae830d",
+   "code": "970RA-209G"
+  },
+  {
+   "id": "oracal-970ra208g",
+   "brand": "oracal",
+   "name": "Post Office Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#a87e0c",
+   "code": "970RA-208G"
+  },
+  {
+   "id": "oracal-970ra216g",
+   "brand": "oracal",
+   "name": "Traffic Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#d4b410",
+   "code": "970RA-216G"
+  },
+  {
+   "id": "avery-sw900235o",
+   "brand": "avery",
+   "name": "Gloss Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#ccac12",
+   "code": "SW900-235-O"
+  },
+  {
+   "id": "3m-s335",
+   "brand": "3m",
+   "name": "Satin Bitter Yellow",
+   "finish": "satin",
+   "family": "yellow",
+   "hex": "#cdbb4f",
+   "code": "2080-S335"
+  },
+  {
+   "id": "avery-sw900224o",
+   "brand": "avery",
+   "name": "Satin Yellow",
+   "finish": "satin",
+   "family": "yellow",
+   "hex": "#c7a927",
+   "code": "SW900-224-O"
+  },
+  {
+   "id": "oracal-970ra209m",
+   "brand": "oracal",
+   "name": "Maize Yellow",
+   "finish": "matte",
+   "family": "yellow",
+   "hex": "#dbaa22",
+   "code": "970RA-209M"
+  },
+  {
+   "id": "oracal-970ra223m",
+   "brand": "oracal",
+   "name": "Safron Yellow",
+   "finish": "matte",
+   "family": "yellow",
+   "hex": "#d38621",
+   "code": "970RA-223M"
+  },
+  {
+   "id": "kpmf-k75534",
+   "brand": "kpmf",
+   "name": "Iced Yellow Titanium",
+   "finish": "matte-metallic",
+   "family": "yellow",
+   "hex": "#aaa445",
+   "code": "K75534"
+  },
+  {
+   "id": "kpmf-k75538",
+   "brand": "kpmf",
+   "name": "Sonic Yellow Pearl",
+   "finish": "matte-metallic",
+   "family": "yellow",
+   "hex": "#d8a613",
+   "code": "K75538"
+  },
+  {
+   "id": "avery-sw900261s",
+   "brand": "avery",
+   "name": "Energetic Yellow",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#af9536",
+   "code": "SW900-261-S",
+   "hex2": "#b79b38"
+  },
+  {
+   "id": "3m-g54",
+   "brand": "3m",
+   "name": "Gloss Bright Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#ce8b33",
+   "code": "2080-G54"
+  },
+  {
+   "id": "oracal-970ra363g",
+   "brand": "oracal",
+   "name": "Daggi Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#aa3910",
+   "code": "970RA-363G"
+  },
+  {
+   "id": "3m-g24",
+   "brand": "3m",
+   "name": "Gloss Deep Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#cd8037",
+   "code": "2080-G24"
+  },
+  {
+   "id": "3m-g364",
+   "brand": "3m",
+   "name": "Gloss Fiery Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#c23113",
+   "code": "2080-G364"
+  },
+  {
+   "id": "oracal-970ra351g",
+   "brand": "oracal",
+   "name": "Municipal Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#d4540a",
+   "code": "970RA-351G"
+  },
+  {
+   "id": "avery-sw900373o",
+   "brand": "avery",
+   "name": "Gloss Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#bf3117",
+   "code": "SW900-373-O"
+  },
+  {
+   "id": "kpmf-k75404",
+   "brand": "kpmf",
+   "name": "Ember Orange",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#a84a16",
+   "code": "K75404"
+  },
+  {
+   "id": "oracal-970ra300g",
+   "brand": "oracal",
+   "name": "Mandarin",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#ab5620",
+   "code": "970RA-300G"
+  },
+  {
+   "id": "avery-sw900302o",
+   "brand": "avery",
+   "name": "Satin Sunset Ride",
+   "finish": "satin",
+   "family": "red",
+   "hex": "#c77e67",
+   "code": "SW900-302-O"
+  },
+  {
+   "id": "3m-m54",
+   "brand": "3m",
+   "name": "Matte Orange",
+   "finish": "matte",
+   "family": "orange",
+   "hex": "#cc7730",
+   "code": "2080-M54"
+  },
+  {
+   "id": "avery-sw900321o",
+   "brand": "avery",
+   "name": "Matte Orange",
+   "finish": "matte",
+   "family": "orange",
+   "hex": "#d48138",
+   "code": "SW900-321-O"
+  },
+  {
+   "id": "kpmf-k75591",
+   "brand": "kpmf",
+   "name": "Iced Amber Titanium",
+   "finish": "matte-metallic",
+   "family": "orange",
+   "hex": "#b98139",
+   "code": "K75591"
+  },
+  {
+   "id": "kpmf-k75502",
+   "brand": "kpmf",
+   "name": "Iced Orange Titanium",
+   "finish": "matte-metallic",
+   "family": "orange",
+   "hex": "#c96322",
+   "code": "K75502"
+  },
+  {
+   "id": "avery-sw900316s",
+   "brand": "avery",
+   "name": "Stunning Orange",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#bc9e46",
+   "code": "SW900-316-S",
+   "hex2": "#c7ab57"
+  },
+  {
+   "id": "avery-sw900475o",
+   "brand": "avery",
+   "name": "Gloss Burgundy",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#45161a",
+   "code": "SW900-475-O"
+  },
+  {
+   "id": "oracal-970ra028g",
+   "brand": "oracal",
+   "name": "Cardinal Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#8e151b",
+   "code": "970RA-028G"
+  },
+  {
+   "id": "avery-sw900433o",
+   "brand": "avery",
+   "name": "Gloss Cardinal Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#9e1c19",
+   "code": "SW900-433-O"
+  },
+  {
+   "id": "oracal-970ra882g",
+   "brand": "oracal",
+   "name": "Cargo Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#771319",
+   "code": "970RA-882G"
+  },
+  {
+   "id": "avery-sw900436o",
+   "brand": "avery",
+   "name": "Gloss Carmine Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#95131a",
+   "code": "SW900-436-O"
+  },
+  {
+   "id": "oracal-970ra371g",
+   "brand": "oracal",
+   "name": "Chili Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#820c0e",
+   "code": "970RA-371G"
+  },
+  {
+   "id": "3m-gp253",
+   "brand": "3m",
+   "name": "Gloss Cinder Spark Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#941f2d",
+   "code": "2080-GP253"
+  },
+  {
+   "id": "oracal-970ra030g",
+   "brand": "oracal",
+   "name": "Dark Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#581919",
+   "code": "970RA-030G"
+  },
+  {
+   "id": "oracal-970ra305g",
+   "brand": "oracal",
+   "name": "Geranium Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#a01615",
+   "code": "970RA-305G"
+  },
+  {
+   "id": "3m-hg13",
+   "brand": "3m",
+   "name": "High Gloss Hot Rod Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#a31616",
+   "code": "2080-HG13"
+  },
+  {
+   "id": "3m-hg73",
+   "brand": "3m",
+   "name": "High Gloss Ruby Rosso",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#621a1b",
+   "code": "2080-HG73"
+  },
+  {
+   "id": "oracal-970ra032g",
+   "brand": "oracal",
+   "name": "Light Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#98110a",
+   "code": "970RA-032G"
+  },
+  {
+   "id": "oracal-970ra026g",
+   "brand": "oracal",
+   "name": "Purple Red",
+   "finish": "gloss",
+   "family": "purple",
+   "hex": "#401018",
+   "code": "970RA-026G"
+  },
+  {
+   "id": "oracal-970ra031g",
+   "brand": "oracal",
+   "name": "Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#911513",
+   "code": "970RA-031G"
+  },
+  {
+   "id": "avery-sw900415o",
+   "brand": "avery",
+   "name": "Gloss Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#af111a",
+   "code": "SW900-415-O"
+  },
+  {
+   "id": "3m-g203",
+   "brand": "3m",
+   "name": "Red Metallic",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#a9262d",
+   "code": "2080-G203"
+  },
+  {
+   "id": "oracal-970ra897g",
+   "brand": "oracal",
+   "name": "Rose Hip",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#941c1b",
+   "code": "970RA-897G"
+  },
+  {
+   "id": "avery-sw900427o",
+   "brand": "avery",
+   "name": "Gloss Soft Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#a0252e",
+   "code": "SW900-427-O"
+  },
+  {
+   "id": "kpmf-k75447",
+   "brand": "kpmf",
+   "name": "Midnight Crimson Bloom",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#210506",
+   "code": "K75447"
+  },
+  {
+   "id": "avery-sw900401m",
+   "brand": "avery",
+   "name": "Gloss Metallic Pure Red",
+   "finish": "gloss-metallic",
+   "family": "red",
+   "hex": "#991520",
+   "code": "SW900-401-M"
+  },
+  {
+   "id": "oracal-970ra369g",
+   "brand": "oracal",
+   "name": "Red Brown",
+   "finish": "gloss-metallic",
+   "family": "brown",
+   "hex": "#351417",
+   "code": "970RA-369G"
+  },
+  {
+   "id": "avery-sw900419m",
+   "brand": "avery",
+   "name": "Gloss Metallic Spark",
+   "finish": "gloss-metallic",
+   "family": "red",
+   "hex": "#c2233c",
+   "code": "SW900-419-M"
+  },
+  {
+   "id": "kpmf-k75403",
+   "brand": "kpmf",
+   "name": "Vengeance Red",
+   "finish": "gloss-metallic",
+   "family": "red",
+   "hex": "#83231f",
+   "code": "K75403"
+  },
+  {
+   "id": "avery-sw900438o",
+   "brand": "avery",
+   "name": "Satin Carmine Red",
+   "finish": "satin",
+   "family": "red",
+   "hex": "#9b2732",
+   "code": "SW900-438-O"
+  },
+  {
+   "id": "3m-sp273",
+   "brand": "3m",
+   "name": "Satin Vampire Red",
+   "finish": "satin",
+   "family": "red",
+   "hex": "#a82930",
+   "code": "2080-SP273"
+  },
+  {
+   "id": "oracal-970ra028m",
+   "brand": "oracal",
+   "name": "Cardinal Red",
+   "finish": "matte",
+   "family": "red",
+   "hex": "#af2528",
+   "code": "970RA-028M"
+  },
+  {
+   "id": "kpmf-k75801",
+   "brand": "kpmf",
+   "name": "Mythos Red",
+   "finish": "matte",
+   "family": "red",
+   "hex": "#502b2b",
+   "code": "K75801"
+  },
+  {
+   "id": "kpmf-k75554",
+   "brand": "kpmf",
+   "name": "Autumn Fire",
+   "finish": "matte-metallic",
+   "family": "orange",
+   "hex": "#a26233",
+   "code": "K75554"
+  },
+  {
+   "id": "avery-sw900444m",
+   "brand": "avery",
+   "name": "Matte Metallic Cherry",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#8c1a3d",
+   "code": "SW900-444-M"
+  },
+  {
+   "id": "oracal-970ra368m",
+   "brand": "oracal",
+   "name": "Dark Red",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#83222b",
+   "code": "970RA-368M"
+  },
+  {
+   "id": "avery-sw900472m",
+   "brand": "avery",
+   "name": "Matte Metallic Garnet Red",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#763e47",
+   "code": "SW900-472-M"
+  },
+  {
+   "id": "kpmf-k75506",
+   "brand": "kpmf",
+   "name": "Iced Red Titanium",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#a03934",
+   "code": "K75506"
+  },
+  {
+   "id": "oracal-970ra369m",
+   "brand": "oracal",
+   "name": "Red Brown",
+   "finish": "matte-metallic",
+   "family": "brown",
+   "hex": "#491b1e",
+   "code": "970RA-369M"
+  },
+  {
+   "id": "kpmf-k75545",
+   "brand": "kpmf",
+   "name": "Russet Red",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#7c5749",
+   "code": "K75545"
+  },
+  {
+   "id": "kpmf-k75508",
+   "brand": "kpmf",
+   "name": "Widowed Red",
+   "finish": "matte-metallic",
+   "family": "red",
+   "hex": "#311312",
+   "code": "K75508"
+  },
+  {
+   "id": "oracal-970ra372m",
+   "brand": "oracal",
+   "name": "Imperial Red",
+   "finish": "pearl",
+   "family": "red",
+   "hex": "#720d1a",
+   "code": "970RA-372M"
+  },
+  {
+   "id": "kpmf-k75573",
+   "brand": "kpmf",
+   "name": "Ruby",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#2a1115",
+   "code": "K75573"
+  },
+  {
+   "id": "avery-sw900426d",
+   "brand": "avery",
+   "name": "Diamond Red",
+   "finish": "diamond",
+   "family": "red",
+   "hex": "#a6232b",
+   "code": "SW900-426-D"
+  },
+  {
+   "id": "avery-sw900448s",
+   "brand": "avery",
+   "name": "Passion Red",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#452327",
+   "code": "SW900-448-S",
+   "hex2": "#64383f"
+  },
+  {
+   "id": "3m-g348",
+   "brand": "3m",
+   "name": "Gloss Fierce Fuchsia",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#95195c",
+   "code": "2080-G348"
+  },
+  {
+   "id": "3m-g103",
+   "brand": "3m",
+   "name": "Gloss Hot Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#c64792",
+   "code": "2080-G103"
+  },
+  {
+   "id": "avery-sw900517o",
+   "brand": "avery",
+   "name": "Gloss Pool Party Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#bc233f",
+   "code": "SW900-517-O"
+  },
+  {
+   "id": "oracal-970ra045g",
+   "brand": "oracal",
+   "name": "Soft Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#c65b8e",
+   "code": "970RA-045G"
+  },
+  {
+   "id": "oracal-970ra077g",
+   "brand": "oracal",
+   "name": "Telemagenta",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#8f1e53",
+   "code": "970RA-077G"
+  },
+  {
+   "id": "avery-sw900526m",
+   "brand": "avery",
+   "name": "Gloss Metallic Cosmic Rose",
+   "finish": "gloss-metallic",
+   "family": "purple",
+   "hex": "#8a2290",
+   "code": "SW900-526-M"
+  },
+  {
+   "id": "kpmf-k75410",
+   "brand": "kpmf",
+   "name": "Cosmos Pink",
+   "finish": "gloss-metallic",
+   "family": "pink",
+   "hex": "#97286e",
+   "code": "K75410"
+  },
+  {
+   "id": "kpmf-k75406",
+   "brand": "kpmf",
+   "name": "Momentum Pink",
+   "finish": "gloss-metallic",
+   "family": "pink",
+   "hex": "#b74287",
+   "code": "K75406"
+  },
+  {
+   "id": "avery-sw900514o",
+   "brand": "avery",
+   "name": "Satin Bubblegum Pink",
+   "finish": "satin",
+   "family": "pink",
+   "hex": "#c888b5",
+   "code": "SW900-514-O"
+  },
+  {
+   "id": "3m-s23",
+   "brand": "3m",
+   "name": "Satin Velvet Rose",
+   "finish": "satin",
+   "family": "red",
+   "hex": "#a87674",
+   "code": "2080-S23"
+  },
+  {
+   "id": "kpmf-k75504",
+   "brand": "kpmf",
+   "name": "Iced Pink Titanium",
+   "finish": "matte-metallic",
+   "family": "pink",
+   "hex": "#c17b9c",
+   "code": "K75504"
+  },
+  {
+   "id": "avery-sw900520m",
+   "brand": "avery",
+   "name": "Matte Metallic Pink",
+   "finish": "matte-metallic",
+   "family": "pink",
+   "hex": "#a84d73",
+   "code": "SW900-520-M"
+  },
+  {
+   "id": "avery-sw900523s",
+   "brand": "avery",
+   "name": "Pearl Tutu Pink",
+   "finish": "pearl",
+   "family": "pink",
+   "hex": "#d8acbf",
+   "code": "SW900-523-S"
+  },
+  {
+   "id": "kpmf-k75575",
+   "brand": "kpmf",
+   "name": "Mystic Pink",
+   "finish": "satin-metallic",
+   "family": "pink",
+   "hex": "#191114",
+   "code": "K75575"
+  },
+  {
+   "id": "3m-hgp258",
+   "brand": "3m",
+   "name": "High Gloss Plum Explosion 2.0",
+   "finish": "gloss",
+   "family": "purple",
+   "hex": "#542577",
+   "code": "2080-HGP258"
+  },
+  {
+   "id": "3m-gp258",
+   "brand": "3m",
+   "name": "Gloss Plum Explosion",
+   "finish": "gloss",
+   "family": "purple",
+   "hex": "#462994",
+   "code": "2080-GP258"
+  },
+  {
+   "id": "kpmf-k75459",
+   "brand": "kpmf",
+   "name": "Hypnotic Black Violet",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#23192c",
+   "code": "K75459"
+  },
+  {
+   "id": "kpmf-k75468",
+   "brand": "kpmf",
+   "name": "Imperial Orchid",
+   "finish": "gloss-metallic",
+   "family": "purple",
+   "hex": "#55317c",
+   "code": "K75468"
+  },
+  {
+   "id": "avery-sw900521m",
+   "brand": "avery",
+   "name": "Gloss Metallic Popstar Concert Purple",
+   "finish": "gloss-metallic",
+   "family": "purple",
+   "hex": "#6d1c57",
+   "code": "SW900-521-M"
+  },
+  {
+   "id": "avery-sw900522m",
+   "brand": "avery",
+   "name": "Gloss Metallic Vibrant Violet",
+   "finish": "gloss-metallic",
+   "family": "purple",
+   "hex": "#7349c6",
+   "code": "SW900-522-M"
+  },
+  {
+   "id": "kpmf-k75416",
+   "brand": "kpmf",
+   "name": "Viola Noir",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#28272a",
+   "code": "K75416"
+  },
+  {
+   "id": "oracal-970ra406g",
+   "brand": "oracal",
+   "name": "Violet",
+   "finish": "gloss-metallic",
+   "family": "purple",
+   "hex": "#651d82",
+   "code": "970RA-406G"
+  },
+  {
+   "id": "kpmf-k75803",
+   "brand": "kpmf",
+   "name": "Royal Amethyst",
+   "finish": "matte",
+   "family": "purple",
+   "hex": "#3f2c65",
+   "code": "K75803"
+  },
+  {
+   "id": "kpmf-k75568",
+   "brand": "kpmf",
+   "name": "Iced Amethyst Titanium",
+   "finish": "matte-metallic",
+   "family": "purple",
+   "hex": "#472166",
+   "code": "K75568"
+  },
+  {
+   "id": "avery-sw900565m",
+   "brand": "avery",
+   "name": "Matte Metallic Purple",
+   "finish": "matte-metallic",
+   "family": "purple",
+   "hex": "#494770",
+   "code": "SW900-565-M"
+  },
+  {
+   "id": "oracal-970ra406m",
+   "brand": "oracal",
+   "name": "Violet",
+   "finish": "matte-metallic",
+   "family": "purple",
+   "hex": "#4a2e5d",
+   "code": "970RA-406M"
+  },
+  {
+   "id": "kpmf-k75570",
+   "brand": "kpmf",
+   "name": "Midnight Purple",
+   "finish": "satin-metallic",
+   "family": "purple",
+   "hex": "#1b1622",
+   "code": "K75570"
+  },
+  {
+   "id": "avery-sw900587d",
+   "brand": "avery",
+   "name": "Diamond Purple",
+   "finish": "diamond",
+   "family": "purple",
+   "hex": "#474178",
+   "code": "SW900-587-D"
+  },
+  {
+   "id": "avery-sw900568s",
+   "brand": "avery",
+   "name": "Fun Purple",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#551f4f",
+   "code": "SW900-568-S",
+   "hex2": "#73316c"
+  },
+  {
+   "id": "avery-sw900929m",
+   "brand": "avery",
+   "name": "Gloss Metallic Brown",
+   "finish": "gloss-metallic",
+   "family": "brown",
+   "hex": "#5b4b49",
+   "code": "SW900-929-M"
+  },
+  {
+   "id": "oracal-970ra874g",
+   "brand": "oracal",
+   "name": "Orient Brown",
+   "finish": "gloss-metallic",
+   "family": "brown",
+   "hex": "#372b20",
+   "code": "970RA-874G"
+  },
+  {
+   "id": "kpmf-k75439",
+   "brand": "kpmf",
+   "name": "Verde Solaris",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#606d24",
+   "code": "K75439"
+  },
+  {
+   "id": "3m-s49",
+   "brand": "3m",
+   "name": "Satin Sandstone",
+   "finish": "satin",
+   "family": "orange",
+   "hex": "#b29271",
+   "code": "2080-S49"
+  },
+  {
+   "id": "3m-m209",
+   "brand": "3m",
+   "name": "Brown Metallic",
+   "finish": "matte",
+   "family": "brown",
+   "hex": "#6b5a4c",
+   "code": "2080-M209"
+  },
+  {
+   "id": "kpmf-k75531",
+   "brand": "kpmf",
+   "name": "Stealth Tundra",
+   "finish": "matte",
+   "family": "orange",
+   "hex": "#7d6c4e",
+   "code": "K75531"
+  },
+  {
+   "id": "kpmf-k75543",
+   "brand": "kpmf",
+   "name": "Java Brown",
+   "finish": "matte-metallic",
+   "family": "brown",
+   "hex": "#504132",
+   "code": "K75543"
+  },
+  {
+   "id": "oracal-970ra996g",
+   "brand": "oracal",
+   "name": "Champagne Myst",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#c6a77c",
+   "code": "970RA-996G"
+  },
+  {
+   "id": "kpmf-k75457",
+   "brand": "kpmf",
+   "name": "Desert Storm",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#9c8461",
+   "code": "K75457"
+  },
+  {
+   "id": "oracal-970ra995g",
+   "brand": "oracal",
+   "name": "Divine Gold",
+   "finish": "gloss",
+   "family": "gold",
+   "hex": "#b18c4a",
+   "code": "970RA-995G"
+  },
+  {
+   "id": "3m-g241",
+   "brand": "3m",
+   "name": "Gold Metallic",
+   "finish": "gloss",
+   "family": "gold",
+   "hex": "#a98942",
+   "code": "2080-G241"
+  },
+  {
+   "id": "oracal-970ra816g",
+   "brand": "oracal",
+   "name": "Papyrus",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#b29e7b",
+   "code": "970RA-816G"
+  },
+  {
+   "id": "oracal-970ra809g",
+   "brand": "oracal",
+   "name": "Taxibeige",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#ab9b7e",
+   "code": "970RA-809G"
+  },
+  {
+   "id": "3m-gp240",
+   "brand": "3m",
+   "name": "Gloss White Gold Sparkle",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#d1d0cc",
+   "code": "2080-GP240"
+  },
+  {
+   "id": "avery-sw900215m",
+   "brand": "avery",
+   "name": "Gloss Metallic Gold",
+   "finish": "gloss-metallic",
+   "family": "gold",
+   "hex": "#b39e52",
+   "code": "SW900-215-M"
+  },
+  {
+   "id": "oracal-970ra926g",
+   "brand": "oracal",
+   "name": "Pyrite",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#bca475",
+   "code": "970RA-926G"
+  },
+  {
+   "id": "avery-sw900255m",
+   "brand": "avery",
+   "name": "Gloss Metallic Sand Sparkle",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#a89487",
+   "code": "SW900-255-M"
+  },
+  {
+   "id": "kpmf-k75409",
+   "brand": "kpmf",
+   "name": "Solar Flash",
+   "finish": "gloss-metallic",
+   "family": "yellow",
+   "hex": "#96901f",
+   "code": "K75409"
+  },
+  {
+   "id": "kpmf-k75555",
+   "brand": "kpmf",
+   "name": "Rose Gold",
+   "finish": "satin-metallic",
+   "family": "gold",
+   "hex": "#bd9187",
+   "code": "K75555"
+  },
+  {
+   "id": "oracal-970ra996m",
+   "brand": "oracal",
+   "name": "Champagne Myst",
+   "finish": "matte",
+   "family": "orange",
+   "hex": "#c7ad82",
+   "code": "970RA-996M"
+  },
+  {
+   "id": "oracal-970ra995m",
+   "brand": "oracal",
+   "name": "Divine Gold",
+   "finish": "matte",
+   "family": "gold",
+   "hex": "#bd964f",
+   "code": "970RA-995M"
+  },
+  {
+   "id": "oracal-970ra091m",
+   "brand": "oracal",
+   "name": "Gold",
+   "finish": "matte-metallic",
+   "family": "gold",
+   "hex": "#937242",
+   "code": "970RA-091M"
+  },
+  {
+   "id": "kpmf-k75581",
+   "brand": "kpmf",
+   "name": "Gold Eclipse",
+   "finish": "matte-metallic",
+   "family": "gold",
+   "hex": "#b3985b",
+   "code": "K75581"
+  },
+  {
+   "id": "avery-sw900221d",
+   "brand": "avery",
+   "name": "Diamond Amber",
+   "finish": "diamond",
+   "family": "yellow",
+   "hex": "#b59840",
+   "code": "SW900-221-D"
+  },
+  {
+   "id": "oracal-975091hc",
+   "brand": "oracal",
+   "name": "Gold Honeycomb",
+   "finish": "carbon",
+   "family": "gold",
+   "hex": "#977a40",
+   "code": "975-091HC"
+  },
+  {
+   "id": "oracal-970ra313g",
+   "brand": "oracal",
+   "name": "Copper Kiss",
+   "finish": "gloss",
+   "family": "copper",
+   "hex": "#b88850",
+   "code": "970RA-313G"
+  },
+  {
+   "id": "3m-g344",
+   "brand": "3m",
+   "name": "Gloss Liquid Copper",
+   "finish": "gloss",
+   "family": "copper",
+   "hex": "#c85720",
+   "code": "2080-G344"
+  },
+  {
+   "id": "oracal-970ra920g",
+   "brand": "oracal",
+   "name": "Bronze",
+   "finish": "gloss-metallic",
+   "family": "bronze",
+   "hex": "#7d5224",
+   "code": "970RA-920G"
+  },
+  {
+   "id": "oracal-970ra921g",
+   "brand": "oracal",
+   "name": "Bronze Antique",
+   "finish": "gloss-metallic",
+   "family": "bronze",
+   "hex": "#7e5a42",
+   "code": "970RA-921G"
+  },
+  {
+   "id": "3m-s344",
+   "brand": "3m",
+   "name": "Satin Canyon Copper",
+   "finish": "satin",
+   "family": "copper",
+   "hex": "#c97f45",
+   "code": "2080-S344"
+  },
+  {
+   "id": "oracal-970ra313m",
+   "brand": "oracal",
+   "name": "Copper Kiss",
+   "finish": "matte",
+   "family": "copper",
+   "hex": "#b9804d",
+   "code": "970RA-313M"
+  },
+  {
+   "id": "3m-m229",
+   "brand": "3m",
+   "name": "Copper Metallic",
+   "finish": "matte",
+   "family": "copper",
+   "hex": "#9c6e55",
+   "code": "2080-M229"
+  },
+  {
+   "id": "kpmf-k75549",
+   "brand": "kpmf",
+   "name": "Anodised Bronze",
+   "finish": "matte-metallic",
+   "family": "bronze",
+   "hex": "#845a34",
+   "code": "K75549"
+  },
+  {
+   "id": "oracal-970ra092m",
+   "brand": "oracal",
+   "name": "Copper",
+   "finish": "matte-metallic",
+   "family": "copper",
+   "hex": "#8d5934",
+   "code": "970RA-092M"
+  },
+  {
+   "id": "kpmf-k75579",
+   "brand": "kpmf",
+   "name": "Burnished Bronze",
+   "finish": "gloss-metallic",
+   "family": "bronze",
+   "hex": "#45362b",
+   "code": "K75579"
+  },
+  {
+   "id": "avery-sw900194x",
+   "brand": "avery",
+   "name": "Carbon Fiber Black",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#22292e",
+   "code": "SW900-194-X"
+  },
+  {
+   "id": "avery-sw900115x",
+   "brand": "avery",
+   "name": "Carbon Fiber White",
+   "finish": "carbon",
+   "family": "white",
+   "hex": "#b7b9be",
+   "code": "SW900-115-X"
+  },
+  {
+   "id": "oracal-975305ca",
+   "brand": "oracal",
+   "name": "Geranium Red Carbon",
+   "finish": "carbon",
+   "family": "red",
+   "hex": "#a52023",
+   "code": "975-305CA"
+  },
+  {
+   "id": "3m-cfs10",
+   "brand": "3m",
+   "name": "Carbon Fiber White",
+   "finish": "carbon",
+   "family": "white",
+   "hex": "#afb1b8",
+   "code": "2080-CFS10"
+  },
+  {
+   "id": "kpmf-k75411",
+   "brand": "kpmf",
+   "name": "Chalk White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#bcbcb9",
+   "code": "K75411"
+  },
+  {
+   "id": "3m-hg10",
+   "brand": "3m",
+   "name": "High Gloss White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#d0d0d0",
+   "code": "2080-HG10"
+  },
+  {
+   "id": "3m-hg120",
+   "brand": "3m",
+   "name": "High Gloss White Aluminum",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#9d9d9e",
+   "code": "2080-HG120"
+  },
+  {
+   "id": "kpmf-k75444",
+   "brand": "kpmf",
+   "name": "Perfect White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#c6c6c6",
+   "code": "K75444"
+  },
+  {
+   "id": "oracal-970ra010g",
+   "brand": "oracal",
+   "name": "White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#cccccb",
+   "code": "970RA-010G"
+  },
+  {
+   "id": "kpmf-k88011",
+   "brand": "kpmf",
+   "name": "White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#cbcbcb",
+   "code": "K88011"
+  },
+  {
+   "id": "avery-sw900101o",
+   "brand": "avery",
+   "name": "Gloss White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#cbcdd0",
+   "code": "SW900-101-O"
+  },
+  {
+   "id": "3m-sp240",
+   "brand": "3m",
+   "name": "Satin Frozen Vanilla",
+   "finish": "satin",
+   "family": "white",
+   "hex": "#c7cbcd",
+   "code": "2080-SP240"
+  },
+  {
+   "id": "avery-sw900116o",
+   "brand": "avery",
+   "name": "Satin White",
+   "finish": "satin",
+   "family": "white",
+   "hex": "#c7c9cc",
+   "code": "SW900-116-O"
+  },
+  {
+   "id": "kpmf-k89002",
+   "brand": "kpmf",
+   "name": "Clear",
+   "finish": "matte",
+   "family": "yellow",
+   "hex": "#d1cdc0",
+   "code": "K89002"
+  },
+  {
+   "id": "kpmf-k75546",
+   "brand": "kpmf",
+   "name": "Perfect White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#d4d4d4",
+   "code": "K75546"
+  },
+  {
+   "id": "oracal-970ra010m",
+   "brand": "oracal",
+   "name": "White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#cccdca",
+   "code": "970RA-010M"
+  },
+  {
+   "id": "kpmf-k89011",
+   "brand": "kpmf",
+   "name": "White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#d6d6d6",
+   "code": "K89011"
+  },
+  {
+   "id": "avery-sw900102o",
+   "brand": "avery",
+   "name": "Matte White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#c9cbcd",
+   "code": "SW900-102-O"
+  },
+  {
+   "id": "kpmf-k75552",
+   "brand": "kpmf",
+   "name": "Aurora Pearl",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#c4c5c0",
+   "code": "K75552"
+  },
+  {
+   "id": "kpmf-k75540",
+   "brand": "kpmf",
+   "name": "Crystalline White",
+   "finish": "matte-metallic",
+   "family": "white",
+   "hex": "#d4d5d3",
+   "code": "K75540"
+  },
+  {
+   "id": "kpmf-k75539",
+   "brand": "kpmf",
+   "name": "Siberian Pearl",
+   "finish": "matte-metallic",
+   "family": "white",
+   "hex": "#d6d5d0",
+   "code": "K75539"
+  },
+  {
+   "id": "kpmf-k75484",
+   "brand": "kpmf",
+   "name": "Blue White",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#d6d7d8",
+   "code": "K75484"
+  },
+  {
+   "id": "kpmf-k75584",
+   "brand": "kpmf",
+   "name": "Blue White",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#d6dade",
+   "code": "K75584"
+  },
+  {
+   "id": "oracal-970ra946g",
+   "brand": "oracal",
+   "name": "Nacre",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#cfced2",
+   "code": "970RA-946G"
+  },
+  {
+   "id": "avery-sw900110s",
+   "brand": "avery",
+   "name": "Pearl White Snow",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#d0d1d1",
+   "code": "SW900-110-S"
+  },
+  {
+   "id": "avery-sw900109s",
+   "brand": "avery",
+   "name": "White Pearl",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#cccdcd",
+   "code": "SW900-109-S"
+  },
+  {
+   "id": "avery-sw900117s",
+   "brand": "avery",
+   "name": "White Pearl",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#cbcbcb",
+   "code": "SW900-117-S"
+  },
+  {
+   "id": "kpmf-k75472",
+   "brand": "kpmf",
+   "name": "Gold White",
+   "finish": "gloss-metallic",
+   "family": "white",
+   "hex": "#ddddda",
+   "code": "K75472"
+  },
+  {
+   "id": "kpmf-k75572",
+   "brand": "kpmf",
+   "name": "Gold White",
+   "finish": "gloss-metallic",
+   "family": "white",
+   "hex": "#dcd8d0",
+   "code": "K75572"
+  },
+  {
+   "id": "kpmf-k75476",
+   "brand": "kpmf",
+   "name": "Pacific Blue White",
+   "finish": "gloss-metallic",
+   "family": "white",
+   "hex": "#d6d8db",
+   "code": "K75476"
+  },
+  {
+   "id": "kpmf-k75576",
+   "brand": "kpmf",
+   "name": "Pacific Blue White",
+   "finish": "gloss-metallic",
+   "family": "white",
+   "hex": "#d5dbdf",
+   "code": "K75576"
+  },
+  {
+   "id": "kpmf-k75574",
+   "brand": "kpmf",
+   "name": "Pink White",
+   "finish": "gloss-metallic",
+   "family": "white",
+   "hex": "#e0d9db",
+   "code": "K75574"
+  },
+  {
+   "id": "avery-sw900161d",
+   "brand": "avery",
+   "name": "Diamond White",
+   "finish": "diamond",
+   "family": "white",
+   "hex": "#cdced1",
+   "code": "SW900-161-D"
+  },
+  {
+   "id": "3m-g251",
+   "brand": "3m",
+   "name": "Gloss Sterling Silver",
+   "finish": "gloss",
+   "family": "silver",
+   "hex": "#828590",
+   "code": "2080-G251"
+  },
+  {
+   "id": "avery-sw900816m",
+   "brand": "avery",
+   "name": "Gloss Metallic Quick Silver",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#8594b3",
+   "code": "SW900-816-M"
+  },
+  {
+   "id": "avery-sw900803m",
+   "brand": "avery",
+   "name": "Gloss Metallic Silver",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#a9abb3",
+   "code": "SW900-803-M"
+  },
+  {
+   "id": "oracal-970ra090g",
+   "brand": "oracal",
+   "name": "Silver Grey",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#a8a7ac",
+   "code": "970RA-090G"
+  },
+  {
+   "id": "oracal-970ra904g",
+   "brand": "oracal",
+   "name": "Silver Lake",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#878783",
+   "code": "970RA-904G"
+  },
+  {
+   "id": "kpmf-k75501",
+   "brand": "kpmf",
+   "name": "Iced Silver Titanium",
+   "finish": "matte-metallic",
+   "family": "silver",
+   "hex": "#a6a6a8",
+   "code": "K75501"
+  },
+  {
+   "id": "avery-sw900857m",
+   "brand": "avery",
+   "name": "Matte Metallic Silver",
+   "finish": "matte-metallic",
+   "family": "silver",
+   "hex": "#acaeb5",
+   "code": "SW900-857-M"
+  },
+  {
+   "id": "oracal-970ra090m",
+   "brand": "oracal",
+   "name": "Silver Grey",
+   "finish": "matte-metallic",
+   "family": "silver",
+   "hex": "#91928f",
+   "code": "970RA-090M"
+  },
+  {
+   "id": "avery-sw900878d",
+   "brand": "avery",
+   "name": "Diamond Silver",
+   "finish": "diamond",
+   "family": "silver",
+   "hex": "#7a7e88",
+   "code": "SW900-878-D"
+  },
+  {
+   "id": "oracal-970ra073g",
+   "brand": "oracal",
+   "name": "Dark Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#4a4b49",
+   "code": "970RA-073G"
+  },
+  {
+   "id": "avery-sw900865o",
+   "brand": "avery",
+   "name": "Gloss Dark Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#434a53",
+   "code": "SW900-865-O"
+  },
+  {
+   "id": "3m-gp291",
+   "brand": "3m",
+   "name": "Gloss Glacier Gray",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#394258",
+   "code": "2080-GP291"
+  },
+  {
+   "id": "avery-sw900832o",
+   "brand": "avery",
+   "name": "Gloss Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#a0a2aa",
+   "code": "SW900-832-O"
+  },
+  {
+   "id": "3m-hg81",
+   "brand": "3m",
+   "name": "High Gloss Meteor Gray",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#3a3a3a",
+   "code": "2080-HG81"
+  },
+  {
+   "id": "3m-hg61",
+   "brand": "3m",
+   "name": "High Gloss Nardo Gray",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#666666",
+   "code": "2080-HG61"
+  },
+  {
+   "id": "3m-hg31",
+   "brand": "3m",
+   "name": "High Gloss Storm Gray",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#8e8e90",
+   "code": "2080-HG31"
+  },
+  {
+   "id": "oracal-970ra724g",
+   "brand": "oracal",
+   "name": "Ice Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#8b8d87",
+   "code": "970RA-724G"
+  },
+  {
+   "id": "avery-sw900827o",
+   "brand": "avery",
+   "name": "Gloss Misty Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#afb0b6",
+   "code": "SW900-827-O"
+  },
+  {
+   "id": "kpmf-k75415",
+   "brand": "kpmf",
+   "name": "Ominous Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#858581",
+   "code": "K75415"
+  },
+  {
+   "id": "avery-sw900821o",
+   "brand": "avery",
+   "name": "Gloss Rock Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#717883",
+   "code": "SW900-821-O"
+  },
+  {
+   "id": "oracal-970ra730g",
+   "brand": "oracal",
+   "name": "Simple Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#80817d",
+   "code": "970RA-730G"
+  },
+  {
+   "id": "oracal-970ra711g",
+   "brand": "oracal",
+   "name": "Stone Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#a9adae",
+   "code": "970RA-711G"
+  },
+  {
+   "id": "oracal-970ra076g",
+   "brand": "oracal",
+   "name": "Telegrey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#686864",
+   "code": "970RA-076G"
+  },
+  {
+   "id": "oracal-970ra908g",
+   "brand": "oracal",
+   "name": "Aluminium",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#656661",
+   "code": "970RA-908G"
+  },
+  {
+   "id": "oracal-970ra093g",
+   "brand": "oracal",
+   "name": "Anthracite",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#454746",
+   "code": "970RA-093G"
+  },
+  {
+   "id": "oracal-970ra922g",
+   "brand": "oracal",
+   "name": "Brass",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#9d8b6b",
+   "code": "970RA-922G"
+  },
+  {
+   "id": "oracal-970ra937g",
+   "brand": "oracal",
+   "name": "Charcoal",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#434745",
+   "code": "970RA-937G"
+  },
+  {
+   "id": "oracal-970ra932g",
+   "brand": "oracal",
+   "name": "Graphite",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#3e4140",
+   "code": "970RA-932G"
+  },
+  {
+   "id": "avery-sw900807m",
+   "brand": "avery",
+   "name": "Gloss Metallic Grey",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#50575f",
+   "code": "SW900-807-M"
+  },
+  {
+   "id": "oracal-970ra935g",
+   "brand": "oracal",
+   "name": "Grey Cast Iron",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#514b45",
+   "code": "970RA-935G"
+  },
+  {
+   "id": "oracal-970ra793g",
+   "brand": "oracal",
+   "name": "Millennium Grey",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#899599",
+   "code": "970RA-793G"
+  },
+  {
+   "id": "avery-sw900879m",
+   "brand": "avery",
+   "name": "Gloss Metallic Pride Prismatic Grey",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#4b4b51",
+   "code": "SW900-879-M"
+  },
+  {
+   "id": "oracal-970ra795g",
+   "brand": "oracal",
+   "name": "Steel",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#444645",
+   "code": "970RA-795G"
+  },
+  {
+   "id": "oracal-970ra933g",
+   "brand": "oracal",
+   "name": "Tin",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#6b6d67",
+   "code": "970RA-933G"
+  },
+  {
+   "id": "oracal-970ra934g",
+   "brand": "oracal",
+   "name": "Zinc",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#8b897b",
+   "code": "970RA-934G"
+  },
+  {
+   "id": "3m-s261",
+   "brand": "3m",
+   "name": "Satin Dark Gray",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#2c3033",
+   "code": "2080-S261"
+  },
+  {
+   "id": "avery-sw900833o",
+   "brand": "avery",
+   "name": "Satin Grey",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#a5a7af",
+   "code": "SW900-833-O"
+  },
+  {
+   "id": "avery-sw900823m",
+   "brand": "avery",
+   "name": "Satin Metallic Black Rock Grey",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#343b42",
+   "code": "SW900-823-M"
+  },
+  {
+   "id": "avery-sw900871m",
+   "brand": "avery",
+   "name": "Satin Metallic Dark Basalt",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#373a3b",
+   "code": "SW900-871-M"
+  },
+  {
+   "id": "avery-sw900854m",
+   "brand": "avery",
+   "name": "Satin Metallic Dark Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#5a6069",
+   "code": "SW900-854-M"
+  },
+  {
+   "id": "avery-sw900828m",
+   "brand": "avery",
+   "name": "Satin Metallic Spy Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#95939c",
+   "code": "SW900-828-M"
+  },
+  {
+   "id": "oracal-970ra073m",
+   "brand": "oracal",
+   "name": "Dark Grey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#3f3f3f",
+   "code": "970RA-073M"
+  },
+  {
+   "id": "kpmf-k89015",
+   "brand": "kpmf",
+   "name": "Dark Grey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#4f4f50",
+   "code": "K89015"
+  },
+  {
+   "id": "avery-sw900856o",
+   "brand": "avery",
+   "name": "Matte Dark Grey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#5c626c",
+   "code": "SW900-856-O"
+  },
+  {
+   "id": "oracal-970ra076m",
+   "brand": "oracal",
+   "name": "Telegrey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#8e8b80",
+   "code": "970RA-076M"
+  },
+  {
+   "id": "oracal-970ra093m",
+   "brand": "oracal",
+   "name": "Anthracite",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#45403b",
+   "code": "970RA-093M"
+  },
+  {
+   "id": "kpmf-k75320",
+   "brand": "kpmf",
+   "name": "Anthracite",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#4a4c4d",
+   "code": "K75320"
+  },
+  {
+   "id": "avery-sw900858m",
+   "brand": "avery",
+   "name": "Matte Metallic Anthracite",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#677179",
+   "code": "SW900-858-M"
+  },
+  {
+   "id": "oracal-970ra937m",
+   "brand": "oracal",
+   "name": "Charcoal",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#50504d",
+   "code": "970RA-937M"
+  },
+  {
+   "id": "avery-sw900845m",
+   "brand": "avery",
+   "name": "Matte Metallic Charcoal",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#63636d",
+   "code": "SW900-845-M"
+  },
+  {
+   "id": "kpmf-k75516",
+   "brand": "kpmf",
+   "name": "Dune",
+   "finish": "matte-metallic",
+   "family": "orange",
+   "hex": "#90836f",
+   "code": "K75516"
+  },
+  {
+   "id": "avery-sw900840m",
+   "brand": "avery",
+   "name": "Matte Metallic Gunmetal",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#797d86",
+   "code": "SW900-840-M"
+  },
+  {
+   "id": "kpmf-k75548",
+   "brand": "kpmf",
+   "name": "Lightning",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#9e9e97",
+   "code": "K75548"
+  },
+  {
+   "id": "oracal-970ra926m",
+   "brand": "oracal",
+   "name": "Pyrite",
+   "finish": "matte-metallic",
+   "family": "orange",
+   "hex": "#a88f66",
+   "code": "970RA-926M"
+  },
+  {
+   "id": "kpmf-k75550",
+   "brand": "kpmf",
+   "name": "Welsh Slate",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#6f726d",
+   "code": "K75550"
+  },
+  {
+   "id": "avery-sw900824x",
+   "brand": "avery",
+   "name": "Matte Rugged Bedrock Grey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#7d8390",
+   "code": "SW900-824-X"
+  },
+  {
+   "id": "oracal-970ra070g",
+   "brand": "oracal",
+   "name": "Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#121210",
+   "code": "970RA-070G"
+  },
+  {
+   "id": "kpmf-k88021",
+   "brand": "kpmf",
+   "name": "Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#141414",
+   "code": "K88021"
+  },
+  {
+   "id": "avery-sw900190o",
+   "brand": "avery",
+   "name": "Gloss Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#1e262b",
+   "code": "SW900-190-O"
+  },
+  {
+   "id": "3m-gp99",
+   "brand": "3m",
+   "name": "Gloss Black Rose",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#2e1d21",
+   "code": "2080-GP99"
+  },
+  {
+   "id": "3m-gp282",
+   "brand": "3m",
+   "name": "Gloss Ember Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#252126",
+   "code": "2080-GP282"
+  },
+  {
+   "id": "3m-gp292",
+   "brand": "3m",
+   "name": "Gloss Galaxy Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#283034",
+   "code": "2080-GP292"
+  },
+  {
+   "id": "3m-hg12",
+   "brand": "3m",
+   "name": "High Gloss Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#101010",
+   "code": "2080-HG12"
+  },
+  {
+   "id": "3m-hg212",
+   "brand": "3m",
+   "name": "High Gloss Black Metallic",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#181818",
+   "code": "2080-HG212"
+  },
+  {
+   "id": "avery-sw900191o",
+   "brand": "avery",
+   "name": "Gloss Obsidian Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#13181a",
+   "code": "SW900-191-O"
+  },
+  {
+   "id": "kpmf-k75443",
+   "brand": "kpmf",
+   "name": "Perfect Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#0c0c0c",
+   "code": "K75443"
+  },
+  {
+   "id": "avery-sw900192m",
+   "brand": "avery",
+   "name": "Gloss Metallic Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#20262c",
+   "code": "SW900-192-M"
+  },
+  {
+   "id": "avery-sw900199m",
+   "brand": "avery",
+   "name": "Gloss Metallic Eclipse",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#282e33",
+   "code": "SW900-199-M"
+  },
+  {
+   "id": "kpmf-k75440",
+   "brand": "kpmf",
+   "name": "Magnetic Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#1b1b1c",
+   "code": "K75440"
+  },
+  {
+   "id": "avery-sw900184m",
+   "brand": "avery",
+   "name": "Gloss Metallic Mystery Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#19263c",
+   "code": "SW900-184-M"
+  },
+  {
+   "id": "kpmf-k75448",
+   "brand": "kpmf",
+   "name": "Phantom Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#1e1a12",
+   "code": "K75448"
+  },
+  {
+   "id": "avery-sw900197o",
+   "brand": "avery",
+   "name": "Satin Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#22292e",
+   "code": "SW900-197-O"
+  },
+  {
+   "id": "3m-sp242",
+   "brand": "3m",
+   "name": "Satin Gold Dust Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#40413d",
+   "code": "2080-SP242"
+  },
+  {
+   "id": "kpmf-k75530",
+   "brand": "kpmf",
+   "name": "Perfect Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#1e1f1f",
+   "code": "K75530"
+  },
+  {
+   "id": "oracal-970ra070m",
+   "brand": "oracal",
+   "name": "Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#1b1b1b",
+   "code": "970RA-070M"
+  },
+  {
+   "id": "kpmf-k89021",
+   "brand": "kpmf",
+   "name": "Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#212222",
+   "code": "K89021"
+  },
+  {
+   "id": "avery-sw900180o",
+   "brand": "avery",
+   "name": "Matte Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#313940",
+   "code": "SW900-180-O"
+  },
+  {
+   "id": "3m-m212",
+   "brand": "3m",
+   "name": "Black Metallic",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#343c43",
+   "code": "2080-M212"
+  },
+  {
+   "id": "3m-dm12",
+   "brand": "3m",
+   "name": "Dead Matte Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#3a444d",
+   "code": "2080-DM12"
+  },
+  {
+   "id": "kpmf-k75547",
+   "brand": "kpmf",
+   "name": "Perfect Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#1d1d1e",
+   "code": "K75547"
+  },
+  {
+   "id": "kpmf-k75810",
+   "brand": "kpmf",
+   "name": "Perfect Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#1a1a1a",
+   "code": "K75810"
+  },
+  {
+   "id": "oracal-970ra932m",
+   "brand": "oracal",
+   "name": "Graphite",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#464644",
+   "code": "970RA-932M"
+  },
+  {
+   "id": "kpmf-k75551",
+   "brand": "kpmf",
+   "name": "Magnetic Black",
+   "finish": "matte-metallic",
+   "family": "black",
+   "hex": "#434343",
+   "code": "K75551"
+  },
+  {
+   "id": "oracal-970ra190m",
+   "brand": "oracal",
+   "name": "Moonlight",
+   "finish": "matte-metallic",
+   "family": "blue",
+   "hex": "#2d333b",
+   "code": "970RA-190M"
+  },
+  {
+   "id": "kpmf-k75556",
+   "brand": "kpmf",
+   "name": "Nero Flare",
+   "finish": "matte-metallic",
+   "family": "grey",
+   "hex": "#57584e",
+   "code": "K75556"
+  },
+  {
+   "id": "kpmf-k75470",
+   "brand": "kpmf",
+   "name": "Gloss Morpheus Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#332f24",
+   "code": "K75470"
+  },
+  {
+   "id": "kpmf-k75571",
+   "brand": "kpmf",
+   "name": "Matt Morpheus Black",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#393b35",
+   "code": "K75571"
+  },
+  {
+   "id": "kpmf-k87021",
+   "brand": "kpmf",
+   "name": "Black",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#292a28",
+   "code": "K87021"
+  },
+  {
+   "id": "avery-sw900182x",
+   "brand": "avery",
+   "name": "Matte Rugged Onyx Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#141b1f",
+   "code": "SW900-182-X"
+  },
+  {
+   "id": "3m-gp298",
+   "brand": "3m",
+   "name": "Gloss Wicked",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#181830",
+   "code": "2080-GP298"
+  },
+  {
+   "id": "oracal-970ra185g",
+   "brand": "oracal",
+   "name": "Enchanted Violet",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#45197c",
+   "code": "970RA-185G",
+   "hex2": "#9454c8"
+  },
+  {
+   "id": "oracal-970ra183g",
+   "brand": "oracal",
+   "name": "Gloss Citrus Fury",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#7b9217",
+   "code": "970RA-183G",
+   "hex2": "#c8d75d"
+  },
+  {
+   "id": "oracal-970ra181g",
+   "brand": "oracal",
+   "name": "Gloss Riviera Rush",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#2a886c",
+   "code": "970RA-181G",
+   "hex2": "#75ceb3"
+  },
+  {
+   "id": "oracal-970ra182g",
+   "brand": "oracal",
+   "name": "Gloss Turbo Turquoise",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#1e7f7f",
+   "code": "970RA-182G",
+   "hex2": "#66cdcd"
+  },
+  {
+   "id": "oracal-970ra183m",
+   "brand": "oracal",
+   "name": "Matt Citrus Fury",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#a1b517",
+   "code": "970RA-183M",
+   "hex2": "#b3c525"
+  },
+  {
+   "id": "oracal-970ra181m",
+   "brand": "oracal",
+   "name": "Matt Riviera Rush",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#19856c",
+   "code": "970RA-181M",
+   "hex2": "#3dbea1"
+  },
+  {
+   "id": "oracal-970ra182m",
+   "brand": "oracal",
+   "name": "Matt Turbo Turquoise",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#11737a",
+   "code": "970RA-182M",
+   "hex2": "#2caab0"
+  },
+  {
+   "id": "3m-mx12",
+   "brand": "3m",
+   "name": "Matte Matrix Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#131b1f",
+   "code": "2080-MX12"
+  },
+  {
+   "id": "3m-sb12",
+   "brand": "3m",
+   "name": "Matte Shadow Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#262d33",
+   "code": "2080-SB12"
+  },
+  {
+   "id": "3m-sb26",
+   "brand": "3m",
+   "name": "Matte Shadow Military Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#262d33",
+   "code": "2080-SB26"
+  }
+ ]
+}

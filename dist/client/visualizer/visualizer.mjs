@@ -96,7 +96,7 @@ export function render(v, out, st) {
   const flowSatin = /satin|matt/i.test(f.name), lum = .2126 * c[0] + .7152 * c[1] + .0722 * c[2];
   const metal = /metallic/.test(fin), sheen = fin.startsWith('satin') ? 1 : fin.startsWith('matte') ? 2 : 0;
   const pearlC = hueShift(c, lum > .5 ? 28 : 40);
-  const chromeTint = (() => { const m = Math.max(c[0], c[1], c[2], .001); return [c[0] / m, c[1] / m, c[2] / m].map(x => .25 + .75 * x); })();
+  const chromeTint = (() => { const m = Math.max(c[0], c[1], c[2], .001); return [c[0] / m, c[1] / m, c[2] / m].map(x => .1 + .9 * x); })();
   const { paint, D, S, E, M, X, Y, R, S5, S14, SX, S40, BR } = v;
   for (let k = 0; k < paint.length; k++) {
     const p = paint[k] * 4, d = D[k], n = R[k];
@@ -106,8 +106,9 @@ export function render(v, out, st) {
       cr = c[0] + (c2[0] - c[0]) * t; cg = c[1] + (c2[1] - c[1]) * t; cb = c[2] + (c2[2] - c[2]) * t;
     } else if (fin === 'pearl') { const t = Math.min(1, Math.max(0, (1.05 - d) * .9 + .25 * (E[k] - .4))); cr += (pearlC[0] - cr) * t * .55; cg += (pearlC[1] - cg) * t * .55; cb += (pearlC[2] - cb) * t * .55; }
     if (fin === 'chrome') {
-      let env = E[k] * 1.12 + S[k] * .85 + (d - 1) * .25; env = env < 0 ? 0 : env;
-      const val = .025 + 1.08 * Math.pow(Math.min(1.4, env), 2.1);
+      // mirror: the black-gloss reflections (S) are the studio as a mirror sees it, boosted to full strength; the soft horizon (E) fills the rest
+      let env = S[k] * 2.6 + S5[k] * .5 + E[k] * .95 + (d - 1) * .15 - .12; env = env < 0 ? 0 : env;
+      const val = .03 + 1.05 * Math.pow(Math.min(1.5, env), 1.45);
       r = chromeTint[0] * val; g = chromeTint[1] * val; b = chromeTint[2] * val;
     } else {
       let dif = d, sp;
