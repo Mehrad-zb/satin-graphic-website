@@ -436,5 +436,6 @@ function device(ua) {
   return `${br} on ${os}`;
 }
 
+try { localStorage.setItem('satinStaff', '1'); } catch {}
 window.SatinPWA = { route, hub, home, poll, checkUpdate, get badges() { return badges; } };
 })();
