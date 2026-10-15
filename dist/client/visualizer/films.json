@@ -16,6 +16,10 @@
   "oracal": {
    "name": "ORACAL",
    "line": "970RA Premium Wrapping Cast"
+  },
+  "teckwrap": {
+   "name": "TeckWrap",
+   "line": "Vinyl Wrap Film"
   }
  },
  "films": [
@@ -4689,6 +4693,1591 @@
    "family": "green",
    "hex": "#262d33",
    "code": "2080-SB26"
+  },
+  {
+   "id": "teckwrap-cg11hd",
+   "brand": "teckwrap",
+   "name": "Tiffany",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#87d6d2",
+   "code": "CG11-HD"
+  },
+  {
+   "id": "teckwrap-cg23hd",
+   "brand": "teckwrap",
+   "name": "Moss Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#767965",
+   "code": "CG23-HD"
+  },
+  {
+   "id": "teckwrap-cg31hd",
+   "brand": "teckwrap",
+   "name": "French Olive",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#5d6f3a",
+   "code": "CG31-HD"
+  },
+  {
+   "id": "teckwrap-cg29hd",
+   "brand": "teckwrap",
+   "name": "Khaki Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#3f4214",
+   "code": "CG29-HD"
+  },
+  {
+   "id": "teckwrap-cg51hd",
+   "brand": "teckwrap",
+   "name": "Camouflage Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#252f23",
+   "code": "CG51-HD"
+  },
+  {
+   "id": "teckwrap-cg41hd",
+   "brand": "teckwrap",
+   "name": "Gecko Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#b6d46d",
+   "code": "CG41-HD"
+  },
+  {
+   "id": "teckwrap-cg32hd",
+   "brand": "teckwrap",
+   "name": "Amphibian Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#062b13",
+   "code": "CG32-HD"
+  },
+  {
+   "id": "teckwrap-gal36hd",
+   "brand": "teckwrap",
+   "name": "Citrus Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#a1b634",
+   "code": "GAL36-HD"
+  },
+  {
+   "id": "teckwrap-rb22hd",
+   "brand": "teckwrap",
+   "name": "Kelly Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#9cc964",
+   "code": "RB22-HD"
+  },
+  {
+   "id": "teckwrap-rb26hd",
+   "brand": "teckwrap",
+   "name": "Ruby Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#136231",
+   "code": "RB26-HD"
+  },
+  {
+   "id": "teckwrap-rb07hd",
+   "brand": "teckwrap",
+   "name": "Acid Lime",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#afbb3d",
+   "code": "RB07-HD"
+  },
+  {
+   "id": "teckwrap-rb18hd",
+   "brand": "teckwrap",
+   "name": "Ocean Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#03846f",
+   "code": "RB18-HD"
+  },
+  {
+   "id": "teckwrap-rb35hd",
+   "brand": "teckwrap",
+   "name": "Wilderness Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#9f9263",
+   "code": "RB35-HD"
+  },
+  {
+   "id": "teckwrap-rb36hd",
+   "brand": "teckwrap",
+   "name": "Palladian Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#809a9f",
+   "code": "RB36-HD"
+  },
+  {
+   "id": "teckwrap-rb39hd",
+   "brand": "teckwrap",
+   "name": "Dragon Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#110f19",
+   "code": "RB39-HD"
+  },
+  {
+   "id": "teckwrap-gal29hd",
+   "brand": "teckwrap",
+   "name": "Hunter Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#142823",
+   "code": "GAL29-HD"
+  },
+  {
+   "id": "teckwrap-gal33hd",
+   "brand": "teckwrap",
+   "name": "Azure Flame",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#003b48",
+   "code": "GAL33-HD"
+  },
+  {
+   "id": "teckwrap-gal40hd",
+   "brand": "teckwrap",
+   "name": "Regatta Green",
+   "finish": "gloss",
+   "family": "green",
+   "hex": "#031415",
+   "code": "GAL40-HD"
+  },
+  {
+   "id": "teckwrap-rd15hd",
+   "brand": "teckwrap",
+   "name": "Green Galaxy",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#21173e",
+   "code": "RD15-HD",
+   "hex2": "#3e1731"
+  },
+  {
+   "id": "teckwrap-rd19hd",
+   "brand": "teckwrap",
+   "name": "Purple Green",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#3e1f32",
+   "code": "RD19-HD",
+   "hex2": "#3e2d1f"
+  },
+  {
+   "id": "teckwrap-rd21prohd",
+   "brand": "teckwrap",
+   "name": "Purple Flame",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#543c8d",
+   "code": "RD21PRO-HD",
+   "hex2": "#8d3c6f"
+  },
+  {
+   "id": "teckwrap-hm07hd",
+   "brand": "teckwrap",
+   "name": "Gloss Green Black Silk",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#332d1a",
+   "code": "HM07-HD"
+  },
+  {
+   "id": "teckwrap-hm14hd",
+   "brand": "teckwrap",
+   "name": "Sherwood Green",
+   "finish": "gloss-metallic",
+   "family": "green",
+   "hex": "#263f2c",
+   "code": "HM14-HD"
+  },
+  {
+   "id": "teckwrap-cm09",
+   "brand": "teckwrap",
+   "name": "Military Green",
+   "finish": "matte",
+   "family": "green",
+   "hex": "#4e5e4e",
+   "code": "CM09"
+  },
+  {
+   "id": "teckwrap-smt16",
+   "brand": "teckwrap",
+   "name": "Jewel Green",
+   "finish": "satin-metallic",
+   "family": "green",
+   "hex": "#194555",
+   "code": "SMT16"
+  },
+  {
+   "id": "teckwrap-smt13",
+   "brand": "teckwrap",
+   "name": "Pine Green",
+   "finish": "satin-metallic",
+   "family": "green",
+   "hex": "#35615c",
+   "code": "SMT13"
+  },
+  {
+   "id": "teckwrap-smt05",
+   "brand": "teckwrap",
+   "name": "Green Mantle",
+   "finish": "satin-metallic",
+   "family": "green",
+   "hex": "#3c4a4e",
+   "code": "SMT05"
+  },
+  {
+   "id": "teckwrap-hm07",
+   "brand": "teckwrap",
+   "name": "Matte Green Black Silk",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#403024",
+   "code": "HM07"
+  },
+  {
+   "id": "teckwrap-scm23",
+   "brand": "teckwrap",
+   "name": "Lizard Grey",
+   "finish": "matte",
+   "family": "grey",
+   "hex": "#787b6c",
+   "code": "SCM23"
+  },
+  {
+   "id": "teckwrap-ech19",
+   "brand": "teckwrap",
+   "name": "Forest Green",
+   "finish": "satin-metallic",
+   "family": "green",
+   "hex": "#173c46",
+   "code": "ECH19"
+  },
+  {
+   "id": "teckwrap-tc02",
+   "brand": "teckwrap",
+   "name": "Piniengruen Pearl",
+   "finish": "satin",
+   "family": "yellow",
+   "hex": "#5d6144",
+   "code": "TC02"
+  },
+  {
+   "id": "teckwrap-vch405m",
+   "brand": "teckwrap",
+   "name": "Ocean Jade",
+   "finish": "satin",
+   "family": "grey",
+   "hex": "#277b73",
+   "code": "VCH405-M"
+  },
+  {
+   "id": "teckwrap-vch412s",
+   "brand": "teckwrap",
+   "name": "Yellow Lime",
+   "finish": "satin-metallic",
+   "family": "yellow",
+   "hex": "#abbb41",
+   "code": "VCH412-S"
+  },
+  {
+   "id": "teckwrap-vch405s",
+   "brand": "teckwrap",
+   "name": "Emerald Green",
+   "finish": "satin-metallic",
+   "family": "green",
+   "hex": "#00b0ad",
+   "code": "VCH405-S"
+  },
+  {
+   "id": "teckwrap-vch423m",
+   "brand": "teckwrap",
+   "name": "Jasper Green",
+   "finish": "satin",
+   "family": "green",
+   "hex": "#3c4f45",
+   "code": "VCH423-M"
+  },
+  {
+   "id": "teckwrap-cg37hd",
+   "brand": "teckwrap",
+   "name": "Bali Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#a3c6d3",
+   "code": "CG37-HD"
+  },
+  {
+   "id": "teckwrap-cg58hd",
+   "brand": "teckwrap",
+   "name": "Baby Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#9ec1d7",
+   "code": "CG58-HD"
+  },
+  {
+   "id": "teckwrap-cg28hd",
+   "brand": "teckwrap",
+   "name": "Yacht Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#99c1cf",
+   "code": "CG28-HD"
+  },
+  {
+   "id": "teckwrap-cg22hd",
+   "brand": "teckwrap",
+   "name": "China Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#99aabb",
+   "code": "CG22-HD"
+  },
+  {
+   "id": "teckwrap-cg33hd",
+   "brand": "teckwrap",
+   "name": "Avalon Teal",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#97a3ae",
+   "code": "CG33-HD"
+  },
+  {
+   "id": "teckwrap-cg21hd",
+   "brand": "teckwrap",
+   "name": "Rolling Sea",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#27b3d1",
+   "code": "CG21-HD"
+  },
+  {
+   "id": "teckwrap-cg57hd",
+   "brand": "teckwrap",
+   "name": "Vibrant Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#1076ca",
+   "code": "CG57-HD"
+  },
+  {
+   "id": "teckwrap-rb09hd",
+   "brand": "teckwrap",
+   "name": "Caribbean Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#7ac7d8",
+   "code": "RB09-HD"
+  },
+  {
+   "id": "teckwrap-rb16hd",
+   "brand": "teckwrap",
+   "name": "Sea Turquoise",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#0099b2",
+   "code": "RB16-HD"
+  },
+  {
+   "id": "teckwrap-rb02hd",
+   "brand": "teckwrap",
+   "name": "Deep Blue",
+   "finish": "gloss-metallic",
+   "family": "blue",
+   "hex": "#1e3277",
+   "code": "RB02-HD"
+  },
+  {
+   "id": "teckwrap-ds04hd",
+   "brand": "teckwrap",
+   "name": "Azure Maya Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#8aacc5",
+   "code": "DS04-HD",
+   "hex2": "#a789c5"
+  },
+  {
+   "id": "teckwrap-gal02hd",
+   "brand": "teckwrap",
+   "name": "Blue Gem",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#153da9",
+   "code": "GAL02-HD"
+  },
+  {
+   "id": "teckwrap-gal14hd",
+   "brand": "teckwrap",
+   "name": "Space Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#070d25",
+   "code": "GAL14-HD"
+  },
+  {
+   "id": "teckwrap-gal19hd",
+   "brand": "teckwrap",
+   "name": "Royal Blue",
+   "finish": "gloss",
+   "family": "blue",
+   "hex": "#0d1273",
+   "code": "GAL19-HD"
+  },
+  {
+   "id": "teckwrap-rd14hd",
+   "brand": "teckwrap",
+   "name": "Violet Sunrise",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#3a2a69",
+   "code": "RD14-HD",
+   "hex2": "#682a54"
+  },
+  {
+   "id": "teckwrap-ck892g",
+   "brand": "teckwrap",
+   "name": "Gloss Purple Blue",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#1b6d9a",
+   "code": "CK892G",
+   "hex2": "#521a9a"
+  },
+  {
+   "id": "teckwrap-smt11",
+   "brand": "teckwrap",
+   "name": "Surf Blue",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#67c7d6",
+   "code": "SMT11"
+  },
+  {
+   "id": "teckwrap-smt07",
+   "brand": "teckwrap",
+   "name": "Rasant Blue",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#4d70c6",
+   "code": "SMT07"
+  },
+  {
+   "id": "teckwrap-smt08",
+   "brand": "teckwrap",
+   "name": "Admiral Blue",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#2e45b3",
+   "code": "SMT08"
+  },
+  {
+   "id": "teckwrap-smt04",
+   "brand": "teckwrap",
+   "name": "Boysenberry Black",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#474a52",
+   "code": "SMT04"
+  },
+  {
+   "id": "teckwrap-vch402s",
+   "brand": "teckwrap",
+   "name": "Velvet Blue",
+   "finish": "satin-metallic",
+   "family": "blue",
+   "hex": "#1b3ea7",
+   "code": "VCH402-S"
+  },
+  {
+   "id": "teckwrap-mch01",
+   "brand": "teckwrap",
+   "name": "Purple Blue Aquamarine",
+   "finish": "chrome",
+   "family": "purple",
+   "hex": "#36aed7",
+   "code": "MCH01"
+  },
+  {
+   "id": "teckwrap-chm25hd",
+   "brand": "teckwrap",
+   "name": "Indigo Chrome",
+   "finish": "chrome",
+   "family": "orange",
+   "hex": "#8b6149",
+   "code": "CHM25-HD"
+  },
+  {
+   "id": "teckwrap-chm26hd",
+   "brand": "teckwrap",
+   "name": "Nova Blue",
+   "finish": "chrome",
+   "family": "blue",
+   "hex": "#1b114e",
+   "code": "CHM26-HD"
+  },
+  {
+   "id": "teckwrap-mch08",
+   "brand": "teckwrap",
+   "name": "Frozen Berry",
+   "finish": "chrome",
+   "family": "blue",
+   "hex": "#2f72d6",
+   "code": "MCH08"
+  },
+  {
+   "id": "teckwrap-vch420m",
+   "brand": "teckwrap",
+   "name": "Imperial Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#70534d",
+   "code": "VCH420-M"
+  },
+  {
+   "id": "teckwrap-vch419m",
+   "brand": "teckwrap",
+   "name": "Serge Blue",
+   "finish": "satin",
+   "family": "blue",
+   "hex": "#37404e",
+   "code": "VCH419-M"
+  },
+  {
+   "id": "teckwrap-gal30hd",
+   "brand": "teckwrap",
+   "name": "Velvet Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#571d20",
+   "code": "GAL30-HD"
+  },
+  {
+   "id": "teckwrap-gal26hd",
+   "brand": "teckwrap",
+   "name": "Supreme Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#82371b",
+   "code": "GAL26-HD"
+  },
+  {
+   "id": "teckwrap-gal01rhd",
+   "brand": "teckwrap",
+   "name": "True Blood",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#c51a17",
+   "code": "GAL01R-HD"
+  },
+  {
+   "id": "teckwrap-cg06hd",
+   "brand": "teckwrap",
+   "name": "Racing Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#d44023",
+   "code": "CG06-HD"
+  },
+  {
+   "id": "teckwrap-smt15",
+   "brand": "teckwrap",
+   "name": "Flame Red",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#d0362f",
+   "code": "SMT15"
+  },
+  {
+   "id": "teckwrap-vch401s",
+   "brand": "teckwrap",
+   "name": "Crimson Red",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#be2326",
+   "code": "VCH401-S"
+  },
+  {
+   "id": "teckwrap-chm04hd",
+   "brand": "teckwrap",
+   "name": "Cherry Red",
+   "finish": "chrome",
+   "family": "red",
+   "hex": "#9b231f",
+   "code": "CHM04-HD"
+  },
+  {
+   "id": "teckwrap-rd17hd",
+   "brand": "teckwrap",
+   "name": "Madeira Red",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#613631",
+   "code": "RD17-HD",
+   "hex2": "#576130"
+  },
+  {
+   "id": "teckwrap-vch422s",
+   "brand": "teckwrap",
+   "name": "Sangria Red",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#671816",
+   "code": "VCH422-S"
+  },
+  {
+   "id": "teckwrap-smt02",
+   "brand": "teckwrap",
+   "name": "Burnt Maroon",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#5a4c54",
+   "code": "SMT02"
+  },
+  {
+   "id": "teckwrap-smt18r",
+   "brand": "teckwrap",
+   "name": "Velour Red",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#864651",
+   "code": "SMT18R"
+  },
+  {
+   "id": "teckwrap-chm24hd",
+   "brand": "teckwrap",
+   "name": "Inferno Red",
+   "finish": "chrome",
+   "family": "red",
+   "hex": "#c10a01",
+   "code": "CHM24-HD"
+  },
+  {
+   "id": "teckwrap-ech15",
+   "brand": "teckwrap",
+   "name": "Navy Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#5e5e5e",
+   "code": "ECH15"
+  },
+  {
+   "id": "teckwrap-cg01hd",
+   "brand": "teckwrap",
+   "name": "Ultimate Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#171718",
+   "code": "CG01-HD"
+  },
+  {
+   "id": "teckwrap-mt01hd",
+   "brand": "teckwrap",
+   "name": "Gloss Coal Black",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#27282c",
+   "code": "MT01-HD"
+  },
+  {
+   "id": "teckwrap-cg01pro",
+   "brand": "teckwrap",
+   "name": "MirrorBlack Supreme",
+   "finish": "gloss",
+   "family": "black",
+   "hex": "#171717",
+   "code": "CG01-Pro+"
+  },
+  {
+   "id": "teckwrap-ck202hd",
+   "brand": "teckwrap",
+   "name": "Ebony Sparkle",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#2f2e2d",
+   "code": "CK202-HD"
+  },
+  {
+   "id": "teckwrap-rd11hd",
+   "brand": "teckwrap",
+   "name": "Rainbow Vortex",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#3a3a39",
+   "code": "RD11-HD",
+   "hex2": "#393a39"
+  },
+  {
+   "id": "teckwrap-hm01",
+   "brand": "teckwrap",
+   "name": "Dark Grey Silk",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#404044",
+   "code": "HM01"
+  },
+  {
+   "id": "teckwrap-mt01",
+   "brand": "teckwrap",
+   "name": "Matte Coal Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#252529",
+   "code": "MT01"
+  },
+  {
+   "id": "teckwrap-cm01m",
+   "brand": "teckwrap",
+   "name": "Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#332f2f",
+   "code": "CM01M"
+  },
+  {
+   "id": "teckwrap-scm01",
+   "brand": "teckwrap",
+   "name": "Deep Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#4d4d4d",
+   "code": "SCM01"
+  },
+  {
+   "id": "teckwrap-cm14",
+   "brand": "teckwrap",
+   "name": "Raven Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#282825",
+   "code": "CM14"
+  },
+  {
+   "id": "teckwrap-cm15",
+   "brand": "teckwrap",
+   "name": "Pearl Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#312d33",
+   "code": "CM15"
+  },
+  {
+   "id": "teckwrap-scm01pro",
+   "brand": "teckwrap",
+   "name": "Velvet Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#4d4d4d",
+   "code": "SCM01-PRO+"
+  },
+  {
+   "id": "teckwrap-cm01ms",
+   "brand": "teckwrap",
+   "name": "Sandy Black",
+   "finish": "matte",
+   "family": "black",
+   "hex": "#3a3e44",
+   "code": "CM01-MS"
+  },
+  {
+   "id": "teckwrap-tc01",
+   "brand": "teckwrap",
+   "name": "Sable Black",
+   "finish": "satin",
+   "family": "black",
+   "hex": "#222020",
+   "code": "TC01"
+  },
+  {
+   "id": "teckwrap-rcf03",
+   "brand": "teckwrap",
+   "name": "Ceramic Carbon",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#1b1a18",
+   "code": "RCF03"
+  },
+  {
+   "id": "teckwrap-rcf03m",
+   "brand": "teckwrap",
+   "name": "Matte Ceramic Carbon",
+   "finish": "carbon",
+   "family": "grey",
+   "hex": "#47494f",
+   "code": "RCF03M"
+  },
+  {
+   "id": "teckwrap-rcf11",
+   "brand": "teckwrap",
+   "name": "Twill Carbon",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#2b292a",
+   "code": "RCF11"
+  },
+  {
+   "id": "teckwrap-cf01",
+   "brand": "teckwrap",
+   "name": "Noir Black Carbon",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#3c3f43",
+   "code": "CF01"
+  },
+  {
+   "id": "teckwrap-cf02",
+   "brand": "teckwrap",
+   "name": "Pitch Black Carbon",
+   "finish": "carbon",
+   "family": "black",
+   "hex": "#303030",
+   "code": "CF02"
+  },
+  {
+   "id": "teckwrap-bm04",
+   "brand": "teckwrap",
+   "name": "Brushed Black",
+   "finish": "brushed",
+   "family": "black",
+   "hex": "#2c2c2c",
+   "code": "BM04"
+  },
+  {
+   "id": "teckwrap-rcf09",
+   "brand": "teckwrap",
+   "name": "Dark Forged Carbon",
+   "finish": "carbon",
+   "family": "grey",
+   "hex": "#18181a",
+   "code": "RCF09"
+  },
+  {
+   "id": "teckwrap-cg02hd",
+   "brand": "teckwrap",
+   "name": "Super White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#f7f7f7",
+   "code": "CG02-HD"
+  },
+  {
+   "id": "teckwrap-cg60hd",
+   "brand": "teckwrap",
+   "name": "Vanilla Mist",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#f6f0e1",
+   "code": "CG60-HD"
+  },
+  {
+   "id": "teckwrap-cg02pro",
+   "brand": "teckwrap",
+   "name": "Prime White",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#f7f7f7",
+   "code": "CG02-Pro+"
+  },
+  {
+   "id": "teckwrap-dch02hd",
+   "brand": "teckwrap",
+   "name": "Gloss Aurora White",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#e9f6fc",
+   "code": "DCH02-HD"
+  },
+  {
+   "id": "teckwrap-ck801hd",
+   "brand": "teckwrap",
+   "name": "Diamond White",
+   "finish": "diamond",
+   "family": "white",
+   "hex": "#e1e4ec",
+   "code": "CK801-HD"
+  },
+  {
+   "id": "teckwrap-ck522hd",
+   "brand": "teckwrap",
+   "name": "White Pearl",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#dadad8",
+   "code": "CK522-HD"
+  },
+  {
+   "id": "teckwrap-ck523hd",
+   "brand": "teckwrap",
+   "name": "Creamrose Pearl",
+   "finish": "pearl",
+   "family": "orange",
+   "hex": "#dad3cf",
+   "code": "CK523-HD"
+  },
+  {
+   "id": "teckwrap-ck524hd",
+   "brand": "teckwrap",
+   "name": "Light Blue Pearl",
+   "finish": "pearl",
+   "family": "blue",
+   "hex": "#a0abbb",
+   "code": "CK524-HD"
+  },
+  {
+   "id": "teckwrap-ck525hd",
+   "brand": "teckwrap",
+   "name": "Gold Pearl",
+   "finish": "pearl",
+   "family": "gold",
+   "hex": "#aeb6bf",
+   "code": "CK525-HD"
+  },
+  {
+   "id": "teckwrap-ck526hd",
+   "brand": "teckwrap",
+   "name": "Lavender Pearl",
+   "finish": "pearl",
+   "family": "blue",
+   "hex": "#dbe5e7",
+   "code": "CK526-HD"
+  },
+  {
+   "id": "teckwrap-ck527hd",
+   "brand": "teckwrap",
+   "name": "Frosted Pearl",
+   "finish": "pearl",
+   "family": "yellow",
+   "hex": "#eeece7",
+   "code": "CK527-HD"
+  },
+  {
+   "id": "teckwrap-cm02",
+   "brand": "teckwrap",
+   "name": "Matte White",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#f2f2f2",
+   "code": "CM02"
+  },
+  {
+   "id": "teckwrap-scm02",
+   "brand": "teckwrap",
+   "name": "Alaska White",
+   "finish": "satin",
+   "family": "white",
+   "hex": "#ededeb",
+   "code": "SCM02"
+  },
+  {
+   "id": "teckwrap-ck903",
+   "brand": "teckwrap",
+   "name": "White Satin",
+   "finish": "satin",
+   "family": "white",
+   "hex": "#e3e6ed",
+   "code": "CK903"
+  },
+  {
+   "id": "teckwrap-ech01",
+   "brand": "teckwrap",
+   "name": "Satin Pearl White",
+   "finish": "pearl",
+   "family": "white",
+   "hex": "#dddce1",
+   "code": "ECH01"
+  },
+  {
+   "id": "teckwrap-cg30hd",
+   "brand": "teckwrap",
+   "name": "Pale Celadon",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#f4f3ee",
+   "code": "CG30-HD"
+  },
+  {
+   "id": "teckwrap-cg16hd",
+   "brand": "teckwrap",
+   "name": "Slate Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#e7e6e2",
+   "code": "CG16-HD"
+  },
+  {
+   "id": "teckwrap-cg47hd",
+   "brand": "teckwrap",
+   "name": "Vintage Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#e0ded9",
+   "code": "CG47-HD"
+  },
+  {
+   "id": "teckwrap-cg55hd",
+   "brand": "teckwrap",
+   "name": "Wild Dove",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#857c7b",
+   "code": "CG55-HD"
+  },
+  {
+   "id": "teckwrap-cg27hd",
+   "brand": "teckwrap",
+   "name": "True Nardo Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#777d7d",
+   "code": "CG27-HD"
+  },
+  {
+   "id": "teckwrap-cg20hd",
+   "brand": "teckwrap",
+   "name": "Battleship Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#77797c",
+   "code": "CG20-HD"
+  },
+  {
+   "id": "teckwrap-cg61hd",
+   "brand": "teckwrap",
+   "name": "Dusky Grape",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#4e413c",
+   "code": "CG61-HD"
+  },
+  {
+   "id": "teckwrap-cg27pro",
+   "brand": "teckwrap",
+   "name": "Dim Grey",
+   "finish": "gloss",
+   "family": "grey",
+   "hex": "#777d7d",
+   "code": "CG27-Pro+"
+  },
+  {
+   "id": "teckwrap-rb28hd",
+   "brand": "teckwrap",
+   "name": "Vibrant Nickel",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#81776a",
+   "code": "RB28-HD"
+  },
+  {
+   "id": "teckwrap-rb32hd",
+   "brand": "teckwrap",
+   "name": "Deep Onyx",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#474644",
+   "code": "RB32-HD"
+  },
+  {
+   "id": "teckwrap-rb12hd",
+   "brand": "teckwrap",
+   "name": "Dark Platinum",
+   "finish": "gloss-metallic",
+   "family": "grey",
+   "hex": "#716865",
+   "code": "RB12-HD"
+  },
+  {
+   "id": "teckwrap-smt09",
+   "brand": "teckwrap",
+   "name": "Onyx Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#5d554e",
+   "code": "SMT09"
+  },
+  {
+   "id": "teckwrap-smt01",
+   "brand": "teckwrap",
+   "name": "Mineral Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#564e47",
+   "code": "SMT01"
+  },
+  {
+   "id": "teckwrap-smt06",
+   "brand": "teckwrap",
+   "name": "Apollo Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#464a4f",
+   "code": "SMT06"
+  },
+  {
+   "id": "teckwrap-ech03",
+   "brand": "teckwrap",
+   "name": "Charcoal Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#a7a6ab",
+   "code": "ECH03"
+  },
+  {
+   "id": "teckwrap-ech02",
+   "brand": "teckwrap",
+   "name": "Gunsmoke Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#787272",
+   "code": "ECH02"
+  },
+  {
+   "id": "teckwrap-ech21",
+   "brand": "teckwrap",
+   "name": "Dark Platinum Satin",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#99989d",
+   "code": "ECH21"
+  },
+  {
+   "id": "teckwrap-hm02r",
+   "brand": "teckwrap",
+   "name": "Black Silver",
+   "finish": "satin-metallic",
+   "family": "black",
+   "hex": "#5b5c64",
+   "code": "HM02-R"
+  },
+  {
+   "id": "teckwrap-chm10hd",
+   "brand": "teckwrap",
+   "name": "Jet Black Chrome",
+   "finish": "chrome",
+   "family": "black",
+   "hex": "#4a4747",
+   "code": "CHM10-HD"
+  },
+  {
+   "id": "teckwrap-vch410s",
+   "brand": "teckwrap",
+   "name": "Gunmetal Grey",
+   "finish": "satin-metallic",
+   "family": "grey",
+   "hex": "#948f90",
+   "code": "VCH410-S"
+  },
+  {
+   "id": "teckwrap-chm22hd",
+   "brand": "teckwrap",
+   "name": "Crystal Chrome",
+   "finish": "chrome",
+   "family": "grey",
+   "hex": "#4a4946",
+   "code": "CHM22-HD"
+  },
+  {
+   "id": "teckwrap-cg50hd",
+   "brand": "teckwrap",
+   "name": "Strawberry Milk",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#f7e6de",
+   "code": "CG50-HD"
+  },
+  {
+   "id": "teckwrap-cg26hd",
+   "brand": "teckwrap",
+   "name": "Ivory Cream",
+   "finish": "gloss",
+   "family": "white",
+   "hex": "#f4eee2",
+   "code": "CG26-HD"
+  },
+  {
+   "id": "teckwrap-cg52hd",
+   "brand": "teckwrap",
+   "name": "Leather Beige",
+   "finish": "gloss",
+   "family": "brown",
+   "hex": "#ba9b73",
+   "code": "CG52-HD"
+  },
+  {
+   "id": "teckwrap-cg44hd",
+   "brand": "teckwrap",
+   "name": "Sunray Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#dbc300",
+   "code": "CG44-HD"
+  },
+  {
+   "id": "teckwrap-cg12hd",
+   "brand": "teckwrap",
+   "name": "Sunflower Yellow",
+   "finish": "gloss",
+   "family": "yellow",
+   "hex": "#d5ad28",
+   "code": "CG12-HD"
+  },
+  {
+   "id": "teckwrap-rb25hd",
+   "brand": "teckwrap",
+   "name": "Golden Yellow",
+   "finish": "gloss-metallic",
+   "family": "yellow",
+   "hex": "#dab416",
+   "code": "RB25-HD"
+  },
+  {
+   "id": "teckwrap-scm26r",
+   "brand": "teckwrap",
+   "name": "Vanilla Cream",
+   "finish": "matte",
+   "family": "white",
+   "hex": "#f1e5cc",
+   "code": "SCM26-R"
+  },
+  {
+   "id": "teckwrap-ech16",
+   "brand": "teckwrap",
+   "name": "Hornet Yellow",
+   "finish": "satin-metallic",
+   "family": "yellow",
+   "hex": "#d2a702",
+   "code": "ECH16"
+  },
+  {
+   "id": "teckwrap-vch408s",
+   "brand": "teckwrap",
+   "name": "Golden Yellow Satin",
+   "finish": "satin-metallic",
+   "family": "yellow",
+   "hex": "#a78300",
+   "code": "VCH408-S"
+  },
+  {
+   "id": "teckwrap-rb19hd",
+   "brand": "teckwrap",
+   "name": "Deep Orange",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#db5d22",
+   "code": "RB19-HD"
+  },
+  {
+   "id": "teckwrap-rb08hd",
+   "brand": "teckwrap",
+   "name": "Coral Peach",
+   "finish": "gloss-metallic",
+   "family": "orange",
+   "hex": "#daa981",
+   "code": "RB08-HD"
+  },
+  {
+   "id": "teckwrap-gal06hd",
+   "brand": "teckwrap",
+   "name": "Paprika Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#d76725",
+   "code": "GAL06-HD"
+  },
+  {
+   "id": "teckwrap-cg40hd",
+   "brand": "teckwrap",
+   "name": "Tangerine Orange",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#dc7713",
+   "code": "CG40-HD"
+  },
+  {
+   "id": "teckwrap-smt17r",
+   "brand": "teckwrap",
+   "name": "Copper Orange",
+   "finish": "satin-metallic",
+   "family": "copper",
+   "hex": "#cc6e2c",
+   "code": "SMT17R"
+  },
+  {
+   "id": "teckwrap-vch418m",
+   "brand": "teckwrap",
+   "name": "Orange Flame",
+   "finish": "satin",
+   "family": "orange",
+   "hex": "#c85c37",
+   "code": "VCH418-M"
+  },
+  {
+   "id": "teckwrap-cg19hd",
+   "brand": "teckwrap",
+   "name": "Millennial Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#fde3e7",
+   "code": "CG19-HD"
+  },
+  {
+   "id": "teckwrap-cg56hd",
+   "brand": "teckwrap",
+   "name": "Flamingo Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#d79595",
+   "code": "CG56-HD"
+  },
+  {
+   "id": "teckwrap-cg59hd",
+   "brand": "teckwrap",
+   "name": "Sorbet Pink",
+   "finish": "gloss",
+   "family": "pink",
+   "hex": "#db5880",
+   "code": "CG59-HD"
+  },
+  {
+   "id": "teckwrap-cg49hd",
+   "brand": "teckwrap",
+   "name": "Berry Red",
+   "finish": "gloss",
+   "family": "red",
+   "hex": "#d4335a",
+   "code": "CG49-HD"
+  },
+  {
+   "id": "teckwrap-sl01hd",
+   "brand": "teckwrap",
+   "name": "Pink Sakura",
+   "finish": "gloss-metallic",
+   "family": "pink",
+   "hex": "#d1abb3",
+   "code": "SL01-HD"
+  },
+  {
+   "id": "teckwrap-gal23hd",
+   "brand": "teckwrap",
+   "name": "Pink Gold",
+   "finish": "gloss",
+   "family": "gold",
+   "hex": "#c6929a",
+   "code": "GAL23-HD"
+  },
+  {
+   "id": "teckwrap-ds03hd",
+   "brand": "teckwrap",
+   "name": "Silver Sunset",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#b7959f",
+   "code": "DS03-HD",
+   "hex2": "#b7b094"
+  },
+  {
+   "id": "teckwrap-ech22",
+   "brand": "teckwrap",
+   "name": "Cherry Blossom Pink",
+   "finish": "satin-metallic",
+   "family": "pink",
+   "hex": "#be99aa",
+   "code": "ECH22"
+  },
+  {
+   "id": "teckwrap-vch421s",
+   "brand": "teckwrap",
+   "name": "Antique Rose",
+   "finish": "satin-metallic",
+   "family": "red",
+   "hex": "#d0a7a6",
+   "code": "VCH421-S"
+  },
+  {
+   "id": "teckwrap-vch404s",
+   "brand": "teckwrap",
+   "name": "Hot Pink",
+   "finish": "satin-metallic",
+   "family": "pink",
+   "hex": "#dc586b",
+   "code": "VCH404-S"
+  },
+  {
+   "id": "teckwrap-chm23hd",
+   "brand": "teckwrap",
+   "name": "Desert Rose",
+   "finish": "chrome",
+   "family": "red",
+   "hex": "#bb8585",
+   "code": "CHM23-HD"
+  },
+  {
+   "id": "teckwrap-hm15hd",
+   "brand": "teckwrap",
+   "name": "Copper Bronze",
+   "finish": "gloss-metallic",
+   "family": "copper",
+   "hex": "#774d31",
+   "code": "HM15-HD"
+  },
+  {
+   "id": "teckwrap-hm09hd",
+   "brand": "teckwrap",
+   "name": "Black Gold",
+   "finish": "gloss-metallic",
+   "family": "black",
+   "hex": "#36261d",
+   "code": "HM09-HD"
+  },
+  {
+   "id": "teckwrap-chm21hd",
+   "brand": "teckwrap",
+   "name": "Solar",
+   "finish": "chrome",
+   "family": "orange",
+   "hex": "#794602",
+   "code": "CHM21-HD"
+  },
+  {
+   "id": "teckwrap-gal35hd",
+   "brand": "teckwrap",
+   "name": "Amber Gold",
+   "finish": "gloss",
+   "family": "gold",
+   "hex": "#aa915b",
+   "code": "GAL35-HD"
+  },
+  {
+   "id": "teckwrap-gal37hd",
+   "brand": "teckwrap",
+   "name": "Royal Saffron",
+   "finish": "gloss",
+   "family": "orange",
+   "hex": "#b77715",
+   "code": "GAL37-HD"
+  },
+  {
+   "id": "teckwrap-smt21",
+   "brand": "teckwrap",
+   "name": "Imperial Gold",
+   "finish": "satin-metallic",
+   "family": "gold",
+   "hex": "#aa8a57",
+   "code": "SMT21"
+  },
+  {
+   "id": "teckwrap-ech17",
+   "brand": "teckwrap",
+   "name": "Bond Gold",
+   "finish": "satin-metallic",
+   "family": "gold",
+   "hex": "#373020",
+   "code": "ECH17"
+  },
+  {
+   "id": "teckwrap-mch02n",
+   "brand": "teckwrap",
+   "name": "Ammolite Gem",
+   "finish": "chrome",
+   "family": "orange",
+   "hex": "#6d2506",
+   "code": "MCH02N"
+  },
+  {
+   "id": "teckwrap-chm02hd",
+   "brand": "teckwrap",
+   "name": "Yellow Gold",
+   "finish": "chrome",
+   "family": "gold",
+   "hex": "#9f7c18",
+   "code": "CHM02-HD"
+  },
+  {
+   "id": "teckwrap-chm01hd",
+   "brand": "teckwrap",
+   "name": "White Gold",
+   "finish": "chrome",
+   "family": "white",
+   "hex": "#a2a39f",
+   "code": "CHM01-HD"
+  },
+  {
+   "id": "teckwrap-gal11hd",
+   "brand": "teckwrap",
+   "name": "Super Silver Mist",
+   "finish": "gloss",
+   "family": "silver",
+   "hex": "#adadaf",
+   "code": "GAL11-HD"
+  },
+  {
+   "id": "teckwrap-gal31hd",
+   "brand": "teckwrap",
+   "name": "Atomic Silver",
+   "finish": "gloss",
+   "family": "silver",
+   "hex": "#7e7a79",
+   "code": "GAL31-HD"
+  },
+  {
+   "id": "teckwrap-rb27hd",
+   "brand": "teckwrap",
+   "name": "Arctic Silver",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#adb0ad",
+   "code": "RB27-HD"
+  },
+  {
+   "id": "teckwrap-rb31hd",
+   "brand": "teckwrap",
+   "name": "Silver Fern",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#9c9f95",
+   "code": "RB31-HD"
+  },
+  {
+   "id": "teckwrap-rb33hd",
+   "brand": "teckwrap",
+   "name": "Dolomite Silver",
+   "finish": "gloss-metallic",
+   "family": "silver",
+   "hex": "#9f9f9f",
+   "code": "RB33-HD"
+  },
+  {
+   "id": "teckwrap-rch03hd",
+   "brand": "teckwrap",
+   "name": "White Fireworks",
+   "finish": "colorflow",
+   "family": "flip",
+   "hex": "#9fa2a2",
+   "code": "RCH03-HD",
+   "hex2": "#9f9fa2"
+  },
+  {
+   "id": "teckwrap-vch411s",
+   "brand": "teckwrap",
+   "name": "Super Silver Sage",
+   "finish": "satin-metallic",
+   "family": "silver",
+   "hex": "#929a8f",
+   "code": "VCH411-S"
   }
  ]
 }

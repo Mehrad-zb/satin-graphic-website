@@ -4,6 +4,7 @@
    and <id>-mask.webp (R: paint, G: glass, B: wheel faces). Rebuild with scripts/visualizer/build_cars.py; film list: visualizer/films.json. */
 import { vehicleFromPhoto, splitCar, feather, blur, refineMask } from './photo-maps.mjs';
 const BASE = '/visualizer/';
+const AV = '20261015'; // asset version: bump when vehicle photos / maps are rebuilt so browsers fetch the new ones
 const BRAND_LOGOS = { '3m': '/satin/img/brands/3m.svg', avery: '/satin/img/brands/avery-dennison.png', kpmf: '/satin/img/brands/kpmf.png', oracal: '/satin/img/brands/orafol.svg' };
 const W = 1600, H = 900;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -57,7 +58,7 @@ function pixels(img, w = W, h = H) { const c = document.createElement('canvas');
 export function loadVehicle(id) {
   if (cache.has(id)) return cache.get(id);
   const dir = id.startsWith('stock:') ? BASE + 'stock/' + id.slice(6) : BASE + 'cars/' + id;
-  const p = Promise.all([loadImg(dir + '.webp'), loadImg(dir + '-maps.webp'), loadImg(dir + '-mask.webp')]).then(([photo, maps, mask]) => {
+  const p = Promise.all([loadImg(dir + '.webp?v=' + AV), loadImg(dir + '-maps.webp?v=' + AV), loadImg(dir + '-mask.webp?v=' + AV)]).then(([photo, maps, mask]) => {
     const W = photo.naturalWidth, H = photo.naturalHeight; // studio side views are 1600×900, stock cars 1536×1024
     const base = pixels(photo, W, H), mp = pixels(maps, W, H), mk = pixels(mask, W, H);
     const paint = [], glass = [], rim = [];
