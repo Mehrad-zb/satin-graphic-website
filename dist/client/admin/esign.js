@@ -20,11 +20,13 @@ const STATUS = { sent: ['Awaiting signature', 'es-sent'], viewed: ['Viewed', 'es
 const pill = s => `<span class="pill ${(STATUS[s] || [])[1] || ''}">${esc((STATUS[s] || [s])[0])}</span>`;
 let DATA = null, TAB = 'docs', FILTER = { q: '', status: '' };
 const fmt = s => A().fmtDate(s);
+const toTop = () => { scrollTo(0, 0); document.body.scrollTop = 0; }; // phones: the admin scrolls the body, not the window
 const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); A().toast(msg || 'Link copied'); } catch { prompt('Copy this link', t); } };
 
 async function route(path, params) {
   if (path === '/agreements/template') return editor(params.get('id'), params.get('send') === '1');
-  if (path === '/agreements/fill') return fillPage(params.get('id'));
+  if (path === '/agreements/fill') return fillPage(params.get('id'), params.get('doc'));
+  if (path === '/agreements/ready') return readyPage(params.get('doc'));
   return list(params);
 }
 
@@ -33,7 +35,7 @@ async function list(params) {
   if (params && params.get('tab')) TAB = params.get('tab') === 'templates' ? 'templates' : 'docs';
   const c = A().shell('Agreements (e-sign)', 'Business', '<div class="card empty">Loading…</div>', '/agreements');
   const canSend = A().can('agreements.send');
-  $('[data-actions]').innerHTML = canSend ? '<button class="btn ghost sm" data-new>+ New template</button> <button class="btn ghost sm" data-oneoff>Sign a one-off PDF</button> <button class="btn sm" data-send>Send for signature</button>' : '';
+  $('[data-actions]').innerHTML = canSend ? '<button class="btn ghost sm" data-new>+ Upload new agreement</button> <button class="btn ghost sm" data-oneoff>Sign a one-off PDF</button> <button class="btn sm" data-send>+ Create agreement</button>' : '';
   if (canSend) {
     $('[data-new]').onclick = () => uploadFlow('template');
     $('[data-oneoff]').onclick = () => uploadFlow('oneoff');
@@ -63,7 +65,7 @@ function docsTab(box) {
       <td>${esc(fmt(d.sentAt || d.createdAt))}</td><td>${pill(d.status)}${d.status === 'signed' ? `<small>${esc(fmt(d.signedAt))}</small>` : d.viewedAt && d.status === 'viewed' ? `<small>Opened ${esc(fmt(d.viewedAt))}</small>` : ''}</td>
       <td class="act"><button type="button" class="rowmenu" data-dmenu="${esc(d.id)}" aria-label="Actions">⋯</button></td></tr>`).join('')}</tbody></table>`
       : `<div class="card empty">${DATA.docs.length ? 'No documents match.' : 'No documents yet. Create a template from your agreement PDF, then press <b>Send for signature</b>.'}</div>`;
-    $$('tr[data-doc]', box).forEach(tr => tr.onclick = e => { if (e.target.closest('.act')) return; docModal(tr.dataset.doc); });
+    $$('tr[data-doc]', box).forEach(tr => tr.onclick = e => { if (e.target.closest('.act')) return; A().go('/agreements/ready?doc=' + tr.dataset.doc); });
     $$('[data-dmenu]', box).forEach(b => b.onclick = e => { e.stopPropagation(); docMenu(b, DATA.docs.find(d => d.id === b.dataset.dmenu)); });
   };
   $('[data-q]', box).oninput = e => { FILTER.q = e.target.value; draw(); };
@@ -104,7 +106,7 @@ function templatesTab(box) {
   const send = A().can('agreements.send');
   box.innerHTML = DATA.templates.length ? `<div class="es-tgrid">${DATA.templates.map(t => `<div class="card es-tcard"><a class="es-thumb" ${send ? `href="#/agreements/template?id=${t.id}"` : ''}>${t.thumb ? `<img src="${esc(t.thumb)}" alt="" loading="lazy">` : ''}</a>
     <div class="es-tbody"><b>${esc(t.name)}</b><small>${t.pageCount} page${t.pageCount === 1 ? '' : 's'} · ${t.fieldCount} field${t.fieldCount === 1 ? '' : 's'}${t.linkOn ? ' · <span class="es-live">● Public link on</span>' : ''}</small>
-    ${send ? `<div class="row-actions" style="margin-top:10px"><button class="btn sm" data-ts="${t.id}">Send</button><a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit</a><button class="btn ghost sm" data-tl="${t.id}">Public link</button><button type="button" class="rowmenu" data-tm="${t.id}" aria-label="More">⋯</button></div>` : ''}</div></div>`).join('')}</div>`
+    ${send ? `<div class="row-actions" style="margin-top:10px"><button class="btn sm" data-ts="${t.id}">Create agreement</button><a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit fields</a><button class="btn ghost sm" data-tl="${t.id}">Public link</button><button type="button" class="rowmenu" data-tm="${t.id}" aria-label="More">⋯</button></div>` : ''}</div></div>`).join('')}</div>`
     : `<div class="card empty">No templates yet.${send ? ' <a href="#" data-first>Upload your agreement PDF</a> and place the fields the customer fills in (signature, date, name…).' : ''}</div>`;
   const f = $('[data-first]', box); if (f) f.onclick = e => { e.preventDefault(); uploadFlow('template'); };
   $$('[data-ts]', box).forEach(b => b.onclick = () => A().go('/agreements/fill?id=' + b.dataset.ts));
@@ -121,7 +123,7 @@ function templatesTab(box) {
 async function getTpl(id) { return (await A().api('/esign/template?id=' + encodeURIComponent(id))).template; }
 function pickTemplate() {
   if (!DATA.templates.length) { A().toast('Create a template first (or use “Sign a one-off PDF”).'); return; }
-  const o = A().modal(`<header><h2>Send for signature</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">Choose the agreement</p>
+  const o = A().modal(`<header><h2>Create agreement</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">Choose the agreement template</p>
     <div class="es-pick">${DATA.templates.map(t => `<button type="button" data-p="${t.id}">${t.thumb ? `<img src="${esc(t.thumb)}" alt="">` : ''}<span><b>${esc(t.name)}</b><small>${t.pageCount} page${t.pageCount === 1 ? '' : 's'} · ${t.fieldCount} fields</small></span></button>`).join('')}</div>`);
   $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); A().go('/agreements/fill?id=' + b.dataset.p); });
 }
@@ -180,48 +182,85 @@ function linkModal(t) {
 }
 
 /* ---------------- Agreement information form: staff fill everything (all optional), the customer only signs ---------------- */
-async function fillPage(id) {
-  const c = A().shell('Agreement information', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
-  let t; try { t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
-  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit template</a>`;
+async function fillPage(id, docId) { toTop();
+  const c = A().shell(docId ? 'Edit agreement information' : 'Create agreement', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
+  let t, doc = null;
+  try { if (docId) { doc = (await A().api('/esign/doc?id=' + encodeURIComponent(docId))).doc; id = doc.templateId; } t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements">← Back</a> <a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit template fields</a>`;
+  const pre = doc ? doc.prefill || {} : null;
   const ours = t.fields.filter(f => f.role === 'sender'), theirsText = t.fields.filter(f => f.role === 'signer' && f.type === 'text');
   const groups = []; const gi = {};
   for (const f of ours) { const g = f.group || (f.type === 'checkbox' ? 'Options' : 'Details'); if (!(g in gi)) { gi[g] = groups.length; groups.push([g, []]); } groups[gi[g]][1].push(f); }
   const today = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
-  const input = f => f.type === 'checkbox' ? `<label class="es-check es-cbf"><input type="checkbox" data-v="${f.id}" ${f.value === '1' ? 'checked' : ''}> ${esc(f.label || 'Checkbox')}</label>`
-    : `<label class="field"><span>${esc(f.label || TYPES[f.type].label)}</span><input data-v="${f.id}" value="${esc(f.type === 'date' && !f.value ? today : f.value)}" ${f.type === 'email' ? 'type="email"' : ''}></label>`;
+  const val = f => pre ? (pre[f.id] ?? '') : f.type === 'date' && !f.value ? today : f.value;
+  const input = f => f.type === 'checkbox' ? `<label class="es-check es-cbf"><input type="checkbox" data-v="${f.id}" ${val(f) === '1' ? 'checked' : ''}> ${esc(f.label || 'Checkbox')}</label>`
+    : `<label class="field"><span>${esc(f.label || TYPES[f.type].label)}</span><input data-v="${f.id}" value="${esc(val(f))}" ${f.type === 'email' ? 'type="email" inputmode="email"' : /phone/i.test(f.label) ? 'type="tel" inputmode="tel"' : ''}></label>`;
   const signs = t.fields.filter(f => f.role === 'signer').reduce((a, f) => (a[f.type] = (a[f.type] || 0) + 1, a), {});
+  const pickTpl = !docId && DATA && DATA.templates.length > 1 ? `<label class="field" style="margin-bottom:14px"><span>Agreement template</span><select class="input" data-tpl>${DATA.templates.map(x => `<option value="${x.id}" ${x.id === t.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
   c.innerHTML = `<form class="es-fill" data-f novalidate>
-    <div class="card"><h2 style="margin-top:0">${esc(t.name)}</h2><p class="hint" style="margin-top:-4px">Fill in what you know — everything is optional. The customer only ${[signs.signature ? 'signs' : '', signs.initials ? 'initials each page' : '', signs.date ? 'gets the date filled in automatically' : ''].filter(Boolean).join(', ') || 'reviews'}${theirsText.length ? ' and completes ' + theirsText.length + ' field' + (theirsText.length === 1 ? '' : 's') : ''}.</p>
-      <div class="es-fgrid"><label class="field"><span>Customer name (signer)</span><input name="name" list="es-cust" autocomplete="off"></label><label class="field"><span>Customer email</span><input name="email" type="email"></label></div><datalist id="es-cust"></datalist></div>
+    <div class="card">${pickTpl}<h2 style="margin-top:0">${esc(t.name)}</h2><p class="hint" style="margin-top:-4px">Fill in what you know — every field is optional. Next you'll see the finished PDF and can email it or copy the link. The customer only ${[signs.signature ? 'signs' : '', signs.initials ? 'initials each page' : ''].filter(Boolean).join(' and ') || 'reviews'}${theirsText.length ? ' and completes ' + theirsText.length + ' field' + (theirsText.length === 1 ? '' : 's') : ''}.</p>
+      <div class="es-fgrid"><label class="field"><span>Customer name</span><input name="name" list="es-cust" autocomplete="off" value="${esc(doc && doc.signerName !== 'Customer' ? doc.signerName : '')}"></label><label class="field"><span>Customer email</span><input name="email" type="email" inputmode="email" value="${esc(doc ? doc.signerEmail : '')}"></label></div><datalist id="es-cust"></datalist></div>
     ${groups.map(([g, fs]) => `<div class="card"><h3 class="es-h3" style="margin-top:0">${esc(g)}</h3><div class="es-fgrid">${fs.filter(f => f.type !== 'checkbox').map(input).join('')}</div>${fs.some(f => f.type === 'checkbox') ? `<div class="es-cbs">${fs.filter(f => f.type === 'checkbox').map(input).join('')}</div>` : ''}</div>`).join('')}
-    ${theirsText.length ? `<div class="card"><h3 class="es-h3" style="margin-top:0">Customer fields <small class="hint">(optional pre-fill — the customer can change them)</small></h3><div class="es-fgrid">${theirsText.map(f => `<label class="field"><span>${esc(f.label || 'Text')}</span><input data-v="${f.id}"></label>`).join('')}</div></div>` : ''}
-    <div class="card"><label class="field"><span>Message to the customer (optional)</span><textarea name="message" rows="3">${esc(t.message || '')}</textarea></label>
-      <label class="es-check"><input type="checkbox" name="mail"> Email the signing link to the customer</label>
-      <div class="err" data-err></div><div class="row-actions" style="margin-top:8px"><button class="btn" data-go>Create agreement</button></div></div></form>`;
+    ${theirsText.length ? `<div class="card"><h3 class="es-h3" style="margin-top:0">Customer fields <small class="hint">(optional — the customer can change them)</small></h3><div class="es-fgrid">${theirsText.map(f => `<label class="field"><span>${esc(f.label || 'Text')}</span><input data-v="${f.id}" value="${esc(pre ? pre[f.id] || '' : '')}"></label>`).join('')}</div></div>` : ''}
+    <div class="card"><label class="field"><span>Message to the customer (optional)</span><textarea name="message" rows="3">${esc(doc ? doc.message : t.message || '')}</textarea></label>
+      <div class="err" data-err></div><div class="es-fill-go"><button class="btn" data-go>${docId ? 'Save & show the PDF' : 'Generate agreement'}</button></div></div></form>`;
   const f = $('[data-f]', c);
-  const syncBtn = () => { $('[data-go]', c).textContent = f.mail.checked ? 'Create & email to customer' : 'Create agreement'; };
-  f.mail.onchange = syncBtn; f.email.oninput = () => { if (f.email.value && !f.mail.dataset.touched) { f.mail.checked = true; syncBtn(); } }; f.mail.addEventListener('click', () => { f.mail.dataset.touched = 1; });
+  const tp = $('[data-tpl]', c); if (tp) tp.onchange = () => A().go('/agreements/fill?id=' + tp.value);
   if (A().can('invoices.view')) (async () => {
     try { CUSTOMERS = CUSTOMERS || (await A().api('/customers')).customers || []; } catch { CUSTOMERS = []; }
     $('#es-cust', c).innerHTML = CUSTOMERS.slice(0, 800).map(x => `<option value="${esc(x.name)}">${esc(x.email || '')}${x.company ? ' · ' + esc(x.company) : ''}</option>`).join('');
-    f.name.addEventListener('change', () => { const x = CUSTOMERS.find(y => y.name === f.name.value); if (!x) return; if (x.email && !f.email.value) { f.email.value = x.email; f.email.oninput(); }
+    f.name.addEventListener('change', () => { const x = CUSTOMERS.find(y => y.name === f.name.value); if (!x) return; if (x.email && !f.email.value) f.email.value = x.email;
       for (const fl of ours) { const el = $(`[data-v="${fl.id}"]`, c); if (!el || el.value) continue; const L = (fl.label || '').toLowerCase(); const v = /company/.test(L) ? x.company : /phone/.test(L) ? x.phone : /email/.test(L) ? x.email : /customer name|full name|^name/.test(L) ? x.name : /address/.test(L) ? x.address : ''; if (v) el.value = v; } });
   })();
-  f.name.addEventListener('input', () => { for (const fl of ours) if (/customer name|full name/i.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = f.name.value; el.dataset.auto = 1; } } });
+  const mirror = (re, from) => { for (const fl of ours) if (re.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = from.value; el.dataset.auto = 1; } } };
+  f.name.addEventListener('input', () => mirror(/customer name|full name/i, f.name));
+  f.email.addEventListener('input', () => mirror(/email/i, f.email));
   f.onsubmit = async e => {
-    e.preventDefault(); const go = $('[data-go]', c); go.disabled = true; $('[data-err]', c).textContent = '';
+    e.preventDefault(); const go = $('[data-go]', c); go.disabled = true; go.textContent = 'Generating…'; $('[data-err]', c).textContent = '';
     const prefill = {}; $$('[data-v]', c).forEach(i => { prefill[i.dataset.v] = i.type === 'checkbox' ? (i.checked ? '1' : '') : i.value.trim(); });
     try {
-      const r = await A().api('/esign/send', { templateId: t.id, signerName: f.name.value.trim(), signerEmail: f.email.value.trim(), message: f.message.value, prefill, email: f.mail.checked });
-      const d = r.doc;
-      c.innerHTML = `<div class="card" style="max-width:720px"><h2 style="margin-top:0">${f.mail.checked ? (r.mailed ? 'Agreement created and emailed ✓' : 'Agreement created — the email was not delivered') : 'Agreement ready to sign ✓'}</h2>
-        <p style="color:var(--mut)">${f.mail.checked && r.mailed ? `${esc(d.signerName)} got an email with the link. You'll get a notification and the signed PDF when it's done.` : 'Send this signing link to the customer (text, WhatsApp, email…) or open it on a tablet at the counter.'}</p>
-        <div class="es-link"><input class="input" readonly value="${esc(d.url)}"><button class="btn sm" data-cp>Copy link</button></div>
-        <div class="row-actions" style="margin-top:12px"><a class="btn" href="/api/admin/esign/draft?id=${d.id}" target="_blank" rel="noopener">View the prepared PDF</a><a class="btn ghost" href="/api/admin/esign/draft?id=${d.id}&dl=1">Download PDF</a><a class="btn ghost" href="${esc(d.url)}" target="_blank" rel="noopener">Open signing page</a><a class="btn ghost" href="#/agreements">Back to agreements</a></div></div>`;
-      $('[data-cp]', c).onclick = () => copy(d.url);
-    } catch (er) { $('[data-err]', c).textContent = er.message; go.disabled = false; }
+      const body = { signerName: f.name.value.trim(), signerEmail: f.email.value.trim(), message: f.message.value, prefill };
+      const r = docId ? await A().api('/esign/doc/update', { id: docId, ...body }) : await A().api('/esign/send', { templateId: t.id, ...body, email: false });
+      A().go('/agreements/ready?doc=' + r.doc.id);
+    } catch (er) { $('[data-err]', c).textContent = er.message; go.disabled = false; go.textContent = docId ? 'Save & show the PDF' : 'Generate agreement'; }
   };
+}
+// Step 2: the finished PDF with everything filled in, then email it / copy the link.
+async function readyPage(docId) { toTop();
+  const c = A().shell('Agreement ready', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
+  let d; try { d = (await A().api('/esign/doc?id=' + encodeURIComponent(docId))).doc; } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  const open = d.status === 'sent' || d.status === 'viewed';
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements">← Back</a>`;
+  const pdf = d.status === 'signed' ? `/api/admin/esign/pdf?id=${d.id}` : `/api/admin/esign/draft?id=${d.id}`;
+  const sent = d.events.some(e => /^(sent|reminder sent)$/.test(e.event));
+  c.innerHTML = `<div class="es-ready">
+    <div class="card es-prev"><div class="es-prev-h"><b>${esc(d.title)}</b> ${pill(d.status)}</div><div class="es-pdfpages" data-pdfpages><div class="empty">Loading the PDF…</div></div><p class="hint es-prev-m"><a href="${pdf}" target="_blank" rel="noopener">Open the PDF in a new tab</a></p></div>
+    <div class="es-side2">
+      ${open ? `<div class="card"><h3 class="es-h3" style="margin-top:0">1 · Send to the customer</h3>
+        <label class="field"><span>Customer name</span><input data-nm value="${esc(d.signerName === 'Customer' ? '' : d.signerName)}"></label>
+        <label class="field"><span>Customer email</span><input data-em type="email" inputmode="email" value="${esc(d.signerEmail)}" placeholder="customer@email.com"></label>
+        <button class="btn block" data-send>${sent ? 'Send again' : 'Email the agreement'}</button><div class="err" data-err></div>
+        ${sent ? `<p class="hint">Emailed ${esc(fmt(d.events.filter(e => /sent/.test(e.event)).pop().at))}</p>` : ''}</div>
+      <div class="card"><h3 class="es-h3" style="margin-top:0">2 · Or share the link</h3><p class="hint" style="margin-top:-4px">Text / WhatsApp it, or open it on a tablet at the counter.</p>
+        <div class="es-link"><input class="input" readonly value="${esc(d.url)}"><button class="btn sm" data-cp>Copy</button></div>
+        <div class="row-actions">${navigator.share ? '<button class="btn ghost sm" data-share>Share…</button>' : ''}<a class="btn ghost sm" href="https://wa.me/?text=${encodeURIComponent('Please review and sign: ' + d.url)}" target="_blank" rel="noopener">WhatsApp</a><a class="btn ghost sm" href="${esc(d.url)}" target="_blank" rel="noopener">Open signing page</a></div></div>` : `<div class="card"><p>${d.status === 'signed' ? 'Signed ' + esc(fmt(d.signedAt)) + '.' : 'This agreement is ' + esc(STATUS[d.status]?.[0] || d.status).toLowerCase() + '.'}</p></div>`}
+      <div class="card"><div class="row-actions"><a class="btn ghost sm" href="${pdf}&dl=1">Download PDF</a>${open ? `<a class="btn ghost sm" href="#/agreements/fill?doc=${d.id}">Edit information</a>` : ''}<button class="btn ghost sm" data-audit>Audit trail</button></div></div>
+    </div></div>`;
+  requestAnimationFrame(toTop);
+  const cp = $('[data-cp]', c); if (cp) cp.onclick = () => copy(d.url);
+  (async () => { // PDF preview drawn with pdf.js (phones can't show a PDF inside the page)
+    const box = $('[data-pdfpages]', c);
+    try { const lib = await pdfjs(); const buf = await (await fetch(pdf, { credentials: 'same-origin' })).arrayBuffer(); const doc = await lib.getDocument({ data: buf }).promise; box.innerHTML = '';
+      for (let n = 1; n <= doc.numPages; n++) { if (!document.body.contains(box)) return; const pg = await doc.getPage(n), w = Math.min(1400, Math.max(600, box.clientWidth * (devicePixelRatio || 1))), vp1 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: w / vp1.width });
+        const cv = document.createElement('canvas'); cv.width = Math.round(vp.width); cv.height = Math.round(vp.height); box.appendChild(cv); await pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise; } }
+    catch (e) { box.innerHTML = `<div class="empty">The preview could not load. <a href="${pdf}" target="_blank" rel="noopener">Open the PDF</a>.</div>`; }
+  })();
+  const sh = $('[data-share]', c); if (sh) sh.onclick = () => navigator.share({ title: d.title, text: 'Please review and sign', url: d.url }).catch(() => {});
+  $('[data-audit]', c).onclick = () => docModal(d.id);
+  const sb = $('[data-send]', c);
+  if (sb) sb.onclick = async () => { sb.disabled = true; $('[data-err]', c).textContent = '';
+    try { await A().api('/esign/doc/send', { id: d.id, email: $('[data-em]', c).value.trim(), name: $('[data-nm]', c).value.trim() }); A().toast('Emailed to ' + $('[data-em]', c).value.trim()); readyPage(d.id); }
+    catch (e) { $('[data-err]', c).textContent = e.message; sb.disabled = false; } };
 }
 
 /* ---------------- upload (PDF / images → page JPEGs) ---------------- */
@@ -308,12 +347,12 @@ async function uploadFlow(kind, existing) {
 }
 
 /* ---------------- template editor ---------------- */
-async function editor(id, sendAfter) {
+async function editor(id, sendAfter) { toTop();
   const c = A().shell('Prepare document', '<a href="#/agreements?tab=templates">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
   let t; try { t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
   const S = { fields: t.fields.map(f => ({ ...f })), sel: null, arm: null, dirty: false };
   const oneoff = t.kind === 'oneoff';
-  $('[data-actions]').innerHTML = `<button class="btn ghost sm" data-replace>Replace PDF</button> <button class="btn ghost sm" data-save>Save</button> <button class="btn sm" data-sendnow>${oneoff ? 'Save & send' : 'Save & send…'}</button>`;
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements?tab=templates">← Back</a> <button class="btn ghost sm es-hide-m" data-replace>Replace file</button> <button class="btn ghost sm" data-save>Save</button> <button class="btn sm" data-sendnow>Save & use →</button>`;
   c.innerHTML = `<div class="es-ed">
     <aside class="es-side"><label class="field"><span>Document name</span><input data-name value="${esc(t.name)}" maxlength="120"></label>
       <div class="es-h">Drag a field onto the page<small>or tap a field, then tap the page</small></div>

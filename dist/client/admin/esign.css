@@ -63,3 +63,28 @@
 .es-fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.es-fgrid .field{margin-bottom:12px}
 .es-cbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px;margin-top:4px}.es-cbf{margin-bottom:6px}
 @media (max-width:640px){.es-fgrid{grid-template-columns:1fr}}
+/* Agreement ready: PDF preview + send */
+.es-ready{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+.es-prev{padding:0;overflow:hidden}.es-prev-h{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.es-pdfpages{background:#e9ebef;padding:14px;display:grid;gap:14px;max-height:calc(100vh - 170px);overflow:auto}.es-pdfpages canvas{width:100%;height:auto;display:block;background:#fff;box-shadow:0 1px 4px #0002}
+.es-prev-m{padding:8px 16px;margin:0}
+.es-side2{display:grid;gap:14px;position:sticky;top:12px}.es-side2 .card{margin:0;padding:18px}
+.btn.block{width:100%;justify-content:center}
+.es-fill-go{display:flex;justify-content:flex-end}.es-fill-go .btn{min-width:220px;justify-content:center;padding:13px 22px;font-size:15px}
+@media (max-width:900px){
+  .es-ready{grid-template-columns:1fr}.es-side2{position:static;order:-1}
+  .es-pdfpages{max-height:none;padding:8px;gap:8px}
+}
+@media (max-width:640px){
+  .es-tiles{grid-template-columns:1fr 1fr!important;gap:10px}.es-tiles .stat{padding:12px 14px}.es-tiles .stat b{font-size:22px}
+  .es-tgrid{grid-template-columns:1fr}.es-hide-m{display:none!important}
+  .es-tbody .row-actions .btn{flex:1;justify-content:center}
+  .es-fill .card{padding:16px}.es-fill .field input,.es-fill .field textarea,.es-fill select{font-size:16px}
+  .es-cbs{grid-template-columns:1fr}.es-cbf{padding:6px 0;font-size:15px}.es-cbf input{width:20px;height:20px}
+  .es-fill-go .btn{width:100%}
+  .es-link{flex-wrap:wrap}.es-link .input{flex:1 1 100%}.es-link .btn{flex:1}
+  .es-ed .es-page{max-width:none}
+  .es-f span{font-size:9px}
+  .es-rs{width:18px;height:18px;right:-9px;bottom:-9px}
+}
+.es-side2 .err:empty,.es-fill .err:empty{display:none}
