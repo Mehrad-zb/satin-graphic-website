@@ -1,0 +1,60 @@
+/* Agreements (e-sign) — esign.js · Customer report card — app.js customerReport() */
+.pill.es-sent{background:#dbeafe;color:#1d4ed8}.pill.es-viewed{background:#fef3c7;color:#92400e}.pill.es-signed{background:var(--ok-bg);color:var(--ok)}
+.pill.es-declined{background:var(--bad-bg);color:var(--bad)}.pill.es-cancelled{background:#f3f4f6;color:#9ca3af}
+.es-tiles{margin-bottom:18px}.es-tiles .stat{min-height:0}
+.es-tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.es-tcard{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.es-thumb{display:block;height:170px;background:#eef0f3;overflow:hidden;border-bottom:1px solid var(--line)}
+.es-thumb img{width:100%;display:block}
+.es-tbody{padding:14px 16px 16px}.es-tbody b{display:block}.es-tbody small{color:var(--mut);font-size:12.5px}
+.es-live{color:var(--ok);font-weight:600}
+.es-pick{display:grid;gap:8px;max-height:60vh;overflow:auto}
+.es-pick button{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;cursor:pointer}
+.es-pick button:hover{border-color:var(--ink)}.es-pick img{width:48px;height:62px;object-fit:cover;object-position:top;border:1px solid var(--line);border-radius:4px}
+.es-pick small{display:block;color:var(--mut);font-size:12.5px}
+.es-us{background:#f6f7f9;border-radius:10px;padding:12px 12px 2px;margin-bottom:14px}.es-us > b{display:block;font-size:13px;margin-bottom:8px}
+.es-check{display:flex;gap:8px;align-items:center;font-size:14px;margin-bottom:12px;cursor:pointer}.es-check input{width:17px;height:17px;accent-color:var(--ink)}
+.es-link{display:flex;gap:8px;margin:12px 0}.es-link .input{font-size:13px}
+.es-bar{height:6px;background:#eef0f3;border-radius:9px;overflow:hidden;margin-top:10px}.es-bar i{display:block;height:100%;width:5%;background:var(--accent);transition:width .25s}
+.modal.es-wide{width:min(640px,100%)}
+.es-h3{font-size:14px;margin:6px 0 10px}
+.es-timeline{list-style:none;margin:0 0 14px;padding:0 0 0 16px;border-left:2px solid var(--line)}
+.es-timeline li{position:relative;padding:0 0 14px 10px;font-size:14px}
+.es-timeline li::before{content:"";position:absolute;left:-23px;top:5px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--accent)}
+.es-timeline li div{color:var(--ink-2)}.es-timeline small{display:block;color:var(--mut);font-size:12px;word-break:break-word}
+/* editor */
+.es-ed{display:grid;grid-template-columns:270px minmax(0,1fr);gap:20px;align-items:start}
+.es-side{position:sticky;top:12px;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;max-height:calc(100vh - 24px);overflow:auto}
+.es-pal,.es-h,.es-pages{user-select:none;-webkit-user-select:none}
+.es-h{font-weight:700;font-size:13.5px;margin:4px 0 8px}.es-h small{display:block;font-weight:400;color:var(--mut);font-size:12px}
+.es-pal{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.es-pal button{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px;cursor:grab;font-size:13px;font-weight:600;text-align:left;touch-action:none;user-select:none}
+.es-pal button i{font-style:normal;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);font-size:11px;font-weight:800;flex:none}
+.es-pal button:hover,.es-pal button.on{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent)}
+.es-props{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.es-props .field{margin-bottom:10px}
+.es-ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.es-ph small{color:var(--mut)}
+.es-pages{display:grid;gap:22px;justify-items:center;padding-bottom:40px}
+.es-pages.arming .es-page{cursor:copy}
+.es-page{position:relative;width:100%;max-width:900px;background:#fff;box-shadow:0 1px 3px #00000014,0 8px 26px #00000014;user-select:none}
+.es-page img{width:100%;height:100%;display:block;pointer-events:none}
+.es-pn{position:absolute;right:0;bottom:-19px;font-size:11px;color:var(--mut)}
+.es-f{position:absolute;background:color-mix(in srgb,#ffd84d 38%,transparent);border:1.5px solid var(--c);border-radius:3px;cursor:move;display:flex;align-items:center;overflow:visible;touch-action:none}
+.es-f span{font-size:11px;font-weight:700;color:var(--c);padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.es-f.us{background:#e5e7ebb3;border-style:dashed}
+.es-f.cb span{display:none}
+.es-f.on{box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 30%,transparent);z-index:2}
+.es-rs{position:absolute;right:-6px;bottom:-6px;width:12px;height:12px;background:#fff;border:2px solid var(--c);border-radius:3px;cursor:nwse-resize;display:none}
+.es-f.on .es-rs{display:block}
+.es-ghost{position:fixed;z-index:100;transform:translate(-50%,-50%);pointer-events:none;background:#fff8d8;border:1.5px solid var(--c);color:var(--c);font-size:12px;font-weight:700;padding:6px 12px;border-radius:4px;box-shadow:0 6px 20px #0002}
+@media (max-width:900px){
+  .es-ed{grid-template-columns:1fr}
+  .es-side{position:static;max-height:none}
+  .es-pal{grid-template-columns:repeat(4,1fr)}.es-pal button{flex-direction:column;font-size:11px;text-align:center;gap:3px;padding:6px 4px}
+}
+/* Customer report */
+.fb-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:4px 0 14px}
+.fb-kpis > div{background:#f7f8fa;border-radius:10px;padding:12px}.fb-kpis b{display:block;font-size:22px;letter-spacing:-.02em}.fb-kpis small{color:var(--mut);font-size:12.5px}
+.fb-groups{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.fb-g{background:var(--accent-2);color:var(--ink-2);border-radius:999px;padding:4px 12px;font-size:13px}.fb-g b{color:var(--accent)}
+.fb-h3{font-size:13.5px;margin:16px 0 6px}
+.fb-notes{list-style:none;padding:0;margin:0;font-size:13.5px}.fb-notes li{padding:6px 0;border-bottom:1px solid #f1f2f4}.fb-notes small{color:var(--mut)}
+@media (max-width:700px){.fb-kpis{grid-template-columns:1fr 1fr}}

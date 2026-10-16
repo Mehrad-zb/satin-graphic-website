@@ -54,6 +54,6 @@ let installEvt = null;
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; document.dispatchEvent(new Event('satin-installable')); });
 async function install() { if (!installEvt) return false; installEvt.prompt(); const r = await installEvt.userChoice.catch(() => null); installEvt = null; return r && r.outcome === 'accepted'; }
 window.SatinPush = { supported, register, state, enable, disable, setPrefs, resync, appBadge, install, canInstall: () => !!installEvt, standalone, ios,
-  EVENTS: { chat: 'New website chat messages', orders: 'New online orders and payments', requests: 'New quote and booking requests', invoices: 'Invoice payments', quotes: 'Customers checking a price (once per visitor and product a day)', visits: 'New website visitors (once per visitor a day)' } };
+  EVENTS: { chat: 'New website chat messages', orders: 'New online orders and payments', requests: 'New quote and booking requests', invoices: 'Invoice payments', quotes: 'Customers checking a price (once per visitor and product a day)', visits: 'New website visitors (once per visitor a day)', agreements: 'Agreements signed or declined (e-sign)' } };
 register();
 })();
