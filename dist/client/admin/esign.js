@@ -24,6 +24,7 @@ const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); A
 
 async function route(path, params) {
   if (path === '/agreements/template') return editor(params.get('id'), params.get('send') === '1');
+  if (path === '/agreements/fill') return fillPage(params.get('id'));
   return list(params);
 }
 
@@ -106,10 +107,14 @@ function templatesTab(box) {
     ${send ? `<div class="row-actions" style="margin-top:10px"><button class="btn sm" data-ts="${t.id}">Send</button><a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit</a><button class="btn ghost sm" data-tl="${t.id}">Public link</button><button type="button" class="rowmenu" data-tm="${t.id}" aria-label="More">⋯</button></div>` : ''}</div></div>`).join('')}</div>`
     : `<div class="card empty">No templates yet.${send ? ' <a href="#" data-first>Upload your agreement PDF</a> and place the fields the customer fills in (signature, date, name…).' : ''}</div>`;
   const f = $('[data-first]', box); if (f) f.onclick = e => { e.preventDefault(); uploadFlow('template'); };
-  $$('[data-ts]', box).forEach(b => b.onclick = async () => sendModal(await getTpl(b.dataset.ts)));
+  $$('[data-ts]', box).forEach(b => b.onclick = () => A().go('/agreements/fill?id=' + b.dataset.ts));
   $$('[data-tl]', box).forEach(b => b.onclick = async () => linkModal(await getTpl(b.dataset.tl)));
-  $$('[data-tm]', box).forEach(b => b.onclick = () => A().popMenu(b, [['delete', 'Delete template', 'danger']], () => {
+  $$('[data-tm]', box).forEach(b => b.onclick = () => A().popMenu(b, [['edit', 'Edit fields'], ['rename', 'Rename'], ['dup', 'Duplicate'], ['replace', 'Replace PDF / file'], ['delete', 'Delete template', 'danger']], async k => {
     const t = DATA.templates.find(x => x.id === b.dataset.tm);
+    if (k === 'edit') return A().go('/agreements/template?id=' + t.id);
+    if (k === 'rename') { const n = prompt('Template name', t.name); if (!n || !n.trim() || n.trim() === t.name) return; try { const full = await getTpl(t.id); await A().api('/esign/template', { id: t.id, name: n.trim(), message: full.message, fields: full.fields }); A().toast('Renamed'); list(); } catch (e) { A().toast(e.message); } return; }
+    if (k === 'dup') { try { const r = await A().api('/esign/template/duplicate', { id: t.id }); A().toast('Template duplicated'); A().go('/agreements/template?id=' + r.template.id); } catch (e) { A().toast(e.message); } return; }
+    if (k === 'replace') { try { const nt = await uploadFlow('template', t.id); if (nt) { A().toast('File replaced — check the field positions'); A().go('/agreements/template?id=' + t.id); } } catch (e) { A().toast(e.message); } return; }
     A().confirmBox('Delete template?', `"${t.name}" is removed. Documents already sent with it are kept.`, async () => { try { await A().api('/esign/template/delete', { id: t.id }); A().toast('Template deleted'); list(); } catch (e) { A().toast(e.message); } }, { danger: true, yesLabel: 'Delete' });
   }));
 }
@@ -118,7 +123,7 @@ function pickTemplate() {
   if (!DATA.templates.length) { A().toast('Create a template first (or use “Sign a one-off PDF”).'); return; }
   const o = A().modal(`<header><h2>Send for signature</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">Choose the agreement</p>
     <div class="es-pick">${DATA.templates.map(t => `<button type="button" data-p="${t.id}">${t.thumb ? `<img src="${esc(t.thumb)}" alt="">` : ''}<span><b>${esc(t.name)}</b><small>${t.pageCount} page${t.pageCount === 1 ? '' : 's'} · ${t.fieldCount} fields</small></span></button>`).join('')}</div>`);
-  $$('[data-p]', o).forEach(b => b.onclick = async () => { o.remove(); sendModal(await getTpl(b.dataset.p)); });
+  $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); A().go('/agreements/fill?id=' + b.dataset.p); });
 }
 
 /* ---------------- send ---------------- */
@@ -174,6 +179,51 @@ function linkModal(t) {
   o.addEventListener('click', e => { if ((e.target === o || e.target.closest('[data-close]')) && location.hash.startsWith('#/agreements') && !location.hash.includes('template')) list(); });
 }
 
+/* ---------------- Agreement information form: staff fill everything (all optional), the customer only signs ---------------- */
+async function fillPage(id) {
+  const c = A().shell('Agreement information', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
+  let t; try { t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements/template?id=${t.id}">Edit template</a>`;
+  const ours = t.fields.filter(f => f.role === 'sender'), theirsText = t.fields.filter(f => f.role === 'signer' && f.type === 'text');
+  const groups = []; const gi = {};
+  for (const f of ours) { const g = f.group || (f.type === 'checkbox' ? 'Options' : 'Details'); if (!(g in gi)) { gi[g] = groups.length; groups.push([g, []]); } groups[gi[g]][1].push(f); }
+  const today = new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+  const input = f => f.type === 'checkbox' ? `<label class="es-check es-cbf"><input type="checkbox" data-v="${f.id}" ${f.value === '1' ? 'checked' : ''}> ${esc(f.label || 'Checkbox')}</label>`
+    : `<label class="field"><span>${esc(f.label || TYPES[f.type].label)}</span><input data-v="${f.id}" value="${esc(f.type === 'date' && !f.value ? today : f.value)}" ${f.type === 'email' ? 'type="email"' : ''}></label>`;
+  const signs = t.fields.filter(f => f.role === 'signer').reduce((a, f) => (a[f.type] = (a[f.type] || 0) + 1, a), {});
+  c.innerHTML = `<form class="es-fill" data-f novalidate>
+    <div class="card"><h2 style="margin-top:0">${esc(t.name)}</h2><p class="hint" style="margin-top:-4px">Fill in what you know — everything is optional. The customer only ${[signs.signature ? 'signs' : '', signs.initials ? 'initials each page' : '', signs.date ? 'gets the date filled in automatically' : ''].filter(Boolean).join(', ') || 'reviews'}${theirsText.length ? ' and completes ' + theirsText.length + ' field' + (theirsText.length === 1 ? '' : 's') : ''}.</p>
+      <div class="es-fgrid"><label class="field"><span>Customer name (signer)</span><input name="name" list="es-cust" autocomplete="off"></label><label class="field"><span>Customer email</span><input name="email" type="email"></label></div><datalist id="es-cust"></datalist></div>
+    ${groups.map(([g, fs]) => `<div class="card"><h3 class="es-h3" style="margin-top:0">${esc(g)}</h3><div class="es-fgrid">${fs.filter(f => f.type !== 'checkbox').map(input).join('')}</div>${fs.some(f => f.type === 'checkbox') ? `<div class="es-cbs">${fs.filter(f => f.type === 'checkbox').map(input).join('')}</div>` : ''}</div>`).join('')}
+    ${theirsText.length ? `<div class="card"><h3 class="es-h3" style="margin-top:0">Customer fields <small class="hint">(optional pre-fill — the customer can change them)</small></h3><div class="es-fgrid">${theirsText.map(f => `<label class="field"><span>${esc(f.label || 'Text')}</span><input data-v="${f.id}"></label>`).join('')}</div></div>` : ''}
+    <div class="card"><label class="field"><span>Message to the customer (optional)</span><textarea name="message" rows="3">${esc(t.message || '')}</textarea></label>
+      <label class="es-check"><input type="checkbox" name="mail"> Email the signing link to the customer</label>
+      <div class="err" data-err></div><div class="row-actions" style="margin-top:8px"><button class="btn" data-go>Create agreement</button></div></div></form>`;
+  const f = $('[data-f]', c);
+  const syncBtn = () => { $('[data-go]', c).textContent = f.mail.checked ? 'Create & email to customer' : 'Create agreement'; };
+  f.mail.onchange = syncBtn; f.email.oninput = () => { if (f.email.value && !f.mail.dataset.touched) { f.mail.checked = true; syncBtn(); } }; f.mail.addEventListener('click', () => { f.mail.dataset.touched = 1; });
+  if (A().can('invoices.view')) (async () => {
+    try { CUSTOMERS = CUSTOMERS || (await A().api('/customers')).customers || []; } catch { CUSTOMERS = []; }
+    $('#es-cust', c).innerHTML = CUSTOMERS.slice(0, 800).map(x => `<option value="${esc(x.name)}">${esc(x.email || '')}${x.company ? ' · ' + esc(x.company) : ''}</option>`).join('');
+    f.name.addEventListener('change', () => { const x = CUSTOMERS.find(y => y.name === f.name.value); if (!x) return; if (x.email && !f.email.value) { f.email.value = x.email; f.email.oninput(); }
+      for (const fl of ours) { const el = $(`[data-v="${fl.id}"]`, c); if (!el || el.value) continue; const L = (fl.label || '').toLowerCase(); const v = /company/.test(L) ? x.company : /phone/.test(L) ? x.phone : /email/.test(L) ? x.email : /customer name|full name|^name/.test(L) ? x.name : /address/.test(L) ? x.address : ''; if (v) el.value = v; } });
+  })();
+  f.name.addEventListener('input', () => { for (const fl of ours) if (/customer name|full name/i.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = f.name.value; el.dataset.auto = 1; } } });
+  f.onsubmit = async e => {
+    e.preventDefault(); const go = $('[data-go]', c); go.disabled = true; $('[data-err]', c).textContent = '';
+    const prefill = {}; $$('[data-v]', c).forEach(i => { prefill[i.dataset.v] = i.type === 'checkbox' ? (i.checked ? '1' : '') : i.value.trim(); });
+    try {
+      const r = await A().api('/esign/send', { templateId: t.id, signerName: f.name.value.trim(), signerEmail: f.email.value.trim(), message: f.message.value, prefill, email: f.mail.checked });
+      const d = r.doc;
+      c.innerHTML = `<div class="card" style="max-width:720px"><h2 style="margin-top:0">${f.mail.checked ? (r.mailed ? 'Agreement created and emailed ✓' : 'Agreement created — the email was not delivered') : 'Agreement ready to sign ✓'}</h2>
+        <p style="color:var(--mut)">${f.mail.checked && r.mailed ? `${esc(d.signerName)} got an email with the link. You'll get a notification and the signed PDF when it's done.` : 'Send this signing link to the customer (text, WhatsApp, email…) or open it on a tablet at the counter.'}</p>
+        <div class="es-link"><input class="input" readonly value="${esc(d.url)}"><button class="btn sm" data-cp>Copy link</button></div>
+        <div class="row-actions" style="margin-top:12px"><a class="btn" href="/api/admin/esign/draft?id=${d.id}" target="_blank" rel="noopener">View the prepared PDF</a><a class="btn ghost" href="/api/admin/esign/draft?id=${d.id}&dl=1">Download PDF</a><a class="btn ghost" href="${esc(d.url)}" target="_blank" rel="noopener">Open signing page</a><a class="btn ghost" href="#/agreements">Back to agreements</a></div></div>`;
+      $('[data-cp]', c).onclick = () => copy(d.url);
+    } catch (er) { $('[data-err]', c).textContent = er.message; go.disabled = false; }
+  };
+}
+
 /* ---------------- upload (PDF / images → page JPEGs) ---------------- */
 let pdfLib = null;
 function polyfill() { // pdf.js 5 uses Map#getOrInsertComputed (new in 2025 browsers)
@@ -183,10 +233,38 @@ function polyfill() { // pdf.js 5 uses Map#getOrInsertComputed (new in 2025 brow
   }
 }
 async function pdfjs() { polyfill(); if (!pdfLib) { pdfLib = await import('/checkout/vendor/pdf.mjs'); pdfLib.GlobalWorkerOptions.workerSrc = '/checkout/vendor/pdf.worker.mjs'; } return pdfLib; }
+const loadScript = src => new Promise((ok, no) => { if ([...document.scripts].some(x => x.src === src)) return ok(); const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = () => no(new Error('Could not load the Word reader. Check your connection, or save the file as PDF.')); document.head.appendChild(el); });
+// Word (.docx): converted to HTML (mammoth), laid out on Letter pages and captured as images (html2canvas). Layout is close, not identical: for exact layout upload a PDF.
+async function docxPages(file, onProgress) {
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  const r = await window.mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+  const PW = 816, PH = 1056, M = 72; // Letter at 96 px/in, 0.75 in margins
+  const host = document.createElement('div'); host.style.cssText = `position:fixed;left:-10000px;top:0;width:${PW - 2 * M}px;font:14px/1.45 Georgia,'Times New Roman',serif;color:#111;background:#fff`;
+  host.innerHTML = `<style>.dx h1{font-size:22px;margin:0 0 12px}.dx h2{font-size:17px;margin:16px 0 8px}.dx h3{font-size:15px;margin:14px 0 6px}.dx p{margin:0 0 9px}.dx ul,.dx ol{margin:0 0 9px 22px;padding:0}.dx table{border-collapse:collapse;width:100%;margin:0 0 10px}.dx td,.dx th{border:1px solid #999;padding:4px 6px;vertical-align:top}.dx img{max-width:100%}</style><div class="dx">${r.value}</div>`;
+  document.body.appendChild(host);
+  try {
+    await new Promise(ok => setTimeout(ok, 300));
+    const blocks = [...host.querySelector('.dx').children], pages = [[]]; let used = 0;
+    for (const b of blocks) { const st = getComputedStyle(b), h = b.offsetHeight + parseFloat(st.marginTop) + parseFloat(st.marginBottom); if (used + h > PH - 2 * M && pages[pages.length - 1].length) { pages.push([]); used = 0; } pages[pages.length - 1].push(b); used += h; }
+    if (pages.length > 40) throw new Error('This document is longer than 40 pages.');
+    const out = [];
+    for (let k = 0; k < pages.length; k++) {
+      onProgress(k + 1, pages.length);
+      const pg = document.createElement('div'); pg.style.cssText = `position:fixed;left:-10000px;top:0;width:${PW}px;height:${PH}px;padding:${M}px;box-sizing:border-box;background:#fff;font:14px/1.45 Georgia,'Times New Roman',serif;color:#111;overflow:hidden`;
+      pg.innerHTML = host.firstElementChild.outerHTML + '<div class="dx"></div>'; pages[k].forEach(b => pg.lastElementChild.appendChild(b.cloneNode(true)));
+      document.body.appendChild(pg);
+      const c = await window.html2canvas(pg, { scale: 1700 / PW, backgroundColor: '#ffffff', logging: false }); pg.remove();
+      out.push({ w: 612, h: 792, blob: await toJpeg(c) });
+    }
+    return out;
+  } finally { host.remove(); }
+}
 function pickFile(accept) { return new Promise(res => { const i = document.createElement('input'); i.type = 'file'; i.accept = accept; i.onchange = () => res(i.files[0] || null); i.click(); }); }
 const toJpeg = c => new Promise(r => c.toBlob(r, 'image/jpeg', .86));
 async function renderPages(file, onProgress) {
   const pages = [];
+  if (/\.docx$/i.test(file.name)) return docxPages(file, onProgress);
   if (/pdf$/i.test(file.type) || /\.pdf$/i.test(file.name)) {
     const lib = await pdfjs(); const doc = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
     if (doc.numPages > 40) throw new Error('This PDF has ' + doc.numPages + ' pages. The limit is 40.');
@@ -208,7 +286,8 @@ async function renderPages(file, onProgress) {
   return pages;
 }
 async function uploadFlow(kind, existing) {
-  const file = await pickFile('application/pdf,.pdf,image/jpeg,image/png'); if (!file) return;
+  const file = await pickFile('application/pdf,.pdf,image/jpeg,image/png,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,application/msword'); if (!file) return;
+  if (/\.doc$/i.test(file.name)) { A().toast('Old .doc files can’t be read. In Word use File → Save as → PDF (or .docx) and upload that.'); return; }
   if (file.size > 30e6) { A().toast('The file is larger than 30 MB.'); return; }
   const o = A().modal(`<header><h2>${existing ? 'Replacing the PDF…' : 'Preparing your document…'}</h2></header><p data-p style="color:var(--mut)">Reading ${esc(file.name)}…</p><div class="es-bar"><i data-b></i></div>`);
   o.onclick = null;
@@ -265,6 +344,7 @@ async function editor(id, sendAfter) {
     const canUs = ['text', 'checkbox', 'date', 'name', 'email'].includes(f.type);
     propsEl.innerHTML = `<div class="es-ph"><b style="color:${TYPES[f.type].color}">${TYPES[f.type].label}</b> <small>page ${f.page + 1}</small></div>
       <label class="field"><span>Label / hint</span><input data-p="label" value="${esc(f.label)}" placeholder="${esc(TYPES[f.type].label)}" maxlength="80"></label>
+      ${f.role === 'sender' ? `<label class="field"><span>Section in the information form</span><input data-p="group" value="${esc(f.group || '')}" maxlength="60" placeholder="e.g. Customer & vehicle" list="es-groups"><datalist id="es-groups">${[...new Set(S.fields.map(x => x.group).filter(Boolean))].map(g => `<option value="${esc(g)}">`).join('')}</datalist></label>` : ''}
       ${canUs ? `<label class="field"><span>Filled by</span><select data-p="role"><option value="signer">Customer (when signing)</option><option value="sender">Me (when sending)</option></select></label>` : ''}
       ${f.role === 'sender' ? (f.type === 'checkbox' ? `<label class="es-check"><input type="checkbox" data-p="value" ${f.value === '1' ? 'checked' : ''}> Checked by default</label>` : `<label class="field"><span>Default value</span><input data-p="value" value="${esc(f.value)}" maxlength="500" placeholder="${f.type === 'date' ? 'Today, if empty' : 'Optional'}"></label>`)
         : f.type !== 'date' ? `<label class="es-check"><input type="checkbox" data-p="required" ${f.required ? 'checked' : ''}> Required</label>` : '<p class="hint">Filled in automatically with the date the customer signs.</p>'}
@@ -323,7 +403,7 @@ async function editor(id, sendAfter) {
   };
   $('[data-name]', c).oninput = dirty; $('[data-msg]', c).oninput = dirty;
   $('[data-save]').onclick = async () => { try { await save(); A().toast('Saved'); } catch (e) { A().toast(e.message); } };
-  $('[data-sendnow]').onclick = async () => { try { const tt = await save(); sendModal(tt, oneoff ? () => A().go('/agreements') : null); } catch (e) { A().toast(e.message); } };
+  $('[data-sendnow]').onclick = async () => { try { await save(); S.dirty = false; A().go('/agreements/fill?id=' + t.id); } catch (e) { A().toast(e.message); } };
   $('[data-replace]').onclick = async () => {
     A().confirmBox('Replace the PDF?', 'Fields stay where they are (fields on pages that no longer exist are removed). Documents already sent are not changed.', async () => {
       try { if (S.dirty) await save(); const nt = await uploadFlow(t.kind, t.id); if (nt) editor(t.id); } catch (e) { A().toast(e.message); }
@@ -333,7 +413,7 @@ async function editor(id, sendAfter) {
   addEventListener('beforeunload', guard);
   drawFields(); drawProps();
   if (!S.fields.length) A().toast('Drag “Signature” and the other fields onto the page');
-  if (sendAfter) sendModal(t);
+  if (sendAfter) A().go('/agreements/fill?id=' + t.id);
 }
 
 window.SatinEsign = { route };

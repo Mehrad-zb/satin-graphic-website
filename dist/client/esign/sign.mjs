@@ -228,7 +228,7 @@ function done(now) {
   $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = '';
   const when = DOC.signedAt ? new Date(DOC.signedAt).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }) : '';
   app.innerHTML = `<div class="card center"><div class="done-ic">${CHECK}</div><h1>${now ? 'Thank you — you\'re all set!' : 'This document is signed'}</h1>
-    <p><b>${esc(DOC.title)}</b> was signed${when ? ' on ' + esc(when.replace(/\.$/, '')) : ''}. ${now ? 'A copy has been emailed to <b>' + esc(DOC.signerEmail) + '</b> and to ' + esc(DOC.business) + '.' : ''}</p>
+    <p><b>${esc(DOC.title)}</b> was signed${when ? ' on ' + esc(when.replace(/\.$/, '')) : ''}. ${now ? (DOC.signerEmail ? 'A copy has been emailed to <b>' + esc(DOC.signerEmail) + '</b> and to ' + esc(DOC.business) + '.' : esc(DOC.business) + ' has received a copy. Download yours below.') : ''}</p>
     <div class="btns"><a class="btn" href="${esc(DOC.pdf)}&dl=1">Download signed PDF</a><a class="btn ghost" href="${esc(DOC.pdf)}" target="_blank" rel="noopener">View PDF</a></div>
     <p class="legal" style="margin-top:18px">The PDF includes an audit trail page. Questions? Call ${esc(DOC.businessPhone)}.</p></div>`;
   scrollTo(0, 0);
