@@ -88,3 +88,9 @@
   .es-rs{width:18px;height:18px;right:-9px;bottom:-9px}
 }
 .es-side2 .err:empty,.es-fill .err:empty{display:none}
+.es-tile{text-align:left;border:0;font:inherit;cursor:pointer}.es-tile:hover{box-shadow:0 0 0 2px var(--line),var(--shadow)}
+.es-cust{position:relative}.es-cust > span{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink-2)}.es-cust-row{display:flex;gap:8px}.es-cust-row input{flex:1;min-width:0}
+.es-sug{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px #0002;margin-top:4px;max-height:320px;overflow:auto;padding:4px}
+.es-sug button{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:8px;cursor:pointer;font:inherit}.es-sug button:hover,.es-sug button.on{background:#f3f4f6}.es-sug small{display:block;color:var(--mut);font-size:12.5px}
+.es-sug .es-sug-add{color:var(--blue);font-weight:600;border-top:1px solid var(--line);border-radius:0 0 8px 8px}
+@media (max-width:640px){.es-cust-row{flex-wrap:wrap}.es-cust-row .btn{width:100%;justify-content:center}}

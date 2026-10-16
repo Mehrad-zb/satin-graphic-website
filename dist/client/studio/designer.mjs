@@ -3,7 +3,8 @@ import {APPAREL_COLOURS} from '/apparel-colours.mjs';
 import {studioNavigation,studioPicker,bindStudioNavigation,studioURL,apparelCardFor,vehicleGroups,bodyImage,bindVehicleFilter} from './navigation.mjs';
 import {observeTranslations,translateTree,language,t,localizedPath,registerRuleTranslations} from './i18n.mjs';
 import {renderMockup,stageOverlay,printArea,photoMockups,sceneKeys,vehicleView,paintHex,VEHICLE_PAINT,load as loadImage} from './mockups.mjs';
-import {pdfFromRasters,cmykSwatch,layerFromCanvas} from './pdf.mjs';
+import {pdfFromRasters,cmykSwatch,layerFromCanvas} from './pdf.mjs?v=vec1';
+import {svgToVector,VectorError} from './vector.mjs?v=vec1';
 import {canvasToCMYKJpeg,bytesToDataURL} from './cmyk.mjs';
 import {PRODUCTS,FONTS,FONT_LIBRARY,SHAPES,EXTRA_SHAPE_LABELS,DECOR_SHAPES,dimensions,svgArtwork,arcGeom,priceInputs,sideViews,sideSlots,vehicleBody,vehicleCategory,labelShape} from './model.mjs';
 import {MASCOTS,MASCOT_KEYS,mascotSVG,ART_MASCOTS} from './mascots.mjs';
@@ -283,8 +284,12 @@ async function printPayload(model){const fonts=await fontCSSFor(model,true),lite
  async function printLayers(model,fonts,k=1){const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1,budget=ios?10e6:22e6,large=product.group==='Large format'||vehicle(),pages=[];let total=0;
   for(const i of activeSides(model)){const d=dimensions(product,model.options,i),b=Number(d.bleed)||0,PW=d.width+2*b,PH=d.height+2*b,sd=model.sides[i];if(!sd)continue;
    let bg=sd.background||'#ffffff';if(product.views&&bg.toLowerCase()===paintHex(model.options))bg=null;if(product.group==='Apparel'&&bg==='#ffffff')bg=null;
-   const layers=[];let n=0;
-   for(const l of sd.layers||[]){n++;const cx=(l.x+l.w/2)*d.width,cy=(l.y+l.h/2)*d.height,hw=l.w*d.width/2,hh=l.h*d.height/2,r=(l.rotation||0)*Math.PI/180,ex=Math.abs(hw*Math.cos(r))+Math.abs(hh*Math.sin(r)),ey=Math.abs(hw*Math.sin(r))+Math.abs(hh*Math.cos(r));
+   const layers=[];let n=0,rasterized=0;
+   for(const l of sd.layers||[]){n++;
+    // vector first (shapes, mascots, gradients, outlined text, photos at full resolution); a raster only when that can't be exact
+    try{const v=await svgToVector(svgArtwork(model,i,embedded,'',true,{noBackground:true,layers:[l]}),{prefix:`s${i}e${n}_`,maxImage:Math.round(6000*k)});
+     layers.push({name:printLayerName(l,n),vec:v});total+=v.ops.length+v.images.reduce((a,x)=>a+x.img.data.length+(x.img.smask?.data.length||0),0);continue;}
+    catch(e){if(!(e instanceof VectorError))console.warn('vector layer',e);else console.info('raster layer',n,e.message);rasterized++;}const cx=(l.x+l.w/2)*d.width,cy=(l.y+l.h/2)*d.height,hw=l.w*d.width/2,hh=l.h*d.height/2,r=(l.rotation||0)*Math.PI/180,ex=Math.abs(hw*Math.cos(r))+Math.abs(hh*Math.sin(r)),ey=Math.abs(hw*Math.sin(r))+Math.abs(hh*Math.cos(r));
     const extra=(l.type==='line'?(l.stroke||2)/100:0)+(l.outline||0)/100+.25,txt=l.type==='text',padX=(txt?ex*.08+ey*.6:ex*.12)+extra,padY=(txt?ey*.6:ey*.12)+extra;
     const x0=Math.max(-b,cx-ex-padX),x1=Math.min(d.width+b,cx+ex+padX),y0=Math.max(-b,cy-ey-padY),y1=Math.min(d.height+b,cy+ey+padY);if(x1-x0<=0||y1-y0<=0)continue;
     const bw=x1-x0,bh=y1-y0,dpi=Math.min(large?150:300,Math.sqrt(budget/(bw*bh)),16000/Math.max(bw,bh))*k;
@@ -293,7 +298,12 @@ async function printPayload(model){const fonts=await fontCSSFor(model,true),lite
     const draw=()=>{g.clearRect(0,0,c.width,c.height);g.drawImage(img,(-b-x0)*dpi,(-b-y0)*dpi,PW*dpi,PH*dpi);};draw();if(WEBKIT){await new Promise(r=>setTimeout(r,250));draw();}
     let res=null;try{res=await layerFromCanvas(c,l.type==='image',/^#[0-9a-f]{6}$/i.test(l.color||'')?l.color:'#ffffff');}catch(e){console.warn('print layer',e);}c.width=c.height=1;if(!res)continue;
     const px=1/dpi;layers.push({name:printLayerName(l,n),xIn:x0+b+res.x*px,yIn:y0+b+res.y*px,wIn:res.img.w*px,hIn:res.img.h*px,img:res.img});total+=res.img.data.length+(res.img.smask?.data.length||0);}
-   const ls=labelShape(product,model.options);pages.push({side:i,widthIn:d.width,heightIn:d.height,bleedIn:b,background:bg,layers,cut:ls&&ls!=='die'?{shape:ls,radiusIn:ls==='round'?Math.min(d.width,d.height)*.12:0}:null});}
+   const ls=labelShape(product,model.options);
+   // big artwork (vehicles, large banners) is saved at 1:5 — it is vector, so it enlarges to full size without losing sharpness
+   const scale=vehicle()||Math.max(PW,PH)>120?5:1,f1=v=>Math.round(v*100)/100,view=sideViews(product)[i];
+   const notes=[(view?.label?view.label+' · ':'')+(scale>1?`SCALE 1:${scale} - print at ${scale*100}% = ${f1(PW)} x ${f1(PH)} in with bleed (trim ${f1(d.width)} x ${f1(d.height)} in)`:`Actual size ${f1(PW)} x ${f1(PH)} in with bleed (trim ${f1(d.width)} x ${f1(d.height)} in)`),
+    `Vector artwork, CMYK, text converted to outlines, one layer per element${rasterized?` (${rasterized} element${rasterized>1?'s':''} embedded as high-resolution image${rasterized>1?'s':''})`:''} - Satin Graphic Design Studio`];
+   pages.push({side:i,widthIn:d.width,heightIn:d.height,bleedIn:b,background:bg,layers,scale,notes,cut:ls&&ls!=='die'?{shape:ls,radiusIn:ls==='round'?Math.min(d.width,d.height)*.12:0}:null});}
   return {pages,total};}
  // Layered print-ready PDF (Blob), kept under ~21 MB so it can travel with the order; cached until the design changes.
  let layeredCache={change:-1,id:'',blob:null};

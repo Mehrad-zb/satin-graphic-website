@@ -1133,7 +1133,7 @@ async function route() {
   } catch (e) { const c = $('[data-content]'); if (c) c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; else toast(e.message); }
 }
 let refresh = () => route();
-window.SatinAdmin = { get csrf() { return CSRF; }, $, esc, api, apiForm, popMenu, toast, go, shell, modal, confirmBox, can, fmtDate, icon, money, csvParse, downloadCSV, nav: NAV, get me() { return ME; } };
+window.SatinAdmin = { customerModal, get csrf() { return CSRF; }, $, esc, api, apiForm, popMenu, toast, go, shell, modal, confirmBox, can, fmtDate, icon, money, csvParse, downloadCSV, nav: NAV, get me() { return ME; } };
 addEventListener('hashchange', () => { document.querySelectorAll('.overlay').forEach(o => o.remove()); route(); });
 boot();
 })();
