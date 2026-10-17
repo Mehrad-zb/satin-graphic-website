@@ -1,0 +1,37 @@
+/* Admin → Our Work (portfolio.js) */
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.pf-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;color:inherit;text-decoration:none;box-shadow:var(--shadow);transition:transform .15s}
+.pf-card:hover{transform:translateY(-2px)}
+.pf-ph{aspect-ratio:1.45;background:#eef0f3;display:grid;place-items:center;color:var(--mut);font-size:13px}
+.pf-ph img{width:100%;height:100%;object-fit:cover}
+.pf-info{padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.pf-info small{color:var(--mut);font-size:12.5px}
+.pf-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.pf-pills .pill{font-size:11px;padding:2px 8px}
+.pf-cols{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start}
+.pf-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0 12px}
+.pf-chips{display:flex;flex-wrap:wrap;gap:7px}
+.pf-chip{position:relative;cursor:pointer}.pf-chip input{position:absolute;opacity:0;pointer-events:none}
+.pf-chip span{display:inline-block;padding:7px 12px;border:1px solid #d1d5db;border-radius:999px;font-size:13px;font-weight:600;color:var(--ink-2);background:#fff;user-select:none}
+.pf-chip input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
+.pf-chip input:focus-visible+span{box-shadow:0 0 0 3px #17191e33}
+.pf-check{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-size:14px}.pf-check input{margin-top:3px}
+.pf-drop{display:block;border:2px dashed #cbd0d8;border-radius:var(--r);padding:26px;text-align:center;cursor:pointer;background:#fafbfc;margin-bottom:16px}
+.pf-drop.on{border-color:var(--accent);background:var(--accent-2)}
+.pf-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.pf-photos figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;cursor:grab}
+.pf-photos figure.cover{border:2px solid var(--accent)}
+.pf-photos figure.over{outline:3px dashed var(--accent)}.pf-photos figure.dragging{opacity:.4}
+.pf-photos img{width:100%;aspect-ratio:1.4;object-fit:cover;display:block;background:#eef0f3}
+.pf-photos.static figure{cursor:default}.pf-photos.static{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));margin-bottom:14px}
+.pf-photos figcaption{padding:8px;display:flex;flex-direction:column;gap:6px}
+.pf-photos .input{padding:7px 9px;font-size:12.5px}
+.pf-ph-tools{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12.5px}
+.pf-ph-tools b{color:var(--accent)}
+.pf-ph-tools button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer}
+.pf-ph-tools button:disabled{opacity:.35;cursor:default}
+.pf-bar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 40px}
+@media(max-width:900px){.pf-cols{grid-template-columns:1fr}}
+@media(max-width:520px){.pf-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pf-photos{grid-template-columns:1fr 1fr}.pf-drop{padding:18px}}
+
+/* show the whole vehicle in the card (no cropping of the front/back of the van) */
+.pf-ph img,.pf-photos img{object-fit:contain!important;background:#f3f4f6;padding:4%;box-sizing:border-box}

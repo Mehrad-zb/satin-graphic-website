@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Invoice · Satin Graphic</title>
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/satin/img/favicon-32.png"><link rel="apple-touch-icon" href="/satin/img/apple-touch-icon.png">
+<style>
+@font-face{font-family:Inter;src:url(/satin/fonts/inter-latin.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{--ink:#16181d;--ink2:#3d4452;--mut:#6b7280;--line:#e5e7eb;--soft:#f6f7f9;--accent:#c91c50;--ok:#15803d;--bad:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;background:#eceef2;font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+.bar{max-width:860px;margin:24px auto 12px;padding:0 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.bar .due{font-size:15px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.bar .due b{font-size:20px;display:block}
+.btn{text-decoration:none;display:inline-block;border:0;background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid #d1d5db}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.wide{width:100%;padding:13px 18px;font-size:15px}
+.tag{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#dbeafe;color:#1d4ed8;white-space:nowrap}
+.tag.draft{background:#f3f4f6;color:#4b5563}.tag.sent{background:#dbeafe;color:#1d4ed8}.tag.overdue{background:#fee2e2;color:#b91c1c}.tag.partial{background:#fef3c7;color:#92400e}
+.tag.paid{background:#dcfce7;color:#15803d}.tag.refunded{background:#ede9fe;color:#6d28d9}.tag.void{background:#e5e7eb;color:#4b5563}
+.tag.sm{font-size:10.5px;padding:2px 9px}.tag.due,.tag.next{background:#dbeafe;color:#1d4ed8}.tag.upcoming{background:#f3f4f6;color:#6b7280}
+.paper,.paybox{position:relative;max-width:860px;margin:0 auto 18px;background:#fff;border-radius:14px;box-shadow:0 1px 3px #0000000f,0 12px 40px #00000014;padding:clamp(22px,5vw,52px);overflow:hidden}
+.paper{margin-bottom:40px}
+.paybox{padding:clamp(20px,4vw,32px)}
+.paybox h2{margin:0 0 4px;font-size:18px}.paybox p.sub{margin:0 0 16px;color:var(--mut)}
+.opts{display:grid;gap:10px;margin-bottom:18px}
+.opt{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.opt input{accent-color:var(--ink);width:18px;height:18px;margin:0}
+.opt.on{border-color:var(--ink);background:var(--soft)}
+.opt span{flex:1}.opt small{display:block;color:var(--mut)}.opt b{font-size:16px;font-variant-numeric:tabular-nums}
+.paygrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.paygrid > div{min-width:0}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);font-weight:700;margin-bottom:4px}
+#sq-card{min-height:90px}
+.err{color:var(--bad);font-size:13px;min-height:18px;margin-top:8px}
+.ap-box{margin-top:6px}.ap-box[hidden],.pp-msg[hidden]{display:none}.ap-or{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:12px;margin:2px 0 10px}.ap-or::before,.ap-or::after{content:"";flex:1;height:1px;background:#e5e7eb}
+#afterpay-button{min-height:48px}.apmsg{font-size:13px;color:var(--mut);text-align:center;margin-top:6px;min-height:18px}
+.pp-btns{display:grid;gap:10px}.pp-msg{margin-top:10px;min-height:18px}
+.okmsg{background:#dcfce7;color:#14532d;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-weight:600}
+.secure{font-size:12px;color:var(--mut);margin-top:10px}
+.head{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+.biz img{height:26px;margin-bottom:14px;display:block}
+.biz b{display:block;font-size:15px}
+.biz div,.to div{color:var(--ink2);white-space:pre-line}
+.meta{text-align:right}
+.meta h1{margin:0 0 10px;font-size:26px;letter-spacing:-.02em}
+.meta table{margin-left:auto;border-collapse:collapse}
+.meta td{padding:2px 0 2px 16px;color:var(--ink2)}.meta td:first-child{color:var(--mut)}
+.to{border-top:1px solid var(--line);padding-top:18px;margin-bottom:22px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.title{font-size:16px;font-weight:700;margin:0 0 14px}
+table.items,table.sched{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.items th,.sched th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);background:var(--soft);padding:9px 10px;border-bottom:1px solid var(--line)}
+.items td,.sched td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.items .r,.sched .r{text-align:right;white-space:nowrap}
+.items small,.sched small{display:block;color:var(--mut);white-space:pre-line;margin-top:2px}
+.sched tr.next td{background:#f8fafc}
+.totals{margin:16px 0 0 auto;width:min(340px,100%);border-collapse:collapse;font-variant-numeric:tabular-nums}
+.totals td{padding:5px 10px}.totals td:last-child{text-align:right}
+.totals .grand td{border-top:2px solid var(--ink);font-weight:800;font-size:16px;padding-top:10px}
+.totals .bal td{background:var(--soft);font-weight:800;font-size:16px}
+.section{margin-top:28px}
+.notes{margin-top:30px;display:grid;gap:18px}
+.notes div div{white-space:pre-line;color:var(--ink2)}
+.stamp{position:absolute;top:34px;right:-40px;transform:rotate(35deg);background:var(--ok);color:#fff;font-weight:800;letter-spacing:.2em;padding:6px 60px;font-size:13px}
+.stamp.void{background:#6b7280}.stamp.refunded{background:#6d28d9}
+.payments{font-size:13px;color:var(--ink2)}
+.payments .neg{color:#6d28d9}
+.msg{max-width:520px;margin:15vh auto;background:#fff;border-radius:14px;padding:30px;text-align:center}
+.foot{text-align:center;color:var(--mut);font-size:12px;margin:-24px 0 30px}
+@media print{body{background:#fff}.bar,.foot,.paybox{display:none}.paper{box-shadow:none;margin:0;max-width:none;border-radius:0;padding:0}@page{margin:14mm}}
+@media(max-width:700px){.paygrid{grid-template-columns:1fr}}
+@media(max-width:600px){.meta{text-align:left}.meta table{margin-left:0}.meta td{padding:2px 16px 2px 0}.items .hide-s,.sched .hide-s{display:none}.bar{margin-top:16px}}
+</style>
+</head>
+<body>
+<div id="app"><div class="msg">Loading invoice…</div></div>
+<script>
+(async () => {
+  const app = document.getElementById('app');
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const t = new URLSearchParams(location.search).get('t') || '';
+  const post = async (path, body) => {
+    const r = await fetch(path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t, ...body }) });
+    let d = {}; try { d = await r.json(); } catch {}
+    if (d.invoice) inv = d.invoice;
+    if (!r.ok) throw new Error(d.error || 'Something went wrong. Please try again.');
+    return d;
+  };
+  let inv, option = 'next', notice = '', busy = false;
+  try { const r = await fetch('/api/invoice?t=' + encodeURIComponent(t), { credentials: 'same-origin' }); const d = await r.json(); if (!r.ok) throw new Error(d.error || 'This invoice is not available.'); inv = d.invoice; }
+  catch (e) { app.innerHTML = `<div class="msg"><h2>Invoice not available</h2><p>${esc(e.message)}</p><p>Questions? Call (905) 962-6222.</p></div>`; return; }
+
+  const STATE = { paid: 'Paid', due: 'Due now', next: 'Next', overdue: 'Overdue', upcoming: 'Upcoming' };
+  const scripts = {};
+  const loadScript = src => scripts[src] ||= new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.async = true; const tm = setTimeout(() => rej(new Error('Timed out')), 15000); s.onload = () => { clearTimeout(tm); res(); }; s.onerror = () => { clearTimeout(tm); delete scripts[src]; rej(new Error('Could not load ' + src)); }; document.head.append(s); });
+  let sq = null;
+
+  function render() {
+    const i = inv, b = i.business || {}, c = i.customer || {};
+    const fmt = n => (i.currency === 'CAD' ? 'CA$' : '$') + (n / 100).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const day = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+    const taxName = id => (i.taxes || []).find(x => x.id === id);
+    document.title = `Invoice #${i.number} · ${b.name || 'Satin Graphic'}`;
+    const st = i.status, bal = Math.max(0, i.total - i.paid);
+    const label = st === 'partial' && i.refunded ? 'Partial · refunded' : (i.statusLabel || st);
+    const tag = `<span class="tag ${esc(st)}" data-status="${esc(st)}">${esc(label)}</span>`;
+    const closed = ['paid', 'refunded', 'void'].includes(st);
+    const sch = i.schedule || [];
+    const nextIdx = sch.findIndex(x => x.remaining > 0);
+    const P = i.pay;
+    if (P && option === 'next' && P.next.amount >= P.balance) option = 'full';
+    const amount = P ? (option === 'full' ? P.balance : P.next.amount) : 0;
+    const head = st === 'paid' ? '<b>Paid in full</b>Thank you!' : st === 'void' ? '<b>This invoice is void</b>' : st === 'refunded' ? `<b>Refunded</b>${fmt(i.refunded)} returned` : `<span>${P && P.next.amount < bal ? (sch[nextIdx]?.due && sch[nextIdx].state !== 'overdue' && sch[nextIdx].state !== 'due' ? 'Next payment · due ' + esc(day(sch[nextIdx].due)) : sch[nextIdx]?.state === 'overdue' ? 'Payment overdue' : 'Amount due now') : `Balance due ${i.dueDate ? 'by ' + esc(day(i.dueDate)) : ''}`}</span><b>${fmt(P && P.next.amount < bal ? P.next.amount : bal)}</b>`;
+    app.innerHTML = `<div class="bar"><div class="due">${tag}<div>${head}</div></div>
+      <div style="display:flex;gap:8px">${P ? '<a class="btn" href="#pay">Pay now</a>' : ''}<button class="btn ghost" data-print>Print / Save PDF</button></div></div>
+    ${P || notice ? `<section class="paybox" id="pay">${notice ? `<div class="okmsg" role="status">${esc(notice)}</div>` : ''}${P ? `
+      <h2>Pay online</h2><p class="sub">Choose how much to pay now. Card details are entered in Square's secure form and never reach our server.</p>
+      <div class="opts">${P.next.amount < P.balance ? `<label class="opt ${option === 'next' ? 'on' : ''}"><input type="radio" name="opt" value="next" ${option === 'next' ? 'checked' : ''}><span>${esc(P.next.label)}<small>Next scheduled payment</small></span><b>${fmt(P.next.amount)}</b></label>` : ''}
+        <label class="opt ${option === 'full' ? 'on' : ''}"><input type="radio" name="opt" value="full" ${option === 'full' ? 'checked' : ''}><span>Full balance<small>Pay everything that is left</small></span><b>${fmt(P.balance)}</b></label></div>
+      <div class="paygrid">${P.square ? `<div><div class="lbl">Credit or debit card</div><div id="sq-card"></div><button class="btn wide" data-paycard disabled>Pay ${fmt(amount)}</button><div class="err" data-card-err role="alert"></div>${P.square.afterpay ? `<div class="ap-box" data-ap hidden><div class="ap-or">or pay in 4 with Afterpay</div><div id="afterpay-button"></div><div id="afterpay-messaging" class="apmsg"></div><div class="err" data-ap-err role="alert"></div></div>` : ''}</div>` : ''}
+        ${P.paypal ? `<div><div class="lbl">PayPal${P.paypal.payLater ? ' · Pay Later' : ''}</div><div data-paypal class="pp-btns"></div><div class="pp-msg" data-pp-msg hidden></div><div class="err" data-pp-err role="alert"></div></div>` : ''}</div>
+      <p class="secure">🔒 Secure payment · ${P.square ? 'Card payments by Square' : ''}${P.square && P.paypal ? ' · ' : ''}${P.paypal ? 'PayPal' : ''}${P.square?.afterpay ? ' · Afterpay where eligible' : ''}</p>` : ''}</section>` : ''}
+    <article class="paper">${st === 'paid' ? '<div class="stamp">PAID</div>' : st === 'void' ? '<div class="stamp void">VOID</div>' : st === 'refunded' ? '<div class="stamp refunded">REFUNDED</div>' : ''}
+      <div class="head"><div class="biz">${b.logo ? `<img src="${esc(b.logo)}" alt="${esc(b.name)}">` : ''}<b>${esc(b.name)}</b><div>${esc(b.address)}</div><div>${esc(b.email)}${b.phone ? '<br>' + esc(b.phone) : ''}${b.taxNumber ? '<br>' + esc(b.taxNumber) : ''}</div></div>
+        <div class="meta"><h1>Invoice #${esc(i.number)}</h1><p style="margin:0 0 10px">${tag}</p><table><tr><td>Issue date</td><td>${esc(day(i.issueDate))}</td></tr><tr><td>Due date</td><td>${esc(day(i.dueDate))}</td></tr>${i.salesRep ? `<tr><td>Sales rep</td><td>${esc(i.salesRep)}</td></tr>` : ''}</table></div></div>
+      <div class="to"><div><div class="lbl">Bill to</div><b>${esc(c.name)}</b>${c.company ? `<div>${esc(c.company)}</div>` : ''}<div>${esc(c.address)}</div><div>${esc(c.email)}${c.phone ? '<br>' + esc(c.phone) : ''}</div></div>
+        <div style="text-align:right"><div class="lbl">${closed ? 'Status' : 'Amount due'}</div><div style="font-size:24px;font-weight:800">${closed ? esc(label) : fmt(bal)}</div></div></div>
+      ${i.title ? `<p class="title">${esc(i.title)}</p>` : ''}
+      <table class="items"><thead><tr><th>Product or service</th><th class="r">Qty</th><th class="r">Price</th><th class="hide-s">Tax</th><th class="r">Amount</th></tr></thead><tbody>
+      ${i.items.map(it => `<tr><td><b>${esc(it.name)}</b>${it.description ? `<small>${esc(it.description)}</small>` : ''}</td><td class="r">${esc(+it.qty)}</td><td class="r">${fmt(it.price)}</td><td class="hide-s">${esc((it.taxes || []).map(id => { const x = taxName(id); return x ? `${x.name} ${x.rate}%` : ''; }).filter(Boolean).join(', ') || '—')}</td><td class="r">${fmt(Math.round(it.qty * it.price))}</td></tr>`).join('')}
+      </tbody></table>
+      <table class="totals"><tr><td>Subtotal</td><td>${fmt(i.subtotal)}</td></tr>
+        ${i.discountTotal ? `<tr><td>Discount${i.discount.type === 'percent' ? ` (${esc(i.discount.value)}%)` : ''}</td><td>−${fmt(i.discountTotal)}</td></tr>` : ''}
+        ${(i.taxes || []).map(x => `<tr><td>${esc(x.name)} (${esc(x.rate)}%)</td><td>${fmt(x.amount)}</td></tr>`).join('')}
+        <tr class="grand"><td>Total</td><td>${fmt(i.total)}</td></tr>
+        ${i.paid || i.refunded ? `<tr><td>Amount paid</td><td>−${fmt(i.paid + i.refunded)}</td></tr>` : ''}
+        ${i.refunded ? `<tr><td>Refunded</td><td>${fmt(i.refunded)}</td></tr>` : ''}
+        ${st === 'void' || st === 'refunded' ? '' : `<tr class="bal"><td>Balance due</td><td>${fmt(bal)}</td></tr>`}</table>
+      ${sch.length && !['void', 'refunded'].includes(st) ? `<div class="section"><div class="lbl">Payment schedule</div><table class="sched"><thead><tr><th>Payment</th><th class="hide-s">Due</th><th class="r">Amount</th><th class="r">Status</th></tr></thead><tbody>
+        ${sch.map((x, k) => `<tr class="${k === nextIdx ? 'next' : ''}"><td><b>${esc(x.label)}</b><small>${x.type === 'percent' ? esc(x.value) + '% of total' : x.type === 'balance' ? 'Remaining balance' : ''}${x.paid && x.remaining ? ` · ${fmt(x.paid)} paid` : ''}</small></td><td class="hide-s">${x.due ? esc(day(x.due)) : 'On receipt'}</td><td class="r">${fmt(x.amount)}</td><td class="r"><span class="tag sm ${esc(x.state)}">${STATE[x.state] || esc(x.state)}</span></td></tr>`).join('')}
+      </tbody></table></div>` : ''}
+      ${(i.payments || []).length ? `<div class="section payments"><div class="lbl">Payments received</div>${i.payments.map(p => p.kind === 'refund' ? `<span class="neg">${esc(day(p.date))} · Refund · ${esc(p.methodName)} · −${fmt(-p.amount)}</span>` : `${esc(day(p.date))} · ${esc(p.methodName)} · ${fmt(p.amount)}`).join('<br>')}</div>` : ''}
+      <div class="notes">${i.notes ? `<div><div class="lbl">Notes</div><div>${esc(i.notes)}</div></div>` : ''}${i.terms ? `<div><div class="lbl">Terms</div><div>${esc(i.terms)}</div></div>` : ''}</div>
+    </article><p class="foot">${esc(b.name)} · ${esc(b.website || '')}</p>`;
+    app.querySelector('[data-print]').onclick = () => print();
+    app.querySelectorAll('input[name=opt]').forEach(r => r.onchange = () => { option = r.value; render(); });
+    if (P) mount(P, amount, fmt);
+  }
+
+  async function mount(P, amount, fmt) {
+    const host = document.getElementById('sq-card');
+    if (P.square && host) {
+      const err = app.querySelector('[data-card-err]'), btn = app.querySelector('[data-paycard]');
+      try {
+        await loadScript(P.square.sdk);
+        if (!window.Square) throw new Error('Square unavailable');
+        if (!sq || sq.app !== P.square.applicationId) sq = { app: P.square.applicationId, payments: window.Square.payments(P.square.applicationId, P.square.locationId) };
+        try { await sq.card?.destroy(); } catch {}
+        sq.card = await sq.payments.card({ style: { input: { fontSize: '16px', color: '#16181d' }, '.input-container': { borderColor: '#d1d5db', borderRadius: '10px' }, '.input-container.is-focus': { borderColor: '#16181d' } } });
+        if (!document.body.contains(host)) return;
+        host.innerHTML = ''; await sq.card.attach('#sq-card'); btn.disabled = false;
+        if (P.square.afterpay) mountAfterpay(amount, fmt);
+      } catch (e) { console.warn('square', e); host.innerHTML = '<p class="err">Card payment could not load. Refresh the page or use PayPal.</p>'; }
+      btn.onclick = async () => {
+        if (busy || !sq?.card) return; busy = true; err.textContent = ''; btn.disabled = true; btn.textContent = 'Processing payment…';
+        try {
+          const c = inv.customer || {}, parts = String(c.name || '').trim().split(/\s+/);
+          const details = { amount: (amount / 100).toFixed(2), currencyCode: 'CAD', intent: 'CHARGE', customerInitiated: true, sellerKeyedIn: false, billingContact: { givenName: parts[0] || '', familyName: parts.slice(1).join(' '), email: c.email || undefined, countryCode: 'CA' } };
+          const res = await sq.card.tokenize(details);
+          if (res.status !== 'OK') throw new Error(res.errors?.[0]?.message || 'Check your card details and try again.');
+          let verificationToken = null;
+          if (typeof sq.payments.verifyBuyer === 'function') { try { verificationToken = (await sq.payments.verifyBuyer(res.token, details))?.token || null; } catch { throw new Error('Card verification was not completed. Please try again.'); } }
+          const d = await post('/api/invoice/pay-card', { option, sourceId: res.token, verificationToken, idempotencyKey: crypto.randomUUID() });
+          notice = d.status === 'paid' ? `Payment of ${fmt(amount)} received — thank you! A receipt is on its way to your email.` : 'Your payment is being processed. This page will show it once it is confirmed.';
+          busy = false; option = 'next'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return;
+        } catch (e) { err.textContent = e.message; if (inv && !inv.pay) { busy = false; render(); return; } }
+        busy = false; btn.disabled = false; btn.textContent = 'Pay ' + fmt(amount);
+      };
+    }
+    const pph = app.querySelector('[data-paypal]');
+    if (P.paypal && pph) {
+      const msg = s => { const e = app.querySelector('[data-pp-err]'); if (e) e.textContent = s; };
+      try {
+        const later = !!P.paypal.payLater;
+        await loadScript('https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(P.paypal.clientId) + '&currency=CAD&intent=capture' + (later ? '&components=buttons,messages&enable-funding=paylater&disable-funding=card,credit' : '&components=buttons&disable-funding=card,credit,paylater'));
+        if (!window.paypal?.Buttons || !document.body.contains(pph)) return;
+        let orderId = null; const F = window.paypal.FUNDING || {};
+        const make = funding => window.paypal.Buttons({ ...(F.PAYPAL ? { fundingSource: funding === 'paylater' ? F.PAYLATER : F.PAYPAL } : {}), style: { layout: 'vertical', color: 'gold', shape: 'rect', height: 48, ...(funding === 'paylater' ? {} : { label: 'paypal' }) },
+          createOrder: async () => { msg(''); const d = await post('/api/invoice/paypal/create', { option, funding }); orderId = d.orderId; return orderId; },
+          onApprove: async () => { msg('Confirming your PayPal payment…'); try { const d = await post('/api/invoice/paypal/capture', { orderId }); notice = d.status === 'paid' ? `Payment of ${fmt(amount)} received — thank you!` : 'PayPal is still confirming your payment. This page will update once it is confirmed.'; option = 'next'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { msg(e.message); } },
+          onCancel: () => msg('PayPal payment was cancelled. You can try again.'), onError: e => msg((e && e.message) || 'PayPal is unavailable. Try card payment.') });
+        const buttons = make('paypal'), lb = later && F.PAYLATER ? make('paylater') : null, lbOk = !!lb && (!lb.isEligible || lb.isEligible());
+        pph.innerHTML = `<div data-pp-main></div>${lbOk ? '<div data-pp-later></div>' : ''}`; await buttons.render(pph.querySelector('[data-pp-main]'));
+        if (lbOk) try { await lb.render(pph.querySelector('[data-pp-later]')); } catch (e) { pph.querySelector('[data-pp-later]')?.remove(); }
+        const pm = app.querySelector('[data-pp-msg]'); // PayPal's official Pay Later message (unedited); PayPal decides eligibility for this amount
+        if (lbOk && pm && window.paypal.Messages) { try { pm.hidden = false; await window.paypal.Messages({ amount: (amount / 100).toFixed(2), currency: 'CAD', placement: 'payment', style: { layout: 'text', logo: { type: 'inline' }, text: { size: 12 } } }).render(pm); } catch { pm.hidden = true; } }
+      } catch (e) { console.warn('paypal', e); pph.innerHTML = '<p class="err">PayPal could not load. Refresh the page or pay by card.</p>'; }
+    }
+  }
+  /* Afterpay / Clearpay (Square): only shown when Square says the seller and this exact amount are eligible; the server charges the same server-computed amount */
+  async function mountAfterpay(amount, fmt) {
+    const box = app.querySelector('[data-ap]'); if (!box || !sq) return;
+    try {
+      try { await sq.afterpay?.destroy(); } catch {}
+      sq.afterpay = null;
+      const req = sq.payments.paymentRequest({ countryCode: 'CA', currencyCode: 'CAD', total: { amount: (amount / 100).toFixed(2), label: 'Total' }, requestShippingContact: false, requestBillingContact: false });
+      const af = await sq.payments.afterpayClearpay(req);
+      if (!document.body.contains(box)) { try { await af.destroy(); } catch {} return; }
+      await af.attach('#afterpay-button'); sq.afterpay = af; box.hidden = false;
+      try { await af.attachMessaging('#afterpay-messaging'); } catch { box.querySelector('#afterpay-messaging').hidden = true; }
+      const err = box.querySelector('[data-ap-err]');
+      box.querySelector('#afterpay-button').onclick = async () => {
+        if (busy) return; busy = true; err.textContent = '';
+        try {
+          const res = await af.tokenize();
+          if (res.status !== 'OK') throw new Error('Afterpay was not completed. Nothing was charged — you can try again or pay by card.');
+          const d = await post('/api/invoice/pay-card', { option, method: 'afterpay', expectedAmount: amount, sourceId: res.token, idempotencyKey: crypto.randomUUID() });
+          notice = d.status === 'paid' ? `Payment of ${fmt(amount)} received with Afterpay — thank you! A receipt is on its way to your email.` : 'Your Afterpay payment is being processed. This page will show it once it is confirmed.';
+          busy = false; option = 'next'; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); return;
+        } catch (e) { busy = false; err.textContent = e.message; }
+      };
+    } catch (e) { console.info('Afterpay not offered:', e?.message || e); box.hidden = true; }
+  }
+  render();
+})();
+</script>
+</body>
+</html>

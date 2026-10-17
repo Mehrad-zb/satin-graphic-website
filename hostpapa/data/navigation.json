@@ -1,0 +1,665 @@
+{
+ "items": [
+  {
+   "key": "wraps",
+   "label": "Vehicle Wraps",
+   "href": "/satin/vehicle-wraps/estimator",
+   "active": true,
+   "groups": [
+    {
+     "label": "Price Estimator",
+     "links": [
+      {
+       "label": "All vehicles – price estimator",
+       "href": "/satin/vehicle-wraps/estimator",
+       "active": true
+      },
+      {
+       "label": "Sedan",
+       "href": "/satin/vehicle-wraps/estimator/sedan",
+       "active": true
+      },
+      {
+       "label": "SUV",
+       "href": "/satin/vehicle-wraps/estimator/suv",
+       "active": true
+      },
+      {
+       "label": "Pickup Truck",
+       "href": "/satin/vehicle-wraps/estimator/pickup-truck",
+       "active": true
+      },
+      {
+       "label": "Minivan",
+       "href": "/satin/vehicle-wraps/estimator/minivan",
+       "active": true
+      },
+      {
+       "label": "Transit Van",
+       "href": "/satin/vehicle-wraps/estimator/transit-van",
+       "active": true
+      },
+      {
+       "label": "Sprinter Van",
+       "href": "/satin/vehicle-wraps/estimator/sprinter-van",
+       "active": true
+      },
+      {
+       "label": "ProMaster",
+       "href": "/satin/vehicle-wraps/estimator/cargo-van",
+       "active": true
+      },
+      {
+       "label": "Box Truck",
+       "href": "/satin/vehicle-wraps/estimator/box-truck",
+       "active": true
+      },
+      {
+       "label": "Trailer",
+       "href": "/satin/vehicle-wraps/estimator/trailer",
+       "active": true
+      },
+      {
+       "label": "Bus",
+       "href": "/satin/vehicle-wraps/estimator/bus",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Commercial Wrap",
+     "links": [
+      {
+       "label": "All vehicle wraps",
+       "href": "/satin/vehicle-wraps",
+       "active": true
+      },
+      {
+       "label": "Commercial wrap",
+       "href": "/satin/vehicle-wraps/commercial",
+       "active": true
+      },
+      {
+       "label": "Vans",
+       "href": "/satin/vehicle-wraps/commercial/vans",
+       "active": true
+      },
+      {
+       "label": "Pickups",
+       "href": "/satin/vehicle-wraps/commercial/pickups",
+       "active": true
+      },
+      {
+       "label": "Box Trucks",
+       "href": "/satin/vehicle-wraps/commercial/box-trucks",
+       "active": true
+      },
+      {
+       "label": "Trailers",
+       "href": "/satin/vehicle-wraps/commercial/trailers",
+       "active": true
+      },
+      {
+       "label": "Buses",
+       "href": "/satin/vehicle-wraps/commercial/buses",
+       "active": true
+      },
+      {
+       "label": "Fleet Programs",
+       "href": "/satin/vehicle-wraps/commercial/fleet-programs",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Color Change & PPF",
+     "links": [
+      {
+       "label": "Color change wrap",
+       "href": "/satin/vehicle-wraps/color-change",
+       "active": true
+      },
+      {
+       "label": "Wrap visualizer",
+       "href": "/satin/vehicle-wraps/visualizer",
+       "active": true
+      },
+      {
+       "label": "Paint protection film",
+       "href": "/satin/vehicle-wraps/paint-protection-film",
+       "active": true
+      },
+      {
+       "label": "Vehicle window tint",
+       "href": "/satin/window-tint/vehicle",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "print",
+   "label": "Print Shop",
+   "href": "/satin/print-shop/offset/business-cards",
+   "active": true,
+   "groups": [
+    {
+     "label": "Offset Printing",
+     "links": [
+      {
+       "label": "All print shop",
+       "href": "/satin/print-shop",
+       "active": true
+      },
+      {
+       "label": "Business Cards",
+       "href": "/satin/print-shop/offset/business-cards",
+       "active": true
+      },
+      {
+       "label": "Flyers",
+       "href": "/satin/print-shop/offset/flyers",
+       "active": true
+      },
+      {
+       "label": "Postcards",
+       "href": "/satin/print-shop/offset/postcards",
+       "active": true
+      },
+      {
+       "label": "Brochures",
+       "href": "/satin/print-shop/offset/brochures",
+       "active": true
+      },
+      {
+       "label": "Door Hangers",
+       "href": "/satin/print-shop/offset/door-hangers",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Large Format",
+     "links": [
+      {
+       "label": "All large format",
+       "href": "/satin/print-shop/large-format",
+       "active": true
+      },
+      {
+       "label": "Roll-Up Banner",
+       "href": "/satin/print-shop/large-format/roll-up-banner",
+       "active": true
+      },
+      {
+       "label": "Vinyl Banners",
+       "href": "/satin/print-shop/large-format/vinyl-banners",
+       "active": true
+      },
+      {
+       "label": "X-Frame Banner",
+       "href": "/satin/print-shop/large-format/x-frame-banner",
+       "active": true
+      },
+      {
+       "label": "Yard Signs",
+       "href": "/satin/print-shop/large-format/yard-signs",
+       "active": true
+      },
+      {
+       "label": "Real Estate Signs",
+       "href": "/satin/print-shop/large-format/real-estate-signs",
+       "active": true
+      },
+      {
+       "label": "Car Magnets",
+       "href": "/satin/print-shop/large-format/car-magnets",
+       "active": true
+      },
+      {
+       "label": "Flags",
+       "href": "/satin/print-shop/large-format/flags",
+       "active": true
+      },
+      {
+       "label": "A-Frame Signs",
+       "href": "/satin/print-shop/large-format/a-frame-signs",
+       "active": true
+      },
+      {
+       "label": "Poly Bag Lawn Sign",
+       "href": "/satin/print-shop/large-format/poly-bag-lawn-sign",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Labels & Stickers",
+     "links": [
+      {
+       "label": "All labels & stickers",
+       "href": "/satin/print-shop/labels",
+       "active": true
+      },
+      {
+       "label": "Roll labels",
+       "href": "/satin/print-shop/labels/roll-labels",
+       "active": true
+      },
+      {
+       "label": "Sticker sheets",
+       "href": "/satin/print-shop/labels/sticker-sheets",
+       "active": true
+      },
+      {
+       "label": "Die-cut stickers",
+       "href": "/satin/print-shop/labels/die-cut-stickers",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Help",
+     "links": [
+      {
+       "label": "Artwork guidelines",
+       "href": "/satin/artwork-guidelines",
+       "active": true
+      },
+      {
+       "label": "Orders & shipping",
+       "href": "/satin/refund-policy",
+       "active": true
+      },
+      {
+       "label": "Track an order",
+       "href": "/satin/track",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "apparel",
+   "label": "Apparel",
+   "href": "/satin/apparel/t-shirts",
+   "active": true,
+   "groups": [
+    {
+     "label": "Custom Apparel",
+     "links": [
+      {
+       "label": "All apparel",
+       "href": "/satin/apparel",
+       "active": true
+      },
+      {
+       "label": "T-Shirts",
+       "href": "/satin/apparel/t-shirts",
+       "active": true
+      },
+      {
+       "label": "Polo shirts",
+       "href": "/satin/apparel?category=polos",
+       "active": true
+      },
+      {
+       "label": "Hoodies",
+       "href": "/satin/apparel/hoodies",
+       "active": true
+      },
+      {
+       "label": "Sweatshirts",
+       "href": "/satin/apparel/sweatshirts",
+       "active": true
+      },
+      {
+       "label": "Kids & youth",
+       "href": "/satin/apparel?group=youth",
+       "active": true
+      },
+      {
+       "label": "Hats & Caps",
+       "href": "/satin/apparel/hats",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Decoration",
+     "links": [
+      {
+       "label": "Embroidery",
+       "href": "/satin/apparel/hats",
+       "active": true
+      },
+      {
+       "label": "DTF transfer",
+       "href": "/satin/shop/dtf-transfers",
+       "active": true
+      },
+      {
+       "label": "Heat-press vinyl",
+       "href": "/satin/apparel",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Help",
+     "links": [
+      {
+       "label": "Apparel artwork guide",
+       "href": "/satin/artwork-guidelines",
+       "active": true
+      },
+      {
+       "label": "Warranty",
+       "href": "/satin/warranty",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "windows",
+   "label": "Windows & Walls",
+   "href": "/satin/window-tint",
+   "active": true,
+   "groups": [
+    {
+     "label": "Window Graphics",
+     "links": [
+      {
+       "label": "All window graphics",
+       "href": "/satin/window-graphics",
+       "active": true
+      },
+      {
+       "label": "Full Window Graphics",
+       "href": "/satin/window-graphics/full-window-graphics",
+       "active": true
+      },
+      {
+       "label": "Perforated Vinyl",
+       "href": "/satin/window-graphics/perforated-vinyl",
+       "active": true
+      },
+      {
+       "label": "Frosted Vinyl",
+       "href": "/satin/window-graphics/frosted-vinyl",
+       "active": true
+      },
+      {
+       "label": "Window Decals",
+       "href": "/satin/window-graphics/window-decals",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Window Tint",
+     "links": [
+      {
+       "label": "Window tint",
+       "href": "/satin/window-tint",
+       "active": true
+      },
+      {
+       "label": "Vehicle tint",
+       "href": "/satin/window-tint/vehicle",
+       "active": true
+      },
+      {
+       "label": "Commercial tint",
+       "href": "/satin/window-tint/commercial",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Wallpaper",
+     "links": [
+      {
+       "label": "Wallpaper",
+       "href": "/satin/wallpaper",
+       "active": true
+      },
+      {
+       "label": "Home",
+       "href": "/satin/wallpaper?space=home",
+       "active": true
+      },
+      {
+       "label": "Office",
+       "href": "/satin/wallpaper?space=office",
+       "active": true
+      },
+      {
+       "label": "Custom",
+       "href": "/satin/wallpaper?space=custom",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "detailing",
+   "label": "Auto Detailing",
+   "href": "/satin/auto-detailing/booking",
+   "active": true,
+   "groups": [
+    {
+     "label": "Vehicle Care",
+     "links": [
+      {
+       "label": "Auto detailing",
+       "href": "/satin/auto-detailing",
+       "active": true
+      },
+      {
+       "label": "Interior detailing",
+       "href": "/satin/auto-detailing/interior-detailing",
+       "active": true
+      },
+      {
+       "label": "Exterior detailing",
+       "href": "/satin/auto-detailing/exterior-detailing",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Restore & Protect",
+     "links": [
+      {
+       "label": "Paint correction",
+       "href": "/satin/auto-detailing/paint-correction",
+       "active": true
+      },
+      {
+       "label": "Ceramic coating",
+       "href": "/satin/auto-detailing/ceramic-coating",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "Plan Your Visit",
+     "links": [
+      {
+       "label": "Price plans",
+       "href": "/satin/auto-detailing#packages",
+       "active": true
+      },
+      {
+       "label": "Build your quote",
+       "href": "/satin/auto-detailing#configure",
+       "active": true
+      },
+      {
+       "label": "Book an appointment",
+       "href": "/satin/auto-detailing/booking",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "digital",
+   "label": "Digital Services",
+   "href": "/satin/website-design",
+   "active": true,
+   "groups": [
+    {
+     "label": "Grow online",
+     "links": [
+      {
+       "label": "Website design",
+       "href": "/satin/website-design",
+       "active": true
+      },
+      {
+       "label": "Social media services",
+       "href": "/satin/social-media-services",
+       "active": true
+      },
+      {
+       "label": "Videography",
+       "href": "/satin/videography",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "shop",
+   "label": "Shop",
+   "href": "/satin/shop",
+   "active": true,
+   "groups": [
+    {
+     "label": "Shop",
+     "links": [
+      {
+       "label": "All shop",
+       "href": "/satin/shop",
+       "active": true
+      },
+      {
+       "label": "Vehicle wrap designs",
+       "href": "/satin/shop/vehicle-wrap-designs",
+       "active": true
+      },
+      {
+       "label": "Vehicle templates",
+       "href": "/satin/shop/vehicle-templates",
+       "active": true
+      },
+      {
+       "label": "Design services",
+       "href": "/satin/shop/design-services",
+       "active": true
+      },
+      {
+       "label": "Vehicle wrap prints",
+       "href": "/satin/shop/vehicle-wrap-prints",
+       "active": true
+      },
+      {
+       "label": "Materials & tools",
+       "href": "/satin/shop/materials-tools",
+       "active": true
+      },
+      {
+       "label": "Design Studio",
+       "href": "/satin/design-studio",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "portfolio",
+   "label": "Our Work",
+   "href": "/satin/portfolio",
+   "active": true,
+   "groups": []
+  },
+  {
+   "key": "contact",
+   "label": "Contact",
+   "href": "/satin/contact",
+   "active": true,
+   "groups": [
+    {
+     "label": "Get in touch",
+     "links": [
+      {
+       "label": "Contact us",
+       "href": "/satin/contact",
+       "active": true
+      },
+      {
+       "label": "WhatsApp us",
+       "href": "https://wa.me/19059626222",
+       "active": true
+      },
+      {
+       "label": "Track an order",
+       "href": "/satin/track",
+       "active": true
+      }
+     ]
+    },
+    {
+     "label": "About us",
+     "links": [
+      {
+       "label": "About",
+       "href": "/satin/about",
+       "active": true
+      },
+      {
+       "label": "Reviews",
+       "href": "/satin/reviews",
+       "active": true
+      },
+      {
+       "label": "FAQ",
+       "href": "/satin/faq",
+       "active": true
+      },
+      {
+       "label": "Warranty",
+       "href": "/satin/warranty",
+       "active": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "studio",
+   "label": "Design Studio",
+   "href": "/satin/design-studio",
+   "active": false,
+   "groups": []
+  },
+  {
+   "key": "login",
+   "label": "Log in",
+   "href": "/satin/login",
+   "active": false,
+   "groups": []
+  }
+ ],
+ "revision": 0
+}

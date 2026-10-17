@@ -1,0 +1,129 @@
+{
+ "rule": {
+  "id": "wrap-prints",
+  "label": "Vehicle Wrap Prints",
+  "path": "/satin/shop/vehicle-wrap-prints",
+  "fields": [
+   {
+    "key": "width",
+    "label": "Length (inches)",
+    "type": "number",
+    "default": 120,
+    "min": 1,
+    "max": 1200,
+    "step": 0.01
+   },
+   {
+    "key": "height",
+    "label": "Height (inches) · max 52 in",
+    "type": "number",
+    "default": 48,
+    "min": 1,
+    "max": 52,
+    "step": 0.01
+   },
+   {
+    "key": "quantity",
+    "label": "Quantity",
+    "type": "number",
+    "default": 1,
+    "min": 1,
+    "max": 10000,
+    "step": 1
+   },
+   {
+    "key": "material",
+    "label": "Material",
+    "type": "select",
+    "default": 0,
+    "options": [
+     {
+      "label": "3M",
+      "value": 0
+     },
+     {
+      "label": "Arlon",
+      "value": 1
+     }
+    ]
+   },
+   {
+    "key": "shipping",
+    "label": "Delivery",
+    "type": "select",
+    "default": 0,
+    "options": [
+     {
+      "label": "Shop pickup",
+      "value": 0
+     },
+     {
+      "label": "Next business day shipping · $100",
+      "value": 100
+     }
+    ]
+   },
+   {
+    "key": "design",
+    "label": "Design services",
+    "type": "checkbox",
+    "default": 0
+   },
+   {
+    "key": "kind",
+    "label": "Print type",
+    "type": "select",
+    "default": 0,
+    "options": [
+     {
+      "label": "Full-colour wrap print",
+      "value": 0
+     },
+     {
+      "label": "Cut decals · vector artwork required",
+      "value": 1
+     }
+    ]
+   },
+   {
+    "key": "rush",
+    "label": "Rush job · +20%",
+    "type": "checkbox",
+    "default": 0
+   }
+  ],
+  "constants": {
+   "minimum": 60,
+   "print3M": 8,
+   "printArlon": 6.5,
+   "decal3M": 14,
+   "decalArlon": 12,
+   "designFee": 250,
+   "rushFactor": 0.2
+  },
+  "formula": "(max(minimum, width * height / 144 * quantity * if(kind == 0, if(material == 0, print3M, printArlon), if(material == 0, decal3M, decalArlon))) + shipping + design * designFee) * (1 + rush * rushFactor)",
+  "deposit": {
+   "type": "percent",
+   "value": 100
+  },
+  "discount": {
+   "type": "percent",
+   "value": 0
+  },
+  "taxPercent": 13,
+  "revision": 0,
+  "priceOnRequest": false,
+  "updateVersion": 6,
+  "priceNote": "",
+  "limits": [
+   {
+    "field": "height",
+    "max": 49,
+    "when": {
+     "kind": 1
+    },
+    "message": "Cut decals: the height can be at most 49 in. For larger graphics choose a full-colour wrap print (up to 52 in)."
+   }
+  ]
+ }
+}

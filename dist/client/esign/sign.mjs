@@ -41,9 +41,10 @@ async function startFromLink(l) {
 async function load() {
   let r; try { r = await api('doc?t=' + encodeURIComponent(TOKEN)); } catch (e) { return fail(e.message); }
   DOC = r.doc; header(DOC.title, DOC.business);
-  if (DOC.status === 'signed') return done();
+  if (DOC.status === 'superseded') return closed(DOC.business + ' updated this document and sent a new version. Please use the newest link in your email — this one no longer works.');
+  if (DOC.status === 'signed' || DOC.myStatus === 'signed') return done();
   if (DOC.status === 'cancelled') return closed('This document was cancelled by ' + DOC.business + '. If you think this is a mistake, please contact them.');
-  if (DOC.status === 'declined') return closed('You declined to sign this document. ' + DOC.business + ' has been notified.');
+  if (DOC.status === 'declined') return closed(DOC.myStatus === 'declined' ? 'You declined to sign this document. ' + DOC.business + ' has been notified.' : 'This document was declined by another signer, so it can no longer be signed. ' + DOC.business + ' has been notified.');
   draw();
 }
 function closed(msg) { $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = ''; app.innerHTML = `<div class="card center"><h1>${esc(DOC.title)}</h1><p>${esc(msg)}</p></div>`; }
@@ -63,7 +64,7 @@ function draw() {
     if (f.type === 'email' && VALS[f.id] === undefined) VALS[f.id] = DOC.signerEmail || '';
     if (f.type === 'date') VALS[f.id] = DOC.today;
   }
-  app.innerHTML = `<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>. Fill in the highlighted fields, then press <b>Finish</b>.</p>${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
+  app.innerHTML = `<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>${DOC.version > 1 ? ' (updated version)' : ''}. Fill in the highlighted fields, then press <b>Finish</b>.</p>${DOC.others && DOC.others.length ? `<p class="others">Also signing: ${DOC.others.map(o => esc(o.name) + (o.signed ? ' ✓' : '')).join(', ')}. You only sign your own fields; theirs are shown greyed out.</p>` : ''}${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
     <div class="pages">${DOC.pages.map((p, k) => `<div class="page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h};background-image:url('${esc(p.url)}')">${DOC.fields.filter(f => f.page === k).map(fieldHTML).join('')}<span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>`).join('')}</div>`;
   $$('.fld[data-f]').forEach(bindField);
   const ro = new ResizeObserver(es => es.forEach(e => sizeFonts(e.target)));
@@ -75,6 +76,7 @@ function draw() {
 function fieldHTML(f) {
   const pos = `left:${f.x * 100}%;top:${f.y * 100}%;width:${f.w * 100}%;height:${f.h * 100}%`;
   const lab = esc(f.label || { signature: 'Signature', initials: 'Initials', name: 'Full name', email: 'Email', text: 'Text', date: 'Date', checkbox: 'Checkbox' }[f.type]);
+  if (f.role === 'other') return `<div class="fld other" style="${pos}" data-h="${f.h}" title="${esc(f.who)} signs here"><span class="ro">${f.type === 'signature' || f.type === 'initials' ? esc(f.who) : ''}</span></div>`;
   if (!mine(f)) {
     if (f.type === 'checkbox') return `<div class="fld cb them" style="${pos}" data-h="${f.h}"><span class="box" style="cursor:default">${f.value === '1' || f.value === 'true' || f.value === 'yes' ? CHECK : ''}</span></div>`;
     return `<div class="fld them" style="${pos}" data-h="${f.h}"><span class="ro">${esc(f.value || '')}</span></div>`;
@@ -118,17 +120,18 @@ function goTo(id) {
 function sigClick(f, el) {
   const kind = f.type;
   if (ADOPT[kind] && !VALS[f.id]) return applySig(f, el, ADOPT[kind]);
-  sigModal(kind, s => { ADOPT[kind] = s; applySig(f, el, s); // reuse for the other empty fields of the same kind? only when the signer asks — keep it one tap each
+  sigModal(kind, s => { ADOPT[kind] = s; applySig(f, el, s);
+    if (kind === 'signature') for (const g of DOC.fields) if (g !== f && mine(g) && g.type === 'signature') { const e = $(`.fld[data-f="${g.id}"]`); if (e) applySig(g, e, s); } // you sign once: the same signature goes in all of your signature fields
   });
 }
-function applySig(f, el, s) { VALS[f.id] = s; el.innerHTML = `<img src="${s.url}" alt="${f.type}">`; el.querySelector('img').onclick = () => sigModal(f.type, n => { ADOPT[f.type] = n; applySig(f, el, n); }); mark(el, f); }
+function applySig(f, el, s) { VALS[f.id] = s; el.innerHTML = `<img src="${s.url}" alt="${f.type}">`; el.querySelector('img').onclick = () => sigModal(f.type, n => { ADOPT[f.type] = n; if (f.type === 'signature') { for (const g of DOC.fields) if (mine(g) && g.type === 'signature') { const e = $(`.fld[data-f="${g.id}"]`); if (e) applySig(g, e, n); } } else applySig(f, el, n); }); mark(el, f); }
 
 const FONTS = [['Dancing Script', 600], ['Great Vibes', 400], ['Caveat', 600]];
 function sigModal(kind, onDone) {
   const isI = kind === 'initials', def = isI ? initialsOf(DOC.signerName) : DOC.signerName || '';
   let mode = 'type', font = 0, strokes = [], cur = null;
   const ov = document.createElement('div'); ov.className = 'ov';
-  ov.innerHTML = `<div class="md" role="dialog" aria-modal="true" aria-labelledby="sgt"><h2 id="sgt">${isI ? 'Your initials' : 'Your signature'}</h2><p class="sub">Type or draw it once — tap any other ${isI ? 'initials' : 'signature'} field to place it again.</p>
+  ov.innerHTML = `<div class="md" role="dialog" aria-modal="true" aria-labelledby="sgt"><h2 id="sgt">${isI ? 'Your initials' : 'Your signature'}</h2><p class="sub">${isI ? 'Type or draw it once — tap any other initials field to place it again.' : (DOC.fields.filter(x => mine(x) && x.type === 'signature').length > 1 ? 'You sign once — it is placed in all ' + DOC.fields.filter(x => mine(x) && x.type === 'signature').length + ' of your signature fields.' : 'Type or draw your signature.')}</p>
     <div class="tabs" role="tablist"><button type="button" data-m="type" class="on">Type</button><button type="button" data-m="draw">Draw</button></div>
     <div data-type><input class="input" data-tx value="${esc(def)}" maxlength="${isI ? 4 : 60}" aria-label="${isI ? 'Initials' : 'Full name'}"><div class="fonts" data-fonts></div></div>
     <div data-draw hidden><div class="pad"><canvas aria-label="Draw here"></canvas><span class="x">✕</span><span class="line"></span><button type="button" class="clr" data-clr>Clear</button></div><p class="legal" style="text-align:center">Draw with your finger or mouse</p></div>
@@ -226,6 +229,13 @@ function finish() {
 function toastBar(t) { const p = $('.prog span'); const o = p.textContent; p.textContent = t; p.style.color = 'var(--bad)'; clearTimeout(p._t); p._t = setTimeout(() => { p.textContent = o; p.style.color = ''; }, 3500); }
 function done(now) {
   $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = '';
+  if (DOC.status !== 'signed') { // signed by you; others still have to sign
+    const left = (DOC.others || []).filter(o => !o.signed).map(o => o.name);
+    app.innerHTML = `<div class="card center"><div class="done-ic">${CHECK}</div><h1>${now ? 'Thank you — you\'ve signed!' : 'You have signed this document'}</h1>
+      <p><b>${esc(DOC.title)}</b>${left.length ? ' is now waiting for ' + esc(left.join(', ')) + '.' : '.'} When everyone has signed, ${DOC.signerEmail ? 'the completed PDF will be emailed to <b>' + esc(DOC.signerEmail) + '</b>.' : esc(DOC.business) + ' will send you the completed PDF.'}</p>
+      <p class="legal" style="margin-top:18px">Questions? Call ${esc(DOC.businessPhone)}.</p></div>`;
+    scrollTo(0, 0); return;
+  }
   const when = DOC.signedAt ? new Date(DOC.signedAt).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }) : '';
   app.innerHTML = `<div class="card center"><div class="done-ic">${CHECK}</div><h1>${now ? 'Thank you — you\'re all set!' : 'This document is signed'}</h1>
     <p><b>${esc(DOC.title)}</b> was signed${when ? ' on ' + esc(when.replace(/\.$/, '')) : ''}. ${now ? (DOC.signerEmail ? 'A copy has been emailed to <b>' + esc(DOC.signerEmail) + '</b> and to ' + esc(DOC.business) + '.' : esc(DOC.business) + ' has received a copy. Download yours below.') : ''}</p>

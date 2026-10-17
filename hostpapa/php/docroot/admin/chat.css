@@ -1,0 +1,75 @@
+/* Satin Admin — Live chat */
+.chat-wrap{display:grid;grid-template-columns:340px 1fr;gap:18px;align-items:start}
+.chat-list{padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 190px)}
+.chat-filters{padding:14px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.chat-fl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chat-fl .input{padding:8px 10px}
+.chat-hours{font-size:12.5px;color:var(--mut);padding:8px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chat-dot{width:8px;height:8px;border-radius:50%;background:#9ca3af;display:inline-block}
+.chat-dot.on{background:#22c55e}
+.chat-items{overflow-y:auto;flex:1}
+.chat-item{display:grid;gap:3px;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #f1f2f4;padding:12px 14px;cursor:pointer}
+.chat-item:hover{background:#fafafa}
+.chat-item.on{background:var(--accent-2)}
+.chat-item-top{display:flex;justify-content:space-between;gap:8px}
+.chat-item-top small{color:var(--mut);white-space:nowrap}
+.chat-item.unread b{color:var(--accent)}
+.chat-item-prev{font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-item-tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.chat-item-tags .pill{font-size:11px;padding:1px 7px}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.chat-unread{margin-left:auto;background:var(--accent);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 7px}
+.chat-view{padding:0;display:flex;flex-direction:column;min-height:520px;max-height:calc(100vh - 190px)}
+.chat-head{display:flex;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.chat-head h2{font-size:17px;margin:0 0 4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chat-head small{color:var(--mut);word-break:break-all}
+.chat-acts{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start}
+.chat-log{flex:1;overflow-y:auto;padding:16px;background:#f7f8fa;display:flex;flex-direction:column;gap:10px;min-height:240px}
+.chat-msg{max-width:78%;background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 12px;align-self:flex-start}
+.chat-msg small{display:block;font-size:11.5px;color:var(--mut);margin-bottom:2px}
+.chat-msg.visitor{background:#fff;border-color:#d7dbe2}
+.chat-msg.staff{align-self:flex-end;background:var(--ink);color:#fff;border-color:var(--ink)}
+.chat-msg.staff small{color:#c7cbd3}
+.chat-msg.bot{background:var(--accent-2);border-color:#f7cddb}
+.chat-msg.system{align-self:center;background:none;border:0;color:var(--mut);font-size:12.5px;text-align:center}
+.chat-body{white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.chat-links a{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:2px 9px;text-decoration:none}
+.chat-reply{padding:12px 16px 16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.chat-qr{display:flex;gap:6px;flex-wrap:wrap}
+.chat-qr .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer}
+.chat-qr .chip:hover{background:#f3f4f6}
+.chat-send{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.chat-send .hint{margin:0;display:flex;gap:6px;align-items:center}
+.chat-try{display:flex;gap:8px}
+.chat-try .input{flex:1}
+.chat-kb td small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.chat-kb tr[hidden]{display:none}
+.chat-hours-t{width:100%;border-collapse:collapse}
+.chat-hours-t td{padding:4px 6px 4px 0;font-size:14px}
+.chat-hours-t .input{padding:6px 8px}
+.chat-help{margin-top:16px;font-size:13.5px;border-top:1px solid var(--line);padding-top:12px}
+.chat-help ol{padding-inline-start:20px;margin:6px 0 12px}
+.chat-navb{margin-left:auto;background:var(--accent);color:#fff;border-radius:999px;font-size:11px;font-weight:700;padding:1px 8px}
+.chat-navb.wait{animation:chatpulse 1.6s infinite}
+@keyframes chatpulse{50%{opacity:.55}}
+@media (max-width:900px){.chat-wrap{grid-template-columns:1fr}.chat-list{max-height:320px}.chat-view{max-height:none}.chat-msg{max-width:92%}}
+/* v2: attachments, presence, import */
+.chat-file{display:grid;gap:6px;margin-top:6px;max-width:280px}
+.chat-thumb{display:block;border-radius:10px;overflow:hidden;background:#0000000d;max-height:240px}
+.chat-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.chat-frow{display:flex;gap:10px;align-items:center;padding:7px 10px;border-radius:10px;background:#00000008;border:1px solid #0000000f;color:inherit;text-decoration:none}
+.chat-msg.staff .chat-frow{background:#ffffff1a;border-color:#ffffff26}
+.chat-frow span:last-child{display:grid;min-width:0}.chat-frow b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-frow small{font-size:11.5px;opacity:.75}
+.chat-fic{flex:none;width:36px;height:36px;border-radius:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center}
+.chat-pres{font-size:12px;font-weight:500;color:var(--mut)}.chat-pres.on{color:#16a34a}
+.imp-up{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.imp-who{display:grid;gap:6px;margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px}.imp-who label{display:flex;gap:8px;align-items:center}.imp-who small{color:var(--mut)}
+.imp-how{padding-inline-start:20px;font-size:14px}.imp-how li{margin:4px 0}
+.imp-bar{position:sticky;top:70px;z-index:3;background:var(--bg);padding:10px 0;margin:18px 0 6px}
+.imp-list{display:grid;gap:12px}
+.imp-c{position:relative;display:grid;gap:4px}
+.imp-pick{position:absolute;top:14px;right:16px;display:flex;gap:6px;align-items:center;font-weight:600}
+.imp-pick input{width:20px;height:20px}
+.imp-meta{display:flex;gap:6px;flex-wrap:wrap;min-height:4px;padding-right:70px}
+.imp-alt{font-size:13px;background:#f7f8fa;border-radius:8px;padding:8px 10px;white-space:pre-wrap}

@@ -67,7 +67,7 @@ const WORK = {
   design: [["Fleet identity, HVAC contractor", "Vehicle wrap design"], ["Logo & brand kit, landscaping", "Logo design"], ["Tri-fold brochure, dental clinic", "Print design"], ["Storefront window layout, café", "Window graphics design"], ["Crew uniform artwork", "Apparel design"], ["Trade-show banner set", "Banner design"]],
   web: [["HVAC contractor — Business site", "Website"], ["Landscaping — Starter site", "Website"], ["Boutique retailer — E-commerce", "Website"], ["Dental clinic — Booking system", "Website"], ["Food truck — Menu & locations", "Website"], ["Auto detailer — Quote estimator", "Website"]],
 };
-const HOME_STRIP = [["job-greenlife-van", "GreenLife · full van wrap"], ["job-tesla-flip", "Tesla Model Y · colour-flip"], ["job-red-van", "Ideal Air Systems · van wrap"], ["job-subaru-matte", "SUV · matte colour change"], ["job-icecream-van", "Ice cream truck · full wrap"], ["job-fence-pickup", "FenceIt.ca · pickup wrap"], ["job-merc-green", "Mercedes SLK · satin green"], ["job-mx-van", "M&X Electrical · van lettering"], ["job-beetle-flip", "VW Beetle · colour-flip"], ["job-camaro", "Camaro · custom wrap"]];
+const HOME_STRIP = [["job-greenlife-van", "GreenLife · full van wrap"], ["job-beetle-flip", "VW Beetle · colour-flip"], ["job-red-van", "Ideal Air Systems · van wrap"], ["job-subaru-matte", "SUV · matte colour change"], ["job-icecream-van", "Ice cream truck · full wrap"], ["job-fence-pickup", "FenceIt.ca · pickup wrap"], ["job-merc-green", "Mercedes SLK · satin green"], ["job-mx-van", "M&X Electrical · van lettering"], ["job-beetle-flip", "VW Beetle · colour-flip"], ["job-camaro", "Camaro · custom wrap"]];
 /* Real photos per category (img/<name>.jpg) — swap names here to update the site */
 const CAT_PHOTOS = {
   "Fleet Wrap": ["job-greenlife-van", "job-red-van", "job-mx-van", "job-icecream-van", "job-fence-pickup", "job-van-2", "show-van-1"],
@@ -3050,12 +3050,12 @@ const HOME_CONTENT = {
       }
     },
     {
-      "photo": "job-tesla-flip",
+      "photo": "job-beetle-flip",
       "title": {
-        "en": "Tesla colour change",
-        "fr": "Changement de couleur Tesla",
-        "es": "Cambio de color Tesla",
-        "fa": "تغییر رنگ تسلا"
+        "en": "VW Beetle colour-flip",
+        "fr": "Coccinelle VW caméléon",
+        "es": "VW Beetle camaleón",
+        "fa": "تغییر رنگ فولکس بیتل"
       }
     },
     {
@@ -3251,7 +3251,7 @@ function vehicleSVG(type = "van", o = {}) {
 
 /* ---------- real photos (img/<name>.jpg) ---------- */
 const BLACK_BG = /^(sedan|suv|pickup|van|sprinter|dec|cc|ppf-audi|tint-\d|car-red|lambo)/;
-const CUT_PHOTOS = new Set(["job-greenlife-van","job-fence-pickup","install-orange","job-icecream-van","job-mx-van","job-red-van","job-van-2","job-tesla-flip"]);
+const CUT_PHOTOS = new Set(["job-greenlife-van","job-fence-pickup","install-orange","job-icecream-van","job-mx-van","job-red-van","job-van-2","job-tesla-flip","job-beetle-flip"]);
 function photo(name, o = {}) {
   if (/(-cut|lineup|shirt-logo)\.webp$/.test(name)) return `<div class="art photo cut ${o.cls || ""}" style="background:transparent;${o.style || ""}"><img src="${SITE.base}/img/${name}" alt="${esc(o.alt || o.label || "")}" loading="lazy" decoding="async" style="object-fit:contain"></div>`;
   if (CUT_PHOTOS.has(name) && !o.keepBg) return `<div class="art photo cut ${o.cls || ""}" style="background:transparent;${o.style || ""}"><img src="${SITE.base}/img/${name}-cut.webp" alt="${esc(o.alt || o.label || "")}" loading="lazy" decoding="async" style="object-fit:contain"></div>`;
@@ -3515,6 +3515,7 @@ function summaryBox(o = {}) {
 }
 
 /* ---------- wrap reveal story ---------- */
+const revealSrc = n => SITE.base + '/img/' + (/\.(webp|png|jpe?g|svg)$/i.test(n) ? n : n + '.' + (transparentImages.includes(n) ? 'png' : 'jpg'));
 function revealStory(stepsArr, o = {}) {
   const id = uid("rv");
   return `<section class="reveal-story" data-reveal id="${id}"><div class="wrap stick">
@@ -3523,7 +3524,7 @@ function revealStory(stepsArr, o = {}) {
       <div class="meter">${stepsArr.map(() => "<i><b></b></i>").join("")}</div>
       ${o.cta ? `<div style="margin-top:26px">${o.cta}</div>` : ""}</div>
     <div class="stage">
-      <div class="ph" aria-label="Vehicle being wrapped, panel by panel"><img src="${SITE.base}/img/${(o.pair || ["sprinter-bare"])[0]}.${transparentImages.includes((o.pair || ["sprinter-bare"])[0])?"png":"jpg"}" alt="Bare vehicle before wrapping" loading="lazy"><div class="rv-mask"><img class="top" data-top src="${SITE.base}/img/${(o.pair || [, "sprinter-wrapped"])[1]}.${transparentImages.includes((o.pair || [, "sprinter-wrapped"])[1])?"png":"jpg"}" alt="Same vehicle fully wrapped" loading="lazy"></div><i class="edge" data-edge></i></div>
+      <div class="ph" aria-label="Vehicle being wrapped, panel by panel"><img src="${revealSrc((o.pair || ["sprinter-bare"])[0])}" alt="Bare vehicle before wrapping" loading="lazy"><div class="rv-mask"><img class="top" data-top src="${revealSrc((o.pair || [, "sprinter-wrapped"])[1])}" alt="Same vehicle fully wrapped" loading="lazy"></div><i class="edge" data-edge></i></div>
       <span class="hint" data-pct>0% applied</span>
     </div></div></section>`;
 }
@@ -4523,10 +4524,11 @@ MEGA.wraps?.cols[1][1].push(['Vehicle window tint','/window-tint/vehicle']);
 MEGA.detailing={label:'Auto Detailing',cols:[['Vehicle Care',[['Auto detailing','/auto-detailing',1],['Interior detailing','/auto-detailing/interior-detailing'],['Exterior detailing','/auto-detailing/exterior-detailing']]],['Restore & Protect',[['Paint correction','/auto-detailing/paint-correction'],['Ceramic coating','/auto-detailing/ceramic-coating']]],['Plan Your Visit',[['Price plans','/auto-detailing#packages',1],['Build your quote','/auto-detailing#configure'],['Book an appointment','/auto-detailing/booking']]]],promo:['Book your vehicle care','Select services and request your preferred appointment.','/auto-detailing/booking','fleet','install-detail']};
 MEGA.shop.cols[1][1].push(['Social media services','/social-media-services',1],['Videography','/videography',1]);
 
+const NAV_PROMOS={digital:['Website design','The same team that brands your fleet builds your site.','/website-design','web','web-2'],shop:['Vehicle wrap prints','Large-format wrap panels printed on cast film, ready to install.','/shop/vehicle-wrap-prints','print','wrap-prints-printer.webp'],studio:['Design Studio','Design your wrap, sign or apparel online and see it before you order.','/design-studio','web','design-studio.optimized.webp'],contact:null};
 const navigationSeed=document.querySelector('[data-navigation-bootstrap]');const managedNavigation=navigationSeed?JSON.parse(navigationSeed.textContent).items:null;
 const navItems=()=>managedNavigation||[...Object.entries(MEGA).map(([key,m])=>({key,label:m.label,href:'/satin'+(m.cols[0]?.[1]?.[0]?.[1]||''),groups:m.cols.map(([label,links])=>({label,links:links.map(([t,p])=>({label:t,href:'/satin'+p}))}))})),{key:'portfolio',label:'Our Work',href:'/satin/portfolio'},{key:'studio',label:'Design Studio',href:'/satin/design-studio'}];
 const mobileChromeOptions=()=>({items:navItems(),lang:LANG,localize:localizedHTML,logo:LOGO,phone:SITE.phone.includes('555-')?'':SITE.phone,path:location.pathname,langHref:c=>languageHref(parseLocation().path,c)});
-if(managedNavigation)for(const m of managedNavigation){const original=MEGA[m.key];MEGA[m.key]={label:m.label,cols:(m.groups||[]).map(g=>[g.label,(g.links||[]).filter(l=>l.active!==false).map(l=>[l.label,l.href.replace(/^\/satin/, ''),/^all\b/i.test(l.label)?2:0])]),promo:original?.promo||[m.label,'Explore '+m.label,m.href.replace(/^\/satin/,''),'print','pr-bc-1']};}
+if(managedNavigation)for(const m of managedNavigation){const original=MEGA[m.key];MEGA[m.key]={label:m.label,cols:(m.groups||[]).map(g=>[g.label,(g.links||[]).filter(l=>l.active!==false).map(l=>[l.label,l.href.replace(/^\/satin/, ''),/^all\b/i.test(l.label)?2:0])]),promo:m.key in NAV_PROMOS?NAV_PROMOS[m.key]:(original?.promo||null)};}
 
 function header() {
   return `<a class="sr" href="#main" data-skip>Skip to content</a><header class="hdr"><div class="wrap bar">
@@ -4538,7 +4540,7 @@ function header() {
 function megaHTML(k) {
   const m = MEGA[k];
   return m.cols.map(([h, links]) => `<div class="col"><h4>${h}</h4>${links.map(([t, p, top]) => A(p, esc(t), top === 2 || /^all\b/i.test(t) ? "top all-link" : top ? "top" : "")).join("")}</div>`).join("") +
-    `<a class="promo" href="${href(m.promo[2])}">${art(m.promo[3], { seed: 2, tag: false, photo: m.promo[4] })}<b>${m.promo[0]}</b><span class="small">${m.promo[1]}</span><span class="link" style="align-self:flex-start">Open ${arrowSm()}</span></a>`;
+    (m.promo ? `<a class="promo" href="${href(m.promo[2])}">${art(m.promo[3], { seed: 2, tag: false, photo: m.promo[4] })}<b>${m.promo[0]}</b><span class="small">${m.promo[1]}</span><span class="link" style="align-self:flex-start">Open ${arrowSm()}</span></a>` : '');
 }
 function drawer() {
   const o=mobileChromeOptions();
@@ -4989,3 +4991,5 @@ if(!globalThis.__PRERENDER__&&!window.frameElement){const chat=()=>setTimeout(()
   const start = () => { fix(document); new MutationObserver(ms => { for (const m of ms) { if (m.type === "attributes") fixOne(m.target); else m.addedNodes.forEach(fix); } }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] }); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
+/* site extras: header search, WhatsApp, home vehicle picker (site-extras.mjs) */
+if(!globalThis.__PRERENDER__&&typeof window!=='undefined'&&!window.frameElement)import('/site-extras.mjs').catch(()=>{});
