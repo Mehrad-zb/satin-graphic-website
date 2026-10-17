@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.ca.satingraphic.app"],
+        "components": [
+          { "/": "/satin/checkout/*", "exclude": true, "comment": "payment pages stay in the browser that opened them" },
+          { "/": "/satin/*/checkout/*", "exclude": true },
+          { "/": "/satin/*", "comment": "the customer website opens in the app" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["TEAMID.ca.satingraphic.app"]
+  }
+}

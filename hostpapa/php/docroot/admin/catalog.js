@@ -31,25 +31,30 @@ async function viewEstimator() {
   let R = clone((await A().api('/estimator-pricing')).rules);
   const r1 = n => Math.round(n * 10) / 10;
   const cad = n => 'CA$' + Math.round(n).toLocaleString('en-CA');
-  const shown = (f, v) => f.kind === 'share' ? r1(num(v) * 100) : r1((num(v) - 1) * 100);
-  const back = (f, x) => f.kind === 'share' ? Math.round(num(x) * 100) / 10000 : Math.round((1 + num(x) / 100) * 10000) / 10000;
+  const shown = (f, v) => f.kind === 'amount' ? num(v) : f.kind === 'share' ? r1(num(v) * 100) : r1((num(v) - 1) * 100);
+  const back = (f, x) => f.kind === 'amount' ? Math.round(num(x) * 100) / 100 : f.kind === 'share' ? Math.round(num(x) * 100) / 10000 : Math.round((1 + num(x) / 100) * 10000) / 10000;
   const draw = () => {
     c.innerHTML = `<div class="card"><p class="hint" style="margin-top:0">These are the live prices of the <b>vehicle wrap price estimator</b> and the <b>Design Studio</b> vehicles. Each vehicle has a <b>starting price</b> (full wrap, gloss). Each choice changes it by a percentage: <b>0%</b> = no change, <b>10%</b> = 10% more, <b>−4%</b> = 4% less. Wrap coverage is a <b>% of the full-wrap price</b>. The grey amount next to each choice is the price with that choice alone. Changes show on the website right after you save.</p></div>
       ${R.map((r, i) => `<section class="card ep-veh" data-r="${i}"><h2>${esc(r.label)} ${r.path ? `<a class="sub" href="${esc(r.path.replace(/^\/satin/, '/satin'))}" target="_blank" rel="noopener">view page ↗</a>` : ''}</h2>
         <div class="grid g2">${r.base !== null ? `<label class="field ep-base"><span>Starting price (CA$)</span><input type="number" min="0" step="10" data-k="base" value="${esc(r.base)}"></label>` : ''}
         ${r.roofMultiplier !== null ? `<label class="field"><span>Roof wrap adds (%)</span><input type="number" step="0.5" data-k="roofMultiplier" value="${r1((r.roofMultiplier - 1) * 100)}"></label>` : ''}
-        ${r.designDeposit !== null ? `<label class="field"><span>Design deposit (CA$)</span><input type="number" min="0" step="5" data-k="designDeposit" value="${esc(r.designDeposit)}"></label>` : ''}</div>
-        ${r.fields.map((f, j) => `<div class="ep-q"><b>${esc(f.label)}${f.kind === 'share' ? ' <span class="sub">% of full-wrap price</span>' : ''}</b><div class="ep-opts">${f.options.map((o, k) => `<div class="ep-opt"><span>${esc(o.label)}</span><label class="ep-pct"><input type="number" step="0.5" data-f="${j}" data-o="${k}" value="${shown(f, o.value)}"><span>%</span></label><small data-ex="${j}.${k}"></small></div>`).join('')}</div></div>`).join('')}
+        ${r.designDeposit !== null ? `<label class="field"><span>Design deposit (CA$)</span><input type="number" min="0" step="5" data-k="designDeposit" value="${esc(r.designDeposit)}"></label>` : ''}
+        ${r.fullWrapFactor !== null ? `<label class="field"><span>Full wrap discount (%)</span><input type="number" step="0.5" data-k="fullWrapFactor" value="${r1((1 - r.fullWrapFactor) * 100)}"></label>` : ''}</div>
+        ${r.base !== null ? `<div class="ep-from">Website shows when the page opens (“From” price on the vehicle card): <b data-from></b> <small class="hint" data-fromhow></small></div>` : ''}
+        ${r.fields.map((f, j) => `<div class="ep-q"><b>${esc(f.label)}${f.kind === 'share' ? ' <span class="sub">% of full-wrap price</span>' : f.kind === 'amount' ? ' <span class="sub">CA$ added to the price</span>' : ''}</b><div class="ep-opts">${f.options.map((o, k) => `<div class="ep-opt"><span>${esc(o.label)}</span><label class="ep-pct">${f.kind === 'amount' ? '<span>+CA$</span>' : ''}<input type="number" step="${f.kind === 'amount' ? 10 : 0.5}" data-f="${j}" data-o="${k}" value="${shown(f, o.value)}">${f.kind === 'amount' ? '' : '<span>%</span>'}</label><small data-ex="${j}.${k}"></small></div>`).join('')}</div></div>`).join('')}
       </section>`).join('')}
       <div class="card ep-bar"><button class="btn" data-save>Save prices</button><span class="hint" data-dirty></span></div>`;
-    const ex = () => $$('[data-r]', c).forEach(sec => { const r = R[+sec.dataset.r]; $$('[data-ex]', sec).forEach(el => { const [j, k] = el.dataset.ex.split('.').map(Number); el.textContent = r.base !== null ? cad(num(r.base) * num(r.fields[j].options[k].value)) : ''; }); });
+    const from = r => { let m = 1, cov = null, how = [], add = 0; r.fields.forEach(f => { const v = f.default ?? f.options[0]?.value ?? 1; if (f.kind === 'amount') { add += num(v); if (num(v)) how.push(`+${cad(num(v))}`); return; } m *= num(v); if (f.key === 'coverage') cov = num(v); else if (num(v) !== 1) how.push(`${f.label} ×${r1(num(v) * 100) / 100}`); });
+      if (r.fullWrapFactor !== null && (cov === null || cov === 1)) { m *= num(r.fullWrapFactor); if (num(r.fullWrapFactor) !== 1) how.push(`full wrap discount ×${num(r.fullWrapFactor)}`); }
+      return { v: Math.round(num(r.base) * m / 10) * 10 + add, how: how.length ? '= starting price × ' + how.join(' × ') : '' }; };
+    const ex = () => $$('[data-r]', c).forEach(sec => { const r = R[+sec.dataset.r]; const fe = $('[data-from]', sec); if (fe) { const f = from(r); fe.textContent = cad(f.v); $('[data-fromhow]', sec).textContent = f.how; } $$('[data-ex]', sec).forEach(el => { const [j, k] = el.dataset.ex.split('.').map(Number); const fj = r.fields[j], ov = num(fj.options[k].value); el.textContent = r.base === null ? '' : fj.kind === 'amount' ? (ov ? '+' + cad(ov) : '') : cad(num(r.base) * ov); }); });
     const mark = () => { DIRTY = true; $('[data-dirty]', c).textContent = 'Unsaved changes'; };
     $$('[data-r]', c).forEach(sec => { const r = R[+sec.dataset.r];
-      $$('[data-k]', sec).forEach(el => el.oninput = () => { const k = el.dataset.k; r[k] = k === 'roofMultiplier' ? Math.round((1 + num(el.value) / 100) * 10000) / 10000 : num(el.value); mark(); ex(); });
+      $$('[data-k]', sec).forEach(el => el.oninput = () => { const k = el.dataset.k; r[k] = k === 'roofMultiplier' ? Math.round((1 + num(el.value) / 100) * 10000) / 10000 : k === 'fullWrapFactor' ? Math.round((1 - num(el.value) / 100) * 10000) / 10000 : num(el.value); mark(); ex(); });
       $$('[data-f]', sec).forEach(el => el.oninput = () => { const f = r.fields[+el.dataset.f]; f.options[+el.dataset.o].value = back(f, el.value); mark(); ex(); });
     });
     ex();
-    $('[data-save]', c).onclick = async () => { try { const res = await A().api('/estimator-pricing', { rules: R }); R = clone(res.rules); DIRTY = false; A().toast(res.changed.length ? `Saved — ${res.changed.length} vehicle${res.changed.length === 1 ? '' : 's'} updated` : 'No changes'); draw(); } catch (e) { A().toast(e.message); } };
+    $('[data-save]', c).onclick = async () => { try { const res = await A().api('/estimator-pricing', { rules: R }); R = clone(res.rules); DIRTY = false; A().toast(res.changed.length ? `Saved — ${res.changed.length} vehicle${res.changed.length === 1 ? '' : 's'} updated` : 'No changes'); draw(); } catch (e) { A().toast(e.message); const d = $('[data-dirty]', c); if (d) { d.innerHTML = `<b style="color:#c62828">${esc(e.message)}</b>${e.data?.stale ? ' <button class="btn ghost sm" data-reload>Reload page</button>' : ''}`; const rl = $('[data-reload]', d); if (rl) rl.onclick = () => { DIRTY = false; viewEstimator(); }; } } };
   };
   draw();
 }

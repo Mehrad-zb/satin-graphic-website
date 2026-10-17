@@ -12,7 +12,7 @@ async function api(path, body) {
   const r = await fetch('/api/admin' + path, { credentials: 'same-origin', ...opt });
   let data = {}; try { data = await r.json(); } catch {}
   if (r.status === 401 && data.signin && !location.hash.startsWith('#/login')) { ME = null; go('/login'); }
-  if (!r.ok) throw new Error(data.error || 'Something went wrong.');
+  if (!r.ok) { const e = new Error(data.error || 'Something went wrong.'); e.data = data; throw e; }
   return data;
 }
 /* multipart POST (fields + files) with the CSRF header — for uploads */
@@ -45,6 +45,7 @@ const ICON = {
   car: '<path d="M3 16v-4l2-5h11l3 5h2v4h-2"/><path d="M3 16h2m4 0h6"/><circle cx="7" cy="16.5" r="2"/><circle cx="17" cy="16.5" r="2"/>',
   chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.8A8 8 0 1 1 21 12z"/>',
   bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  sign: '<path d="M3 17c2.5-3 4-6 5.5-6S8 17 10 17s3-4 4.5-4 1 3 2.5 3 2-1.5 3-2.5"/><path d="M3 21h18"/>',
   image: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5-8 8"/>'
 };
 const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
@@ -57,6 +58,7 @@ const NAV = [
   { path: '/orders', label: 'Online orders', icon: 'cart', perm: 'orders.view' },
   { path: '/invoices', label: 'Invoices', icon: 'doc', perm: 'invoices.view' },
   { path: '/customers', label: 'Customers', icon: 'users', perm: 'invoices.view' },
+  { path: '/agreements', label: 'Agreements (e-sign)', icon: 'sign', perm: 'agreements.view' },
   { path: '/coupons', label: 'Coupons', icon: 'tag', perm: 'pricing.edit' },
   { path: '/payments', label: 'Payments (Square & PayPal)', icon: 'card', perm: 'payments.manage' },
   { group: 'Website' },
@@ -131,10 +133,15 @@ async function viewJoin(token, reset) {
 
 /* ---------- shell ---------- */
 function shell(title, crumb, body, path) {
+  document.body.classList.remove('wx-inv');
   const items = NAV.filter(n => n.group || !n.perm || can(n.perm));
   const nav = items.map((n, i) => n.group ? (items[i + 1] && !items[i + 1].group ? `<div class="group">${n.group}</div>` : '') :
     `<a href="${n.href || '#' + n.path}" class="${path === n.path ? 'on' : ''}">${icon(n.icon)}<span>${n.label}</span>${n.soon ? '<span class="soon">Soon</span>' : ''}</a>`).join('');
-  app.innerHTML = `<div class="shell"><aside class="side" data-side>
+  const srch = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
+  app.innerHTML = `<header class="wtop"><a class="wt-logo" href="#/" aria-label="Admin home"><img src="/satin/img/logo.png" alt="Satin"></a><a class="wt-site" href="/satin/" target="_blank" rel="noopener">Satin Graphic ${icon('ext')}</a>
+    <div class="wt-search">${srch}<input data-wsearch placeholder="Search admin pages…" aria-label="Search admin pages" autocomplete="off"><div class="wt-sug" data-wsug hidden></div></div>
+    <div class="wt-icons">${can('chat.view') ? `<a href="#/chat" title="Live chat" aria-label="Live chat">${icon('chat')}</a>` : ''}<a href="#/notifications" title="Notifications & app" aria-label="Notifications">${icon('bell')}</a><a class="wt-me" href="#/account" title="${esc(ME.name)}"><span class="avatar">${esc(initials(ME.name))}</span></a></div></header>
+  <div class="shell"><aside class="side" data-side>
     <div class="brand"><img src="/satin/img/logo.png" alt="Satin"><small>Admin</small></div>
     <nav class="nav">${nav}<a href="/satin/" target="_blank" rel="noopener">${icon('ext')}<span>View website</span></a></nav>
     <div class="me"><div class="avatar">${esc(initials(ME.name))}</div><div><b>${esc(ME.name)}</b><small>${esc(ME.roleName)}</small></div><button data-logout>Sign out</button></div>
@@ -142,6 +149,11 @@ function shell(title, crumb, body, path) {
   <div class="content" data-content>${body}</div></div></div>`;
   $('[data-logout]').onclick = async () => { await api('/logout', {}).catch(() => {}); ME = null; go('/login'); };
   $('[data-menu]').onclick = () => $('[data-side]').classList.toggle('open');
+  const ws = $('[data-wsearch]'), wg = $('[data-wsug]'); // top bar search: jump to any admin page you can open
+  const hits = () => { const q = ws.value.trim().toLowerCase(); return q ? items.filter(n => !n.group && n.label.toLowerCase().includes(q)).slice(0, 8) : []; };
+  ws.oninput = () => { const h = hits(); wg.hidden = !h.length; wg.innerHTML = h.map(n => `<a href="${n.href || '#' + n.path}">${icon(n.icon)}<span>${esc(n.label)}</span></a>`).join(''); };
+  ws.onkeydown = e => { if (e.key === 'Enter') { const h = hits()[0]; if (h) { ws.value = ''; wg.hidden = true; h.href ? open(h.href, '_blank') : go(h.path); } } else if (e.key === 'Escape') { ws.value = ''; wg.hidden = true; ws.blur(); } };
+  ws.onblur = () => setTimeout(() => { wg.hidden = true; }, 150);
   return $('[data-content]');
 }
 function denied() { return shell('No access', 'Admin', '<div class="card empty">Your role does not include this page. Ask the owner for access.</div>', ''); }
@@ -453,12 +465,13 @@ async function viewHome() {
   const m = a ? a.metrics : {};
   const tile = (k, hero) => { const x = m[k]; if (!x) return ''; return `<div class="card stat${hero ? ' hero' : ''}"><small>${esc(x.label)}</small><b>${compact(x.value, x.money)}</b>${delta(x.value, x.prev, prevLabel)}${sparkline(bucket(a.labels, x.series, homeDays).values)}</div>`; };
   c.innerHTML = `<div data-apphome></div><div class="dash-head"><div class="welcome-l"><div class="avatar">${esc(initials(ME.name))}</div><div><h2>Welcome back, ${esc(ME.name.split(' ')[0])}</h2><p>${esc(ME.roleName)} · Satin Graphic${a && a.activeNow ? ` · <span class="live">● ${a.activeNow} on the site now</span>` : ''}</p></div></div>
-    <div class="row-actions">${can('invoices.edit') ? '<a class="btn sm" href="#/invoices/edit">+ New invoice</a>' : ''}<a class="btn ghost sm" href="/admin/editor/">Edit website</a></div></div>
+    <div class="row-actions">${can('invoices.view') || can('invoices.edit') ? '<a class="btn ghost sm" href="#/invoices">Invoices</a>' : ''}${can('invoices.edit') ? '<a class="btn sm" href="#/invoices/edit">+ New invoice</a>' : ''}<a class="btn ghost sm" href="/admin/editor/">Edit website</a></div></div>
     ${a ? `<div class="filters"><label>Your key stats for <select class="input" data-days>${[[7, 'Last 7 days'], [30, 'Last 30 days'], [90, 'Last 90 days'], [365, 'Last 12 months']].map(([v, l]) => `<option value="${v}" ${v === homeDays ? 'selected' : ''}>${l}</option>`).join('')}</select></label><span class="hint" style="margin:0">Visits count people who allowed anonymous measurement on the website.</span></div>
     <div class="grid g4 tiles">${tile('sessions')}${tile('pageviews')}${tile('requests')}${tile('contact')}${m.paid ? tile('paid') + tile('invoiced') + `<a class="card stat link" href="#/invoices?status=open"><small>Outstanding</small><b>${compact(a.invoices.outstanding, true)}</b><span class="delta flat">${a.invoices.open} open invoice${a.invoices.open === 1 ? '' : 's'}</span></a><a class="card stat link" href="#/invoices?status=overdue"><small>Overdue</small><b class="${a.invoices.overdue ? 'warn-t' : ''}">${compact(a.invoices.overdue, true)}</b><span class="delta ${a.invoices.overdue ? 'down' : 'flat'}">${a.invoices.overdue ? '⚠ Needs follow-up' : 'Nothing overdue'}</span></a>` : ''}</div>
     <div class="grid g2" style="margin-top:18px"><div class="card"><h2>Site sessions <span class="sub">${period}</span></h2><div data-ch-sessions></div></div>
       ${m.paid ? `<div class="card"><h2>Amount paid <span class="sub">${period}</span></h2><div data-ch-paid></div></div>` : `<div class="card"><h2>Requests <span class="sub">${period}</span></h2><div data-ch-req></div></div>`}</div>
     <div class="grid g3" style="margin-top:18px"><div class="card"><h2>Top pages</h2>${barList(a.topPages)}</div><div class="card"><h2>Traffic sources</h2>${barList(a.sources)}</div><div class="card"><h2>Devices</h2>${barList(a.devices)}<h2 style="margin-top:18px">Languages</h2>${barList((a.languages || []).map(l => ({ ...l, label: { en: 'English', fr: 'Français', es: 'Español', fa: 'فارسی' }[l.label] || l.label })))}</div></div>` : ''}
+    <div data-fb></div>
     <div class="grid g2" style="margin-top:18px">${r ? `<div class="card"><h2>Latest requests <a class="sub" href="#/requests">View all</a></h2>${r.recent.length ? requestTable(r.recent.slice(0, 5)) : '<div class="empty">No requests yet.</div>'}</div>` : ''}
     ${a && a.invoices ? `<div class="card"><h2>Recent invoices <a class="sub" href="#/invoices">View all</a></h2>${a.invoices.recent.length ? invoiceTable(a.invoices.recent, true) : '<div class="empty">No invoices yet. <a href="#/invoices/edit">Create the first one</a>.</div>'}</div>` : ''}</div>`;
   if (a) {
@@ -468,7 +481,29 @@ async function viewHome() {
     $('[data-days]', c).onchange = e => { homeDays = +e.target.value; viewHome(); };
   }
   bindRows(c); bindInvRows(c);
+  if (can('dashboard.view')) customerReport($('[data-fb]', c), homeDays, period);
   if (window.SatinPWA && window.SatinPWA.home) window.SatinPWA.home($('[data-apphome]', c), { overview: o, analytics: a });
+}
+
+/* ---------- Customer report: "How did you hear about us?" answers from the website corner card (feedback.php) ---------- */
+async function customerReport(box, days, period) {
+  if (!box) return;
+  let d; try { d = await api('/feedback?days=' + days); } catch { return; }
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const rows = d.choices.filter(x => x.value || x.prev);
+  const max = Math.max(1, ...d.choices.map(x => x.value));
+  const groups = Object.entries(d.groups).sort((a, b) => b[1] - a[1]);
+  const best = groups[0] && groups[0][1] ? groups[0][0] : '';
+  const leadsTotal = d.choices.reduce((a, x) => a + x.leads, 0);
+  box.innerHTML = `<div class="card fb-card" style="margin-top:18px"><h2>Customer report <span class="sub">How visitors found Satin · ${esc(period)}</span></h2>
+    ${d.total ? `<div class="fb-kpis"><div><b>${d.total.toLocaleString('en-CA')}</b><small>answers${d.prevTotal ? ` · ${d.total >= d.prevTotal ? '▲' : '▼'} ${Math.abs(d.total - d.prevTotal)} vs before` : ''}</small></div>
+      <div><b>${d.sessions ? pct(d.total, d.sessions) + '%' : '—'}</b><small>of visits answered</small></div>
+      <div><b>${esc(best || '—')}</b><small>biggest channel</small></div><div><b>${leadsTotal}</b><small>answers that also sent a quote / contacted you</small></div></div>
+    <div class="fb-groups">${groups.map(([k, v]) => `<span class="fb-g"><b>${pct(v, d.total)}%</b> ${esc(k)}</span>`).join('')}</div>
+    <ul class="blist fb-list">${rows.map(x => `<li><div class="bl-top"><span>${esc(x.label)}</span><b>${x.value.toLocaleString('en-CA')}<small> · ${pct(x.value, d.total)}%${x.leads ? ` · ${x.leads} lead${x.leads === 1 ? '' : 's'}` : ''}${x.prev || x.value ? ` · ${x.value >= x.prev ? '▲' : '▼'}${Math.abs(x.value - x.prev)}` : ''}</small></b></div><div class="bl-track"><i style="width:${Math.max(2, x.value / max * 100)}%"></i></div></li>`).join('')}</ul>
+    ${d.notes.length ? `<h3 class="fb-h3">What they wrote</h3><ul class="fb-notes">${d.notes.map(n => `<li><b>${esc(n.choice)}</b> — ${esc(n.detail)} <small>${esc(n.day)}</small></li>`).join('')}</ul>` : ''}
+    <p class="hint">Leads = the same visit also sent a quote request or tapped call / email / WhatsApp. ▲▼ compare with the previous ${days} days.</p>`
+    : `<div class="empty small">No answers yet for this period. Visitors see a small “How did you hear about us?” card in the corner of the website; answers show up here.</div>`}</div>`;
 }
 
 /* ---------- invoices list ---------- */
@@ -556,10 +591,13 @@ async function viewInvoiceEdit(params) {
   drawInvoice(c);
 }
 function drawInvoice(c) {
+  if (!drawInvoice.mq) { drawInvoice.mq = matchMedia('(max-width:820px)'); drawInvoice.mq.addEventListener('change', () => { const cc = $('[data-content]'); if (INV && cc && cc.querySelector('.inv-doc,.wx')) { document.body.classList.remove('wx-inv'); drawInvoice(cc); } }); }
+  if (drawInvoice.mq.matches) return drawInvoiceM(c);
+  document.body.classList.remove('wx-inv');
   const i = INV, s = INVSET, b = i.business || s.business, ro = !can('invoices.edit') || i.baseStatus === 'void';
   const top = $('.top h1'); if (top) top.textContent = i.id ? 'Invoice #' + i.number : 'New invoice';
   $('[data-actions]').innerHTML = ro ? (i.id ? `<a class="btn ghost sm" href="${esc(i.publicUrl)}" target="_blank" rel="noopener">View / print</a>` : '') :
-    `<a class="btn ghost sm" href="#/invoices">Close</a> <button class="btn ghost sm" data-save>${i.id ? 'Save' : 'Save draft'}</button> ${i.id ? '<div class="more"><button class="btn ghost sm" data-more>More ▾</button><div class="menu" hidden></div></div>' : ''} <button class="btn sm" data-sendinv>${i.status === 'draft' ? 'Send invoice' : 'Resend'}</button>`;
+    `<a class="btn ghost sm" href="#/invoices">← All invoices</a> <button class="btn ghost sm" data-save>${i.id ? 'Save' : 'Save draft'}</button> ${i.id ? '<div class="more"><button class="btn ghost sm" data-more>More ▾</button><div class="menu" hidden></div></div>' : ''} <button class="btn sm" data-sendinv>${i.status === 'draft' ? 'Send invoice' : 'Resend'}</button>`;
   const cust = i.customer || {};
   c.innerHTML = `${i.id ? `<div class="inv-status">${invPill(i)}${i.refunded ? `<span>${money(i.refunded)} refunded</span>` : ''}${i.nextDue && ['sent', 'partial', 'overdue'].includes(i.status) ? `<span>Next payment: ${esc(i.nextDue.label)} ${money(i.nextDue.amount)}${i.nextDue.due ? ' due ' + esc(dlong(i.nextDue.due)) : ''}</span>` : ''}${i.sentAt ? `<span>Sent ${esc(dlong(i.sentAt))}</span>` : ''}${i.viewedAt ? `<span>Viewed by customer ${esc(dlong(i.viewedAt))}</span>` : ''}${i.requestId ? `<span>From a website request</span>` : ''}</div>` : ''}
   <div class="card inv-doc"><fieldset ${ro ? 'disabled' : ''}>
@@ -601,29 +639,188 @@ function drawInvoice(c) {
   const more = $('[data-more]');
   if (more) {
     const menu = more.nextElementSibling;
-    const items = [['print', 'View / print / PDF'], ['copy', 'Copy customer link'], ...(i.status === 'draft' ? [['finalize', 'Mark as sent (no email)']] : []), ['dup', 'Duplicate'], ['newcust', 'New invoice for this customer'], ...(!['paid', 'void'].includes(i.status) ? [['pay', 'Record payment']] : []), ...(i.baseStatus !== 'void' ? [['void', 'Void invoice']] : []), ['del', i.status === 'draft' ? 'Delete draft' : 'Delete invoice…']];
+    const items = invMenuItems(i);
     menu.innerHTML = items.map(([k, l]) => `<button data-m="${k}" class="${k === 'void' || k === 'del' ? 'danger' : ''}">${l}</button>`).join('');
     more.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
     document.addEventListener('click', () => { menu.hidden = true; }, { once: true });
-    menu.onclick = async e => {
-      const k = e.target.closest('[data-m]')?.dataset.m; if (!k) return; menu.hidden = true;
-      if (k === 'print') { if (invDirty && !(await saveInvoice(c))) return; open(i.publicUrl, '_blank', 'noopener'); }
-      if (k === 'copy') { navigator.clipboard.writeText(i.publicUrl); toast('Link copied'); }
-      if (k === 'finalize') { try { const r = await api('/invoices/mark-sent', { id: i.id }); setInv(r.invoice); drawInvoice(c); toast('Marked as sent'); } catch (er) { toast(er.message); } }
-      if (k === 'dup') { const copy = JSON.parse(JSON.stringify(i)); Object.assign(copy, { id: '', status: 'draft', baseStatus: 'draft', payments: [], paid: 0, refunded: 0, schedule: null, nextDue: null, sentAt: null, viewedAt: null, issueDate: todayISO(), number: '(new)' }); const d = new Date(); d.setDate(d.getDate() + (+INVSET.dueDays || 30)); copy.dueDate = d.toISOString().slice(0, 10); INV = copy; history.replaceState(null, '', '#/invoices/edit'); drawInvoice(c); toast('Copy ready — save to create it'); }
-      if (k === 'newcust') go('/invoices/edit?customer=' + encodeURIComponent(i.customerId || ''));
-      if (k === 'pay') paymentModal(c);
-      if (k === 'void') confirmBox('Void this invoice?', 'The customer link will show it as VOID (no more payments) and it no longer counts as outstanding. Payments already received stay listed — refund them separately if needed. This cannot be undone.', async () => { try { await api('/invoices/void', { id: i.id }); toast('Invoice voided'); viewInvoiceEdit(new URLSearchParams('id=' + i.id)); } catch (er) { toast(er.message); } });
-      if (k === 'del') deleteInvoice(i, () => { invDirty = false; go('/invoices'); });
-    };
+    menu.onclick = e => { const k = e.target.closest('[data-m]')?.dataset.m; if (!k) return; menu.hidden = true; invAct(k, c); };
   }
 }
+function invMenuItems(i) { return [['print', 'View / print / PDF'], ['copy', 'Copy customer link'], ...(i.status === 'draft' ? [['finalize', 'Mark as sent (no email)']] : []), ['dup', 'Duplicate'], ['newcust', 'New invoice for this customer'], ...(!['paid', 'void'].includes(i.status) ? [['pay', 'Record payment']] : []), ...(i.baseStatus !== 'void' ? [['void', 'Void invoice']] : []), ['del', i.status === 'draft' ? 'Delete draft' : 'Delete invoice…']]; }
+async function invAct(k, c) {
+  const i = INV;
+  if (k === 'print') { if (invDirty && !(await saveInvoice(c))) return; open(i.publicUrl, '_blank', 'noopener'); }
+  if (k === 'copy') { navigator.clipboard.writeText(i.publicUrl); toast('Link copied'); }
+  if (k === 'finalize') { try { const r = await api('/invoices/mark-sent', { id: i.id }); setInv(r.invoice); drawInvoice(c); toast('Marked as sent'); } catch (er) { toast(er.message); } }
+  if (k === 'dup') { const copy = JSON.parse(JSON.stringify(i)); Object.assign(copy, { id: '', status: 'draft', baseStatus: 'draft', payments: [], paid: 0, refunded: 0, schedule: null, nextDue: null, sentAt: null, viewedAt: null, issueDate: todayISO(), number: '(new)' }); const d = new Date(); d.setDate(d.getDate() + (+INVSET.dueDays || 30)); copy.dueDate = d.toISOString().slice(0, 10); INV = copy; history.replaceState(null, '', '#/invoices/edit'); drawInvoice(c); toast('Copy ready — save to create it'); }
+  if (k === 'newcust') go('/invoices/edit?customer=' + encodeURIComponent(i.customerId || ''));
+  if (k === 'pay') paymentModal(c);
+  if (k === 'void') confirmBox('Void this invoice?', 'The customer link will show it as VOID (no more payments) and it no longer counts as outstanding. Payments already received stay listed — refund them separately if needed. This cannot be undone.', async () => { try { await api('/invoices/void', { id: i.id }); toast('Invoice voided'); viewInvoiceEdit(new URLSearchParams('id=' + i.id)); } catch (er) { toast(er.message); } });
+  if (k === 'del') deleteInvoice(i, () => { invDirty = false; go('/invoices'); });
+}
+/* ---------- phones: invoice editor laid out like the Wix app (sections, summary rows, full-screen sheets) ---------- */
+const INV_ST = { draft: 'Draft', sent: 'Sent', partial: 'Partially paid', paid: 'Paid', overdue: 'Overdue', void: 'Void', refunded: 'Refunded' };
+function drawInvoiceM(c) {
+  const i = INV, s = INVSET, ro = !can('invoices.edit') || i.baseStatus === 'void';
+  document.body.classList.add('wx-inv');
+  const cust = i.customer || {}, st = INV_ST[i.status] || (i.status ? i.status[0].toUpperCase() + i.status.slice(1) : 'Draft');
+  const da = $('[data-actions]'); if (da) da.innerHTML = '';
+  const terms = [[0, 'Due on receipt'], [7, 'In 7 days'], [15, 'In 15 days'], [30, 'In 30 days'], [45, 'In 45 days'], [60, 'In 60 days']];
+  const info = i.id ? [i.refunded ? `${money(i.refunded)} refunded` : '', i.nextDue && ['sent', 'partial', 'overdue'].includes(i.status) ? `Next payment: ${esc(i.nextDue.label)} ${money(i.nextDue.amount)}${i.nextDue.due ? ' due ' + esc(dlong(i.nextDue.due)) : ''}` : '', i.sentAt ? `Sent ${esc(dlong(i.sentAt))}` : '', i.viewedAt ? `Viewed by customer ${esc(dlong(i.viewedAt))}` : '', i.requestId ? 'From a website request' : ''].filter(Boolean) : [];
+  const addr = [cust.address].filter(Boolean).join('');
+  c.innerHTML = `<div class="wx">
+  <div class="wx-bar"><a class="wx-x" href="#/invoices" aria-label="Close">✕</a><div class="wx-t"><b>${i.id ? 'Invoice #' + esc(i.number) : 'New Invoice'}</b><small>${esc(st)}</small></div>
+    ${ro ? (i.id ? `<a class="wx-next" href="${esc(i.publicUrl)}" target="_blank" rel="noopener">View</a>` : '<span></span>') : '<button type="button" class="wx-next" data-next>Next</button>'}</div>
+  ${info.length ? `<div class="wx-sec wx-info">${invPill(i)}${info.map(x => `<span>${x}</span>`).join('')}</div>` : ''}
+  <section class="wx-sec"><h3>Customer</h3>
+    ${cust.name || cust.email ? `<div class="wx-cust"><span class="avatar">${esc(initials(cust.name || cust.email))}</span><div class="wx-cd"><b>${esc(cust.name || cust.email)}</b>${cust.company ? `<small>${esc(cust.company)}</small>` : ''}${cust.email ? `<small>${esc(cust.email)}</small>` : '<small class="warn-t">Add an email to send the invoice</small>'}${cust.phone ? `<small>${esc(cust.phone)}</small>` : ''}${addr ? `<small class="wx-addr">${esc(addr)}</small>` : ''}${!i.customerId && !ro ? '<small class="hint">New customer — saved with the invoice</small>' : ''}</div>${ro ? '' : '<button type="button" class="wx-dots" data-custmenu aria-label="Customer options">⋯</button>'}</div>`
+      : ro ? '<p class="hint">No customer</p>' : '<button type="button" class="wx-add" data-addcust><i>+</i>Add Customer</button>'}
+  </section>
+  <section class="wx-sec"><label class="wx-lbl" for="wx-terms">Due Date</label>
+    <div class="wx-due"><select class="input" id="wx-terms" data-terms>${terms.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}<option value="">Custom date</option></select><input type="date" class="input" data-f="dueDate" value="${esc(i.dueDate)}" aria-label="Due date"></div>
+  </section>
+  <section class="wx-sec"><h3>Products &amp; Services</h3><div class="wx-items" data-items></div>
+    <p class="wx-note">Taxes are excluded and added to the total price.</p>
+    ${ro ? '' : '<button type="button" class="wx-add" data-additem><i>+</i>Add Items</button>'}</section>
+  <section class="wx-sec wx-tot" data-totm></section>
+  <section class="wx-sec" data-schedsec><div class="inv-sched" data-sched></div></section>
+  <section class="wx-sec"><h3>Additional Info</h3>
+    <label class="field"><span>Invoice title</span><input data-f="title" value="${esc(i.title || '')}" placeholder="e.g. Commercial van wrap"></label>
+    <div class="wx-two"><label class="field"><span>Issue date</span><input type="date" data-f="issueDate" value="${esc(i.issueDate)}"></label><label class="field"><span>Invoice #</span><input value="${esc(i.number)}" disabled></label></div>
+    <label class="field"><span>Sales representative</span><input data-f="salesRep" value="${esc(i.salesRep || '')}" placeholder="Optional"></label>
+    <label class="field"><span>Notes</span><textarea rows="3" data-f="notes" placeholder="e.g. Thanks for your business.">${esc(i.notes || '')}</textarea></label>
+    <label class="field"><span>Terms</span><textarea rows="3" data-f="terms" placeholder="e.g. Payment is due within 30 days.">${esc(i.terms || '')}</textarea></label>
+    ${can('settings.edit') ? '<a href="#/invoices/settings" class="wx-link">Edit business info (address, email, logo)</a>' : ''}
+  </section>
+  ${i.id ? `<section class="wx-sec"><h3>Payments &amp; refunds</h3>${(i.payments || []).length ? i.payments.map(p => { const left = p.amount - (p.refunded || 0), rf = p.kind === 'refund';
+      return `<div class="wx-pay"><div><b>${esc(p.methodName)}${rf ? ' · Refund' : ''}${p.online ? ' · Online' : ''}</b><small>${esc(dlong(p.date))}${p.note ? ' · ' + esc(p.note) : ''}</small>${p.refunded ? `<small>${money(p.refunded)} refunded</small>` : ''}</div><b class="${rf ? 'refund-t' : ''}">${rf ? '−' + money(-p.amount) : money(p.amount)}</b>
+        ${ro ? '' : `<span class="wx-pacts">${!rf && left > 0 ? `<button type="button" class="linkbtn" data-refund="${esc(p.id)}">Refund</button>` : ''}${p.online ? '' : `<button type="button" class="linkbtn" data-delpay="${esc(p.id)}">Remove</button>`}</span>`}</div>`; }).join('') : '<p class="hint">No payments recorded yet.</p>'}
+    ${ro ? '' : '<button type="button" class="wx-add" data-pay><i>+</i>Record Payment</button>'}</section>` : ''}
+  </div>`;
+  if (ro) c.querySelectorAll('.wx input,.wx select,.wx textarea').forEach(el => el.disabled = true);
+  c.querySelectorAll('[data-f]').forEach(el => el.oninput = () => { i[el.dataset.f] = el.value; invDirty = true; if (el.dataset.f === 'issueDate' || el.dataset.f === 'dueDate') syncTerms(); });
+  const tsel = $('[data-terms]', c);
+  const syncTerms = () => { const dd = Math.round((new Date(i.dueDate) - new Date(i.issueDate)) / 864e5); tsel.value = [0, 7, 15, 30, 45, 60].includes(dd) ? String(dd) : ''; };
+  tsel.onchange = () => { if (tsel.value === '') { $('[data-f=dueDate]', c).focus(); return; } const d = new Date(i.issueDate + 'T12:00:00'); d.setDate(d.getDate() + +tsel.value); i.dueDate = d.toISOString().slice(0, 10); $('[data-f=dueDate]', c).value = i.dueDate; invDirty = true; drawSchedule(c, ro); };
+  syncTerms();
+  drawItemsM(c, ro); drawTotalsM(c, ro);
+  const on = (sel, fn) => { const el = $(sel, c); if (el) el.onclick = fn; };
+  on('[data-addcust]', () => custSheetM(c));
+  on('[data-custmenu]', e => popMenu(e.currentTarget, [['edit', 'Edit customer details'], ['change', 'Change customer'], ['remove', 'Remove customer', 'danger']], k => {
+    if (k === 'edit') custEditM(c); if (k === 'change') custSheetM(c);
+    if (k === 'remove') { i.customer = {}; i.customerId = null; invDirty = true; drawInvoice(c); } }));
+  on('[data-additem]', () => itemSheetM(c, -1));
+  on('[data-pay]', () => paymentModal(c));
+  c.querySelectorAll('[data-refund]').forEach(bt => bt.onclick = () => refundModal(c, i.payments.find(p => p.id === bt.dataset.refund)));
+  c.querySelectorAll('[data-delpay]').forEach(bt => bt.onclick = () => confirmBox('Remove this entry?', 'The amounts paid and the balance due are recalculated.', async () => { try { const r = await api('/invoices/payment/delete', { paymentId: bt.dataset.delpay }); setInv(r.invoice); drawInvoice(c); toast('Payment removed'); } catch (e) { toast(e.message); } }));
+  on('[data-next]', e => popMenu(e.currentTarget, [['send', i.status === 'draft' ? 'Send invoice' : 'Resend invoice'], ['save', i.id ? 'Save changes' : 'Save as draft'], ...(i.id ? invMenuItems(i).map(([k, l]) => [k, l, k === 'void' || k === 'del' ? 'danger' : '']) : [])], k => {
+    if (k === 'send') sendInvoiceModal(c);
+    else if (k === 'save') saveInvoice(c).then(ok => ok && toast('Invoice saved'));
+    else invAct(k, c); }));
+}
+function drawItemsM(c, ro) {
+  const i = INV, taxes = INVSET.taxes || [], box = $('[data-items]', c), calc = calcInvoice(i, taxes);
+  const shown = i.items.map((it, k) => [it, k]).filter(([it]) => it.name || it.description || +it.price);
+  box.innerHTML = shown.length ? shown.map(([it, k]) => { const tx = taxes.filter(t => (it.taxes || []).includes(t.id)).map(t => t.name).join(', ');
+    return `<div class="wx-item" data-k="${k}"><div class="wx-it"><b>${esc(it.name || 'Item')}</b>${it.description ? `<small class="wx-desc">${esc(it.description)}</small>` : ''}<small>${esc(+it.qty || 0)} x ${money(Math.round((+it.price || 0) * 100))}${tx ? ' · ' + esc(tx) : ''}</small></div>
+      <b class="wx-amt">${money(calc.lines[k])}</b>${ro ? '' : '<button type="button" class="wx-dots" data-itmenu aria-label="Item options">⋯</button>'}</div>`; }).join('')
+    : '<p class="hint wx-empty">No products or services yet.</p>';
+  if (ro) return;
+  box.querySelectorAll('.wx-item').forEach(row => {
+    const k = +row.dataset.k;
+    row.onclick = e => { if (e.target.closest('[data-itmenu]')) return; itemSheetM(c, k); };
+    row.querySelector('[data-itmenu]').onclick = e => { e.stopPropagation(); popMenu(e.currentTarget, [['edit', 'Edit item'], ['dup', 'Duplicate'], ['rm', 'Remove', 'danger']], m => {
+      if (m === 'edit') return itemSheetM(c, k);
+      if (m === 'dup') i.items.splice(k + 1, 0, JSON.parse(JSON.stringify(i.items[k])));
+      if (m === 'rm') i.items.splice(k, 1);
+      invDirty = true; drawItemsM(c, ro); drawTotalsM(c, ro); }); };
+  });
+}
+/* full-screen "Add Product" sheet: name (with saved items), description, price + quantity, taxes */
+function itemSheetM(c, k) {
+  const i = INV, s = INVSET, taxes = s.taxes || [], isNew = k < 0;
+  const it = isNew ? { name: '', description: '', qty: 1, price: '', taxes: [...(s.defaultTaxes || [])] } : JSON.parse(JSON.stringify(i.items[k]));
+  const o = modal(`<header><button type="button" class="x" data-close aria-label="Close">✕</button><h2>${isNew ? 'Add Product' : 'Edit Product'}</h2><span></span></header>
+    <div class="wx-sheet"><label class="field"><span>Name</span><input data-i="name" list="wx-itemlist" value="${esc(it.name)}" placeholder="Product or service name" autocomplete="off"></label>
+    <datalist id="wx-itemlist">${INVLOOK.items.map(x => `<option value="${esc(x.name)}">${money(x.price)}</option>`).join('')}</datalist>
+    <label class="field"><span>Description</span><textarea rows="3" data-i="description" placeholder="Optional">${esc(it.description || '')}</textarea></label>
+    <h3>Price and Tax</h3>
+    <div class="wx-two"><label class="field"><span>Price (C$)</span><input type="number" inputmode="decimal" step="0.01" data-i="price" value="${esc(it.price)}" placeholder="0.00"></label><label class="field"><span>Quantity</span><input type="number" inputmode="decimal" step="any" min="0" data-i="qty" value="${esc(it.qty)}"></label></div>
+    <div class="field"><span>Tax</span><div class="taxchips">${taxes.map(t => `<button type="button" data-tax="${esc(t.id)}" class="${(it.taxes || []).includes(t.id) ? 'on' : ''}">${esc(t.name)} ${esc(t.rate)}%</button>`).join('') || '<small>No taxes set up</small>'}</div>
+      ${can('settings.edit') ? '<a class="wx-link" href="#/invoices/settings">+ Create New Tax</a>' : ''}</div>
+    <div class="wx-line"><span>Line total</span><b data-lt></b></div>
+    <div class="err" data-ierr hidden></div></div>
+    <div class="wx-float">${isNew ? '' : '<button type="button" class="btn ghost" data-rm>Remove</button>'}<button type="button" class="btn" data-ok>${isNew ? 'Add to Invoice' : 'Save'}</button></div>`);
+  o.classList.add('wx-o');
+  const lt = () => { $('[data-lt]', o).textContent = money(Math.round((+it.qty || 0) * Math.round((+it.price || 0) * 100))); };
+  o.querySelectorAll('[data-i]').forEach(el => el.oninput = () => { it[el.dataset.i] = el.value;
+    if (el.dataset.i === 'name') { const m = INVLOOK.items.find(x => x.name === el.value); if (m && !+it.price) { it.description = m.description; it.price = m.price / 100; if (m.taxes.length) it.taxes = m.taxes;
+      $('[data-i=description]', o).value = it.description || ''; $('[data-i=price]', o).value = it.price; o.querySelectorAll('[data-tax]').forEach(b => b.classList.toggle('on', it.taxes.includes(b.dataset.tax))); } }
+    lt(); });
+  o.querySelectorAll('[data-tax]').forEach(bt => bt.onclick = () => { const t = bt.dataset.tax; it.taxes = (it.taxes || []).includes(t) ? it.taxes.filter(x => x !== t) : [...(it.taxes || []), t]; bt.classList.toggle('on'); });
+  lt(); if (isNew) setTimeout(() => $('[data-i=name]', o).focus(), 80);
+  const done = () => { o.remove(); invDirty = true; drawItemsM(c, false); drawTotalsM(c, false); };
+  $('[data-ok]', o).onclick = () => {
+    const er = $('[data-ierr]', o);
+    if (!String(it.name).trim() && !String(it.description).trim()) { er.textContent = 'Enter a name for this product or service.'; er.hidden = false; return; }
+    if (+it.qty < 0 || it.qty === '') { er.textContent = 'Enter a quantity.'; er.hidden = false; return; }
+    it.price = +it.price || 0;
+    if (isNew) { const blank = i.items.findIndex(x => !x.name && !x.description && !+x.price); if (blank >= 0) i.items[blank] = it; else i.items.push(it); } else i.items[k] = it;
+    done(); };
+  const rm = $('[data-rm]', o); if (rm) rm.onclick = () => { i.items.splice(k, 1); done(); };
+}
+/* customer: search sheet (reuses the picker) and a details sheet */
+function custSheetM(c) {
+  const i = INV;
+  const o = modal(`<header><button type="button" class="x" data-close aria-label="Close">✕</button><h2>Add Customer</h2><span></span></header>
+    <div class="cust-pick wx-sheet"><div class="cbx" data-cbx><input class="input" data-custsearch role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cbx-list" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Search by name, company or email"><div class="cbx-list" id="cbx-list" role="listbox" aria-label="Customers" hidden></div></div></div>`);
+  o.classList.add('wx-o');
+  custPicker(c, i, o);
+  const cs = $('[data-custsearch]', o); setTimeout(() => cs.focus(), 80);
+}
+function custEditM(c) {
+  const i = INV, cur = { ...(i.customer || {}) };
+  const o = modal(`<header><button type="button" class="x" data-close aria-label="Close">✕</button><h2>Customer details</h2><span></span></header>
+    <div class="wx-sheet">${[['name', 'Name'], ['company', 'Company'], ['email', 'Email *'], ['phone', 'Phone']].map(([k, l]) => `<label class="field"><span>${l}</span><input data-c="${k}" ${k === 'email' ? 'type="email"' : ''} value="${esc(cur[k] || '')}"></label>`).join('')}
+    <label class="field"><span>Billing address</span><textarea rows="3" data-c="address">${esc(cur.address || '')}</textarea></label>
+    <p class="hint">${i.customerId ? 'Changes apply to this invoice. To update the saved customer too, use “Update saved customer”.' : 'This new customer is saved when you save the invoice.'}</p></div>
+    <div class="wx-float">${i.customerId ? '<button type="button" class="btn ghost" data-saved>Update saved customer</button>' : ''}<button type="button" class="btn" data-ok>Done</button></div>`);
+  o.classList.add('wx-o');
+  o.querySelectorAll('[data-c]').forEach(el => el.oninput = () => { cur[el.dataset.c] = el.value; });
+  $('[data-ok]', o).onclick = () => { i.customer = cur; invDirty = true; o.remove(); drawInvoice(c); };
+  const sv = $('[data-saved]', o);
+  if (sv) sv.onclick = () => { const m = INVLOOK.customers.find(x => x.id === i.customerId) || { id: i.customerId }; o.remove();
+    customerModal({ ...m, ...cur, id: i.customerId }, x => { const k = INVLOOK.customers.findIndex(y => y.id === x.id); if (k >= 0) INVLOOK.customers[k] = x; i.customer = { name: x.name || '', company: x.company || '', email: x.email || '', phone: x.phone || '', address: x.address || '' }; invDirty = true; drawInvoice(c); }); };
+}
+function drawTotalsM(c, ro) {
+  const i = INV, k = calcInvoice(i, INVSET.taxes || []), box = $('[data-totm]', c);
+  const paid = i.paid || 0, bal = Math.max(0, k.total - paid), plan = i.deposit?.items?.length ? i.deposit : null;
+  const dep = plan ? planAmounts(plan, k.total)[0] : 0, d = i.discount || {};
+  const add = (attr, lbl = 'Add') => ro ? '' : `<button type="button" class="wx-addl" ${attr}>${lbl}</button>`;
+  box.innerHTML = `<div class="wx-tl"><span>Subtotal</span><b>${money(k.subtotal)}</b></div>
+    <div class="wx-tl"><span>Discount${d.type ? ` (${d.type === 'percent' ? esc(d.value) + '%' : money(Math.round((+d.value || 0) * 100))})` : ''}</span>${d.type ? `<b>−${money(k.disc)}</b>` : add('data-dadd')}</div>
+    ${d.type && !ro ? `<div class="wx-disc"><input class="input" type="number" inputmode="decimal" step="0.01" min="0" data-dv value="${esc(d.value)}" aria-label="Discount"><select class="input" data-dt><option value="percent" ${d.type === 'percent' ? 'selected' : ''}>%</option><option value="amount" ${d.type === 'amount' ? 'selected' : ''}>CA$</option></select><button type="button" class="linkbtn" data-dx>Remove</button></div>` : ''}
+    ${k.taxes.map(t => `<div class="wx-tl sub"><span>${esc(t.name)} (${esc(t.rate)}%)</span><b>${money(t.amount)}</b></div>`).join('')}
+    <div class="wx-tl"><span>Tax total</span><b>${money(k.tax)}</b></div>
+    <div class="wx-tl strong"><span>Invoice total</span><b>${money(k.total)}</b></div>
+    <div class="wx-tl"><span>${plan ? 'Deposit (' + esc(plan.items[0].label || 'Deposit') + ')' : 'Deposit'}</span>${plan ? `<b>${money(dep)}</b>` : add('data-padd')}</div>
+    <div class="wx-tl"><span>Amount paid</span><b>${money(paid)}</b></div>${i.refunded ? `<div class="wx-tl sub"><span>Refunded</span><b>${money(i.refunded)}</b></div>` : ''}
+    <div class="wx-bal"><span>Balance Due</span><b>${['refunded', 'void'].includes(i.status) ? '—' : money(bal)}</b></div>`;
+  const on = (sel, ev, fn) => { const el = $(sel, box); if (el) el[ev] = fn; };
+  on('[data-dadd]', 'onclick', () => { i.discount = { type: 'percent', value: 10 }; invDirty = true; drawTotalsM(c, ro); $('[data-dv]', box)?.select(); });
+  on('[data-dx]', 'onclick', () => { i.discount = {}; invDirty = true; drawTotalsM(c, ro); });
+  on('[data-dt]', 'onchange', e => { i.discount.type = e.target.value; invDirty = true; drawTotalsM(c, ro); });
+  on('[data-dv]', 'onchange', e => { i.discount.value = +e.target.value; invDirty = true; drawTotalsM(c, ro); });
+  on('[data-padd]', 'onclick', () => { i.deposit = planResize({}, 2); invDirty = true; drawTotalsM(c, ro); $('[data-schedsec]', c)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  drawSchedule(c, ro);
+  const ss = $('[data-schedsec]', c); if (ss) ss.hidden = !plan;
+}
 /* Invoice customer picker (like Wix): searchable list, “+ Add new customer” first, keyboard ↑ ↓ Enter Esc. */
-function custPicker(c, i) {
-  const cs = $('[data-custsearch]', c), list = $('#cbx-list', c); if (!cs || !list) return;
+function custPicker(c, i, root = c) {
+  const cs = $('[data-custsearch]', root), list = $('#cbx-list', root); if (!cs || !list) return;
   let rows = [], act = 0;
   const norm = v => String(v || '').toLowerCase();
-  const pick = m => { i.customer = { name: m.name || '', company: m.company || '', email: m.email || '', phone: m.phone || '', address: m.address || '' }; i.customerId = m.id; invDirty = true; drawInvoice(c); };
+  const pick = m => { i.customer = { name: m.name || '', company: m.company || '', email: m.email || '', phone: m.phone || '', address: m.address || '' }; i.customerId = m.id; invDirty = true; if (root !== c) root.remove(); drawInvoice(c); };
   const saved = m => { const k = INVLOOK.customers.findIndex(x => x.id === m.id); if (k >= 0) INVLOOK.customers[k] = m; else INVLOOK.customers.unshift(m); pick(m); };
   const addNew = q => { close(); q = q.trim(); customerModal(q.includes('@') ? { email: q } : { name: q }, saved); };
   const close = () => { list.hidden = true; cs.setAttribute('aria-expanded', 'false'); cs.removeAttribute('aria-activedescendant'); };
@@ -642,9 +839,9 @@ function custPicker(c, i) {
     list.hidden = false; cs.setAttribute('aria-expanded', 'true'); mark();
   };
   const choose = k => { const x = rows[k]; if (!x) return; if (x.add) addNew(cs.value); else { close(); pick(x); } };
-  cs.onfocus = () => { open(); if (matchMedia('(max-width:820px)').matches) setTimeout(() => { const h = $('.top'); cs.style.scrollMarginTop = ((h ? h.getBoundingClientRect().bottom : 0) + 12) + 'px'; cs.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 250); }; // phones: room for the list above the keyboard
+  cs.onfocus = () => { open(); if (root === c && matchMedia('(max-width:820px)').matches) setTimeout(() => { const h = $('.top'); cs.style.scrollMarginTop = ((h ? h.getBoundingClientRect().bottom : 0) + 12) + 'px'; cs.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 250); }; // phones: room for the list above the keyboard
   cs.onclick = () => { if (list.hidden) open(); };
-  cs.oninput = () => { i.customer = { ...(i.customer || {}), name: cs.value }; if (i.customerId) { i.customerId = null; const l = $('.cbx-linked', c); if (l) l.remove(); } invDirty = true; open(); };
+  cs.oninput = () => { i.customer = { ...(i.customer || {}), name: cs.value }; if (i.customerId) { i.customerId = null; const l = $('.cbx-linked', root); if (l) l.remove(); } invDirty = true; open(); };
   cs.onkeydown = e => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (list.hidden) { open(); return; } act = (act + (e.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length; mark(); }
     else if (e.key === 'Enter') { if (!list.hidden) { e.preventDefault(); choose(act); } }
@@ -655,7 +852,7 @@ function custPicker(c, i) {
   list.onpointerdown = e => e.preventDefault(); // keep focus in the input while choosing
   list.onclick = e => { const el = e.target.closest('[data-k]'); if (el) choose(+el.dataset.k); };
   list.onpointermove = e => { const el = e.target.closest('[data-k]'); if (el && +el.dataset.k !== act) { act = +el.dataset.k; mark(); } };
-  const ed = $('[data-editcust]', c);
+  const ed = $('[data-editcust]', root);
   if (ed) ed.onclick = () => { const m = INVLOOK.customers.find(x => x.id === i.customerId) || { id: i.customerId };
     const cur = i.customer || {}; customerModal({ ...m, ...Object.fromEntries(['name', 'company', 'email', 'phone', 'address'].map(k => [k, cur[k] ?? m[k] ?? ''])), id: i.customerId }, saved); };
 }
@@ -1080,7 +1277,7 @@ async function route() {
   if (path === '/forgot') return viewForgot();
   if (!ME) { const me = await api('/me').catch(() => ({})); if (!me.user) return viewLogin(me.setupNeeded); return boot(); }
   if (path === '/login') return go('/');
-  const nav = NAV.find(n => n.path === path) || (path.startsWith('/catalog') ? NAV.find(n => n.path === '/catalog') : path.startsWith('/chat') ? NAV.find(n => n.path === '/chat') : path.startsWith('/portfolio') ? NAV.find(n => n.path === '/portfolio') : null);
+  const nav = NAV.find(n => n.path === path) || (path.startsWith('/catalog') ? NAV.find(n => n.path === '/catalog') : path.startsWith('/chat') ? NAV.find(n => n.path === '/chat') : path.startsWith('/portfolio') ? NAV.find(n => n.path === '/portfolio') : path.startsWith('/agreements') ? NAV.find(n => n.path === '/agreements') : null);
   if (nav && nav.perm && !can(nav.perm)) return denied();
   try {
     if (path === '/') return can('dashboard.view') ? viewHome() : viewAccount();
@@ -1101,13 +1298,14 @@ async function route() {
     if (path === '/banner') { if (!window.SatinCatalog) throw new Error('Refresh the page.'); return window.SatinCatalog.route(path, params); }
     if (['/orders', '/payments', '/templates', '/coupons'].includes(path)) { if (!window.SatinShop) throw new Error('This page could not load. Refresh the page.'); return window.SatinShop.route(path, params); }
     if (path === '/chat' || path.startsWith('/chat/')) { if (!window.SatinChat) throw new Error('Live chat could not load. Refresh the page.'); return window.SatinChat.route(path, params); }
+    if (path === '/agreements' || path.startsWith('/agreements/')) { if (!window.SatinEsign) throw new Error('This page could not load. Refresh the page.'); return window.SatinEsign.route(path, params); }
     if (path === '/portfolio' || path.startsWith('/portfolio/')) { if (!window.SatinPortfolio) throw new Error('This page could not load. Refresh the page.'); return window.SatinPortfolio.route(path, params); }
     if (path === '/catalog' || path.startsWith('/catalog/')) { if (!window.SatinCatalog) throw new Error('The catalog could not load. Refresh the page.'); return window.SatinCatalog.route(path, params); }
     go('/');
   } catch (e) { const c = $('[data-content]'); if (c) c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; else toast(e.message); }
 }
 let refresh = () => route();
-window.SatinAdmin = { get csrf() { return CSRF; }, $, esc, api, apiForm, popMenu, toast, go, shell, modal, confirmBox, can, fmtDate, icon, money, csvParse, downloadCSV, nav: NAV, get me() { return ME; } };
+window.SatinAdmin = { customerModal, get csrf() { return CSRF; }, $, esc, api, apiForm, popMenu, toast, go, shell, modal, confirmBox, can, fmtDate, icon, money, csvParse, downloadCSV, nav: NAV, get me() { return ME; } };
 addEventListener('hashchange', () => { document.querySelectorAll('.overlay').forEach(o => o.remove()); route(); });
 boot();
 })();

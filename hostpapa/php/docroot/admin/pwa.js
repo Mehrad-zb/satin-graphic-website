@@ -20,6 +20,7 @@ const pathNow = () => (location.hash.slice(1) || '/').split('?')[0];
 const qsNow = () => new URLSearchParams((location.hash.split('?')[1]) || '');
 
 const I = {
+  doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 12h6M10 16h6"/>',
   home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
   chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.8A8 8 0 1 1 21 12z"/>',
   sales: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5M9.5 16h2.5"/>',
@@ -157,6 +158,7 @@ function hub(path) {
   if (path === '/sales') {
     html += section('', [
       can('invoices.edit') && { href: '#/invoices/edit', label: 'New invoice', sub: 'Line items, taxes, deposit, send by email or link', icon: svg('plus'), primary: true },
+      (can('invoices.view') || can('invoices.edit')) && { href: '#/invoices', label: 'Invoices', sub: 'See all invoices, open one to edit, resend or print', icon: svg('doc') },
       can('invoices.edit') && { href: '#/invoices?status=open', label: 'Record a payment', sub: 'Pick an unpaid invoice, then “Record payment”', icon: svg('cash') }
     ].filter(Boolean));
     html += section('Sales', SALES.map(p => items.find(n => n.path === p)).filter(Boolean).map(fromNav));
@@ -204,6 +206,7 @@ async function home(el, { overview, analytics } = {}) {
   const can = a.can;
   const qa = [
     can('invoices.edit') && ['#/invoices/edit', 'New invoice', 'plus', 'primary'],
+    (can('invoices.view') || can('invoices.edit')) && ['#/invoices', 'Invoices', 'doc'],
     can('chat.view') && ['#/chat', 'Open chat', 'chat', '', 'chat'],
     can('invoices.edit') && ['#/invoices?status=open', 'Record payment', 'cash'],
     can('pricing.edit') && ['#/catalog', 'Change prices', 'tag'],
@@ -401,7 +404,15 @@ async function route() {
         <p class="hint" data-out>${st.permission === 'denied' ? 'Notifications are blocked for this site in the browser settings.' : st.subscribed ? '✓ This device gets notifications.' : ''}</p>
         ${dev.length ? `<h3 style="margin-top:18px">Your devices</h3><table class="table mini"><thead><tr><th>Device</th><th>Last delivered</th><th></th></tr></thead><tbody>${dev.map(d => `<tr><td>${esc(device(d.agent))}${d === here ? ' <span class="pill confirmed">this device</span>' : ''}</td><td>${d.lastOkAt ? esc(a.fmtDate(d.lastOkAt)) : '—'}${d.fails ? ` <span class="pill warn">${d.fails} failed</span>` : ''}</td><td><button class="btn ghost sm" data-rm="${esc(d.id)}">Remove</button></td></tr>`).join('')}</tbody></table>` : ''}
       </div></div>
-      <div class="card" style="margin-top:18px"><h2>Badges</h2><p class="hint">The red numbers on the menu show what is new since you last opened that page: ${Object.values(LABELS).join(', ')}. They clear when you open the page (live chat: when you open the conversation). On an installed app the same total shows on the app icon where the phone supports it.</p></div>`;
+      <div class="card" style="margin-top:18px"><h2>Badges</h2><p class="hint">The red numbers on the menu show what is new since you last opened that page: ${Object.values(LABELS).join(', ')}. They clear when you open the page (live chat: when you open the conversation). On an installed app the same total shows on the app icon where the phone supports it.</p></div>
+      ${a.can('settings.edit') ? `<div class="card" style="margin-top:18px" data-mailcard><h2>Email delivery (invoices, orders, account emails)</h2>
+        <p class="hint">So customers get your emails in their inbox (not spam), send them through your real mailbox. Recommended for Google Workspace: server <b>smtp.gmail.com</b>, port <b>587</b>, user <b>info@satingraphic.ca</b> and a Google <b>app password</b> (Google Account → Security → 2-Step Verification → App passwords). Leave the server empty to use the hosting mail server.</p>
+        <div class="form-grid"><label>SMTP server<input data-m="host" placeholder="smtp.gmail.com"></label><label>Port<select data-m="port"><option>587</option><option>465</option><option>25</option><option>2525</option></select></label>
+        <label>Mailbox (user)<input data-m="user" type="email" placeholder="info@satingraphic.ca"></label><label>Password / app password<input data-m="pass" type="password" autocomplete="new-password" placeholder="unchanged"></label>
+        <label>Sender name<input data-m="fromName" placeholder="Satin Graphic"></label><label>Reply-to address<input data-m="replyTo" type="email" placeholder="info@satingraphic.ca"></label>
+        <label>From address without SMTP<input data-m="from" type="email" placeholder="no-reply@satingraphic.ca"></label></div>
+        <div class="shop-acts"><button class="btn sm" data-msave>Save</button> <input data-mto type="email" placeholder="test address" style="max-width:220px"> <button class="btn ghost sm" data-mtest>Send a test email</button></div>
+        <p class="hint" data-mout></p></div>` : ''}`;
     const prefs = () => Object.fromEntries($$('[data-pref]', c).map(i => [i.dataset.pref, i.checked]));
     const out = $('[data-out]', c);
     const busy = (b, fn) => async () => { b.disabled = true; try { await fn(); } catch (e) { out.textContent = e.message; out.className = 'err'; } finally { b.disabled = false; } };
@@ -410,6 +421,14 @@ async function route() {
     const tb = $('[data-test]', c); if (tb) tb.onclick = busy(tb, async () => { const r = await a.api('/push/test', {}); out.className = r.ok ? 'okmsg' : 'err'; out.textContent = r.ok ? `Test sent to ${r.sent} of ${r.total} device(s).` : `The push service did not accept it (code ${r.codes.join(', ')}).`; });
     const off = $('[data-off]', c); if (off) off.onclick = busy(off, async () => { await P().disable(a.api); a.toast('Notifications turned off'); draw(); });
     $$('[data-rm]', c).forEach(b => b.onclick = busy(b, async () => { await a.api('/push/unsubscribe', { id: b.dataset.rm }); draw(); }));
+    const mc = $('[data-mailcard]', c);
+    if (mc) {
+      const mo = $('[data-mout]', mc), f = k => $(`[data-m="${k}"]`, mc);
+      a.api('/push/mail').then(m => { for (const k of ['host', 'user', 'fromName', 'replyTo', 'from']) f(k).value = m[k] || ''; f('port').value = String(m.port || 587); f('pass').placeholder = m.hasPass ? 'saved — leave empty to keep' : 'app password'; $('[data-mto]', mc).value = a.me?.email || ''; }).catch(e => { mo.textContent = e.message; });
+      const mb = (b, fn) => async () => { b.disabled = true; mo.className = 'hint'; try { await fn(); } catch (e) { mo.textContent = e.message; mo.className = 'err'; } finally { b.disabled = false; } };
+      const ms = $('[data-msave]', mc); ms.onclick = mb(ms, async () => { const v = {}; for (const k of ['host', 'user', 'pass', 'fromName', 'replyTo', 'from']) v[k] = f(k).value.trim(); v.port = Number(f('port').value); await a.api('/push/mail', v); f('pass').value = ''; mo.textContent = 'Saved. Send a test to check.'; mo.className = 'okmsg'; });
+      const mt = $('[data-mtest]', mc); mt.onclick = mb(mt, async () => { const r = await a.api('/push/mail/test', { to: $('[data-mto]', mc).value.trim() }); mo.className = r.ok && !r.smtpError ? 'okmsg' : 'err'; mo.textContent = r.ok ? `Sent via ${r.via}.` + (r.smtpError ? ` SMTP did not work (${r.smtpError}), so the hosting mail server was used — check the mailbox and app password.` : ' Check the inbox (and the spam folder the first time).') : 'The email could not be sent.'; });
+    }
     const ib = $('[data-install]', c); if (ib) ib.onclick = async () => { if (await P().install()) a.toast('Installed'); draw(); };
   };
   try { await draw(); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; }
@@ -420,5 +439,6 @@ function device(ua) {
   return `${br} on ${os}`;
 }
 
+try { localStorage.setItem('satinStaff', '1'); } catch {}
 window.SatinPWA = { route, hub, home, poll, checkUpdate, get badges() { return badges; } };
 })();

@@ -30,7 +30,9 @@ const priceFields = fields => { const o = {}; for (const f of fields) if (f.role
 const num = v => { const n = parseFloat(String(v ?? '').replace(/[$,\s]/g, '')); return Number.isFinite(n) ? n : null; };
 const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
 const cad = n => n == null ? '' : '$' + r2(n).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const steps = (n, d) => `<ol class="es-steps">${['Information', 'Signature positions', 'Review & send'].map((t, k) => `<li class="${k + 1 === n ? 'on' : k + 1 < n ? 'done' : ''}">${d && k + 1 !== n && d.status === 'draft' ? `<a href="#/agreements/${['fill', 'place', 'ready'][k]}?doc=${d.id}">` : '<span>'}<i>${k + 1}</i>${t}${d && k + 1 !== n && d.status === 'draft' ? '</a>' : '</span>'}</li>`).join('')}</ol>`;
+const CUST_RE = /customer name|full name|first name|last name|^name$|company|phone|mobile|e-?mail|address|vehicle|make|model|year|colou?r|licen[cs]e|plate|\bvin\b|pick-?up/i;
+const intakeIds = fields => { const pr = new Set(Object.values(priceFields(fields)).map(x => x.id)); return new Set(fields.filter(f => ['text', 'name', 'email'].includes(f.type) && !pr.has(f.id) && !(f.role === 'signer' && (f.signer || 's1') !== 's1') && CUST_RE.test(f.label || (f.type === 'email' ? 'Email' : f.type === 'name' ? 'Full name' : ''))).map(f => f.id)); };
+const steps = (n, d, auto) => `<ol class="es-steps">${(auto || d && d.auto ? ['Information', 'Documents & signatures', 'Send to customer'] : ['Information', 'Signature positions', 'Review & send']).map((t, k) => `<li class="${k + 1 === n ? 'on' : k + 1 < n ? 'done' : ''}">${d && k + 1 !== n && d.status === 'draft' ? `<a href="#/agreements/${['fill', 'place', 'ready'][k]}?doc=${d.id}">` : '<span>'}<i>${k + 1}</i>${t}${d && k + 1 !== n && d.status === 'draft' ? '</a>' : '</span>'}</li>`).join('')}</ol>`;
 let DATA = null, TAB = 'docs', FILTER = { q: '', status: '' };
 const fmt = s => A().fmtDate(s);
 const toTop = () => { scrollTo(0, 0); document.body.scrollTop = 0; }; // phones: the admin scrolls the body, not the window
@@ -38,7 +40,7 @@ const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); A
 
 async function route(path, params) {
   if (path === '/agreements/template') return editor(params.get('id'), params.get('send') === '1');
-  if (path === '/agreements/fill') return fillPage(params.get('id'), params.get('doc'));
+  if (path === '/agreements/fill') return fillPage(params.get('id'), params.get('doc'), params.get('auto') === '1');
   if (path === '/agreements/ready') return readyPage(params.get('doc'));
   if (path === '/agreements/place') return placePage(params.get('doc'));
   return list(params);
@@ -49,11 +51,12 @@ async function list(params) {
   if (params && params.get('tab')) TAB = params.get('tab') === 'templates' ? 'templates' : 'docs';
   const c = A().shell('Agreements (e-sign)', 'Business', '<div class="card empty">Loading…</div>', '/agreements');
   const canSend = A().can('agreements.send');
-  $('[data-actions]').innerHTML = canSend ? '<button class="btn ghost sm" data-new>+ Upload new agreement</button> <button class="btn ghost sm" data-oneoff>Sign a one-off PDF</button> <button class="btn sm" data-send>+ Create agreement</button>' : '';
+  $('[data-actions]').innerHTML = canSend ? '<button class="btn ghost sm" data-new>+ Upload new agreement</button> <button class="btn ghost sm" data-oneoff>Sign a one-off PDF</button> <button class="btn ghost sm" data-send>+ Create agreement (manual)</button> <button class="btn sm" data-auto>+ Automated agreement</button>' : '';
   if (canSend) {
     $('[data-new]').onclick = () => uploadFlow('template');
     $('[data-oneoff]').onclick = () => uploadFlow('oneoff');
     $('[data-send]').onclick = () => pickTemplate();
+    $('[data-auto]').onclick = () => pickTemplate(true);
   }
   try { DATA = await A().api('/esign'); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
   const waiting = DATA.docs.filter(isOpen).length;
@@ -77,7 +80,7 @@ function docsTab(box) {
     const w = FILTER.q.toLowerCase().split(/\s+/).filter(Boolean);
     const rows = DATA.docs.filter(d => (!FILTER.status || d.status === FILTER.status || FILTER.status === 'sent' && isOpen(d) || FILTER.status === 'signed30' && d.status === 'signed' && Date.now() - new Date(d.signedAt) < 30 * 864e5) && w.every(x => [d.title, d.number, ...(d.signers || []).flatMap(s => [s.name, s.email])].join(' ').toLowerCase().includes(x)));
     $('[data-list]', box).innerHTML = rows.length ? `<table class="table has-acts"><thead><tr><th>Document</th><th>Signer</th><th>Sent</th><th>Status</th><th class="act"><span class="sr">Actions</span></th></tr></thead><tbody>${rows.map(d => `
-      <tr class="click" data-doc="${esc(d.id)}"><td><b>${esc(d.title)}</b><small>#${d.number}${d.version > 1 ? ' · version ' + d.version : ''}${d.via === 'public' ? ' · via public link' : ''}</small></td><td>${d.signers.length > 1 ? `${d.signers.map(s => `<span class="es-who"><i style="--c:${scol(s.sid)}"></i>${esc(s.name)}${s.status === 'signed' ? ' ✓' : ''}</span>`).join('')}` : `${esc(d.signerName)}<small>${esc(d.signerEmail)}</small>`}</td>
+      <tr class="click" data-doc="${esc(d.id)}"><td><b>${esc(d.title)}</b><small>#${d.number}${d.version > 1 ? ' · version ' + d.version : ''}${d.via === 'public' ? ' · via public link' : ''}${d.auto ? ' · automated' : ''}</small>${d.auto && d.auto.intake === 'pending' && isOpen(d) ? '<small class="es-warn">Waiting for the customer’s details</small>' : ''}</td><td>${d.signers.length > 1 ? `${d.signers.map(s => `<span class="es-who"><i style="--c:${scol(s.sid)}"></i>${esc(s.name)}${s.status === 'signed' ? ' ✓' : ''}</span>`).join('')}` : `${esc(d.signerName)}<small>${esc(d.signerEmail)}</small>`}</td>
       <td>${esc(d.sentAt ? fmt(d.sentAt) : 'Not sent')}</td><td>${pill(d.status)}${d.status === 'signed' ? `<small>${esc(fmt(d.signedAt))}</small>` : d.signers.length > 1 && isOpen(d) ? `<small>${signedCount(d)} of ${d.signers.length} signed</small>` : d.viewedAt && d.status === 'viewed' ? `<small>Opened ${esc(fmt(d.viewedAt))}</small>` : ''}</td>
       <td class="act"><button type="button" class="rowmenu" data-dmenu="${esc(d.id)}" aria-label="Actions">⋯</button></td></tr>`).join('')}</tbody></table>`
       : `<div class="card empty">${DATA.docs.length ? 'No documents match.' : 'No documents yet. Create a template from your agreement PDF, then press <b>Create agreement</b>.'}</div>`;
@@ -157,11 +160,11 @@ function templatesTab(box) {
   }));
 }
 async function getTpl(id) { return (await A().api('/esign/template?id=' + encodeURIComponent(id))).template; }
-function pickTemplate() {
+function pickTemplate(auto) {
   if (!DATA.templates.length) { A().toast('Create a template first (or use “Sign a one-off PDF”).'); return; }
-  const o = A().modal(`<header><h2>Create agreement</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">Choose the agreement template</p>
+  const o = A().modal(`<header><h2>${auto ? 'Automated agreement' : 'Create agreement'}</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">${auto ? 'You enter the price, materials and dates. The customer gets a link, fills in their own details and vehicles on a form, then signs once at the end.' : 'Choose the agreement template'}</p>
     <div class="es-pick">${DATA.templates.map(t => `<button type="button" data-p="${t.id}">${t.thumb ? `<img src="${esc(t.thumb)}" alt="">` : ''}<span><b>${esc(t.name)}</b><small>${t.pageCount} page${t.pageCount === 1 ? '' : 's'} · ${t.fieldCount} fields</small></span></button>`).join('')}</div>`);
-  $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); A().go('/agreements/fill?id=' + b.dataset.p); });
+  $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); A().go('/agreements/fill?id=' + b.dataset.p + (auto ? '&auto=1' : '')); });
 }
 
 /* ---------------- send ---------------- */
@@ -218,16 +221,18 @@ function linkModal(t) {
 }
 
 /* ---------------- Agreement information form: staff fill everything (all optional), the customer only signs ---------------- */
-async function fillPage(id, docId) { toTop();
-  const c = A().shell(docId ? 'Edit agreement' : 'Create agreement', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
+async function fillPage(id, docId, auto) { toTop();
+  const c = A().shell(docId ? 'Edit agreement' : auto ? 'Automated agreement' : 'Create agreement', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
   let t, doc = null;
   try { if (docId) { doc = (await A().api('/esign/doc?id=' + encodeURIComponent(docId))).doc; id = doc.templateId; } t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  auto = !!(auto || doc && doc.auto);
   if (doc && (doc.superseded || doc.status === 'cancelled')) { c.innerHTML = `<div class="card">This is ${doc.superseded ? 'an older version' : 'a cancelled document'} and can't be edited. <a href="#/agreements">Back to agreements</a></div>`; return; }
   $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="${doc ? '#/agreements/ready?doc=' + doc.id : '#/agreements'}">← Back</a> <a class="btn ghost sm es-hide-m" href="#/agreements/template?id=${t.id}">Edit template fields</a>`;
   const revising = doc && doc.status !== 'draft';
   const extra = doc ? doc.signers.slice(1).map(s => ({ name: s.name, email: s.email })) : [];
   const pre = doc ? doc.prefill || {} : null;
-  const ours = t.fields.filter(f => f.role === 'sender'), theirsText = t.fields.filter(f => f.role === 'signer' && f.type === 'text');
+  const INTAKE = auto ? intakeIds(t.fields) : new Set(); // automated: the customer fills these in on their details form
+  const ours = t.fields.filter(f => f.role === 'sender' && !INTAKE.has(f.id)), theirsText = t.fields.filter(f => f.role === 'signer' && f.type === 'text' && !INTAKE.has(f.id)), custF = t.fields.filter(f => INTAKE.has(f.id));
   const groups = []; const gi = {};
   for (const f of ours) { const g = f.group || (f.type === 'checkbox' ? 'Options' : 'Details'); if (!(g in gi)) { gi[g] = groups.length; groups.push([g, []]); } groups[gi[g]][1].push(f); }
   const PR = priceFields(t.fields), hasPR = !!PR.price, PRIDS = new Set(Object.values(PR).map(x => x.id));
@@ -247,16 +252,17 @@ async function fillPage(id, docId) { toTop();
     : `<label class="field"><span>${esc(f.label || TYPES[f.type].label)}</span><input data-v="${f.id}" value="${esc(val(f))}" ${f.type === 'email' ? 'type="email" inputmode="email"' : /phone/i.test(f.label) ? 'type="tel" inputmode="tel"' : ''}></label>`;
   const signs = t.fields.filter(f => f.role === 'signer').reduce((a, f) => (a[f.type] = (a[f.type] || 0) + 1, a), {});
   const pickTpl = !docId && DATA && DATA.templates.length > 1 ? `<label class="field" style="margin-bottom:14px"><span>Agreement template</span><select class="input" data-tpl>${DATA.templates.map(x => `<option value="${x.id}" ${x.id === t.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label>` : '';
-  c.innerHTML = `${steps(1, doc)}<form class="es-fill" data-f novalidate>
+  c.innerHTML = `${steps(1, doc, auto)}<form class="es-fill" data-f novalidate>
     ${revising ? `<div class="card es-note"><b>Edit & resend — version ${doc.version + 1}</b><p>Version ${doc.version} was sent${doc.sentAt ? ' ' + esc(fmt(doc.sentAt)) : ''}${doc.status === 'signed' ? ' and is signed' : doc.status === 'partial' ? ' and is partly signed' : ''}. Your changes make a new version: every signer signs it again, and when you send it the links to version ${doc.version} stop working. Version ${doc.version} stays in the history unchanged.</p></div>` : ''}
-    <div class="card">${pickTpl}<h2 style="margin-top:0">${esc(t.name)}</h2><p class="hint" style="margin-top:-4px">Fill in what you know — every field is optional. Next you'll see the finished PDF and can email it or copy the link. The customer only ${[signs.signature ? 'signs' : '', signs.initials ? 'initials each page' : ''].filter(Boolean).join(' and ') || 'reviews'}${theirsText.length ? ' and completes ' + theirsText.length + ' field' + (theirsText.length === 1 ? '' : 's') : ''}.</p>
+    <div class="card">${pickTpl}<h2 style="margin-top:0">${esc(t.name)}</h2>${auto ? `<p class="hint" style="margin-top:-4px"><b>Automated agreement.</b> Enter the job details (price, materials, dates…). Next you add the Approval Form and any other PDF and choose their order. The customer then gets a link: they fill in their own details and vehicles (they can add more than one vehicle), review the agreement and sign once at the end — no initials on each page.</p>` : `<p class="hint" style="margin-top:-4px">Fill in what you know — every field is optional. Next you'll see the finished PDF and can email it or copy the link. The customer only ${[signs.signature ? 'signs' : '', signs.initials ? 'initials each page' : ''].filter(Boolean).join(' and ') || 'reviews'}${theirsText.length ? ' and completes ' + theirsText.length + ' field' + (theirsText.length === 1 ? '' : 's') : ''}.</p>`}
       <div class="es-fgrid"><div class="field es-cust"><span>Customer name</span><div class="es-cust-row"><input name="custname" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Type to search your customers" value="${esc(doc && doc.signerName !== 'Customer' ? doc.signerName : '')}" role="combobox" aria-expanded="false" aria-autocomplete="list"><button type="button" class="btn ghost sm" data-addcust>+ Add customer</button></div><div class="es-sug" data-sug hidden role="listbox"></div></div><label class="field"><span>Customer email</span><input name="email" type="email" inputmode="email" value="${esc(doc ? doc.signerEmail : '')}"></label></div>
       <div class="es-who-sign"><div class="es-count"><span>How many people need to sign this document?</span><div class="es-stepper"><button type="button" data-dec aria-label="One signer fewer">−</button><input data-count type="number" min="1" max="10" inputmode="numeric" aria-label="Number of signers"><button type="button" data-inc aria-label="One more signer">+</button></div></div>
         <p class="hint" style="margin:6px 0 0">The customer above is signer 1. Each signer gets their own email link and signs once, only in their own fields.</p><div data-extra></div></div></div>
     ${groups.map(([g, all]) => { const fs = all.filter(plain); const pr = hasPR && all.includes(PR.price); return `<div class="card"${pr ? ' data-pricing' : ''}><h3 class="es-h3" style="margin-top:0">${esc(g)}</h3>${pr ? pricingHTML() : ''}${fs.some(f => f.type !== 'checkbox') ? `<div class="es-fgrid">${fs.filter(f => f.type !== 'checkbox').map(input).join('')}</div>` : ''}${fs.some(f => f.type === 'checkbox') ? `<div class="es-cbs">${fs.filter(f => f.type === 'checkbox').map(input).join('')}</div>` : ''}</div>`; }).join('')}
+    ${custF.length ? `<details class="card es-custf"${doc && doc.auto && doc.auto.intake === 'done' ? ' open' : ''}><summary><b>Customer details & vehicle</b> <small class="hint">${doc && doc.auto && doc.auto.intake === 'done' ? '— entered by the customer; you can correct them' : '— the customer fills these in on their form (optional: pre-fill what you know)'}</small></summary><div class="es-fgrid" style="margin-top:12px">${custF.map(f => `<label class="field"><span>${esc(f.label || TYPES[f.type].label)}</span><input data-v="${f.id}" value="${esc(pre ? pre[f.id] || '' : '')}" ${f.type === 'email' || /e-?mail/i.test(f.label) ? 'type="email" inputmode="email"' : /phone/i.test(f.label) ? 'type="tel" inputmode="tel"' : ''}></label>`).join('')}</div>${doc && doc.auto && doc.auto.vehicles > 1 ? `<p class="hint">${doc.auto.vehicles - 1} more vehicle${doc.auto.vehicles > 2 ? 's are' : ' is'} on Schedule A.</p>` : ''}</details>` : ''}
     ${theirsText.length ? `<div class="card"><h3 class="es-h3" style="margin-top:0">Customer fields <small class="hint">(optional — the customer can change them)</small></h3><div class="es-fgrid">${theirsText.map(f => `<label class="field"><span>${esc(f.label || 'Text')}</span><input data-v="${f.id}" value="${esc(pre ? pre[f.id] || '' : '')}"></label>`).join('')}</div></div>` : ''}
     <div class="card"><label class="field"><span>Message to the customer (optional)</span><textarea name="message" rows="3">${esc(doc ? doc.message : t.message || '')}</textarea></label>
-      <div class="err" data-err></div><div class="es-fill-go"><button class="btn" data-go>Next: signature positions →</button></div></div></form>`;
+      <div class="err" data-err></div><div class="es-fill-go"><button class="btn" data-go>${auto ? 'Next: documents & Approval Form →' : 'Next: signature positions →'}</button></div></div></form>`;
   const f = $('[data-f]', c);
   // Pricing & payment: suggested amounts fill in as you type; any amount can be typed over (kept until "Reset to auto"); staff confirm the shown amounts
   const PS = { manual: { ...((doc && doc.pricing && doc.pricing.manual) || {}) }, conf: null };
@@ -319,10 +325,10 @@ async function fillPage(id, docId) { toTop();
   $('[data-dec]', c).onclick = () => setCount(extra.length); $('[data-inc]', c).onclick = () => setCount(extra.length + 2);
   cnt.onchange = () => setCount(+cnt.value || 1);
   drawExtra();
-  const tp = $('[data-tpl]', c); if (tp) tp.onchange = () => A().go('/agreements/fill?id=' + tp.value);
+  const tp = $('[data-tpl]', c); if (tp) tp.onchange = () => A().go('/agreements/fill?id=' + tp.value + (auto ? '&auto=1' : ''));
   // customer: search your customer list (Invoices → Customers) or add a new one; picking one fills name, email, phone, company, address
   const useCustomer = x => { f.custname.value = x.name || ''; if (x.email) f.email.value = x.email; f.custname.dataset.cust = x.id || '';
-    for (const fl of [...ours, ...theirsText]) { const el = $(`[data-v="${fl.id}"]`, c); if (!el || el.type === 'checkbox') continue; const L = (fl.label || '').toLowerCase();
+    for (const fl of [...ours, ...theirsText, ...custF]) { const el = $(`[data-v="${fl.id}"]`, c); if (!el || el.type === 'checkbox') continue; const L = (fl.label || '').toLowerCase();
       const v = /company/.test(L) ? x.company : /phone/.test(L) ? x.phone : /e-?mail/.test(L) ? x.email : /first name/.test(L) ? (x.name || '').split(' ')[0] : /last name/.test(L) ? (x.name || '').split(' ').slice(1).join(' ') : /customer name|full name|^name/.test(L) ? x.name : /address/.test(L) ? x.address : '';
       if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } } };
   const sug = $('[data-sug]', c); let act = -1, shown = [];
@@ -338,7 +344,7 @@ async function fillPage(id, docId) { toTop();
   f.custname.addEventListener('input', drawSug); f.custname.addEventListener('blur', () => setTimeout(closeSug, 150));
   f.custname.addEventListener('keydown', e => { if (sug.hidden) return; if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); act = (act + (e.key === 'ArrowDown' ? 1 : -1) + shown.length) % Math.max(1, shown.length); drawSug(); } else if (e.key === 'Enter' && act >= 0) { e.preventDefault(); useCustomer(shown[act]); closeSug(); } else if (e.key === 'Escape') closeSug(); });
   if (A().can('invoices.view')) (async () => { try { CUSTOMERS = CUSTOMERS || (await A().api('/customers')).customers || []; } catch { CUSTOMERS = []; } })();
-  const mirror = (re, from) => { for (const fl of ours) if (re.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = from.value; el.dataset.auto = 1; } } };
+  const mirror = (re, from) => { for (const fl of [...ours, ...custF]) if (re.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = from.value; el.dataset.auto = 1; } } };
   f.custname.addEventListener('input', () => mirror(/customer name|full name/i, f.custname));
   f.email.addEventListener('input', () => mirror(/email/i, f.email));
   f.onsubmit = async e => {
@@ -357,38 +363,47 @@ async function fillPage(id, docId) { toTop();
     const prefill = {}; $$('[data-v]', c).forEach(i => { prefill[i.dataset.v] = i.type === 'checkbox' ? (i.checked ? '1' : '') : i.value.trim(); });
     try {
       const body = { signers, message: f.message.value, prefill, ...(hasPR ? { pricing: { hst: $('[data-hst]', c).checked, manual: PS.manual, confirmed: sameVals(PS.conf, prVals()), values: prVals() } } : {}) };
-      const r = docId ? await A().api('/esign/doc/update', { id: docId, ...body }) : await A().api('/esign/send', { templateId: t.id, ...body, email: false });
+      const r = docId ? await A().api('/esign/doc/update', { id: docId, ...body }) : await A().api('/esign/send', { templateId: t.id, ...body, email: false, auto });
       if (revising) A().toast('Version ' + r.doc.version + ' created');
       A().go('/agreements/place?doc=' + r.doc.id);
-    } catch (er) { err.textContent = er.message; go.disabled = false; go.textContent = 'Next: signature positions →'; }
+    } catch (er) { err.textContent = er.message; go.disabled = false; go.textContent = auto ? 'Next: documents & Approval Form →' : 'Next: signature positions →'; }
   };
 }
 // Step 2: signature positions — each signer's signature (and date) on the agreement and on the optional Approval Form PDF.
 async function placePage(docId) { toTop();
   const c = A().shell('Signature positions', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
   let d; try { d = (await A().api('/esign/doc?id=' + encodeURIComponent(docId))).doc; } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  if (d.auto) { const h = document.querySelector('.crumb + h1'); if (h && /Signature positions/.test(h.textContent)) h.textContent = 'Documents & signatures'; }
   if (d.status !== 'draft') { c.innerHTML = `${steps(2, d)}<div class="card">This version was already sent, so its signature positions can't change. Use <a href="#/agreements/fill?doc=${d.id}">Edit & resend</a> to make a new version.</div>`; return; }
   const S = { fields: d.fields.map(f => ({ ...f })), sel: null, cur: 's1', arm: null, dirty: false };
   const mov = f => f.role === 'signer' && (f.type === 'signature' || f.type === 'date');
   const nm = sid => (d.signers.find(s => s.sid === sid) || {}).name || sid;
-  let apStart = -1;
-  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements/fill?doc=${d.id}">← Information</a> <button class="btn sm" data-next>Save & review →</button>`;
+  const auto = !!d.auto;
+  const partIdx = id => d.pages.map((p, k) => p.part === id ? k : -1).filter(k => k >= 0);
+  const partName = id => (d.parts.find(x => x.id === id) || {}).name || 'Document';
+  const pageLabel = k => { const p = d.pages[k], ix = partIdx(p.part); return (d.parts.length > 1 ? partName(p.part) + ' · ' : '') + (p.kind === 'addendum' ? 'Schedule A' : 'page ' + (ix.indexOf(k) + 1) + ' / ' + ix.length); };
+  const sigOn = (sid, id) => S.fields.some(f => f.type === 'signature' && f.signer === sid && d.pages[f.page] && d.pages[f.page].part === id);
+  const pageHTML = (p, k) => p.kind === 'addendum'
+    ? `<div class="es-page es-addm" data-page="${k}" style="aspect-ratio:${p.w}/${p.h}"><div class="es-addin"><b>${esc(p.title)}</b>${(p.blocks || []).map(bk => `<h4>${esc(bk.title)}</h4><dl>${bk.items.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`).join('')}</div><span class="es-pn">${esc(pageLabel(k))}</span></div>`
+    : `<div class="es-page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h}"><img src="${esc(p.url)}" alt="Page ${k + 1}" draggable="false"><span class="es-pn">${esc(pageLabel(k))}</span></div>`;
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/agreements/fill?doc=${d.id}">← Information</a> <button class="btn sm" data-next>Save & ${auto ? 'continue' : 'review'} →</button>`;
   const draw = () => {
-    apStart = d.pages.findIndex(p => p.kind === 'approval');
+    const docsCard = `<div class="es-apcard"><div class="es-h" style="margin-top:6px">Documents in this agreement <small>The customer sees them in this order. Drag ⠿ or use ↑ ↓ to change it. ${auto ? 'Add the Approval Form here — a signature is placed at the bottom of it automatically (drag it if needed).' : 'Attach an Approval Form or any other PDF the signers also sign; a signature is placed at the bottom automatically.'}</small></div>
+      <ol class="es-docs" data-docs>${d.parts.map((p, i) => { const miss = p.id !== 'main' && d.signers.some(s => !sigOn(s.sid, p.id));
+        return `<li draggable="true" data-part="${esc(p.id)}"><span class="es-grip" aria-hidden="true">⠿</span><span class="es-dn"><b>${i + 1}. ${esc(p.name)}</b><small>${p.pages} page${p.pages === 1 ? '' : 's'}${p.id === 'main' ? ' · the agreement' : miss ? ' · <em class="es-warn">signature missing</em>' : ' · signature placed ✓'}</small></span><span class="es-dacts"><button type="button" class="btn ghost sm" data-mv="-1" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button><button type="button" class="btn ghost sm" data-mv="1" ${i === d.parts.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>${p.id !== 'main' ? '<button type="button" class="rowmenu" data-pm aria-label="More">⋯</button>' : ''}</span></li>`; }).join('')}</ol>
+      <button type="button" class="btn ${auto && d.parts.length < 2 ? '' : 'ghost '}sm" data-apup>+ Add ${auto && d.parts.length < 2 ? 'Approval Form' : 'document'} (PDF)</button></div>`;
     c.innerHTML = `${steps(2, d)}<div class="es-ed es-place">
     <aside class="es-side">
+      ${auto ? docsCard : ''}
       <div class="es-h">Signers<small>Pick a signer, then drag their signature to where it belongs. Each signer signs once — the same signature fills all of their positions.</small></div>
-      <div class="es-plist">${d.signers.map(s => { const n = S.fields.filter(f => f.type === 'signature' && f.signer === s.sid); const onAp = n.some(f => d.pages[f.page].kind === 'approval');
-        return `<button type="button" class="es-psig ${S.cur === s.sid ? 'on' : ''}" data-cur="${s.sid}" style="--c:${scol(s.sid)}"><i class="es-dot"></i><span><b>${esc(s.name)}</b><small>${esc(s.email || 'no email yet')}</small><small>${n.length} signature position${n.length === 1 ? '' : 's'}${apStart >= 0 ? (onAp ? ' · on Approval Form ✓' : ' · <em>not on Approval Form yet</em>') : ''}</small></span></button>`; }).join('')}</div>
+      <div class="es-plist">${d.signers.map(s => { const n = S.fields.filter(f => f.type === 'signature' && f.signer === s.sid);
+        return `<button type="button" class="es-psig ${S.cur === s.sid ? 'on' : ''}" data-cur="${s.sid}" style="--c:${scol(s.sid)}"><i class="es-dot"></i><span><b>${esc(s.name)}</b><small>${esc(s.email || (auto && s.sid === 's1' ? 'enters their details on the form' : 'no email yet'))}</small><small>${n.length} signature position${n.length === 1 ? '' : 's'}</small></span></button>`; }).join('')}</div>
       <div class="row-actions" style="margin:10px 0 4px"><button type="button" class="btn ghost sm" data-add="signature" style="--c:${scol(S.cur)}">+ Signature for ${esc(nm(S.cur).split(' ')[0])}</button><button type="button" class="btn ghost sm" data-add="date">+ Date</button></div>
       <div data-props class="es-props"></div>
-      <div class="es-apcard"><div class="es-h" style="margin-top:6px">Approval Form <small>Optional PDF the signers also sign (for example a design approval). Its pages are added after the agreement.</small></div>
-        ${d.approval ? `<p class="hint" style="margin:0 0 8px"><b>${esc(d.approval.name)}</b> · ${d.approval.pages} page${d.approval.pages === 1 ? '' : 's'}${d.approval.confirmed ? ' · positions confirmed' : ' · <span class="es-warn">place each signer’s signature on it</span>'}</p>
-          <div class="row-actions"><button type="button" class="btn ghost sm" data-apgo>Show pages</button><button type="button" class="btn ghost sm" data-apup>Replace PDF</button><button type="button" class="btn ghost sm danger" data-aprm>Remove</button></div>` : `<button type="button" class="btn ghost sm" data-apup>Upload Approval Form (PDF)</button>`}
-      </div>
+      ${auto ? '' : docsCard}
       <div class="err" data-err></div>
     </aside>
-    <div class="es-pages" data-pages>${d.pages.map((p, k) => `${k === apStart ? '<div class="es-apsep">Approval Form</div>' : ''}<div class="es-page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h}"><img src="${esc(p.url)}" alt="Page ${k + 1}" draggable="false"><span class="es-pn">${p.kind === 'approval' ? 'Approval Form · ' + (k - apStart + 1) + ' / ' + d.approval.pages : (k + 1) + ' / ' + (apStart >= 0 ? apStart : d.pages.length)}</span></div>`).join('')}</div></div>`;
+    <div class="es-pages" data-pages>${d.pages.map((p, k) => `${d.parts.length > 1 && (k === 0 || d.pages[k - 1].part !== p.part) ? `<div class="es-apsep">${esc(partName(p.part))}</div>` : ''}${pageHTML(p, k)}`).join('')}</div></div>`;
     bind(); drawFields(); drawProps();
   };
   const pageOf = k => $(`.es-page[data-page="${k}"]`, c);
@@ -407,7 +422,7 @@ async function placePage(docId) { toTop();
   const drawProps = () => {
     const box = $('[data-props]', c), f = S.fields.find(x => x.id === S.sel);
     if (!f) { box.innerHTML = '<p class="hint">Tip: tap a signature box to change whose it is or to remove it. Grey boxes are the other fields of the agreement.</p>'; return; }
-    box.innerHTML = `<div class="es-ph"><b style="color:${scol(f.signer)}">${f.type === 'date' ? 'Date signed' : 'Signature'}</b> <small>${d.pages[f.page].kind === 'approval' ? 'Approval Form p. ' + (f.page - apStart + 1) : 'page ' + (f.page + 1)}</small></div>
+    box.innerHTML = `<div class="es-ph"><b style="color:${scol(f.signer)}">${f.type === 'date' ? 'Date signed' : 'Signature'}</b> <small>${esc(pageLabel(f.page))}</small></div>
       <label class="field"><span>Signer</span><select data-who>${d.signers.map(s => `<option value="${s.sid}" ${s.sid === f.signer ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></label>
       <button type="button" class="btn ghost sm danger" data-del>Remove this ${f.type === 'date' ? 'date' : 'signature'}</button>`;
     $('[data-who]', box).onchange = e => { f.signer = e.target.value; S.dirty = true; drawFields(); drawProps(); side(); };
@@ -447,35 +462,53 @@ async function placePage(docId) { toTop();
         if (!resize && p && p.page !== f.page) { f.page = p.page; f.x = Math.max(0, Math.min(1 - f.w, p.fx - f.w / 2)); f.y = Math.max(0, Math.min(1 - f.h, p.fy - f.h / 2)); side(); } };
       addEventListener('pointermove', mv); addEventListener('pointerup', up);
     };
-    const go = $('[data-apgo]', c); if (go) go.onclick = () => pageOf(apStart).scrollIntoView({ behavior: 'smooth', block: 'start' });
     $('[data-apup]', c).onclick = () => approvalUpload();
-    const rm = $('[data-aprm]', c); if (rm) rm.onclick = () => A().confirmBox('Remove the Approval Form?', 'Its pages and the signature positions on them are removed from this document.', async () => {
-      try { if (S.dirty) await save(true); const fd = new FormData(); fd.append('id', d.id); fd.append('remove', '1'); d = (await A().apiForm('/esign/doc/approval', fd)).doc; S.fields = d.fields.map(f => ({ ...f })); S.dirty = false; side(); A().toast('Approval Form removed'); } catch (e) { A().toast(e.message); } }, { yesLabel: 'Remove', danger: true });
+    // documents: order (drag or ↑ ↓) and per-document menu
+    const order = d.parts.map(p => p.id);
+    const setOrder = async ids => { if (ids.join() === order.join()) return; try { if (S.dirty) await save(true); d = (await A().api('/esign/doc/order', { id: d.id, order: ids })).doc; S.fields = d.fields.map(f => ({ ...f })); S.dirty = false; side(); A().toast('Order saved'); } catch (e) { A().toast(e.message); } };
+    $$('[data-docs] li', c).forEach(li => {
+      const id = li.dataset.part, i = order.indexOf(id);
+      $$('[data-mv]', li).forEach(b => b.onclick = () => { const o = [...order], j = i + +b.dataset.mv; [o[i], o[j]] = [o[j], o[i]]; setOrder(o); });
+      li.ondragstart = e => { e.dataTransfer.setData('text/plain', id); li.classList.add('drag'); };
+      li.ondragend = () => li.classList.remove('drag');
+      li.ondragover = e => { e.preventDefault(); li.classList.add('over'); };
+      li.ondragleave = () => li.classList.remove('over');
+      li.ondrop = e => { e.preventDefault(); li.classList.remove('over'); const from = e.dataTransfer.getData('text/plain'); if (!from || from === id) return; const o = order.filter(x => x !== from); o.splice(o.indexOf(id) + (order.indexOf(from) < i ? 1 : 0), 0, from); setOrder(o); };
+      const pm = $('[data-pm]', li); if (pm) pm.onclick = () => A().popMenu(pm, [['show', 'Show pages'], ['replace', 'Replace PDF'], ['remove', 'Remove', 'danger']], async k => {
+        if (k === 'show') return pageOf(partIdx(id)[0]).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (k === 'replace') return approvalUpload(id);
+        A().confirmBox('Remove “' + partName(id) + '”?', 'Its pages and the signature positions on them are removed from this agreement.', async () => {
+          try { if (S.dirty) await save(true); const fd = new FormData(); fd.append('id', d.id); fd.append('remove', id); d = (await A().apiForm('/esign/doc/approval', fd)).doc; S.fields = d.fields.map(f => ({ ...f })); S.dirty = false; side(); A().toast('Document removed'); } catch (e) { A().toast(e.message); } }, { yesLabel: 'Remove', danger: true });
+      });
+    });
   };
-  const approvalUpload = async () => {
+  const approvalUpload = async replace => {
     const file = await pickFile('application/pdf,.pdf,image/jpeg,image/png'); if (!file) return;
     if (file.size > 30e6) { A().toast('The file is larger than 30 MB.'); return; }
-    const o = A().modal(`<header><h2>${d.approval ? 'Replacing the Approval Form…' : 'Adding the Approval Form…'}</h2></header><p data-p style="color:var(--mut)">Reading ${esc(file.name)}…</p><div class="es-bar"><i data-b></i></div>`); o.onclick = null;
+    const o = A().modal(`<header><h2>${replace ? 'Replacing ' + esc(partName(replace)) + '…' : 'Adding the document…'}</h2></header><p data-p style="color:var(--mut)">Reading ${esc(file.name)}…</p><div class="es-bar"><i data-b></i></div>`); o.onclick = null;
     try {
       if (S.dirty) await save(true);
       const pages = await renderPages(file, (n, t) => { $('[data-p]', o).textContent = `Page ${n} of ${t}…`; $('[data-b]', o).style.width = n / t * 80 + '%'; }, 2200);
       $('[data-p]', o).textContent = 'Uploading…'; $('[data-b]', o).style.width = '90%';
       const fd = new FormData(); fd.append('id', d.id); fd.append('name', file.name.replace(/\.[a-z0-9]+$/i, '').replace(/[_-]+/g, ' ').trim() || 'Approval Form');
+      if (replace) fd.append('replace', replace);
       fd.append('meta', JSON.stringify(pages.map(p => ({ w: p.w, h: p.h })))); pages.forEach((p, k) => fd.append('page' + k, p.blob, 'a' + k + '.jpg'));
       d = (await A().apiForm('/esign/doc/approval', fd)).doc; o.remove();
       S.fields = d.fields.map(f => ({ ...f })); S.dirty = false; draw();
-      A().toast('Approval Form added — place each signer’s signature on it');
-      requestAnimationFrame(() => pageOf(d.pages.findIndex(p => p.kind === 'approval')).scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      const added = replace || d.parts.filter(p => p.id !== 'main').map(p => p.id).find(id => !order0.includes(id)); order0 = d.parts.map(p => p.id);
+      A().toast('Document added — the signature is placed at the bottom of its last page');
+      const ix = added ? partIdx(added) : []; if (ix.length) requestAnimationFrame(() => pageOf(ix[ix.length - 1]).scrollIntoView({ behavior: 'smooth', block: 'end' }));
     } catch (e) { o.querySelector('.modal').innerHTML = `<header><h2>Could not add the file</h2><button class="x" data-close>×</button></header><div class="err">${esc(e.message)}</div><div class="confirm-acts"><button class="btn" data-close>OK</button></div>`; o.onclick = ev => { if (ev.target === o || ev.target.closest('[data-close]')) o.remove(); }; }
   };
+  let order0 = d.parts.map(p => p.id);
   const save = async quiet => { d = (await A().api('/esign/doc/layout', { id: d.id, fields: S.fields })).doc; if (!quiet) { S.fields = d.fields.map(f => ({ ...f })); } S.dirty = false; };
   $('[data-next]').onclick = async () => {
     const miss = d.signers.filter(s => !S.fields.some(f => f.type === 'signature' && f.signer === s.sid));
-    const ap = d.pages.findIndex(p => p.kind === 'approval');
-    const missAp = ap >= 0 ? d.signers.filter(s => !S.fields.some(f => f.type === 'signature' && f.signer === s.sid && d.pages[f.page].kind === 'approval')) : [];
+    const gap = d.parts.filter(p => p.id !== 'main').map(p => [p, d.signers.filter(s => !sigOn(s.sid, p.id))]).find(([, m]) => m.length);
+    const ap = gap ? partIdx(gap[0].id)[0] : -1, missAp = gap ? gap[1] : [];
     const err = $('[data-err]', c);
     if (miss.length) { err.textContent = 'Add a signature position for ' + miss.map(s => s.name).join(', ') + '.'; return; }
-    if (missAp.length) { err.textContent = 'Place the signature of ' + missAp.map(s => s.name).join(', ') + ' on the Approval Form.'; pageOf(ap).scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (missAp.length) { err.textContent = 'Place the signature of ' + missAp.map(s => s.name).join(', ') + ' on “' + gap[0].name + '”.'; pageOf(ap).scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     try { await save(); A().go('/agreements/ready?doc=' + d.id); } catch (e) { err.textContent = e.message; }
   };
   const guard = e => { if (!document.body.contains(c) || !$('[data-pages]', c)) { removeEventListener('beforeunload', guard); return; } if (S.dirty) { e.preventDefault(); e.returnValue = ''; } };
@@ -494,12 +527,12 @@ async function readyPage(docId) { toTop();
     <div class="card es-prev"><div class="es-prev-h"><b>${esc(d.title)}${d.version > 1 ? ' · v' + d.version : ''}</b> ${pill(d.status)}</div><div class="es-pdfpages" data-pdfpages><div class="empty">Loading the PDF…</div></div><p class="hint es-prev-m"><a href="${pdf}" target="_blank" rel="noopener">Open the PDF in a new tab</a></p></div>
     <div class="es-side2">
       ${draft && send ? `<div class="card"><h3 class="es-h3" style="margin-top:0">Send for signatures</h3>
-        <p class="hint" style="margin-top:-4px">${d.signers.length > 1 ? `Each of the ${d.signers.length} signers gets their own link and signs only their own fields.` : 'The signer gets a link to review and sign.'}${d.version > 1 ? ` Sending replaces version ${d.version - 1}: its links stop working.` : ''}</p>
+        <p class="hint" style="margin-top:-4px">${d.auto ? 'The customer opens the link, fills in their details and vehicles (they can add more vehicles), then sees the agreement — documents in your order — and signs once at the end. The preview shows the customer fields empty until they fill them in.' : d.signers.length > 1 ? `Each of the ${d.signers.length} signers gets their own link and signs only their own fields.` : 'The signer gets a link to review and sign.'}${d.version > 1 ? ` Sending replaces version ${d.version - 1}: its links stop working.` : ''}</p>
         ${signerRows(d, false)}
-        <button class="btn block" data-send>Send for signatures</button>
-        <button class="btn ghost block" data-links style="margin-top:8px">Create links — I’ll share them myself</button>
+        <button class="btn block" data-send>${d.auto ? 'Email the link to the customer' : 'Send for signatures'}</button>
+        <button class="btn ghost block" data-links style="margin-top:8px">${d.auto ? 'Create the link — I’ll send it myself' : 'Create links — I’ll share them myself'}</button>
         <div class="err" data-err></div>
-        <p class="hint"><a href="#/agreements/fill?doc=${d.id}">Change signers or information</a> · <a href="#/agreements/place?doc=${d.id}">Signature positions</a></p></div>`
+        <p class="hint"><a href="#/agreements/fill?doc=${d.id}">Change signers or information</a> · <a href="#/agreements/place?doc=${d.id}">${d.auto ? 'Documents & signatures' : 'Signature positions'}</a></p></div>`
       : `<div class="card"><h3 class="es-h3" style="margin-top:0">Signers ${d.signers.length > 1 ? `<small class="hint">${signedCount(d)} of ${d.signers.length} signed</small>` : ''}</h3>${signerRows(d, send && !d.superseded)}
         ${open ? `<p class="hint">Waiting for: ${esc(d.signers.filter(s => s.status !== 'signed').map(s => s.name).join(', '))}</p>${send ? '<button class="btn ghost sm" data-remind>Remind everyone who hasn’t signed</button>' : ''}` : d.status === 'signed' ? `<p>Fully signed ${esc(fmt(d.signedAt))}.</p>` : `<p>This agreement is ${esc((STATUS[d.status] || [d.status])[0]).toLowerCase()}.</p>`}</div>`}
       ${(() => { const pr = priceFields(d.fields); if (!pr.price) return ''; const pv = r => (d.prefill || {})[pr[r] && pr[r].id] || '';

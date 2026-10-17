@@ -20,6 +20,7 @@ const pathNow = () => (location.hash.slice(1) || '/').split('?')[0];
 const qsNow = () => new URLSearchParams((location.hash.split('?')[1]) || '');
 
 const I = {
+  doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 12h6M10 16h6"/>',
   home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
   chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.8A8 8 0 1 1 21 12z"/>',
   sales: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5M9.5 16h2.5"/>',
@@ -157,6 +158,7 @@ function hub(path) {
   if (path === '/sales') {
     html += section('', [
       can('invoices.edit') && { href: '#/invoices/edit', label: 'New invoice', sub: 'Line items, taxes, deposit, send by email or link', icon: svg('plus'), primary: true },
+      (can('invoices.view') || can('invoices.edit')) && { href: '#/invoices', label: 'Invoices', sub: 'See all invoices, open one to edit, resend or print', icon: svg('doc') },
       can('invoices.edit') && { href: '#/invoices?status=open', label: 'Record a payment', sub: 'Pick an unpaid invoice, then “Record payment”', icon: svg('cash') }
     ].filter(Boolean));
     html += section('Sales', SALES.map(p => items.find(n => n.path === p)).filter(Boolean).map(fromNav));
@@ -204,6 +206,7 @@ async function home(el, { overview, analytics } = {}) {
   const can = a.can;
   const qa = [
     can('invoices.edit') && ['#/invoices/edit', 'New invoice', 'plus', 'primary'],
+    (can('invoices.view') || can('invoices.edit')) && ['#/invoices', 'Invoices', 'doc'],
     can('chat.view') && ['#/chat', 'Open chat', 'chat', '', 'chat'],
     can('invoices.edit') && ['#/invoices?status=open', 'Record payment', 'cash'],
     can('pricing.edit') && ['#/catalog', 'Change prices', 'tag'],

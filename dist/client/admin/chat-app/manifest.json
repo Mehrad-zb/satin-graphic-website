@@ -1,0 +1,18 @@
+{
+  "id": "/admin/chat-app/",
+  "name": "Satin Chat",
+  "short_name": "Satin Chat",
+  "description": "Reply to Satin Graphic website chats from your phone.",
+  "start_url": "/admin/chat-app/",
+  "scope": "/admin/chat-app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f2f5",
+  "theme_color": "#c91c50",
+  "lang": "en",
+  "icons": [
+    { "src": "/admin/icons/chat-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/icons/chat-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/icons/chat-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

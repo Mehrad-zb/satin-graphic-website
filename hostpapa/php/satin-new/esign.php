@@ -26,7 +26,7 @@ function es_db(): PDO {
     $pdo->exec("CREATE TABLE IF NOT EXISTS esign_signers (doc_id TEXT NOT NULL, sid TEXT NOT NULL, ord INTEGER NOT NULL DEFAULT 1, name TEXT NOT NULL DEFAULT '', email TEXT NOT NULL DEFAULT '', token TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', sent_at TEXT, viewed_at TEXT, signed_at TEXT, ip TEXT NOT NULL DEFAULT '', ua TEXT NOT NULL DEFAULT '', decline_reason TEXT NOT NULL DEFAULT '', PRIMARY KEY (doc_id, sid))");
     $pdo->exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_esign_signer_token ON esign_signers (token)');
     $cols = array_column($pdo->query('PRAGMA table_info(esign_docs)')->fetchAll(), 'name');
-    foreach (['record_id' => "TEXT NOT NULL DEFAULT ''", 'version' => 'INTEGER NOT NULL DEFAULT 1', 'superseded' => 'INTEGER NOT NULL DEFAULT 0', 'approval' => "TEXT NOT NULL DEFAULT ''", 'changes' => "TEXT NOT NULL DEFAULT ''", 'pricing' => "TEXT NOT NULL DEFAULT ''"] as $c => $def)
+    foreach (['record_id' => "TEXT NOT NULL DEFAULT ''", 'version' => 'INTEGER NOT NULL DEFAULT 1', 'superseded' => 'INTEGER NOT NULL DEFAULT 0', 'approval' => "TEXT NOT NULL DEFAULT ''", 'changes' => "TEXT NOT NULL DEFAULT ''", 'pricing' => "TEXT NOT NULL DEFAULT ''", 'auto' => "TEXT NOT NULL DEFAULT ''"] as $c => $def)
         if (!in_array($c, $cols, true)) $pdo->exec("ALTER TABLE esign_docs ADD COLUMN $c $def");
     if (!in_array('record_id', $cols, true)) $pdo->exec("UPDATE esign_docs SET record_id = id WHERE record_id = ''");
     $pdo->exec('CREATE INDEX IF NOT EXISTS idx_esign_record ON esign_docs (record_id)');
@@ -75,6 +75,135 @@ function es_clean_fields($fields, int $pages): array {
     return $out;
 }
 function es_main_pages(array $pages): array { return array_keys(array_filter($pages, fn($p) => ($p['kind'] ?? '') !== 'approval')); }
+
+/* ---------- documents in an agreement: the agreement itself ("main") + attached PDFs (Approval Form …), in the order staff choose ---------- */
+function es_part_of(array $p): string { return ($p['kind'] ?? '') === 'approval' ? (string)($p['part'] ?? 'a') : 'main'; }
+function es_part_list(array $ap): array { $l = $ap['parts'] ?? []; if (!$l && $ap) $l = [['id' => 'a', 'name' => $ap['name'] ?? 'Approval Form']]; return $l; }
+/** Ordered [{id, name, pages}] of a document. */
+function es_parts(array $d): array {
+    $pages = json_decode($d['pages'], true) ?: []; $names = array_column(es_part_list(json_decode($d['approval'] ?: '{}', true) ?: []), 'name', 'id');
+    $out = []; $ix = [];
+    foreach ($pages as $p) { $id = es_part_of($p); if (!isset($ix[$id])) { $ix[$id] = count($out); $out[] = ['id' => $id, 'name' => $id === 'main' ? $d['title'] : ($names[$id] ?? 'Approval Form'), 'pages' => 0]; } $out[$ix[$id]]['pages']++; }
+    return $out;
+}
+/** Pages rearranged by part order (each part keeps its own page order); field pages follow. */
+function es_reorder(array $pages, array $fields, array $order): array {
+    $g = []; foreach ($pages as $k => $p) $g[es_part_of($p)][] = $k;
+    $seq = []; foreach ($order as $id) if (is_string($id) && isset($g[$id])) { array_push($seq, ...$g[$id]); unset($g[$id]); }
+    foreach ($g as $rest) array_push($seq, ...$rest);
+    $map = array_flip($seq);
+    foreach ($fields as &$f) $f['page'] = $map[(int)$f['page']] ?? (int)$f['page']; unset($f);
+    return [array_map(fn($k) => $pages[$k], $seq), $fields];
+}
+function es_insert_pages(array $pages, array $fields, int $at, array $new): array {
+    $n = count($new); foreach ($fields as &$f) if ((int)$f['page'] >= $at) $f['page'] = (int)$f['page'] + $n; unset($f);
+    array_splice($pages, $at, 0, $new); return [$pages, $fields];
+}
+/** Removes the pages of one part (and their fields). Returns [pages, fields, index where the part started]. */
+function es_remove_part(array $pages, array $fields, string $pid, string $dir): array {
+    $keep = []; $map = []; $at = -1;
+    foreach ($pages as $k => $p) { if (es_part_of($p) === $pid) { if ($at < 0) $at = count($keep); if (!empty($p['img'])) @unlink("$dir/" . $p['img']); continue; } $map[$k] = count($keep); $keep[] = $p; }
+    $fields = array_values(array_map(function ($f) use ($map) { $f['page'] = $map[(int)$f['page']]; return $f; }, array_filter($fields, fn($f) => isset($map[(int)$f['page']]))));
+    return [$keep, $fields, $at < 0 ? count($keep) : $at];
+}
+/** Each signer gets a signature (+ date) at the bottom of the last page of an attached document, if they have none on it. */
+function es_autoplace(array $pages, array $fields, array $sids, string $pid, string $dir): array {
+    $idx = array_keys(array_filter($pages, fn($p) => es_part_of($p) === $pid)); if (!$idx) return $fields;
+    $last = max($idx); $pg = $pages[$last];
+    $sh = 42 / $pg['h']; $sw = min(.4, 190 / $pg['w']); $dh = 18 / $pg['h']; $dw = min(.3, 110 / $pg['w']); $step = $sh + $dh + .02;
+    $todo = array_values(array_filter($sids, function ($sid) use ($fields, $idx) { foreach ($fields as $f) if ($f['type'] === 'signature' && ($f['signer'] ?? '') === $sid && in_array((int)$f['page'], $idx, true)) return false; return true; }));
+    if (!$todo) return $fields;
+    $top = !empty($pg['img']) ? (es_free_y("$dir/" . $pg['img'], .5, .95, .72, $step * count($todo)) ?? es_free_y("$dir/" . $pg['img'], .5, .95, .5, $step * count($todo))) : null;
+    $y0 = $top !== null ? $top + .004 : max(.05, .93 - $step * count($todo));
+    $id = fn() => substr(bin2hex(random_bytes(6)), 0, 10);
+    foreach ($todo as $k => $sid) {
+        $y = min(1 - $sh - $dh - .01, $y0 + $k * $step);
+        $fields[] = ['id' => $id(), 'type' => 'signature', 'page' => $last, 'x' => .52, 'y' => round($y, 5), 'w' => round($sw, 5), 'h' => round($sh, 5), 'label' => 'Signature', 'required' => true, 'role' => 'signer', 'signer' => $sid, 'value' => '', 'group' => ''];
+        $fields[] = ['id' => $id(), 'type' => 'date', 'page' => $last, 'x' => .52, 'y' => round($y + $sh + .004, 5), 'w' => round($dw, 5), 'h' => round($dh, 5), 'label' => 'Date signed', 'required' => false, 'role' => 'signer', 'signer' => $sid, 'value' => '', 'group' => ''];
+    }
+    return $fields;
+}
+
+/* ---------- automated agreements: the customer enters their own details (and vehicles) on a form, then signs once ---------- */
+const ES_CUST_RE = '/customer name|full name|first name|last name|^name$|company|phone|mobile|e-?mail|address|vehicle|make|model|year|colou?r|licen[cs]e|plate|\bvin\b|pick-?up/i';
+const ES_VEH_RE = '/vehicle|make|model|year|colou?r|licen[cs]e|plate|\bvin\b/i';
+function es_auto(array $d): array { return json_decode((string)($d['auto'] ?? '') ?: '{}', true) ?: []; }
+function es_flabel(array $f): string { return $f['label'] !== '' ? $f['label'] : ($f['type'] === 'name' ? 'Full name' : ($f['type'] === 'email' ? 'Email' : 'Text')); }
+/** id => 'you' | 'vehicle' for the fields the customer fills in on the details form. */
+function es_intake_fields(array $fields): array {
+    $price = array_flip(es_price_fields($fields)); $o = [];
+    foreach ($fields as $f) {
+        if (!in_array($f['type'], ['text', 'name', 'email'], true) || isset($price[$f['id']])) continue;
+        if ($f['role'] === 'signer' && ($f['signer'] ?? 's1') !== 's1') continue;
+        $l = es_flabel($f); if (!preg_match(ES_CUST_RE, $l)) continue;
+        $o[$f['id']] = preg_match(ES_VEH_RE, $l) && !preg_match('/pick-?up|company|e-?mail|phone|address/i', $l) ? 'vehicle' : 'you';
+    }
+    return $o;
+}
+function es_intake_req(string $label, string $type): bool { return $type === 'email' || (bool)preg_match('/customer name|full name|first name|last name|^name$|e-?mail|phone|make|model/i', $label); }
+/** The details form for the customer: [{id, label, type, group, required, value}]. */
+function es_intake_spec(array $fields, array $map, array $prefill): array {
+    $o = []; foreach ($fields as $f) if (isset($map[$f['id']])) { $l = es_flabel($f);
+        $o[] = ['id' => $f['id'], 'label' => $l, 'type' => $f['type'] === 'email' || preg_match('/e-?mail/i', $l) ? 'email' : (preg_match('/phone|mobile/i', $l) ? 'tel' : 'text'), 'group' => $map[$f['id']], 'required' => es_intake_req($l, $f['type']), 'value' => (string)($prefill[$f['id']] ?? '')]; }
+    return $o;
+}
+/** Checks the customer's details form. Returns ['pf' => id => value, 'veh' => [[id => value]…], 'name', 'email']. */
+function es_intake_clean(array $fields, array $map, $vals, $vehicles): array {
+    $vals = is_array($vals) ? $vals : []; $byId = array_column($fields, null, 'id'); $pf = []; $email = ''; $name = ''; $first = ''; $last = '';
+    foreach ($map as $id => $grp) {
+        if (!isset($byId[$id])) continue; $f = $byId[$id]; $l = es_flabel($f); $v = text($vals[$id] ?? '', 200);
+        if ($v === '' && es_intake_req($l, $f['type'])) json_out(['error' => 'Please fill in: ' . $l, 'field' => $id], 400);
+        if (($f['type'] === 'email' || preg_match('/e-?mail/i', $l)) && $v !== '') { if (!filter_var($v, FILTER_VALIDATE_EMAIL)) json_out(['error' => 'Enter a valid email address.', 'field' => $id], 400); $v = strtolower($v); if ($email === '') $email = $v; }
+        if (preg_match('/customer name|full name|^name$/i', $l) && $name === '') $name = $v;
+        if (preg_match('/first name/i', $l)) $first = $v; if (preg_match('/last name/i', $l)) $last = $v;
+        $pf[$id] = $v;
+    }
+    if ($name === '') $name = trim("$first $last");
+    $vids = array_keys(array_filter($map, fn($g) => $g === 'vehicle')); $veh = [];
+    foreach (array_slice(is_array($vehicles) ? $vehicles : [], 0, 20) as $k => $row) {
+        if (!is_array($row)) continue; $r = [];
+        foreach ($vids as $id) if (isset($byId[$id])) $r[$id] = text($row[$id] ?? '', 200);
+        if (!array_filter($r, fn($x) => $x !== '')) continue;
+        foreach ($vids as $id) if (isset($byId[$id]) && $r[$id] === '' && preg_match('/make|model/i', es_flabel($byId[$id]))) json_out(['error' => 'Vehicle ' . (count($veh) + 2) . ': please fill in ' . es_flabel($byId[$id]) . '.', 'vehicle' => $k, 'field' => $id], 400);
+        $veh[] = $r;
+    }
+    return ['pf' => $pf, 'veh' => $veh, 'name' => $name, 'email' => $email];
+}
+/** Saves the customer's details on the document: values on the agreement, extra vehicles on a "Schedule A" page, signer name / email. */
+function es_intake_store(array $d, array $c, string $who): array {
+    $pdo = es_db(); $a = es_auto($d); $map = $a['fields'] ?? [];
+    $fields = json_decode($d['fields'], true); $pages = json_decode($d['pages'], true); $pf = json_decode($d['prefill'], true) ?: [];
+    foreach ($c['pf'] as $id => $v) $pf[$id] = $v;
+    foreach ($fields as &$f) if (isset($map[$f['id']])) { $f['role'] = 'sender'; $f['signer'] = ''; } unset($f); // shown filled in (read-only) on the agreement
+    foreach (array_keys($pages) as $k) if (($pages[$k]['kind'] ?? '') === 'addendum') { [$pages, $fields] = es_remove_part_page($pages, $fields, $k); break; }
+    if ($c['veh']) {
+        $byId = array_column($fields, null, 'id'); $at = 0; $vp = null;
+        foreach ($map as $id => $g) if ($g === 'vehicle' && isset($byId[$id])) $vp = max($vp ?? 0, (int)$byId[$id]['page']);
+        $at = $vp !== null ? $vp + 1 : count($pages);
+        $ref = $pages[max(0, $at - 1)] ?? ['w' => 612, 'h' => 792];
+        $blocks = [];
+        foreach ($c['veh'] as $k => $r) { $items = []; foreach ($r as $id => $v) if ($v !== '') $items[] = [es_flabel($byId[$id]), $v]; $blocks[] = ['title' => 'Vehicle ' . ($k + 2), 'items' => $items]; }
+        [$pages, $fields] = es_insert_pages($pages, $fields, $at, [['w' => $ref['w'], 'h' => $ref['h'], 'kind' => 'addendum', 'img' => '', 'title' => 'Schedule A — Additional vehicles', 'blocks' => $blocks]]);
+    }
+    $a['intake'] = 'done'; $a['at'] = now_iso(); $a['vehicles'] = $c['veh'];
+    $now = now_iso();
+    $pdo->prepare('UPDATE esign_docs SET fields = ?, pages = ?, prefill = ?, auto = ?, updated_at = ? WHERE id = ?')->execute([json_encode($fields), json_encode($pages), json_encode($pf, JSON_UNESCAPED_UNICODE), json_encode($a), $now, $d['id']]);
+    $s1 = es_signers($d)[0] ?? null;
+    if ($s1) {
+        $nm = in_array($s1['name'], ['', 'Customer'], true) && $c['name'] !== '' ? $c['name'] : $s1['name']; $em = $s1['email'] === '' ? $c['email'] : $s1['email'];
+        $pdo->prepare('UPDATE esign_signers SET name = ?, email = ? WHERE doc_id = ? AND sid = ?')->execute([$nm, $em, $d['id'], 's1']);
+        $pdo->prepare('UPDATE esign_docs SET signer_name = ?, signer_email = ? WHERE id = ?')->execute([$nm, $em, $d['id']]);
+    }
+    $d = es_doc_by_id($d['id']);
+    if ($d['status'] !== 'draft') $pdo->prepare('UPDATE esign_docs SET original_hash = ? WHERE id = ?')->execute([es_doc_hash($d), $d['id']]);
+    es_event($d['id'], 'customer details entered', $who, 'Details form completed' . ($c['veh'] ? ' · ' . (count($c['veh']) + 1) . ' vehicles (Schedule A added)' : ''));
+    return es_doc_by_id($d['id']);
+}
+function es_remove_part_page(array $pages, array $fields, int $k): array {
+    $fields = array_values(array_filter($fields, fn($f) => (int)$f['page'] !== $k));
+    foreach ($fields as &$f) if ((int)$f['page'] > $k) $f['page'] = (int)$f['page'] - 1; unset($f);
+    array_splice($pages, $k, 1); return [$pages, $fields];
+}
 /** Signer fields for the current signer list: fields of removed signers go; a new signer gets one signature + date on the
  *  main agreement, under the first signer's (staff can move them on the placement step). */
 /** Top (page fraction) of the first blank band at least $need tall, at or below $from, across [$x0, $x1] of a page image. */
@@ -198,12 +327,14 @@ function es_doc_row(array $d, bool $full = false): array {
     $pc = json_decode($d['pricing'] ?: '{}', true) ?: [];
     $o['pricing'] = ['hst' => $pc['hst'] ?? null, 'manual' => (object)($pc['manual'] ?? []), 'confirmed' => es_pricing_ok($d), 'confirmedAt' => $pc['confirmedAt'] ?? null, 'confirmedBy' => $pc['confirmedBy'] ?? null];
     $o['approval'] = $ap ? ['name' => $ap['name'] ?? '', 'pages' => (int)($ap['count'] ?? 0), 'confirmed' => !empty($ap['confirmed'])] : null;
+    $au = es_auto($d); $o['auto'] = $au ? ['intake' => $au['intake'] ?? 'pending', 'vehicles' => count($au['vehicles'] ?? []) + 1] : null;
+    $o['parts'] = es_parts($d);
     if ($full) {
         $pdo = es_db();
         $q = $pdo->prepare('SELECT at, event, actor, ip, ua, detail FROM esign_events WHERE doc_id = ? ORDER BY id'); $q->execute([$d['id']]);
         $o['events'] = $q->fetchAll(); $o['message'] = $d['message']; $o['prefill'] = json_decode($d['prefill'], true) ?: (object)[];
         $pages = json_decode($d['pages'], true) ?: [];
-        $o['pages'] = array_map(fn($p, $k) => ['w' => $p['w'], 'h' => $p['h'], 'kind' => $p['kind'] ?? 'main', 'url' => '/api/admin/esign/page?doc=' . $d['id'] . '&n=' . $k . '&v=' . substr(md5($p['img']), 0, 8)], $pages, array_keys($pages));
+        $o['pages'] = array_map(fn($p, $k) => ['w' => $p['w'], 'h' => $p['h'], 'kind' => $p['kind'] ?? 'main', 'part' => es_part_of($p)] + (empty($p['img']) ? ['url' => '', 'title' => $p['title'] ?? '', 'blocks' => $p['blocks'] ?? []] : ['url' => '/api/admin/esign/page?doc=' . $d['id'] . '&n=' . $k . '&v=' . substr(md5($p['img']), 0, 8)]), $pages, array_keys($pages));
         $o['fields'] = json_decode($d['fields'], true) ?: [];
         $q = $pdo->prepare('SELECT id, version, status, superseded, created_at, sent_at, signed_at, changes FROM esign_docs WHERE record_id = ? ORDER BY version DESC'); $q->execute([$d['record_id'] ?: $d['id']]);
         $o['versions'] = array_map(fn($v) => ['id' => $v['id'], 'version' => (int)$v['version'], 'status' => $v['status'], 'superseded' => (bool)$v['superseded'], 'createdAt' => $v['created_at'], 'sentAt' => $v['sent_at'], 'signedAt' => $v['signed_at'], 'changes' => $v['changes']], $q->fetchAll());
@@ -265,11 +396,12 @@ function es_pricing_ok(array $d): bool { // nothing to confirm, or the confirmed
 }
 
 /** Copies the template's pages into a new draft document (so later template edits never change a sent document). */
-function es_create_doc(array $t, array $signers, string $message, array $prefill, string $via, ?array $u, $pricing = null): array {
+function es_create_doc(array $t, array $signers, string $message, array $prefill, string $via, ?array $u, $pricing = null, bool $auto = false): array {
     $pdo = es_db();
     $pages = json_decode($t['pages'], true) ?: []; $fields = json_decode($t['fields'], true) ?: [];
     if (!$pages) json_out(['error' => 'This template has no pages yet.'], 400);
     $fields = es_clean_fields($fields, count($pages));
+    if ($auto) $fields = array_values(array_filter($fields, fn($f) => $f['type'] !== 'initials')); // automated: one signature at the end, no initials on every page
     if (!array_filter($fields, fn($f) => $f['role'] === 'signer')) json_out(['error' => 'Add at least one field for the customer (for example a signature) first.'], 400);
     $id = uuid(); $dir = es_dir('doc/' . $id); $out = [];
     foreach ($pages as $k => $p) {
@@ -285,6 +417,7 @@ function es_create_doc(array $t, array $signers, string $message, array $prefill
     $pdo->prepare('INSERT INTO esign_docs (id, number, title, template_id, pages, fields, prefill, vals, signer_name, signer_email, message, token, via, status, created_by, created_at, updated_at, record_id, version, pricing) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         ->execute([$id, $num, $t['name'], $t['id'], json_encode($out), json_encode($fields), json_encode($pf, JSON_UNESCAPED_UNICODE), '{}', $signers[0]['name'], $signers[0]['email'], $message, $tok, $via, 'draft', $u['id'] ?? null, $now, $now, $id, 1, $prc]);
     es_put_signers($id, $signers);
+    if ($auto) $pdo->prepare('UPDATE esign_docs SET auto = ? WHERE id = ?')->execute([json_encode(['on' => true, 'intake' => es_intake_fields($fields) ? 'pending' : 'done', 'fields' => (object)es_intake_fields($fields)]), $id]);
     if ($via === 'public') $pdo->prepare('UPDATE esign_signers SET token = ? WHERE doc_id = ? AND sid = ?')->execute([$tok, $id, 's1']);
     es_event($id, 'created', $u ? $u['name'] . ' (' . $u['email'] . ')' : es_who($signers[0]), $via === 'public' ? 'Started from the public signing link of "' . $t['name'] . '"' : 'Document prepared for ' . implode(', ', array_map('es_who', $signers)));
     return es_doc_by_id($id);
@@ -300,6 +433,7 @@ function es_new_version(array $d, array $u): array {
     $prc = json_decode($d['pricing'] ?: '{}', true) ?: []; if ($prc) { $prc['confirmed'] = false; $prc['values'] = (object)[]; } // Edit & Resend: overrides are kept, the pricing is confirmed again
     $pdo->prepare('INSERT INTO esign_docs (id, number, title, template_id, pages, fields, prefill, vals, signer_name, signer_email, message, token, via, status, created_by, created_at, updated_at, record_id, version, approval, pricing) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         ->execute([$id, $d['number'], $d['title'], $d['template_id'], $d['pages'], $d['fields'], $d['prefill'], '{}', $d['signer_name'], $d['signer_email'], $d['message'], token(), $d['via'] === 'public' ? 'email' : $d['via'], 'draft', $u['id'], $now, $now, $rec, $ver, $ap ? json_encode($ap) : '', $prc ? json_encode($prc) : '']);
+    if (($d['auto'] ?? '') !== '') $pdo->prepare('UPDATE esign_docs SET auto = ? WHERE id = ?')->execute([$d['auto'], $id]);
     es_put_signers($id, array_map(fn($s) => ['sid' => $s['sid'], 'name' => $s['name'], 'email' => $s['email']], es_signers($d)));
     es_event($id, 'version created', $u['name'], "Version $ver made from version " . $d['version'] . ' (Edit & Resend)');
     es_event($d['id'], 'new version started', $u['name'], "Version $ver is being prepared");
@@ -327,7 +461,7 @@ function es_info_changes(array $d): void {
 }
 function es_doc_hash(array $d): string {
     $h = hash_init('sha256'); $dir = es_dir('doc/' . $d['id']);
-    foreach (json_decode($d['pages'], true) as $p) hash_update($h, (string)@file_get_contents("$dir/" . $p['img']));
+    foreach (json_decode($d['pages'], true) as $p) hash_update($h, !empty($p['img']) ? (string)@file_get_contents("$dir/" . $p['img']) : json_encode($p));
     hash_update($h, $d['fields'] . $d['prefill']);
     return hash_final($h);
 }
@@ -341,11 +475,12 @@ function es_send_mail(array $d, array $s, bool $reminder = false): bool {
     $others = array_values(array_filter(es_signers($d), fn($x) => $x['sid'] !== $s['sid']));
     $multi = $others ? ' Other signers: ' . implode(', ', array_column($others, 'name')) . '. Everyone signs with their own link; you only sign your own fields.' : '';
     $intro = ($ver ? 'an updated version of ' : '') . '"' . $d['title'] . '"';
-    $text = "Hi $first,\n\n" . $b['name'] . " has sent you $intro to review and sign online." . ($ver ? ' Please use this new link — earlier links no longer work.' : '') . "$multi\n\n" . ($msg !== '' ? "Message:\n$msg\n\n" : '') . "Review and sign: $url\n\nIt takes about a minute and works on your phone. When everyone has signed you will get the completed PDF by email.\n\nQuestions? Reply to this email or call " . $b['phone'] . ".\n\n" . $b['name'];
+    $fillin = (es_auto($d)['intake'] ?? '') === 'pending' && $s['sid'] === 's1';
+    $text = "Hi $first,\n\n" . $b['name'] . " has sent you $intro to " . ($fillin ? 'complete with your details and vehicle information, then review and sign online.' : 'review and sign online.') . ($ver ? ' Please use this new link — earlier links no longer work.' : '') . "$multi\n\n" . ($msg !== '' ? "Message:\n$msg\n\n" : '') . "Review and sign: $url\n\nIt takes about a minute and works on your phone. When everyone has signed you will get the completed PDF by email.\n\nQuestions? Reply to this email or call " . $b['phone'] . ".\n\n" . $b['name'];
     $e = fn($x) => htmlspecialchars($x, ENT_QUOTES, 'UTF-8');
     $html = '<div style="font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;padding:24px"><div style="max-width:520px;margin:0 auto;background:#fff;border-radius:12px;padding:28px;color:#1d2330">'
         . '<p style="margin:0 0 6px;color:#6b7280;font-size:13px">' . $e($b['name']) . '</p><h1 style="font-size:20px;margin:0 0 14px">' . $e($d['title']) . ($ver ? ' <span style="font-size:13px;color:#6b7280;font-weight:normal">(updated version)</span>' : '') . '</h1>'
-        . '<p style="font-size:15px;line-height:1.5">Hi ' . $e($first) . ',<br>' . $e($b['name']) . ' has sent you ' . ($ver ? 'an updated document' : 'a document') . ' to review and sign online.' . ($ver ? ' Please use the button below — earlier links no longer work.' : '') . '</p>'
+        . '<p style="font-size:15px;line-height:1.5">Hi ' . $e($first) . ',<br>' . $e($b['name']) . ' has sent you ' . ($ver ? 'an updated document' : 'a document') . ($fillin ? ' to complete with your details and vehicle information, then review and sign online.' : ' to review and sign online.') . ($ver ? ' Please use the button below — earlier links no longer work.' : '') . '</p>'
         . ($others ? '<p style="font-size:13px;color:#6b7280;line-height:1.5">Other signers: ' . $e(implode(', ', array_column($others, 'name'))) . '. Everyone signs with their own link; you only sign your own fields.</p>' : '')
         . ($msg !== '' ? '<div style="background:#f7f7fa;border-left:3px solid #e6007e;padding:10px 14px;margin:14px 0;font-size:14px;white-space:pre-line">' . $e($msg) . '</div>' : '')
         . '<p style="text-align:center;margin:26px 0"><a href="' . $e($url) . '" style="background:#e6007e;color:#fff;text-decoration:none;font-weight:bold;padding:13px 28px;border-radius:8px;display:inline-block">Review &amp; sign</a></p>'
@@ -445,6 +580,23 @@ function es_build_pdf(array $d, array $vals, array $events, bool $audit = true):
     $W = 612; $H = 792;
     foreach ($pages as $k => $p) {
         $W = (float)$p['w']; $H = (float)$p['h'];
+        if (($p['kind'] ?? '') === 'addendum') { // Schedule A (extra vehicles): drawn as text
+            $ops = ''; $y = $H - 64; $sx = $W / 612;
+            $tl = function (string $t, float $size, bool $bold, float $x, array $rgb) use (&$ops, &$y) { $ops .= 'BT /' . ($bold ? 'F2' : 'F1') . ' ' . es_n($size) . ' Tf ' . implode(' ', array_map('es_n', $rgb)) . ' rg ' . es_n($x) . ' ' . es_n($y) . ' Td ' . es_pdf_text($t) . " Tj ET\n"; };
+            $tl((string)($p['title'] ?? 'Schedule A'), 17 * $sx, true, 54 * $sx, [.07, .09, .13]); $y -= 20 * $sx;
+            $tl('Part of agreement #' . (int)$d['number'] . ' — ' . $d['title'] . '. Vehicle 1 is listed in the agreement.', 9 * $sx, false, 54 * $sx, [.42, .45, .5]); $y -= 26 * $sx;
+            foreach ($p['blocks'] ?? [] as $bk) {
+                if ($y < 120 * $sx) break;
+                $ops .= '0.9 0.9 0.92 RG 0.8 w ' . es_n(54 * $sx) . ' ' . es_n($y + 14 * $sx) . ' m ' . es_n($W - 54 * $sx) . ' ' . es_n($y + 14 * $sx) . " l S\n";
+                $tl((string)$bk['title'], 12 * $sx, true, 54 * $sx, [.07, .09, .13]); $y -= 18 * $sx;
+                foreach ($bk['items'] as [$k2, $v2]) { $tl((string)$k2, 9 * $sx, true, 64 * $sx, [.42, .45, .5]); $tl((string)$v2, 10.5 * $sx, false, 210 * $sx, [.07, .12, .29]); $y -= 15 * $sx; }
+                $y -= 16 * $sx;
+            }
+            $ops .= 'BT /F1 6 Tf 0.45 0.45 0.5 rg 14 8 Td ' . es_pdf_text('Satin e-Sign · Document ID ' . $short . $verTxt . ' · page ' . ($k + 1) . ' of ' . (count($pages) + count($auditPages)) . ($audit ? '' : ' · PREPARED COPY — NOT SIGNED')) . " Tj ET\n";
+            $content = $add($stream('/Filter /FlateDecode', (string)gzcompress($ops, 6)));
+            $kids[] = $add("<< /Type /Page /Parent $pagesId 0 R /MediaBox [0 0 " . es_n($W) . ' ' . es_n($H) . "] /Resources << /Font << /F1 $f1 0 R /F2 $f2 0 R >> >> /Contents $content 0 R >>");
+            continue;
+        }
         $jpg = (string)file_get_contents("$dir/" . $p['img']); $info = @getimagesizefromstring($jpg);
         $cs = ($info['channels'] ?? 3) === 1 ? '/DeviceGray' : (($info['channels'] ?? 3) === 4 ? '/DeviceCMYK' : '/DeviceRGB');
         $img = $add($stream('/Type /XObject /Subtype /Image /Width ' . (int)($info[0] ?? 1) . ' /Height ' . (int)($info[1] ?? 1) . " /ColorSpace $cs /BitsPerComponent 8 /Filter /DCTDecode" . ($cs === '/DeviceCMYK' ? ' /Decode [1 0 1 0 1 0 1 0]' : ''), $jpg));
@@ -539,11 +691,10 @@ function es_page_upload(string $dir, string $prefix): array { // multipart meta 
     }
     return $pages;
 }
-/** Every signer has a signature on the Approval Form pages? */
+/** Every signer has a signature on every attached document (Approval Form …)? */
 function es_approval_ready(array $pages, array $fields, array $sids): bool {
-    $ap = array_keys(array_filter($pages, fn($p) => ($p['kind'] ?? '') === 'approval'));
-    if (!$ap) return true;
-    foreach ($sids as $sid) { $ok = false; foreach ($fields as $f) if ($f['type'] === 'signature' && ($f['signer'] ?? '') === $sid && in_array((int)$f['page'], $ap, true)) $ok = true; if (!$ok) return false; }
+    $parts = []; foreach ($pages as $k => $p) if (es_part_of($p) !== 'main') $parts[es_part_of($p)][] = $k;
+    foreach ($parts as $idx) foreach ($sids as $sid) { $ok = false; foreach ($fields as $f) if ($f['type'] === 'signature' && ($f['signer'] ?? '') === $sid && in_array((int)$f['page'], $idx, true)) $ok = true; if (!$ok) return false; }
     return true;
 }
 /** Sends a draft: checks it, fixes the original hash, supersedes the older versions and emails each signer their own link. */
@@ -657,7 +808,7 @@ function esign_admin_route(string $r, string $method): void {
         $mail = (bool)($v['email'] ?? true);
         $list = is_array($v['signers'] ?? null) ? $v['signers'] : [['name' => $v['signerName'] ?? '', 'email' => $v['signerEmail'] ?? '']];
         $signers = es_clean_signers($list, $mail);
-        $d = es_create_doc($t, $signers, text($v['message'] ?? '', 2000), is_array($v['prefill'] ?? null) ? $v['prefill'] : [], $mail ? 'email' : 'link', $u, $v['pricing'] ?? null);
+        $d = es_create_doc($t, $signers, text($v['message'] ?? '', 2000), is_array($v['prefill'] ?? null) ? $v['prefill'] : [], $mail ? 'email' : 'link', $u, $v['pricing'] ?? null, !empty($v['auto']));
         $failed = $mail ? es_send_doc($d, $u, true) : [];
         audit($u, 'agreement ' . ($mail ? 'sent' : 'prepared'), $d['title'] . ' → ' . implode(', ', array_column($signers, 'email')));
         json_out(['doc' => es_doc_row(es_doc_by_id($d['id']), true), 'mailed' => $mail && !$failed]);
@@ -696,7 +847,7 @@ function esign_admin_route(string $r, string $method): void {
         foreach ($sids as $sid) if (!array_filter($fields, fn($f) => $f['type'] === 'signature' && $f['signer'] === $sid)) json_out(['error' => 'Every signer needs at least one signature position.'], 400);
         $ap = json_decode($d['approval'] ?: '{}', true) ?: [];
         if ($ap) {
-            if (!es_approval_ready($pages, $fields, $sids)) json_out(['error' => 'Place a signature for each signer on the Approval Form.'], 400);
+            if (!es_approval_ready($pages, $fields, $sids)) json_out(['error' => 'Place a signature for each signer on every attached document (Approval Form …).'], 400);
             $ap['confirmed'] = true;
         }
         $moved = json_encode(array_map(fn($f) => [$f['id'], $f['page'], $f['x'], $f['y'], $f['signer']], $old)) !== json_encode(array_map(fn($f) => [$f['id'], $f['page'], $f['x'], $f['y'], $f['signer']], $fields));
@@ -704,28 +855,45 @@ function esign_admin_route(string $r, string $method): void {
         if ($moved) { es_event($d['id'], 'signature positions set', $u['name']); if ((int)$d['version'] > 1) es_add_change($d['id'], 'Signature positions changed'); }
         json_out(['doc' => es_doc_row(es_doc_by_id($d['id']), true)]);
     }
-    if ($r === '/esign/doc/approval' && $method === 'POST') { // upload / replace (multipart: id, name, meta, page0..N) or remove (remove=1) the Approval Form of a draft
+    if ($r === '/esign/doc/approval' && $method === 'POST') { // documents attached to the agreement (Approval Form …). multipart: id + (name, meta, page0..N [, replace = part]) to add / replace, or remove = part ('1' = all)
         $u = require_user('agreements.send'); $d = es_doc_by_id((string)($_POST['id'] ?? '')); es_need_draft($d);
         $dir = es_dir('doc/' . $d['id']); $pages = json_decode($d['pages'], true); $fields = json_decode($d['fields'], true);
-        $keep = []; $map = [];
-        foreach ($pages as $k => $p) { if (($p['kind'] ?? '') === 'approval') { @unlink("$dir/" . $p['img']); continue; } $map[$k] = count($keep); $keep[] = $p; }
-        $fields = array_values(array_map(function ($f) use ($map) { $f['page'] = $map[(int)$f['page']]; return $f; }, array_filter($fields, fn($f) => isset($map[(int)$f['page']]))));
-        $had = (bool)json_decode($d['approval'] ?: '{}', true);
-        if (!empty($_POST['remove'])) {
-            $pdo->prepare("UPDATE esign_docs SET pages = ?, fields = ?, approval = '', updated_at = ? WHERE id = ?")->execute([json_encode($keep), json_encode($fields), now_iso(), $d['id']]);
-            es_event($d['id'], 'approval form removed', $u['name']); if ((int)$d['version'] > 1 && $had) es_add_change($d['id'], 'Approval Form removed');
+        $ap = json_decode($d['approval'] ?: '{}', true) ?: []; $parts = es_part_list($ap); $sids = array_column(es_signers($d), 'sid');
+        $save = function (array $pages, array $fields, array $parts, string $event, string $detail, string $change) use ($pdo, $d, $u) {
+            $cnt = count(array_filter($pages, fn($p) => es_part_of($p) !== 'main'));
+            $ap = $parts ? ['parts' => array_values($parts), 'name' => $parts[0]['name'], 'count' => $cnt, 'confirmed' => false, 'uploadedAt' => now_iso()] : [];
+            $pdo->prepare('UPDATE esign_docs SET pages = ?, fields = ?, approval = ?, updated_at = ? WHERE id = ?')->execute([json_encode(array_values($pages)), json_encode(array_values($fields)), $ap ? json_encode($ap) : '', now_iso(), $d['id']]);
+            es_event($d['id'], $event, $u['name'], $detail); if ((int)$d['version'] > 1) es_add_change($d['id'], $change);
             json_out(['doc' => es_doc_row(es_doc_by_id($d['id']), true)]);
+        };
+        $rm = (string)($_POST['remove'] ?? '');
+        if ($rm !== '') {
+            $ids = $rm === '1' ? array_column($parts, 'id') : [$rm]; $names = [];
+            foreach ($ids as $pid) { [$pages, $fields] = es_remove_part($pages, $fields, $pid, $dir); foreach ($parts as $x) if ($x['id'] === $pid) $names[] = $x['name']; }
+            $parts = array_values(array_filter($parts, fn($x) => !in_array($x['id'], $ids, true)));
+            $save($pages, $fields, $parts, 'document removed', implode(', ', $names) ?: 'Attached document', 'Removed: ' . (implode(', ', $names) ?: 'attached document'));
         }
-        if (count($keep) + count(json_decode((string)($_POST['meta'] ?? '[]'), true) ?: []) > ES_MAX_PAGES) json_out(['error' => 'The agreement and the Approval Form together can have up to ' . ES_MAX_PAGES . ' pages.'], 400);
-        $new = es_page_upload($dir, 'a');
-        $start = count($keep);
-        foreach ($new as $p) { $p['kind'] = 'approval'; $keep[] = $p; }
+        $meta = json_decode((string)($_POST['meta'] ?? '[]'), true) ?: [];
+        $rep = (string)($_POST['replace'] ?? ''); $at = null;
+        if ($rep !== '' && in_array($rep, array_column($parts, 'id'), true)) { [$pages, $fields, $at] = es_remove_part($pages, $fields, $rep, $dir); $pid = $rep; }
+        else { $rep = ''; $pid = 'a' . substr(bin2hex(random_bytes(4)), 0, 6); }
+        if (count($pages) + count($meta) > ES_MAX_PAGES) json_out(['error' => 'All documents together can have up to ' . ES_MAX_PAGES . ' pages.'], 400);
+        $new = array_map(fn($p) => $p + ['kind' => 'approval', 'part' => $pid], es_page_upload($dir, $pid . '-'));
+        if ($at === null) { $at = count($pages); if (es_auto($d) || !empty($_POST['first'])) foreach ($pages as $k => $p) if (es_part_of($p) === 'main') { $at = $k; break; } } // automated agreements: new documents go before the agreement, in upload order (staff can reorder)
+        [$pages, $fields] = es_insert_pages($pages, $fields, $at, $new);
+        $fields = es_autoplace($pages, $fields, $sids, $pid, $dir);
         $name = text($_POST['name'] ?? '', 120) ?: 'Approval Form';
-        $ap = ['name' => $name, 'start' => $start, 'count' => count($new), 'confirmed' => false, 'uploadedAt' => now_iso()];
-        $pdo->prepare('UPDATE esign_docs SET pages = ?, fields = ?, approval = ?, updated_at = ? WHERE id = ?')->execute([json_encode($keep), json_encode($fields), json_encode($ap), now_iso(), $d['id']]);
-        es_event($d['id'], $had ? 'approval form replaced' : 'approval form added', $u['name'], $name . ' (' . count($new) . ' page' . (count($new) === 1 ? '' : 's') . ')');
-        if ((int)$d['version'] > 1) es_add_change($d['id'], $had ? 'Approval Form replaced' : 'Approval Form added');
-        json_out(['doc' => es_doc_row(es_doc_by_id($d['id']), true)]);
+        if ($rep !== '') { foreach ($parts as &$x) if ($x['id'] === $pid) $x['name'] = $name; unset($x); } else $parts[] = ['id' => $pid, 'name' => $name];
+        $save($pages, $fields, $parts, $rep !== '' ? 'document replaced' : 'document added', $name . ' (' . count($new) . ' page' . (count($new) === 1 ? '' : 's') . ')', ($rep !== '' ? 'Replaced: ' : 'Added: ') . $name);
+    }
+    if ($r === '/esign/doc/order' && $method === 'POST') { // order of the documents: {id, order: ['a1…', 'main', …]}
+        $u = require_user('agreements.send'); $v = body_json(4000); $d = es_doc_by_id((string)($v['id'] ?? '')); es_need_draft($d);
+        $before = array_column(es_parts($d), 'id');
+        [$pages, $fields] = es_reorder(json_decode($d['pages'], true), json_decode($d['fields'], true), is_array($v['order'] ?? null) ? $v['order'] : []);
+        $pdo->prepare('UPDATE esign_docs SET pages = ?, fields = ?, updated_at = ? WHERE id = ?')->execute([json_encode($pages), json_encode($fields), now_iso(), $d['id']]);
+        $d = es_doc_by_id($d['id']); $after = es_parts($d);
+        if (array_column($after, 'id') !== $before) { es_event($d['id'], 'documents reordered', $u['name'], implode(' → ', array_column($after, 'name'))); if ((int)$d['version'] > 1) es_add_change($d['id'], 'Document order changed'); }
+        json_out(['doc' => es_doc_row($d, true)]);
     }
     if ($r === '/esign/doc/send' && $method === 'POST') { // draft → send to every signer (email) or make the links (link). With sid: email one signer again.
         $u = require_user('agreements.send'); $v = body_json(4000); $d = es_doc_by_id((string)($v['id'] ?? ''));
@@ -805,7 +973,8 @@ function es_public_doc(array $d, array $s): array {
     return ['title' => $d['title'], 'status' => $closed, 'version' => (int)$d['version'], 'signerName' => $s['name'], 'signerEmail' => $s['email'], 'myStatus' => $s['status'], 'mySignedAt' => $s['signed_at'],
         'others' => array_values(array_map(fn($x) => ['name' => $x['name'], 'signed' => $x['status'] === 'signed'], array_filter($sg, fn($x) => $x['sid'] !== $s['sid']))),
         'message' => $d['message'], 'business' => $b['name'], 'businessPhone' => $b['phone'],
-        'pages' => array_map(fn($p, $k) => ['w' => $p['w'], 'h' => $p['h'], 'kind' => $p['kind'] ?? 'main', 'url' => '/api/sign/page?t=' . $s['token'] . '&n=' . $k], $pages, array_keys($pages)), 'fields' => $out,
+        'pages' => array_map(fn($p, $k) => ['w' => $p['w'], 'h' => $p['h'], 'kind' => $p['kind'] ?? 'main'] + (empty($p['img']) ? ['url' => '', 'title' => $p['title'] ?? '', 'blocks' => $p['blocks'] ?? []] : ['url' => '/api/sign/page?t=' . $s['token'] . '&n=' . $k]), $pages, array_keys($pages)), 'fields' => $out,
+        'auto' => (bool)es_auto($d), 'intake' => (es_auto($d)['intake'] ?? '') === 'pending' && $s['sid'] === 's1' ? ['fields' => es_intake_spec($fields, es_auto($d)['fields'] ?? [], $pf), 'vehicles' => []] : null,
         'signedAt' => $d['signed_at'], 'pdf' => $d['status'] === 'signed' ? '/api/sign/pdf?t=' . $s['token'] : '', 'today' => (new DateTime('now', new DateTimeZone('America/Toronto')))->format('M j, Y')];
 }
 function esign_public_route(string $path, string $method): void {
@@ -834,18 +1003,23 @@ function esign_public_route(string $path, string $method): void {
         $l = (string)($_GET['l'] ?? '');
         $q = $pdo->prepare('SELECT * FROM esign_templates WHERE link_token = ? AND link_on = 1 AND deleted = 0'); $q->execute([$l]); $t = $q->fetch();
         if (!$t || !preg_match('/^[A-Za-z0-9_-]{30,60}$/', $l)) json_out(['error' => 'This signing link is no longer active. Please contact us for a new one.'], 404);
-        json_out(['title' => $t['name'], 'business' => es_business()['name'], 'message' => $t['message']]);
+        $tf = es_clean_fields(json_decode($t['fields'], true) ?: [], count(json_decode($t['pages'], true) ?: []));
+        $map = es_intake_fields($tf);
+        json_out(['title' => $t['name'], 'business' => es_business()['name'], 'message' => $t['message'], 'intake' => $map ? ['fields' => es_intake_spec($tf, $map, []), 'vehicles' => []] : null]);
     }
     if ($path === '/api/sign/start' && $method === 'POST') {
         same_origin(); $v = body_json(4000);
         $l = (string)($v['l'] ?? '');
         $q = $pdo->prepare('SELECT * FROM esign_templates WHERE link_token = ? AND link_on = 1 AND deleted = 0'); $q->execute([$l]); $t = $q->fetch();
         if (!$t || !preg_match('/^[A-Za-z0-9_-]{30,60}$/', $l)) json_out(['error' => 'This signing link is no longer active.'], 404);
-        $name = text($v['name'] ?? '', 120); $email = strtolower(text($v['email'] ?? '', 254));
+        $tf = es_clean_fields(json_decode($t['fields'], true) ?: [], count(json_decode($t['pages'], true) ?: [])); $map = es_intake_fields($tf); $c = null;
+        if ($map && isset($v['values'])) { $c = es_intake_clean($tf, $map, $v['values'], $v['vehicles'] ?? []); $name = $c['name']; $email = $c['email']; } // automated: the details form
+        else { $name = text($v['name'] ?? '', 120); $email = strtolower(text($v['email'] ?? '', 254)); }
         if (mb_strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL)) json_out(['error' => 'Enter your full name and a valid email.'], 400);
         if (rate_limited('esign:' . client_ip(), 12, 3600)) json_out(['error' => 'Too many attempts. Try again later.'], 429);
         note_attempt('esign:' . client_ip());
-        $d = es_create_doc($t, [['sid' => 's1', 'name' => $name, 'email' => $email]], $t['message'], [], 'public', null);
+        $d = es_create_doc($t, [['sid' => 's1', 'name' => $name, 'email' => $email]], $t['message'], [], 'public', null, null, (bool)$c);
+        if ($c) $d = es_intake_store($d, $c, es_who(['name' => $name, 'email' => $email]));
         $now = now_iso();
         $pdo->prepare("UPDATE esign_signers SET status = 'sent', sent_at = ? WHERE doc_id = ?")->execute([$now, $d['id']]);
         $pdo->prepare("UPDATE esign_docs SET status = 'sent', sent_at = ?, original_hash = ? WHERE id = ?")->execute([$now, es_doc_hash($d), $d['id']]);
@@ -862,8 +1036,21 @@ function esign_public_route(string $path, string $method): void {
         notify_owner('Declined: ' . $d['title'] . ' — ' . $s['name'], es_who($s) . " declined to sign \"" . $d['title'] . "\".\n" . ($reason !== '' ? "Reason: $reason\n" : '') . "\n" . es_site() . '/admin/#/agreements');
         json_out(['ok' => true]);
     }
+    if ($path === '/api/sign/intake' && $method === 'POST') { // automated agreement: the customer's details form
+        same_origin(); $v = body_json(60000); [$d, $s] = es_doc_by_token((string)($v['t'] ?? ''));
+        $a = es_auto($d);
+        if (!$a || ($a['intake'] ?? '') !== 'pending' || $s['sid'] !== 's1') json_out(['error' => 'Your details are already saved.'], 409);
+        if ($d['superseded'] || !in_array($d['status'], ['sent', 'viewed'], true)) json_out(['error' => 'This document is no longer available. Please contact ' . es_business()['name'] . '.'], 409);
+        if (rate_limited('esign-intake:' . client_ip(), 30, 3600)) json_out(['error' => 'Too many attempts. Try again later.'], 429);
+        note_attempt('esign-intake:' . client_ip());
+        $c = es_intake_clean(json_decode($d['fields'], true), $a['fields'] ?? [], $v['values'] ?? [], $v['vehicles'] ?? []);
+        es_intake_store($d, $c, es_who($s));
+        [$d, $s] = es_doc_by_token((string)$v['t']);
+        json_out(['ok' => true, 'doc' => es_public_doc($d, $s)]);
+    }
     if ($path === '/api/sign/submit' && $method === 'POST') {
         same_origin(); $v = body_json(4000000); [$d, $s] = es_doc_by_token((string)($v['t'] ?? ''));
+        if ((es_auto($d)['intake'] ?? '') === 'pending') json_out(['error' => 'Please fill in your details first.'], 409);
         if ($s['status'] === 'signed') json_out(['error' => 'You have already signed this document.'], 409);
         if ($d['superseded'] || !in_array($d['status'], ['sent', 'viewed', 'partial'], true)) json_out(['error' => 'This document is no longer available for signing. Please contact ' . es_business()['name'] . '.'], 409);
         if (($v['consent'] ?? null) !== true) json_out(['error' => 'Please agree to sign electronically.'], 400);

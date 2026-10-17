@@ -24,6 +24,7 @@ const fail = (msg) => { $('[data-bar]').hidden = true; app.innerHTML = `<div cla
 async function startFromLink(l) {
   let t; try { t = await api('link?l=' + encodeURIComponent(l)); } catch (e) { return fail(e.message); }
   header(t.title, t.business);
+  if (t.intake && t.intake.fields.length) return intakeForm(t, async (values, vehicles) => { const r = await api('start', { l, values, vehicles }); TOKEN = r.t; history.replaceState(null, '', '/esign/?t=' + TOKEN); load(); });
   app.innerHTML = `<div class="card"><h1>${esc(t.title)}</h1><p>${esc(t.business)} needs your signature on this document. Enter your details to begin — you'll get the signed PDF by email.</p>
     ${t.message ? `<div class="msg">${esc(t.message)}</div>` : ''}
     <form data-start novalidate><label class="f" for="nm">Full legal name</label><input class="input" id="nm" name="name" autocomplete="name" required>
@@ -45,7 +46,41 @@ async function load() {
   if (DOC.status === 'signed' || DOC.myStatus === 'signed') return done();
   if (DOC.status === 'cancelled') return closed('This document was cancelled by ' + DOC.business + '. If you think this is a mistake, please contact them.');
   if (DOC.status === 'declined') return closed(DOC.myStatus === 'declined' ? 'You declined to sign this document. ' + DOC.business + ' has been notified.' : 'This document was declined by another signer, so it can no longer be signed. ' + DOC.business + ' has been notified.');
+  if (DOC.intake) return intakeForm(DOC, async (values, vehicles) => { const r = await api('intake', { t: TOKEN, values, vehicles }); DOC = r.doc; draw(); });
   draw();
+}
+
+/* ---------- automated agreements: step 1 — the customer's details and vehicles ---------- */
+function intakeForm(src, submit) {
+  const F = src.intake.fields, you = F.filter(f => f.group !== 'vehicle'), veh = F.filter(f => f.group === 'vehicle');
+  const extra = []; // vehicles 2…N: {id: value}
+  $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = '';
+  const inp = (f, v, attr) => `<label class="f">${esc(f.label)}${f.required ? ' <i class="rq">*</i>' : ''}<input class="input" ${attr} value="${esc(v || '')}" ${f.type === 'email' ? 'type="email" inputmode="email" autocomplete="email"' : f.type === 'tel' ? 'type="tel" inputmode="tel" autocomplete="tel"' : /first name/i.test(f.label) ? 'autocomplete="given-name"' : /last name/i.test(f.label) ? 'autocomplete="family-name"' : /name/i.test(f.label) && !/company|pick/i.test(f.label) ? 'autocomplete="name"' : /company/i.test(f.label) ? 'autocomplete="organization"' : ''} maxlength="200"></label>`;
+  const vcard = (k, row) => `<div class="card vcard" data-veh="${k}"><div class="vh"><h2>Vehicle ${k + 2}</h2><button type="button" class="link" data-vrm="${k}">Remove</button></div><div class="g2">${veh.map(f => inp({ ...f, required: /make|model/i.test(f.label) }, row[f.id], `data-x="${k}" data-id="${f.id}"`)).join('')}</div></div>`;
+  const drawX = () => { $('[data-extra]').innerHTML = extra.map((r, k) => vcard(k, r)).join('');
+    $$('[data-x]').forEach(i => i.oninput = () => { extra[+i.dataset.x][i.dataset.id] = i.value; });
+    $$('[data-vrm]').forEach(b => b.onclick = () => { extra.splice(+b.dataset.vrm, 1); drawX(); }); };
+  app.innerHTML = `<ol class="isteps"><li class="on"><i>1</i>Your details</li><li><i>2</i>Review & sign</li></ol>
+    <form data-in novalidate><div class="card"><h1>${esc(src.title)}</h1><p>Please fill in your details${veh.length ? ' and your vehicle information' : ''}. On the next step you'll see the agreement with your information and sign once at the end.</p>${src.message ? `<div class="msg">${esc(src.message)}</div>` : ''}</div>
+    ${you.length ? `<div class="card"><h2>Your details</h2><div class="g2">${you.map(f => inp(f, f.value, `data-id="${f.id}"`)).join('')}</div></div>` : ''}
+    ${veh.length ? `<div class="card"><h2>Vehicle 1</h2><div class="g2">${veh.map(f => inp(f, f.value, `data-id="${f.id}"`)).join('')}</div></div><div data-extra></div>
+      <div class="card addv"><button type="button" class="btn ghost wide" data-addv>+ Add another vehicle (if required)</button><small>Only if this agreement covers more than one vehicle.</small></div>` : ''}
+    <div class="card"><div class="err" data-err></div><button class="btn wide" data-go>Next: review & sign →</button></div></form>`;
+  if (veh.length) $('[data-addv]').onclick = () => { if (extra.length >= 19) return; extra.push({}); drawX(); const l = $$('.vcard').pop(); l.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => l.querySelector('input').focus({ preventScroll: true }), 300); };
+  const form = $('[data-in]'); scrollTo(0, 0);
+  form.onsubmit = async e => {
+    e.preventDefault(); const err = $('[data-err]'), go = $('[data-go]'); err.textContent = ''; $$('.input.bad').forEach(i => i.classList.remove('bad'));
+    const values = {}; $$('[data-id]:not([data-x])', form).forEach(i => { values[i.dataset.id] = i.value.trim(); });
+    const bad = (el, msg) => { err.textContent = msg; el.classList.add('bad'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.focus({ preventScroll: true }), 300); };
+    for (const f of F) { const el = $(`[data-id="${f.id}"]:not([data-x])`, form); const v = values[f.id];
+      if (f.required && !v) return bad(el, 'Please fill in: ' + f.label);
+      if (f.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return bad(el, 'Please enter a valid email address.'); }
+    for (const [k, r] of extra.entries()) { if (!Object.values(r).some(x => (x || '').trim())) continue;
+      for (const f of veh) if (/make|model/i.test(f.label) && !(r[f.id] || '').trim()) return bad($(`[data-x="${k}"][data-id="${f.id}"]`), `Vehicle ${k + 2}: please fill in ${f.label}.`); }
+    go.disabled = true; go.textContent = 'Saving…';
+    try { await submit(values, extra.map(r => Object.fromEntries(Object.entries(r).map(([a, b]) => [a, (b || '').trim()])))); }
+    catch (er) { err.textContent = er.message; go.disabled = false; go.textContent = 'Next: review & sign →'; const el = er.field && $(`[data-id="${er.field}"]:not([data-x])`, form); if (el) bad(el, er.message); }
+  };
 }
 function closed(msg) { $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = ''; app.innerHTML = `<div class="card center"><h1>${esc(DOC.title)}</h1><p>${esc(msg)}</p></div>`; }
 
@@ -64,8 +99,8 @@ function draw() {
     if (f.type === 'email' && VALS[f.id] === undefined) VALS[f.id] = DOC.signerEmail || '';
     if (f.type === 'date') VALS[f.id] = DOC.today;
   }
-  app.innerHTML = `<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>${DOC.version > 1 ? ' (updated version)' : ''}. Fill in the highlighted fields, then press <b>Finish</b>.</p>${DOC.others && DOC.others.length ? `<p class="others">Also signing: ${DOC.others.map(o => esc(o.name) + (o.signed ? ' ✓' : '')).join(', ')}. You only sign your own fields; theirs are shown greyed out.</p>` : ''}${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
-    <div class="pages">${DOC.pages.map((p, k) => `<div class="page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h};background-image:url('${esc(p.url)}')">${DOC.fields.filter(f => f.page === k).map(fieldHTML).join('')}<span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>`).join('')}</div>`;
+  app.innerHTML = `${DOC.auto ? '<ol class="isteps"><li class="done"><i>✓</i>Your details</li><li class="on"><i>2</i>Review & sign</li></ol>' : ''}<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${DOC.auto ? `Here is <b>${esc(DOC.title)}</b> with your information. Please read it, then sign at the end (one signature is used everywhere it is needed) and press <b>Finish</b>.` : `${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>${DOC.version > 1 ? ' (updated version)' : ''}. Fill in the highlighted fields, then press <b>Finish</b>.`}</p>${DOC.others && DOC.others.length ? `<p class="others">Also signing: ${DOC.others.map(o => esc(o.name) + (o.signed ? ' ✓' : '')).join(', ')}. You only sign your own fields; theirs are shown greyed out.</p>` : ''}${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
+    <div class="pages">${DOC.pages.map((p, k) => p.kind === 'addendum' ? `<div class="page addm" data-page="${k}" style="aspect-ratio:${p.w}/${p.h}"><div class="addin"><b>${esc(p.title)}</b>${(p.blocks || []).map(bk => `<h4>${esc(bk.title)}</h4><dl>${bk.items.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`).join('')}</div><span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>` : `<div class="page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h};background-image:url('${esc(p.url)}')">${DOC.fields.filter(f => f.page === k).map(fieldHTML).join('')}<span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>`).join('')}</div>`;
   $$('.fld[data-f]').forEach(bindField);
   const ro = new ResizeObserver(es => es.forEach(e => sizeFonts(e.target)));
   $$('.page').forEach(p => { ro.observe(p); sizeFonts(p); });

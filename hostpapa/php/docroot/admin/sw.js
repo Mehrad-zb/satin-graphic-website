@@ -1,7 +1,7 @@
 /* Satin Admin service worker (scope /admin/): makes the admin and the staff chat app installable and fast to open,
    and shows Web Push notifications. It keeps an offline copy of the app shell only (HTML/CSS/JS/icons under /admin/), always network-first.
    API responses (/api/…) and anything with customer data are never cached. */
-const VERSION = 'satin-admin-v2';
+const VERSION = 'satin-admin-v3';
 const SHELL = ['/admin/', '/admin/chat-app/', '/admin/icons/icon-192.png', '/admin/icons/chat-192.png', '/admin/icons/badge-96.png', '/satin/img/logo.png'];
 
 self.addEventListener('install', e => {
@@ -71,7 +71,7 @@ self.addEventListener('push', e => {
   const chat = d.type === 'chat';
   e.waitUntil(Promise.all([
     self.registration.showNotification(d.title || 'Satin admin', {
-      body: d.body || '', tag: d.tag || d.type || 'satin', renotify: true,
+      body: d.body || '', tag: d.tag || d.type || 'satin', renotify: true, silent: false, vibrate: [200, 100, 200],
       icon: chat ? '/admin/icons/chat-192.png' : '/admin/icons/icon-192.png', badge: '/admin/icons/badge-96.png',
       data: { url: d.url || '/admin/' }, timestamp: (d.ts || Date.now() / 1000) * 1000
     }),

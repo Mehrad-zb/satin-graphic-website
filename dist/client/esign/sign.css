@@ -87,3 +87,17 @@ label.f{display:block;font-weight:600;font-size:13.5px;margin:12px 0 4px}
 .fld.other{border:1.5px dashed #b8bfcc;background:repeating-linear-gradient(-45deg,#f3f4f6aa 0 6px,#e5e7ebaa 6px 12px);border-radius:3px;pointer-events:none}
 .fld.other .ro{color:#6b7280;font-size:calc(var(--fs,12px)*.7);padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .intro .others{font-size:14px;color:var(--mut,#6b7280);margin-top:6px}
+/* automated agreements: details form + Schedule A page */
+.isteps{list-style:none;display:flex;gap:8px;justify-content:center;margin:0 auto 14px;padding:0;max-width:620px;font-size:13.5px;color:var(--mut)}
+.isteps li{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px 6px 6px}
+.isteps i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-weight:700;font-size:12px}
+.isteps .on{color:var(--ink);font-weight:600}.isteps .on i{background:var(--accent);color:#fff}.isteps .done i{background:#dcfce7;color:var(--ok)}
+.card h2{font-size:16px;margin:0 0 4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}@media (max-width:560px){.g2{grid-template-columns:1fr}}
+.g2 label.f{margin:12px 0 0}.g2 label.f .input{margin-top:4px;font-weight:400}
+.rq{color:var(--accent);font-style:normal}.input.bad{border-color:var(--bad);background:#fff5f5}
+.vh{display:flex;justify-content:space-between;align-items:center}
+.addv{text-align:center}.addv small{display:block;color:var(--mut);margin-top:6px;font-size:12.5px}
+.page.addm{background:#fff}.addin{position:absolute;inset:6% 8%;font-size:clamp(9px,1.6vw,14px);color:#1d2330;overflow:hidden}
+.addin>b{display:block;font-size:1.35em;margin-bottom:1em}.addin h4{margin:1em 0 .3em;font-size:1.05em;border-top:1px solid var(--line);padding-top:.6em}
+.addin dl{display:grid;grid-template-columns:38% 1fr;gap:.15em .8em;margin:0}.addin dt{color:var(--mut);font-weight:600}.addin dd{margin:0}
