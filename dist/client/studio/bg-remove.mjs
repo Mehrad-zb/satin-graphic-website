@@ -1,0 +1,32 @@
+// Background removal for uploaded images in the Design Studio.
+// Logos / graphics on a flat background → exact colour flood-fill from the edges (instant, crisp).
+// Photos → small U²-Net (u2netp, Apache-2.0) model run in the browser with onnxruntime-web.
+const ORT_VER='1.20.1';
+const ORT_BASE=`https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VER}/dist/`;
+const MODEL_URL='/studio/models/u2netp.onnx';
+const MAX_SIDE=4096;
+let sessionP=null;
+
+function loadImg(blob){return new Promise((ok,no)=>{const u=URL.createObjectURL(blob),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);ok(i);};i.onerror=()=>{URL.revokeObjectURL(u);no(Error('This image could not be read.'));};i.src=u;});}
+function toBlob(c){return new Promise((ok,no)=>c.toBlob(b=>b?ok(b):no(Error('Could not create the image.')),'image/png'));}
+
+async function canvasFor(blob){const img=await loadImg(blob),w0=img.naturalWidth||img.width,h0=img.naturalHeight||img.height,k=Math.min(1,MAX_SIDE/Math.max(w0,h0));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w0*k));c.height=Math.max(1,Math.round(h0*k));c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,c.width,c.height);return c;}
+
+// Look at the outer ring of pixels: is it (mostly) one flat colour, or already transparent?
+function analyseBorder(d,w,h){const pts=[];const step=Math.max(1,Math.floor((w+h)/800));for(let x=0;x<w;x+=step){pts.push(x,(h-1)*w+x);}for(let y=0;y<h;y+=step){pts.push(y*w,y*w+w-1);}let clear=0;const bins=new Map();for(const p of pts){const i=p*4;if(d[i+3]<16){clear++;continue;}const key=(d[i]>>4)<<8|(d[i+1]>>4)<<4|(d[i+2]>>4);bins.set(key,(bins.get(key)||0)+1);}if(clear/pts.length>.6)return{transparent:true};let best=0,bk=0;for(const [k,v] of bins)if(v>best){best=v;bk=k;}let r=0,g=0,b=0,n=0;for(const p of pts){const i=p*4;if(d[i+3]<16)continue;const key=(d[i]>>4)<<8|(d[i+1]>>4)<<4|(d[i+2]>>4);if(key===bk){r+=d[i];g+=d[i+1];b+=d[i+2];n++;}}const col=n?[r/n,g/n,b/n]:[255,255,255];let near=0,opaque=0;for(const p of pts){const i=p*4;if(d[i+3]<16)continue;opaque++;const dr=d[i]-col[0],dg=d[i+1]-col[1],db=d[i+2]-col[2];if(dr*dr+dg*dg+db*db<40*40)near++;}return{transparent:false,color:col,flat:opaque?near/opaque:0};}
+
+// Flood-fill every edge-connected pixel close to the background colour; feather the boundary.
+function floodRemove(c,col){const ctx=c.getContext('2d',{willReadFrequently:true}),w=c.width,h=c.height,im=ctx.getImageData(0,0,w,h),d=im.data;const T1=34*34,T2=80*80;const dist=i=>{const dr=d[i]-col[0],dg=d[i+1]-col[1],db=d[i+2]-col[2];return dr*dr+dg*dg+db*db;};const seen=new Uint8Array(w*h),q=new Int32Array(w*h);let qh=0,qt=0;const push=p=>{if(seen[p])return;const i=p*4;if(d[i+3]<16||dist(i)<=T1){seen[p]=1;q[qt++]=p;}};for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1);}while(qh<qt){const p=q[qh++],x=p%w;if(x>0)push(p-1);if(x<w-1)push(p+1);if(p>=w)push(p-w);if(p<w*(h-1))push(p+w);}let removed=0;for(let p=0;p<w*h;p++)if(seen[p]){d[p*4+3]=0;removed++;}
+ // soften the 1px fringe next to removed pixels (anti-aliased edges blended with the old background)
+ for(let p=0;p<w*h;p++){if(seen[p])continue;const x=p%w;if(!((x>0&&seen[p-1])||(x<w-1&&seen[p+1])||(p>=w&&seen[p-w])||(p<w*(h-1)&&seen[p+w])))continue;const i=p*4,dd=dist(i);if(dd<T2){const a=Math.max(0,Math.min(1,(Math.sqrt(dd)-34)/(80-34)));d[i+3]=Math.round(d[i+3]*a);}}
+ ctx.putImageData(im,0,0);return removed/(w*h);}
+
+async function ort(){const m=await import(/* webpackIgnore: true */ORT_BASE+'ort.wasm.min.mjs');const o=m.default||m;o.env.wasm.wasmPaths=ORT_BASE;o.env.wasm.numThreads=self.crossOriginIsolated?Math.min(4,navigator.hardwareConcurrency||2):1;return o;}
+function session(){if(!sessionP)sessionP=(async()=>{const o=await ort();const r=await fetch(MODEL_URL);if(!r.ok)throw Error('The background-removal model could not be loaded.');const buf=new Uint8Array(await r.arrayBuffer());const s=await o.InferenceSession.create(buf,{executionProviders:['wasm']});return{o,s};})().catch(e=>{sessionP=null;throw e;});return sessionP;}
+
+async function aiRemove(c,onStatus){onStatus?.('Loading the background remover… (first time only)');const {o,s}=await session();onStatus?.('Finding the subject…');const S=320,t=document.createElement('canvas');t.width=t.height=S;const tc=t.getContext('2d',{willReadFrequently:true});tc.fillStyle='#fff';tc.fillRect(0,0,S,S);tc.drawImage(c,0,0,S,S);const px=tc.getImageData(0,0,S,S).data;let mx=1;for(let i=0;i<px.length;i+=4)mx=Math.max(mx,px[i],px[i+1],px[i+2]);const mean=[.485,.456,.406],sd=[.229,.224,.225],N=S*S,input=new Float32Array(3*N);for(let p=0;p<N;p++)for(let ch=0;ch<3;ch++)input[ch*N+p]=(px[p*4+ch]/mx-mean[ch])/sd[ch];const feeds={[s.inputNames[0]]:new o.Tensor('float32',input,[1,3,S,S])};const out=await s.run(feeds),pred=out[s.outputNames[0]].data;let lo=Infinity,hi=-Infinity;for(const v of pred){if(v<lo)lo=v;if(v>hi)hi=v;}const span=hi-lo||1;const m=document.createElement('canvas');m.width=m.height=S;const mc=m.getContext('2d'),mi=mc.createImageData(S,S);for(let p=0;p<N;p++){let a=(pred[p]-lo)/span;a=Math.max(0,Math.min(1,(a-.08)/.84));mi.data[p*4]=mi.data[p*4+1]=mi.data[p*4+2]=255;mi.data[p*4+3]=Math.round(a*255);}mc.putImageData(mi,0,0);
+ // scale the mask up to full size and use it as the alpha channel
+ const ctx=c.getContext('2d');ctx.save();ctx.globalCompositeOperation='destination-in';ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(m,0,0,c.width,c.height);ctx.restore();}
+
+// mode: 'auto' | 'color' | 'ai'
+export async function removeBackground(blob,{mode='auto',onStatus}={}){const c=await canvasFor(blob);const ctx=c.getContext('2d',{willReadFrequently:true});const info=analyseBorder(ctx.getImageData(0,0,c.width,c.height).data,c.width,c.height);if(info.transparent&&mode!=='ai')throw Error('This image already has a transparent background.');const flat=!info.transparent&&info.flat>=.82;let used;if(mode==='color'||(mode==='auto'&&flat)){const share=floodRemove(c,info.color);if(share<.01&&mode==='auto'){used='ai';await aiRemove(c,onStatus);}else used='color';}else{used='ai';try{await aiRemove(c,onStatus);}catch(e){console.warn('bg ai',e);if(info.transparent||info.flat<.5)throw Error('The background could not be removed on this device. Please try again on a computer, or email the file to info@satingraphic.ca and we will do it for you.');used='color';floodRemove(c,info.color);}}return{blob:await toBlob(c),mode:used};}
