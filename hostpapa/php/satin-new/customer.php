@@ -70,7 +70,7 @@ function cust_throttle(string $key, int $max, int $window, string $msg = 'Too ma
 }
 function cust_ip(): string { return substr((string)($_SERVER['REMOTE_ADDR'] ?? ''), 0, 64); }
 function cust_mail(string $to, string $subject, string $body): bool {
-    return send_mail($to, $subject, $body . "\n\nSatin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · (905) 962-6222 · info@satingraphic.ca");
+    return send_mail($to, $subject, $body . "\n\nSatin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · (905) 695-9147 · info@satingraphic.ca");
 }
 function cust_redirect(string $to): void { header('Cache-Control: no-store'); header('Location: ' . $to, true, 302); exit; }
 /** Only same-site page paths under /satin/ are accepted as a post-login destination. */
@@ -876,7 +876,7 @@ function customer_route_inner(string $r, string $method): void {
             try { if ($o['provider'] === 'square') shop_square_verify($o); elseif ($o['provider'] === 'paypal') shop_paypal_verify($o, false); } catch (Throwable $e) { error_log('satin cancel verify: ' . $e->getMessage()); }
             $o = shop_order($o['id']);
         }
-        if (!cust_order_unpaid($o)) json_out(['error' => 'This order is paid or in progress, so it can no longer be cancelled online. Please contact us at info@satingraphic.ca or 905-962-6222.'], 409);
+        if (!cust_order_unpaid($o)) json_out(['error' => 'This order is paid or in progress, so it can no longer be cancelled online. Please contact us at info@satingraphic.ca or 905-695-9147.'], 409);
         if (!$remove && !cust_order_cancellable($o)) json_out(['error' => 'This order is already cancelled.'], 409);
         $wasOpen = cust_order_cancellable($o);
         $h = json_decode((string)($o['history'] ?? ''), true) ?: [];

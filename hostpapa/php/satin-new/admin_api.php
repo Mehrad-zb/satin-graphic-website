@@ -368,7 +368,7 @@ const REPLY_TYPES = [ // extension => MIME type sent in the email
     'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'ai' => 'application/postscript', 'eps' => 'application/postscript', 'svg' => 'image/svg+xml', 'zip' => 'application/zip',
 ];
-const REPLY_BUSINESS_LINE = 'Satin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · 905-962-6222 · info@satingraphic.ca · satingraphic.ca';
+const REPLY_BUSINESS_LINE = 'Satin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · 905-695-9147 · info@satingraphic.ca · satingraphic.ca';
 
 function migrate_replies(PDO $pdo): void {
     static $done = false; if ($done) return; $done = true;

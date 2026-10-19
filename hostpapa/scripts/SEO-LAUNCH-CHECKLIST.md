@@ -58,7 +58,7 @@
 - Primary category: Vehicle wrapping service (or "Car wrapping service" if that is what the GBP list offers).
 - Secondary categories: Window tinting service, Sign shop, Print shop, Graphic designer, Screen printer / T-shirt printing, Auto detailing, Car detailing service.
 - Services: add each one with a short description and "from" price matching the site. These include commercial/fleet wraps, colour change, lettering & decals, PPF, vehicle tint, commercial window film, window graphics, large-format printing, business cards, apparel printing and wallpaper.
-- Hours: Mon–Fri 8–6, Sat 9–3. NAP exactly as follows: "Satin Graphic", 50 Viceroy Rd, Unit 22–23, Vaughan, ON, (905) 962-6222, website `https://satingraphic.ca/satin/`.
+- Hours: Mon–Fri 8–6, Sat 9–3. NAP exactly as follows: "Satin Graphic", 50 Viceroy Rd, Unit 22–23, Vaughan, ON, (905) 695-9147, website `https://satingraphic.ca/satin/`.
 - Photos: 3–5 new shop and job photos per week for the first month, then weekly.
 - Posts: one per week (finished job, seasonal tip, a link to a guide).
 - Q&A: seed with real customer questions.

@@ -51,7 +51,7 @@ function es_url(string $token): string { return es_site() . '/esign/?t=' . $toke
 function es_link_url(string $token): string { return es_site() . '/esign/?l=' . $token; }
 function es_business(): array {
     try { require_once __DIR__ . '/invoices_api.php'; $b = inv_settings()['business'] ?? []; } catch (Throwable $e) { $b = []; }
-    return ['name' => (string)($b['name'] ?? 'Satin Graphic'), 'email' => (string)($b['email'] ?? (cfg('notify_email') ?: 'info@satingraphic.ca')), 'phone' => (string)($b['phone'] ?? '905-962-6222')];
+    return ['name' => (string)($b['name'] ?? 'Satin Graphic'), 'email' => (string)($b['email'] ?? (cfg('notify_email') ?: 'info@satingraphic.ca')), 'phone' => (string)($b['phone'] ?? '905-695-9147')];
 }
 function es_who(array $s): string { return trim($s['name'] . ($s['email'] !== '' ? ' <' . $s['email'] . '>' : '')); }
 

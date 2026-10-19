@@ -29,7 +29,7 @@ function inv_method_name(string $m): string { return INV_METHODS[$m] ?? INV_ONLI
 
 function inv_default_settings(): array {
     return [
-        'business' => ['name' => 'Satin Graphic INC', 'address' => "50 Viceroy Rd, Unit 22–23\nVaughan, Ontario\nCanada", 'email' => 'info@satinautowrap.com', 'phone' => '+1 905 962 6222', 'taxNumber' => 'HST/GST# 721390409RT0001', 'logo' => '/satin/img/logo.png', 'website' => 'satingraphic.ca'],
+        'business' => ['name' => 'Satin Graphic INC', 'address' => "50 Viceroy Rd, Unit 22–23\nVaughan, Ontario\nCanada", 'email' => 'info@satinautowrap.com', 'phone' => '+1 905 695 9147', 'taxNumber' => 'HST/GST# 721390409RT0001', 'logo' => '/satin/img/logo.png', 'website' => 'satingraphic.ca'],
         'prefix' => '', 'nextNumber' => 13461, 'pad' => 7, 'dueDays' => 30, 'currency' => 'CAD',
         'taxes' => [['id' => 'hst', 'name' => 'HST', 'rate' => 13]],
         'defaultTaxes' => ['hst'],
@@ -381,7 +381,7 @@ function inv_pay_card(array $r, array $v): string {
         || (isset($v['verificationToken']) && $v['verificationToken'] !== null && (!is_string($v['verificationToken']) || !preg_match('/^[A-Za-z0-9:_\-]{4,2048}$/', $v['verificationToken'])))) throw new ShopError('Card details could not be read. Please re-enter your card.');
     $afterpay = ($v['method'] ?? '') === 'afterpay';
     if ($afterpay && !$c['afterpay']) json_out(['error' => 'Afterpay is not available right now. Pay by card instead.'], 503);
-    shop_limit('invcard:' . $r['id'], 8, 3600, 'Too many card attempts for this invoice. Please wait an hour or call 905-962-6222.');
+    shop_limit('invcard:' . $r['id'], 8, 3600, 'Too many card attempts for this invoice. Please wait an hour or call 905-695-9147.');
     [$amt, $label] = inv_pay_amount($r, ($v['option'] ?? '') === 'full' ? 'full' : 'next');
     if ($amt <= 0) throw new ShopError('Nothing is due on this invoice.');
     // Afterpay: charge exactly the amount the buyer approved in the Afterpay popup (the server amount shown on the page), or nothing.
@@ -465,7 +465,7 @@ function public_invoice_route(string $path, string $method): void {
             json_out(['status' => $ok ? 'paid' : 'pending', 'invoice' => inv_public(inv_get_row($r['id']))]);
         }
         if (!inv_payable($r) || $r['status'] === 'draft') json_out(['error' => 'This invoice is not open for payment.', 'invoice' => inv_public($r)], 409);
-        shop_limit('invpay:' . shop_ip(), 30, 3600, 'Too many payment attempts. Please wait and try again, or call 905-962-6222.');
+        shop_limit('invpay:' . shop_ip(), 30, 3600, 'Too many payment attempts. Please wait and try again, or call 905-695-9147.');
         if ($path === '/api/invoice/pay-card') { $st = inv_pay_card($r, $v); json_out(['status' => $st, 'invoice' => inv_public(inv_get_row($r['id']))]); }
         if ($path === '/api/invoice/paypal/create') json_out(['orderId' => inv_paypal_create($r, (string)($v['option'] ?? 'next'), (string)($v['funding'] ?? ''))]);
     } catch (ShopError $e) { json_out(['error' => $e->getMessage()], 400); }

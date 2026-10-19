@@ -12,7 +12,7 @@ header('X-Content-Type-Options: nosniff');
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-const UNAVAILABLE = 'This feature is being moved to our new server. Please use "Get exact quote", call 905-962-6222 or email info@satingraphic.ca.';
+const UNAVAILABLE = 'This feature is being moved to our new server. Please use "Get exact quote", call 905-695-9147 or email info@satingraphic.ca.';
 
 function rule_by_id(string $id): ?array {
     if (str_starts_with($id, 'template-')) { require_once __DIR__ . '/commerce.php'; return shop_template_rule($id); }

@@ -198,7 +198,7 @@ function default_menu(): array { $d = json_decode((string)file_get_contents(DATA
 
 /* ---------- business profile (NAP) for structured data ---------- */
 function business_default(): array {
-    return ['name' => 'Satin Graphic', 'legalName' => 'Satin Auto Wrap Inc.', 'phone' => '+1-905-962-6222', 'email' => 'info@satingraphic.ca', 'street' => '50 Viceroy Rd, Unit 22–23', 'city' => 'Vaughan', 'region' => 'ON', 'postal' => '', 'country' => 'CA',
+    return ['name' => 'Satin Graphic', 'legalName' => 'Satin Auto Wrap Inc.', 'phone' => '+1-905-695-9147', 'email' => 'info@satingraphic.ca', 'street' => '50 Viceroy Rd, Unit 22–23', 'city' => 'Vaughan', 'region' => 'ON', 'postal' => '', 'country' => 'CA',
         'hours' => [['days' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], 'opens' => '09:00', 'closes' => '17:00'], ['days' => ['Saturday'], 'opens' => '10:00', 'closes' => '15:00']], 'priceRange' => '$$',
         'sameAs' => ['https://www.facebook.com/SatinAutoWrap', 'https://www.satinautowrap.com/'], 'areaServed' => ['Vaughan', 'Toronto', 'Mississauga', 'Brampton', 'Markham', 'Richmond Hill', 'Greater Toronto Area'],
         'lat' => '', 'lng' => ''];

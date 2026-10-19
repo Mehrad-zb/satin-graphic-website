@@ -91,7 +91,7 @@ table.items,table.sched{width:100%;border-collapse:collapse;font-variant-numeric
   };
   let inv, option = 'next', notice = '', busy = false;
   try { const r = await fetch('/api/invoice?t=' + encodeURIComponent(t), { credentials: 'same-origin' }); const d = await r.json(); if (!r.ok) throw new Error(d.error || 'This invoice is not available.'); inv = d.invoice; }
-  catch (e) { app.innerHTML = `<div class="msg"><h2>Invoice not available</h2><p>${esc(e.message)}</p><p>Questions? Call (905) 962-6222.</p></div>`; return; }
+  catch (e) { app.innerHTML = `<div class="msg"><h2>Invoice not available</h2><p>${esc(e.message)}</p><p>Questions? Call (905) 695-9147.</p></div>`; return; }
 
   const STATE = { paid: 'Paid', due: 'Due now', next: 'Next', overdue: 'Overdue', upcoming: 'Upcoming' };
   const scripts = {};

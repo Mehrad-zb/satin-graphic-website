@@ -130,7 +130,7 @@ function shop_admin_inner(string $r, string $method): void {
             $emailed = false;
             if (($v['emailCustomer'] ?? false) === true && $o['email'] !== '') {
                 $msg = ['new' => 'We have received your order.', 'artwork_check' => 'We are checking your artwork. We will contact you if anything needs to change.', 'in_production' => 'Your order is now in production.', 'ready' => 'Your order is ready.', 'completed' => 'Your order is complete. Thank you for choosing Satin Graphic!', 'cancelled' => 'Your order has been cancelled.'][$newStage];
-                $emailed = send_mail($o['email'], "Satin Graphic order {$o['number']}: " . SHOP_STAGES[$newStage], "Hello {$o['name']},\n\n$msg" . ($note !== '' ? "\n\n$note" : '') . "\n\nOrder: {$o['number']}\nQuestions? Reply to info@satingraphic.ca or call 905-962-6222.\n\nSatin Graphic");
+                $emailed = send_mail($o['email'], "Satin Graphic order {$o['number']}: " . SHOP_STAGES[$newStage], "Hello {$o['name']},\n\n$msg" . ($note !== '' ? "\n\n$note" : '') . "\n\nOrder: {$o['number']}\nQuestions? Reply to info@satingraphic.ca or call 905-695-9147.\n\nSatin Graphic");
             }
             $h = json_decode((string)($o['history'] ?? ''), true) ?: [];
             $h[] = ['at' => now_iso(), 'by' => (string)$u['name'], 'from' => $stage, 'stage' => $newStage, 'note' => $note, 'emailed' => $emailed];
@@ -208,7 +208,7 @@ function shop_admin_inner(string $r, string $method): void {
         $sent = false;
         if (($v['email'] ?? false) === true) {
             $sent = send_mail($o['email'], "Payment link for your Satin Graphic order {$o['number']}", "Hello {$o['name']},\n\nThank you for your order {$o['number']}.\n\n" . shop_order_text($o) .
-                "\n\nPay securely by card here:\n{$o['payment_url']}\n\nQuestions? Reply to info@satingraphic.ca or call 905-962-6222.\n\nSatin Graphic");
+                "\n\nPay securely by card here:\n{$o['payment_url']}\n\nQuestions? Reply to info@satingraphic.ca or call 905-695-9147.\n\nSatin Graphic");
             audit($u, 'order payment link emailed', $o['number']);
         }
         json_out(['ok' => true, 'emailed' => $sent, 'order' => shop_admin_order_full($o)]);

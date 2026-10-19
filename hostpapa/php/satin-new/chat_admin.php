@@ -68,7 +68,7 @@ function chat_admin_route(string $r, string $method): void {
         $pdo->prepare("UPDATE chat_conversations SET staff_typing_at = '' WHERE id = ?")->execute([$c['id']]);
         $sent = false;
         if (($v['emailVisitor'] ?? false) === true) {
-            $sent = chat_mail($c['email'], 'Reply from Satin Graphic', "Hello {$c['name']},\n\n$text\n\n— {$u['name']}, Satin Graphic\n(905) 962-6222 · info@satingraphic.ca\n50 Viceroy Rd, Unit 22–23, Vaughan, ON\n", chat_notify_to() ?: 'info@satingraphic.ca');
+            $sent = chat_mail($c['email'], 'Reply from Satin Graphic', "Hello {$c['name']},\n\n$text\n\n— {$u['name']}, Satin Graphic\n(905) 695-9147 · info@satingraphic.ca\n50 Viceroy Rd, Unit 22–23, Vaughan, ON\n", chat_notify_to() ?: 'info@satingraphic.ca');
             audit($u, 'chat reply emailed', $c['email']);
         }
         json_out(['ok' => true, 'message' => $m, 'emailed' => $sent]);
@@ -322,7 +322,7 @@ function chat_pii_strip(string $t, array $names): string {
     $t = (string)preg_replace('/\b[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d\b/iu', '[postal code]', $t);
     $t = (string)preg_replace_callback('/\b\d{1,6}\s+(?:[\p{L}\'.-]+\s+){1,4}(?:st|street|rd|road|ave|avenue|blvd|boulevard|dr|drive|cres|crescent|ct|court|way|lane|ln|pl|place|pkwy|parkway|hwy|highway|trail|cir|circle|sq|square|terrace|gate|gardens|grove)\b\.?(?:,?\s*(?:unit|suite|apt|#)\s*[\w-]+)?/iu',
         fn($m) => stripos($m[0], 'viceroy') !== false ? $m[0] : '[address]', $t);
-    $t = (string)preg_replace_callback('/(?<![\w$])\+?\(?\d[\d\s().\-]{5,}\d(?![\w%])/u', fn($m) => preg_replace('/\D/', '', $m[0]) === '9059626222' || preg_replace('/\D/', '', $m[0]) === '19059626222' ? $m[0] : '[number]', $t); // phone, card, order, account numbers (ours stays)
+    $t = (string)preg_replace_callback('/(?<![\w$])\+?\(?\d[\d\s().\-]{5,}\d(?![\w%])/u', fn($m) => preg_replace('/\D/', '', $m[0]) === '9059626222' || preg_replace('/\D/', '', $m[0]) === '19059626222' || in_array(preg_replace('/\D/', '', $m[0]), ['9056959147', '19056959147'], true) ? $m[0] : '[number]', $t); // phone, card, order, account numbers (ours stays)
     foreach ($names as $n) {
         foreach (array_unique(array_merge([$n], preg_split('/\s+/u', $n) ?: [])) as $part) {
             $part = trim($part, " .,-_()~'\""); if (mb_strlen($part) < 3 || preg_match('/^(satin|graphic|graphics|auto|wrap|wraps|the|and|inc|ltd|ca|mr|mrs|ms)$/iu', $part) || preg_match('/^\+?\d/', $part)) continue;

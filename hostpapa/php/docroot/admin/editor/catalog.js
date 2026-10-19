@@ -29,7 +29,7 @@ export function preset(kind) {
   const P = {
     blank: { style: { minHeight: 520 } },
     text: { eyebrow: 'New section', title: 'Add a heading here', body: 'Tell your visitors about this service. Double-click any text on the page to edit it.', button: 'Start a quote', link: 'quote:' },
-    cta: { title: 'Ready to start your project?', body: 'Get a free quote within one business day.', button: 'Get a quote', link: 'quote:', button2: 'Call us', link2: 'tel:+19059626222' },
+    cta: { title: 'Ready to start your project?', body: 'Get a free quote within one business day.', button: 'Get a quote', link: 'quote:', button2: 'Call us', link2: 'tel:+19056959147' },
     faq: { title: 'Frequently asked questions', items: [{ title: 'How long does a wrap take?', body: 'Most vehicles are done in 2–4 days.' }, { title: 'Do you offer design?', body: 'Yes, our in-house designers can create your artwork.' }, { title: 'Is there a warranty?', body: 'All installs include a workmanship warranty.' }] },
     testimonial: { body: 'Satin did an amazing job on our fleet. Fast, professional and the result looks incredible.', name: 'Happy customer', role: 'Google review' },
     'text-image': { layout: 'left', eyebrow: 'Why Satin', title: 'Designed, printed and installed in-house', body: 'One team takes care of your project from start to finish.', button: 'Learn more', link: '/satin/about', image: im(0), alt: '' },
@@ -41,7 +41,7 @@ export function preset(kind) {
     cards: { title: 'Our services', items: [['Vehicle wraps', '/satin/vehicle-wraps'], ['Print shop', '/satin/print-shop'], ['Apparel', '/satin/apparel']].map(([t, l], i) => ({ title: t, body: 'Short description of this service.', image: im(i + 6), link: l })) },
     hscroll: { title: 'How a wrap comes together', items: [['Design', 'We mock up your vehicle in 3D.'], ['Print', 'Premium cast vinyl, printed in-house.'], ['Laminate', 'UV and scratch protection.'], ['Install', 'Certified installers, climate-controlled bay.'], ['Deliver', 'Ready to turn heads.']].map(([t, b], i) => ({ title: t, body: b, image: im(i + 3) })) },
     stats: { items: [['9,700+', 'Projects completed'], ['11', 'Years of experience'], ['5.0', 'Google rating']].map(([t, b]) => ({ title: t, body: b })) },
-    contact: { layout: 'left', title: 'Talk to our team', body: 'Visit our shop in Vaughan or send us a message.', button: 'Start a quote', link: 'quote:', items: [{ title: 'Phone', body: '(905) 962-6222', link: 'tel:+19059626222' }, { title: 'Email', body: 'info@satingraphic.ca', link: 'mailto:info@satingraphic.ca' }] },
+    contact: { layout: 'left', title: 'Talk to our team', body: 'Visit our shop in Vaughan or send us a message.', button: 'Start a quote', link: 'quote:', items: [{ title: 'Phone', body: '(905) 695-9147', link: 'tel:+19056959147' }, { title: 'Email', body: 'info@satingraphic.ca', link: 'mailto:info@satingraphic.ca' }] },
     button: { button: 'Get a free quote', link: 'quote:' },
     spacer: { height: 60 },
     divider: {}

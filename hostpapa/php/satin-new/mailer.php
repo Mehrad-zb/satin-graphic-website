@@ -29,7 +29,7 @@ function mail_text_html(string $text): string {
     $h = preg_replace('#(https?://[^\s<]+)#', '<a href="$1" style="color:#1d4ed8">$1</a>', $h);
     return '<!doctype html><html><body style="margin:0;background:#f4f5f7;font-family:Arial,Helvetica,sans-serif;color:#16181d"><table role="presentation" width="100%" style="border-collapse:collapse"><tr><td align="center" style="padding:24px 12px">'
         . '<table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:12px"><tr><td style="padding:26px;font-size:14px;line-height:1.6;white-space:pre-line">' . $h
-        . '</td></tr></table><p style="font-size:11px;color:#8a8f98;margin:14px 0 0">Satin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · (905) 962-6222</p></td></tr></table></body></html>';
+        . '</td></tr></table><p style="font-size:11px;color:#8a8f98;margin:14px 0 0">Satin Graphic · 50 Viceroy Rd, Unit 22–23, Vaughan, ON · (905) 695-9147</p></td></tr></table></body></html>';
 }
 
 function mail_hdr(string $s): string { return preg_match('/[^\x20-\x7e]/', $s) ? '=?UTF-8?B?' . base64_encode($s) . '?=' : $s; }

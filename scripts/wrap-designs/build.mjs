@@ -149,7 +149,7 @@ Colours: ${d.c.join(', ')} (sRGB). Ask us for Pantone / CMYK matches before prin
 Licence (summary): single-business licence for vehicles you own or operate. Resale or redistribution of the design files is not permitted.
 Full terms: https://satingraphic.ca/satin/design-agreement/
 
-Need it adjusted to your exact vehicle? Order "Need adjustment for your vehicle" or email info@satingraphic.ca · 905-962-6222.
+Need it adjusted to your exact vehicle? Order "Need adjustment for your vehicle" or email info@satingraphic.ca · 905-695-9147.
 `);
   fs.rmSync(`${PKG}/${d.slug}.zip`, { force: true });
   execFileSync('python3', ['-c', 'import sys,os,zipfile\nz=zipfile.ZipFile(sys.argv[2],"w",zipfile.ZIP_DEFLATED)\nfor f in sorted(os.listdir(sys.argv[1])): z.write(os.path.join(sys.argv[1],f),"'+d.slug+'-wrap-design/"+f)\nz.close()', pk, `${PKG}/${d.slug}.zip`]);

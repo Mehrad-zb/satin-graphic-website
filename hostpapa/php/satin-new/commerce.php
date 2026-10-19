@@ -561,7 +561,7 @@ function shop_notify_new(array $o, string $why): void {
 function shop_mail_customer_received(array $o): void {
     $pay = $o['payment_url'] !== '' ? "Pay securely here: {$o['payment_url']}\n\n" : "We will review your order and artwork and email you a secure payment link shortly. No payment has been taken yet.\n\n";
     send_mail($o['email'], "Your Satin Graphic order {$o['number']}", "Hello {$o['name']},\n\nThank you for your order {$o['number']}.\n\n" . shop_order_text($o) . "\n\n$pay" .
-        "Our team checks every file before printing and will contact you if anything needs attention.\n\nQuestions? Reply to info@satingraphic.ca or call 905-962-6222.\n\nSatin Graphic\n50 Viceroy Rd, Unit 22–23, Vaughan, ON");
+        "Our team checks every file before printing and will contact you if anything needs attention.\n\nQuestions? Reply to info@satingraphic.ca or call 905-695-9147.\n\nSatin Graphic\n50 Viceroy Rd, Unit 22–23, Vaughan, ON");
 }
 function shop_mail_customer_paid(array $o): void {
     $links = shop_download_links($o);
@@ -576,7 +576,7 @@ function shop_mail_customer_paid(array $o): void {
     }
     $via = shop_pay_method_label($o);
     send_mail($o['email'], "Payment received — Satin Graphic order {$o['number']}", "Hello {$o['name']},\n\nWe received your payment for order {$o['number']}" . ($via !== '' ? " ($via)" : '') . ".\n\n" . shop_order_text($o) . "\n\n$dl" .
-        ($onlyDigital ? "Thank you for your purchase. Keep this email: the links above are your download access.\n\n" : "We will check your artwork before production and keep you updated.\n\n") . "Satin Graphic · info@satingraphic.ca · 905-962-6222");
+        ($onlyDigital ? "Thank you for your purchase. Keep this email: the links above are your download access.\n\n" : "We will check your artwork before production and keep you updated.\n\n") . "Satin Graphic · info@satingraphic.ca · 905-695-9147");
 }
 /** Marks an order paid once (webhook, return check or admin) and sends the emails. */
 function shop_mark_paid(array $o, string $paymentId, string $how): bool {
@@ -1056,7 +1056,7 @@ function shop_checkout_route(string $path, string $method): void {
 
 function shop_checkout_payment(array $s, array $v, array $draft, int $revision, bool $exists, bool $card = false): void {
     $sid = $s['id']; $pdo = shop_db();
-    shop_limit('shoppay:' . shop_ip(), 20, 3600, 'Too many checkout attempts. Please wait and try again, or call 905-962-6222.');
+    shop_limit('shoppay:' . shop_ip(), 20, 3600, 'Too many checkout attempts. Please wait and try again, or call 905-695-9147.');
     $prov = (string)($v['provider'] ?? ''); $sqReady = shop_square_ready(); $ppReady = shop_paypal_ready();
     if (!in_array($prov, ['square', 'paypal'], true)) throw new ShopError('Choose a payment method.');
     if ($prov === 'paypal' && !$ppReady) json_out(['error' => 'PayPal is not available right now. Pay by card instead.'], 503);
@@ -1085,7 +1085,7 @@ function shop_checkout_payment(array $s, array $v, array $draft, int $revision, 
     $t = shop_totals($draft);
     if (!$t['taxReady']) throw new ShopError('Online ordering is not available for this delivery province yet. Choose pickup or contact us.');
     if ($t['couponError']) throw new ShopError($t['couponError'] . ' Remove the discount code to continue.');
-    if ($t['total'] === 0) throw new ShopError('Your total is $0.00 after the discount, so it cannot be paid online. Please contact us at info@satingraphic.ca or 905-962-6222 to complete this order.');
+    if ($t['total'] === 0) throw new ShopError('Your total is $0.00 after the discount, so it cannot be paid online. Please contact us at info@satingraphic.ca or 905-695-9147 to complete this order.');
     if ($t['total'] < 0 || $t['total'] > 10000000) throw new ShopError('Check the order amount.');
     $h = hash('sha256', $sid . ':' . $revision);
     $id = substr($h, 0, 8) . '-' . substr($h, 8, 4) . '-' . substr($h, 12, 4) . '-' . substr($h, 16, 4) . '-' . substr($h, 20, 12);
@@ -1279,7 +1279,7 @@ function shop_studio_orders(string $r, string $method, array $s): void {
     }
     if ($r === '/order') {
         // Studio cart "submit for review": saved as an online order awaiting payment; the owner confirms and sends a payment link.
-        shop_limit('shoporder:' . shop_ip(), 10, 3600, 'Too many orders. Please wait or call 905-962-6222.');
+        shop_limit('shoporder:' . shop_ip(), 10, 3600, 'Too many orders. Please wait or call 905-695-9147.');
         $v = shop_input(10000);
         $name = shop_clean($v['name'] ?? '', 120); $email = strtolower(shop_clean($v['email'] ?? '', 254));
         if (!shop_is_uuid($v['id'] ?? null) || ($v['consent'] ?? null) !== true || mb_strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new ShopError('Add contact details and agree to order review.');
@@ -1511,7 +1511,7 @@ function shop_pay_method_label(array $o): string {
 }
 function shop_square_charge(array $o, array $v, bool $afterpay = false): array {
     if ($o['status'] !== 'awaiting_payment') return $o;
-    shop_limit('sqcard:' . $o['id'], 8, 3600, 'Too many card attempts for this order. Please wait an hour or call 905-962-6222.');
+    shop_limit('sqcard:' . $o['id'], 8, 3600, 'Too many card attempts for this order. Please wait an hour or call 905-695-9147.');
     $c = shop_square();
     $a = json_decode($o['address'], true) ?: [];
     $body = ['source_id' => $v['sourceId'], 'idempotency_key' => $v['idempotencyKey'], 'amount_money' => ['amount' => (int)$o['total'], 'currency' => 'CAD'], 'location_id' => $c['locationId'],

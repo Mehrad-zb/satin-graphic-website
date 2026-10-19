@@ -18,7 +18,7 @@ async function api(path, body) {
   return d;
 }
 const header = (title, sub) => { $('[data-title]').textContent = title; $('[data-sub]').textContent = sub || ''; document.title = title + ' · Review & sign'; };
-const fail = (msg) => { $('[data-bar]').hidden = true; app.innerHTML = `<div class="card center"><h1>We couldn't open this document</h1><p>${esc(msg)}</p><p>Please contact Satin Graphic at <a href="tel:9059626222">905-962-6222</a> or <a href="mailto:info@satingraphic.ca">info@satingraphic.ca</a>.</p></div>`; header('Satin e-Sign'); };
+const fail = (msg) => { $('[data-bar]').hidden = true; app.innerHTML = `<div class="card center"><h1>We couldn't open this document</h1><p>${esc(msg)}</p><p>Please contact Satin Graphic at <a href="tel:9056959147">905-695-9147</a> or <a href="mailto:info@satingraphic.ca">info@satingraphic.ca</a>.</p></div>`; header('Satin e-Sign'); };
 
 /* ---------- public link: who is signing? ---------- */
 async function startFromLink(l) {

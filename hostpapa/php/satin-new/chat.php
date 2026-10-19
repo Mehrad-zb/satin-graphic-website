@@ -436,7 +436,7 @@ function chat_answer(string $question, array $conv, ?array $history = null): arr
     if ($p && $p['coverage'] >= ($nq <= 2 ? 0.5 : 0.6) && !($unknown && $nq <= 3)) {
         return ['text' => ($fa ? 'این را در سایت ما پیدا کردم: «' : 'Here’s what our website says: “') . chat_snippet($p['body'], $q) . ($fa ? '»' : '”'), 'links' => array_slice($pageLinks, 0, 3), 'source' => 'pages', 'offerHuman' => false];
     }
-    return ['text' => $fa ? 'برای این سؤال مطمئن نیستم. همکاران ما می‌توانند پاسخ دهند — روی «صحبت با همکاران» بزنید یا با ‎(905) 962-6222 تماس بگیرید / به info@satingraphic.ca ایمیل بزنید.' : 'I’m not sure about that one. Our team can answer it — tap “Talk to a person”, or call (905) 962-6222 / email info@satingraphic.ca.', 'links' => array_slice($pageLinks, 0, 2), 'source' => 'none', 'offerHuman' => true];
+    return ['text' => $fa ? 'برای این سؤال مطمئن نیستم. همکاران ما می‌توانند پاسخ دهند — روی «صحبت با همکاران» بزنید یا با ‎(905) 695-9147 تماس بگیرید / به info@satingraphic.ca ایمیل بزنید.' : 'I’m not sure about that one. Our team can answer it — tap “Talk to a person”, or call (905) 695-9147 / email info@satingraphic.ca.', 'links' => array_slice($pageLinks, 0, 2), 'source' => 'none', 'offerHuman' => true];
 }
 /** Live values inside Q&A answers: {hours} = office hours from Live chat → Settings. */
 function chat_fill(string $text, ?array $s = null): string {
@@ -451,7 +451,7 @@ function chat_kb_link_title(string $u): string {
 
 /* ---------------- optional AI (Anthropic Messages API) ---------------- */
 function chat_ai_system(array $s): string {
-    return "You are the website chat assistant for Satin Graphic (also known as Satin Auto Wrap), a vehicle wrap, paint protection film, window tint, print shop, apparel, window graphics and wallpaper business at 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario, serving the Greater Toronto Area. Phone (905) 962-6222, email info@satingraphic.ca. Office hours (Toronto time): " . chat_hours_text($s) . ".\n\n"
+    return "You are the website chat assistant for Satin Graphic (also known as Satin Auto Wrap), a vehicle wrap, paint protection film, window tint, print shop, apparel, window graphics and wallpaper business at 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario, serving the Greater Toronto Area. Phone (905) 695-9147, email info@satingraphic.ca. Office hours (Toronto time): " . chat_hours_text($s) . ".\n\n"
         . "Rules:\n- Answer only questions about Satin Graphic, its services, products, prices, process and policies. Politely decline anything unrelated.\n"
         . "- Use only the facts in the SITE CONTEXT and the details above. Never invent or estimate prices, discounts, dates or guarantees that are not in the context; if a price is not in the context, say a team member will confirm it and suggest the quote form or the price estimator.\n"
         . "- Be concise: 1–4 short sentences, plain text, no markdown headings or tables. Answer in the visitor's language.\n"
@@ -741,7 +741,7 @@ function chat_route(string $path, string $method): void {
         json_out(['enabled' => $s['enabled'], 'welcome' => $s['welcome'], 'welcomeFa' => $s['welcomeFa'], 'whatsapp' => chat_wa_link($s['whatsapp']), 'openNow' => chat_open_now($s),
             'staffOnline' => chat_staff_online(), 'hours' => chat_hours_text($s), 'maxLength' => CHAT_MAX_MESSAGE, 'fileMax' => CHAT_FILE_MAX]);
     }
-    if (!$s['enabled']) json_out(['error' => 'Chat is not available right now. Call (905) 962-6222 or email info@satingraphic.ca.'], 503);
+    if (!$s['enabled']) json_out(['error' => 'Chat is not available right now. Call (905) 695-9147 or email info@satingraphic.ca.'], 503);
 
     if ($r === '/start' && $method === 'POST') {
         same_origin();
@@ -751,7 +751,7 @@ function chat_route(string $path, string $method): void {
         if (mb_strlen($name) < 2 || preg_match('/[<>{}\r\n]/', $name)) json_out(['error' => 'Please enter your name.', 'field' => 'name'], 400);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) json_out(['error' => 'Please enter a valid email address.', 'field' => 'email'], 400);
         if ($phone !== '' && (!preg_match('/^[+()\d\s.\-]{7,25}$/', $phone) || strlen(preg_replace('/\D/', '', $phone)) < 7)) json_out(['error' => 'Please check the phone number (or leave it empty).', 'field' => 'phone'], 400);
-        chat_limit('chatstart:' . chat_ip(), 6, 3600, 'Too many chats from this connection. Please call (905) 962-6222 or email info@satingraphic.ca.');
+        chat_limit('chatstart:' . chat_ip(), 6, 3600, 'Too many chats from this connection. Please call (905) 695-9147 or email info@satingraphic.ca.');
         $id = uuid(); $tok = token(); $now = now_iso(); $page = chat_page($v['page'] ?? '');
         $lang = ($v['lang'] ?? '') === 'fa' ? 'fa' : 'en';
         chat_db()->prepare('INSERT INTO chat_conversations (id,token_hash,name,email,phone,page_url,first_page,lang,status,mode,human_requested_at,emailed_at,unread_staff,last_visitor_at,last_staff_at,last_message_at,last_preview,ip,agent,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
@@ -910,14 +910,14 @@ function chat_kb_upgrade(PDO $pdo): void {
 function chat_seed_entries(): array {
     return [
         /* ---------- contact, location, hours ---------- */
-        ['Where are you located?', 'We’re at 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario, serving Toronto and the GTA. Shop visits are by appointment so the right person is available — call (905) 962-6222 to book a time.', 'address location shop visit directions where vaughan map office آدرس کجا کجاست نشانی مغازه', '/satin/contact/',
-            'آدرس ما: 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario — به تورنتو و کل GTA خدمات می‌دهیم. مراجعه حضوری با وقت قبلی است تا فرد مناسب حاضر باشد؛ برای هماهنگی با ‎(905) 962-6222 تماس بگیرید.'],
+        ['Where are you located?', 'We’re at 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario, serving Toronto and the GTA. Shop visits are by appointment so the right person is available — call (905) 695-9147 to book a time.', 'address location shop visit directions where vaughan map office آدرس کجا کجاست نشانی مغازه', '/satin/contact/',
+            'آدرس ما: 50 Viceroy Rd, Unit 22–23, Vaughan, Ontario — به تورنتو و کل GTA خدمات می‌دهیم. مراجعه حضوری با وقت قبلی است تا فرد مناسب حاضر باشد؛ برای هماهنگی با ‎(905) 695-9147 تماس بگیرید.'],
         ['What are your hours?', 'Our hours (Toronto time): {hours}. Shop visits are by appointment.', 'hours open opening closed saturday sunday weekend time today holiday ساعت کاری باز تعطیل شنبه یکشنبه', '/satin/contact/',
             'ساعت کاری ما (به وقت تورنتو): {hours}. مراجعه حضوری با وقت قبلی است.'],
-        ['How can I contact you?', 'Call (905) 962-6222 or email info@satingraphic.ca. Most quotes go out within one business day. You can also tap “Talk to a person” here, or send us files right in this chat.', 'phone email contact call number reach whatsapp تلفن ایمیل شماره تماس', '/satin/contact/',
-            'با ‎(905) 962-6222 تماس بگیرید یا به info@satingraphic.ca ایمیل بزنید. بیشتر قیمت‌ها ظرف یک روز کاری ارسال می‌شوند. همین‌جا هم می‌توانید روی «صحبت با همکاران» بزنید یا فایل بفرستید.'],
-        ['Can I visit the shop?', 'Yes — by appointment. Call (905) 962-6222 or email info@satingraphic.ca and we’ll book a time so the right person is there. You can also see paper stocks and film samples when you visit.', 'visit shop showroom appointment come in drop by walk in see samples حضوری مراجعه وقت قبلی', '/satin/contact/',
-            'بله، با وقت قبلی. با ‎(905) 962-6222 تماس بگیرید یا ایمیل بزنید تا زمانی هماهنگ کنیم که فرد مناسب حاضر باشد. هنگام مراجعه می‌توانید نمونهٔ کاغذها و فیلم‌ها را هم ببینید.'],
+        ['How can I contact you?', 'Call (905) 695-9147 or email info@satingraphic.ca. Most quotes go out within one business day. You can also tap “Talk to a person” here, or send us files right in this chat.', 'phone email contact call number reach whatsapp تلفن ایمیل شماره تماس', '/satin/contact/',
+            'با ‎(905) 695-9147 تماس بگیرید یا به info@satingraphic.ca ایمیل بزنید. بیشتر قیمت‌ها ظرف یک روز کاری ارسال می‌شوند. همین‌جا هم می‌توانید روی «صحبت با همکاران» بزنید یا فایل بفرستید.'],
+        ['Can I visit the shop?', 'Yes — by appointment. Call (905) 695-9147 or email info@satingraphic.ca and we’ll book a time so the right person is there. You can also see paper stocks and film samples when you visit.', 'visit shop showroom appointment come in drop by walk in see samples حضوری مراجعه وقت قبلی', '/satin/contact/',
+            'بله، با وقت قبلی. با ‎(905) 695-9147 تماس بگیرید یا ایمیل بزنید تا زمانی هماهنگ کنیم که فرد مناسب حاضر باشد. هنگام مراجعه می‌توانید نمونهٔ کاغذها و فیلم‌ها را هم ببینید.'],
         ['Which areas do you serve?', 'We’re in Vaughan and serve the whole Greater Toronto Area — Toronto, Mississauga, Brampton, Markham, Richmond Hill, Woodbridge, Concord, Maple, Thornhill, North York, Etobicoke, Newmarket, Aurora, King City and more. Print and apparel ship across Canada.', 'areas serve gta toronto mississauga brampton markham richmond hill woodbridge concord thornhill north york etobicoke newmarket aurora king city near me مناطق تورنتو', '/satin/vehicle-wraps/',
             'ما در Vaughan هستیم و به کل GTA خدمات می‌دهیم: تورنتو، میسیساگا، برامپتون، مارکهام، ریچموندهیل، وودبریج، تورنهیل، نورث‌یورک، اتوبیکوک، نیومارکت، اورورا و… . چاپ و پوشاک را به سراسر کانادا ارسال می‌کنیم.'],
         ['What services do you offer?', 'Vehicle wraps (commercial, colour change, lettering), paint protection film, window tint, auto detailing and ceramic coating, print shop (offset, large format, labels and stickers), custom apparel, window graphics, wallpaper, design services, websites, social media and videography.', 'services offer do what everything list خدمات چه کارهایی', '/satin/',
@@ -1128,8 +1128,8 @@ function chat_seed_entries(): array {
             'بله — چاپ و پوشاک را با پیک به سراسر کانادا ارسال می‌کنیم؛ هزینه بر اساس وزن و مقصد قبل از تأیید اعلام می‌شود. سفارش‌های بالای ۵۰۰ دلار داخل GTA ارسال رایگان دارند.'],
         ['Do you ship or install outside Vaughan?', 'Pickup in Vaughan is free. We ship print and apparel across Canada by courier, and install wraps, tint, window and wall graphics across the GTA (Toronto, Mississauga, Brampton, Markham, Richmond Hill and more).', 'ship shipping delivery courier canada install gta toronto mississauga brampton markham outside', '/satin/faq/',
             'تحویل حضوری در Vaughan رایگان است. چاپ و پوشاک را به سراسر کانادا ارسال می‌کنیم و رپ، تینت، گرافیک ویترین و دیوار را در سراسر GTA نصب می‌کنیم.'],
-        ['My package arrived damaged — what do I do?', 'Photograph the package before opening it and contact us within 48 hours at info@satingraphic.ca or (905) 962-6222, so we can claim against the carrier and reprint.', 'damaged package shipping broken courier arrived lost claim خراب رسید', '/satin/refund-policy/',
-            'قبل از باز کردن از بسته عکس بگیرید و ظرف ۴۸ ساعت با info@satingraphic.ca یا ‎(905) 962-6222 تماس بگیرید تا از شرکت حمل خسارت بگیریم و دوباره چاپ کنیم.'],
+        ['My package arrived damaged — what do I do?', 'Photograph the package before opening it and contact us within 48 hours at info@satingraphic.ca or (905) 695-9147, so we can claim against the carrier and reprint.', 'damaged package shipping broken courier arrived lost claim خراب رسید', '/satin/refund-policy/',
+            'قبل از باز کردن از بسته عکس بگیرید و ظرف ۴۸ ساعت با info@satingraphic.ca یا ‎(905) 695-9147 تماس بگیرید تا از شرکت حمل خسارت بگیریم و دوباره چاپ کنیم.'],
         ['What is your refund policy?', 'Everything is custom-made to your artwork, so we don’t accept returns or refunds for change of mind, the wrong size or quantity ordered, or errors in a proof you approved. If an order doesn’t match the approved proof or has a defect, tell us within 7 days and we’ll reprint it free — or refund it if a reprint isn’t practical.', 'refund return money back policy exchange change mind wrong size مرجوع بازپرداخت', '/satin/refund-policy/',
             'همهٔ کارها سفارشی ساخته می‌شوند، بنابراین برای تغییر نظر، سایز یا تعداد اشتباه یا خطای موجود در پروف تأییدشده مرجوعی و بازپرداخت نداریم. اگر سفارش با پروف تأییدشده مطابقت ندارد یا ایراد دارد، ظرف ۷ روز خبر دهید تا رایگان دوباره چاپ کنیم یا در صورت عدم امکان، وجه را برگردانیم.'],
         ['What if my order has a mistake or defect?', 'If your order doesn’t match the approved proof — wrong colour, size, stock, misregistration, trimming faults or a manufacturing defect — tell us within 7 days of pickup or delivery. We reprint the affected quantity at no charge, or refund it if a reprint isn’t practical.', 'defect mistake wrong reprint error misprint quality problem issue ایراد اشتباه چاپ مجدد', '/satin/refund-policy/',
@@ -1148,7 +1148,7 @@ function chat_seed_entries(): array {
             'پنج سال گارانتی اجرت رپ، ده سال گارانتی سازنده روی فیلم PPF به‌علاوهٔ ۵ سال اجرت، گارانتی مادام‌العمر فیلم تینت به‌علاوهٔ ۲ سال اجرت، ۲ سال برای گرافیک ویترین و کاغذدیواری، ۵۰ بار شستشو برای چاپ پوشاک، و چاپ مجدد برای هر کاری که با پروف تأییدشده مطابقت نداشته باشد.'],
         ['What does the wrap warranty not cover?', 'Not covered: damage from accidents, pressure washers at edges, automatic brush washes, chemicals, or wraps applied over repaint, damaged paint or non-OEM panels we flagged at inspection.', 'warranty not covered exclusions accident pressure washer brush wash repaint گارانتی شامل نمی شود', '/satin/warranty/',
             'شامل نمی‌شود: آسیب تصادف، کارواش فشار قوی روی لبه‌ها، کارواش برس‌دار، مواد شیمیایی، یا رپ روی رنگ دوباره‌شده، رنگ آسیب‌دیده یا قطعات غیرکارخانه‌ای که در بازدید اعلام کرده‌ایم.'],
-        ['How do I make a warranty claim?', 'Email info@satingraphic.ca with your invoice number, photos of the issue and the date it appeared (call (905) 962-6222 if urgent). We inspect within 10 business days and repair, replace or reprint the affected area at no charge if it’s covered.', 'warranty claim how to problem lifting peeling bubble report ادعای گارانتی', '/satin/warranty/',
+        ['How do I make a warranty claim?', 'Email info@satingraphic.ca with your invoice number, photos of the issue and the date it appeared (call (905) 695-9147 if urgent). We inspect within 10 business days and repair, replace or reprint the affected area at no charge if it’s covered.', 'warranty claim how to problem lifting peeling bubble report ادعای گارانتی', '/satin/warranty/',
             'به info@satingraphic.ca ایمیل بزنید و شمارهٔ فاکتور، عکس مشکل و تاریخ بروز آن را بفرستید (در موارد فوری تماس بگیرید). ظرف ۱۰ روز کاری بررسی می‌کنیم و اگر مشمول گارانتی باشد رایگان تعمیر، تعویض یا چاپ مجدد می‌کنیم.'],
 
         /* ---------- account ---------- */
