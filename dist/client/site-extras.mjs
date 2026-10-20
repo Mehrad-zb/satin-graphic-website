@@ -246,6 +246,3 @@ run();
 new MutationObserver(() => { clearTimeout(run.t); run.t = setTimeout(run, 60); }).observe(document.body, { childList: true, subtree: true });
 addEventListener('keydown', e => { if ((e.key === '/' && !/input|textarea|select/i.test(document.activeElement?.tagName || '') && !document.activeElement?.isContentEditable) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); openSearch(); } });
 window.satinOpenSearch = openSearch;
-
-/* opt-in preview of the simplified menu: ?preview=nav2 turns it on for this browser, ?preview=off turns it off */
-try{const pv=new URLSearchParams(location.search).get('preview');if(pv==='nav2')localStorage.setItem('satinNav2','1');if(pv==='off')localStorage.removeItem('satinNav2');if(localStorage.getItem('satinNav2')==='1')import('/nav-v2.mjs?v=2').catch(e=>console.warn('nav2',e));}catch(e){}
