@@ -246,3 +246,6 @@ run();
 new MutationObserver(() => { clearTimeout(run.t); run.t = setTimeout(run, 60); }).observe(document.body, { childList: true, subtree: true });
 addEventListener('keydown', e => { if ((e.key === '/' && !/input|textarea|select/i.test(document.activeElement?.tagName || '') && !document.activeElement?.isContentEditable) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) { e.preventDefault(); openSearch(); } });
 window.satinOpenSearch = openSearch;
+
+/* coming-soon pages (list in /coming-soon.mjs) */
+try{import('/coming-soon.mjs?v=1').catch(e=>console.warn('coming-soon',e));}catch(e){}
