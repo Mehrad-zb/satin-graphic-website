@@ -221,6 +221,9 @@ function linkModal(t) {
 }
 
 /* ---------------- Agreement information form: staff fill everything (all optional), the customer only signs ---------------- */
+// saved vehicles of a customer (filled in by the customer on an agreement's details form)
+const custVehicles = x => { try { const v = typeof x.vehicles === 'string' ? JSON.parse(x.vehicles || '[]') : x.vehicles; return Array.isArray(v) ? v : []; } catch { return []; } };
+const vehKey = l => /make/i.test(l) && /model/i.test(l) ? 'makeModel' : /make/i.test(l) ? 'make' : /model/i.test(l) ? 'model' : /year/i.test(l) ? 'year' : /colou?r/i.test(l) ? 'colour' : /licen[cs]e|plate/i.test(l) ? 'plate' : /\bvin\b/i.test(l) ? 'vin' : '';
 async function fillPage(id, docId, auto) { toTop();
   const c = A().shell(docId ? 'Edit agreement' : auto ? 'Automated agreement' : 'Create agreement', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
   let t, doc = null;
@@ -330,12 +333,16 @@ async function fillPage(id, docId, auto) { toTop();
   const useCustomer = x => { f.custname.value = x.name || ''; if (x.email) f.email.value = x.email; f.custname.dataset.cust = x.id || '';
     for (const fl of [...ours, ...theirsText, ...custF]) { const el = $(`[data-v="${fl.id}"]`, c); if (!el || el.type === 'checkbox') continue; const L = (fl.label || '').toLowerCase();
       const v = /company/.test(L) ? x.company : /phone/.test(L) ? x.phone : /e-?mail/.test(L) ? x.email : /first name/.test(L) ? (x.name || '').split(' ')[0] : /last name/.test(L) ? (x.name || '').split(' ').slice(1).join(' ') : /customer name|full name|^name/.test(L) ? x.name : /address/.test(L) ? x.address : '';
-      if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } } };
+      if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } }
+    const V = custVehicles(x)[0]; if (V) { const mm = V.makeModel || [V.make, V.model].filter(Boolean).join(' ');
+      for (const fl of [...ours, ...theirsText, ...custF]) { const el = $(`[data-v="${fl.id}"]`, c); const L = fl.label || ''; if (!el || el.type === 'checkbox' || !/vehicle|make|model|year|colou?r|licen[cs]e|plate|\bvin\b/i.test(L) || /company|e-?mail|phone|address|pick-?up/i.test(L)) continue;
+        const k = vehKey(L), v = k === 'makeModel' ? mm : k === 'make' ? (V.make || mm.split(' ')[0] || '') : k === 'model' ? (V.model || mm.split(' ').slice(1).join(' ')) : (V[k] || '');
+        if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } } } };
   const sug = $('[data-sug]', c); let act = -1, shown = [];
   const closeSug = () => { sug.hidden = true; f.custname.setAttribute('aria-expanded', 'false'); act = -1; };
   const drawSug = () => { const q = f.custname.value.trim().toLowerCase(); if (!CUSTOMERS || !q) return closeSug();
     shown = CUSTOMERS.filter(x => [x.name, x.company, x.email, x.phone].join(' ').toLowerCase().includes(q)).slice(0, 8);
-    sug.innerHTML = shown.map((x, k) => `<button type="button" role="option" data-k="${k}" class="${k === act ? 'on' : ''}"><b>${esc(x.name)}</b><small>${esc([x.company, x.email, x.phone].filter(Boolean).join(' · '))}</small></button>`).join('') + `<button type="button" class="es-sug-add" data-new>+ Add “${esc(f.custname.value.trim())}” as a new customer</button>`;
+    sug.innerHTML = shown.map((x, k) => `<button type="button" role="option" data-k="${k}" class="${k === act ? 'on' : ''}"><b>${esc(x.name)}</b><small>${esc([x.company, x.email, x.phone, (v => v ? v.makeModel || [v.year, v.make, v.model].filter(Boolean).join(' ') : '')(custVehicles(x)[0])].filter(Boolean).join(' · '))}</small></button>`).join('') + `<button type="button" class="es-sug-add" data-new>+ Add “${esc(f.custname.value.trim())}” as a new customer</button>`;
     sug.hidden = false; f.custname.setAttribute('aria-expanded', 'true');
     $$('[data-k]', sug).forEach(b => b.onmousedown = e => { e.preventDefault(); useCustomer(shown[+b.dataset.k]); closeSug(); });
     $('[data-new]', sug).onmousedown = e => { e.preventDefault(); closeSug(); addCust(f.custname.value.trim()); }; };
@@ -343,7 +350,7 @@ async function fillPage(id, docId, auto) { toTop();
   $('[data-addcust]', c).onclick = () => addCust(f.custname.value.trim());
   f.custname.addEventListener('input', drawSug); f.custname.addEventListener('blur', () => setTimeout(closeSug, 150));
   f.custname.addEventListener('keydown', e => { if (sug.hidden) return; if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); act = (act + (e.key === 'ArrowDown' ? 1 : -1) + shown.length) % Math.max(1, shown.length); drawSug(); } else if (e.key === 'Enter' && act >= 0) { e.preventDefault(); useCustomer(shown[act]); closeSug(); } else if (e.key === 'Escape') closeSug(); });
-  if (A().can('invoices.view')) (async () => { try { CUSTOMERS = CUSTOMERS || (await A().api('/customers')).customers || []; } catch { CUSTOMERS = []; } })();
+  if (A().can('invoices.view')) (async () => { try { CUSTOMERS = (await A().api('/customers')).customers || CUSTOMERS || []; } catch { CUSTOMERS = CUSTOMERS || []; } })(); // fresh each time: customers who just filled in a form show up
   const mirror = (re, from) => { for (const fl of [...ours, ...custF]) if (re.test(fl.label || '')) { const el = $(`[data-v="${fl.id}"]`, c); if (el && (!el.value || el.dataset.auto)) { el.value = from.value; el.dataset.auto = 1; } } };
   f.custname.addEventListener('input', () => mirror(/customer name|full name/i, f.custname));
   f.email.addEventListener('input', () => mirror(/email/i, f.email));

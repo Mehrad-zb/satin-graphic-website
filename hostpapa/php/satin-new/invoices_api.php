@@ -797,7 +797,7 @@ function invoices_route(string $r, string $method): void {
     if ($r === '/customers' && $method === 'GET') {
         require_user('invoices.view');
         $rows = $pdo->query('SELECT c.*, COUNT(i.id) n, COALESCE(SUM(CASE WHEN i.status != \'void\' AND i.status != \'draft\' THEN i.total ELSE 0 END),0) billed, COALESCE(SUM(CASE WHEN i.status != \'void\' AND i.status != \'draft\' THEN i.total - i.paid ELSE 0 END),0) balance, MAX(i.issue_date) last FROM inv_customers c LEFT JOIN invoices i ON i.customer_id = c.id GROUP BY c.id ORDER BY c.name COLLATE NOCASE LIMIT 5000')->fetchAll();
-        json_out(['customers' => array_map(function ($c) { return ['id' => $c['id'], 'name' => $c['name'], 'company' => $c['company'], 'email' => $c['email'], 'phone' => $c['phone'], 'address' => $c['address'], 'notes' => $c['notes'], 'created' => $c['created_at'], 'invoices' => (int)$c['n'], 'billed' => (int)$c['billed'], 'balance' => max(0, (int)$c['balance']), 'last' => $c['last']]; }, $rows)]);
+        json_out(['customers' => array_map(function ($c) { return ['id' => $c['id'], 'name' => $c['name'], 'company' => $c['company'], 'email' => $c['email'], 'phone' => $c['phone'], 'address' => $c['address'], 'notes' => $c['notes'], 'vehicles' => json_decode((string)($c['vehicles'] ?? ''), true) ?: [], 'created' => $c['created_at'], 'invoices' => (int)$c['n'], 'billed' => (int)$c['billed'], 'balance' => max(0, (int)$c['balance']), 'last' => $c['last']]; }, $rows)]);
     }
     if ($r === '/customers/save' && $method === 'POST') {
         $u = require_user('invoices.edit');

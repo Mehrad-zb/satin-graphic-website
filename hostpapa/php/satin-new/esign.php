@@ -197,7 +197,39 @@ function es_intake_store(array $d, array $c, string $who): array {
     $d = es_doc_by_id($d['id']);
     if ($d['status'] !== 'draft') $pdo->prepare('UPDATE esign_docs SET original_hash = ? WHERE id = ?')->execute([es_doc_hash($d), $d['id']]);
     es_event($d['id'], 'customer details entered', $who, 'Details form completed' . ($c['veh'] ? ' · ' . (count($c['veh']) + 1) . ' vehicles (Schedule A added)' : ''));
+    try { es_save_customer($d, $c, $fields); } catch (Throwable $e) { error_log('esign customer: ' . $e->getMessage()); }
     return es_doc_by_id($d['id']);
+}
+/** Vehicle field label → key in the customer's saved vehicles. */
+function es_veh_key(string $l): string {
+    if (preg_match('/make/i', $l) && preg_match('/model/i', $l)) return 'makeModel';
+    foreach (['make' => '/make/i', 'model' => '/model/i', 'year' => '/year/i', 'colour' => '/colou?r/i', 'plate' => '/licen[cs]e|plate/i', 'vin' => '/\bvin\b/i'] as $k => $re) if (preg_match($re, $l)) return $k;
+    return '';
+}
+/** The customer's details form also saves (or updates) them in Customers, with their vehicles, so the next agreement fills itself in. */
+function es_save_customer(array $d, array $c, array $fields): void {
+    $email = strtolower(trim($c['email'] ?? '')); if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) return;
+    $pdo = es_db(); $byId = array_column($fields, null, 'id'); $o = ['company' => '', 'phone' => '', 'address' => '']; $veh0 = [];
+    foreach ($c['pf'] as $id => $v) { if (!isset($byId[$id]) || $v === '') continue; $l = es_flabel($byId[$id]);
+        if (preg_match('/company/i', $l)) $o['company'] = $v; elseif (preg_match('/phone|mobile/i', $l)) $o['phone'] = $v; elseif (preg_match('/address/i', $l) && !preg_match('/e-?mail/i', $l)) $o['address'] = $v;
+        elseif (preg_match(ES_VEH_RE, $l) && ($k = es_veh_key($l)) !== '') $veh0[$k] = $v; }
+    $vehs = $veh0 ? [$veh0] : [];
+    foreach ($c['veh'] as $row) { $r = []; foreach ($row as $id => $v) if ($v !== '' && isset($byId[$id]) && ($k = es_veh_key(es_flabel($byId[$id]))) !== '') $r[$k] = $v; if ($r) $vehs[] = $r; }
+    try { $pdo->exec("ALTER TABLE inv_customers ADD COLUMN vehicles TEXT NOT NULL DEFAULT ''"); } catch (Throwable $e) { }
+    $q = $pdo->prepare('SELECT * FROM inv_customers WHERE lower(email) = ? ORDER BY updated_at DESC LIMIT 1'); $q->execute([$email]); $old = $q->fetch();
+    $name = trim($c['name'] ?? '') ?: ($old['name'] ?? $email); $now = now_iso();
+    $note = 'Agreement #' . $d['number'] . ' — ' . $d['title'] . ' (' . substr($now, 0, 10) . ')';
+    if ($old) {
+        $have = json_decode((string)($old['vehicles'] ?? ''), true) ?: [];
+        $sig = fn($v) => strtolower(json_encode($v)); $seen = array_map($sig, $have);
+        foreach (array_reverse($vehs) as $v) if (!in_array($sig($v), $seen, true)) array_unshift($have, $v);
+        $notes = (string)$old['notes']; if (strpos($notes, 'Agreement #' . $d['number'] . ' ') === false) $notes = trim($notes . "\n" . $note);
+        $pdo->prepare('UPDATE inv_customers SET name = ?, company = ?, phone = ?, address = ?, vehicles = ?, notes = ?, updated_at = ? WHERE id = ?')
+            ->execute([$name, $o['company'] ?: $old['company'], $o['phone'] ?: $old['phone'], $o['address'] ?: $old['address'], json_encode(array_slice($have, 0, 20), JSON_UNESCAPED_UNICODE), $notes, $now, $old['id']]);
+    } else {
+        $pdo->prepare('INSERT INTO inv_customers (id, name, company, email, phone, address, notes, vehicles, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)')
+            ->execute([uuid(), $name, $o['company'], $email, $o['phone'], $o['address'], $note, json_encode($vehs, JSON_UNESCAPED_UNICODE), $now, $now]);
+    }
 }
 function es_remove_part_page(array $pages, array $fields, int $k): array {
     $fields = array_values(array_filter($fields, fn($f) => (int)$f['page'] !== $k));
