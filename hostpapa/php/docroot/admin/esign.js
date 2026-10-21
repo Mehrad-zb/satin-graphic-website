@@ -40,7 +40,7 @@ const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); A
 
 async function route(path, params) {
   if (path === '/agreements/template') return editor(params.get('id'), params.get('send') === '1');
-  if (path === '/agreements/fill') return fillPage(params.get('id'), params.get('doc'), params.get('auto') === '1');
+  if (path === '/agreements/fill') return fillPage(params.get('id'), params.get('doc'), params.get('auto') === '1', params.get('form') === '1');
   if (path === '/agreements/ready') return readyPage(params.get('doc'));
   if (path === '/agreements/place') return placePage(params.get('doc'));
   return list(params);
@@ -59,6 +59,7 @@ async function list(params) {
     $('[data-auto]').onclick = () => pickTemplate(true);
   }
   try { DATA = await A().api('/esign'); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  if (canSend) { const acts = $('[data-actions]'); acts.insertAdjacentHTML('afterbegin', DATA.templates.filter(t => t.linkOn && t.linkUrl).map(t => `<button class="btn sm" data-ql="${t.id}">${esc(t.name.replace(/^Vehicle Wrap /, ''))} link</button> `).join('')); $$('[data-ql]', acts).forEach(b => b.onclick = () => linkModal(DATA.templates.find(x => x.id === b.dataset.ql))); }
   const waiting = DATA.docs.filter(isOpen).length;
   c.innerHTML = `<div class="grid g4 tiles es-tiles">
       <button type="button" class="card stat link es-tile" data-go="sent"><small>Awaiting signature</small><b>${waiting}</b></button>
@@ -164,7 +165,7 @@ function pickTemplate(auto) {
   if (!DATA.templates.length) { A().toast('Create a template first (or use “Sign a one-off PDF”).'); return; }
   const o = A().modal(`<header><h2>${auto ? 'Automated agreement' : 'Create agreement'}</h2><button class="x" data-close>×</button></header><p class="hint" style="margin-top:-6px">${auto ? 'You enter the price, materials and dates. The customer gets a link, fills in their own details and vehicles on a form, then signs once at the end.' : 'Choose the agreement template'}</p>
     <div class="es-pick">${DATA.templates.map(t => `<button type="button" data-p="${t.id}">${t.thumb ? `<img src="${esc(t.thumb)}" alt="">` : ''}<span><b>${esc(t.name)}</b><small>${t.pageCount} page${t.pageCount === 1 ? '' : 's'} · ${t.fieldCount} fields</small></span></button>`).join('')}</div>`);
-  $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); A().go('/agreements/fill?id=' + b.dataset.p + (auto ? '&auto=1' : '')); });
+  $$('[data-p]', o).forEach(b => b.onclick = () => { o.remove(); const t = DATA.templates.find(x => x.id === b.dataset.p); if (t && t.linkOn && t.linkUrl) return linkModal(t); A().go('/agreements/fill?id=' + b.dataset.p + (auto ? '&auto=1' : '')); });
 }
 
 /* ---------------- send ---------------- */
@@ -224,13 +225,22 @@ function linkModal(t) {
 // saved vehicles of a customer (filled in by the customer on an agreement's details form)
 const custVehicles = x => { try { const v = typeof x.vehicles === 'string' ? JSON.parse(x.vehicles || '[]') : x.vehicles; return Array.isArray(v) ? v : []; } catch { return []; } };
 const vehKey = l => /make/i.test(l) && /model/i.test(l) ? 'makeModel' : /make/i.test(l) ? 'make' : /model/i.test(l) ? 'model' : /year/i.test(l) ? 'year' : /colou?r/i.test(l) ? 'colour' : /licen[cs]e|plate/i.test(l) ? 'plate' : /\bvin\b/i.test(l) ? 'vin' : '';
-async function fillPage(id, docId, auto) { toTop();
+// templates with an active public link (e.g. the Design Agreement): no form for us — copy the link and send it
+const linkPanelHTML = t => `<div class="card"><h2 style="margin-top:0">${esc(t.name)}</h2>
+  <p class="hint" style="margin-top:-4px">Send this link to the customer — nothing to fill in here. They enter their own details, review the agreement and sign. Each customer who uses the link gets a <b>new agreement number</b>; the signed PDF is emailed to them and to you, it appears in your Agreements list, and their details are saved in Customers.</p>
+  <div class="es-link" style="margin-top:12px"><input class="input" readonly value="${esc(t.linkUrl)}"><button type="button" class="btn sm" data-cp>Copy link</button></div>
+  <p class="hint" style="margin-top:10px"><a href="${esc(t.linkUrl)}" target="_blank" rel="noopener">Open the link</a> · <a href="https://wa.me/?text=${encodeURIComponent('Please fill in your details and sign the ' + t.name + ' here: ' + t.linkUrl)}" target="_blank" rel="noopener">Send by WhatsApp</a> · <a href="#/agreements/fill?id=${t.id}&form=1">Prepare a custom one instead</a></p></div>`;
+function linkModal(t) { const o = A().modal(`<header><h2>Send ${esc(t.name)}</h2><button class="x" data-close>×</button></header>${linkPanelHTML(t)}`); $('[data-cp]', o).onclick = () => copy(t.linkUrl); $$('a[href^="#/"]', o).forEach(a => a.addEventListener('click', () => o.remove())); }
+async function fillPage(id, docId, auto, form) { toTop();
   const c = A().shell(docId ? 'Edit agreement' : auto ? 'Automated agreement' : 'Create agreement', '<a href="#/agreements">Agreements</a>', '<div class="card empty">Loading…</div>', '/agreements');
   let t, doc = null;
   try { if (docId) { doc = (await A().api('/esign/doc?id=' + encodeURIComponent(docId))).doc; id = doc.templateId; } t = await getTpl(id); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
   auto = !!(auto || doc && doc.auto);
   if (doc && (doc.superseded || doc.status === 'cancelled')) { c.innerHTML = `<div class="card">This is ${doc.superseded ? 'an older version' : 'a cancelled document'} and can't be edited. <a href="#/agreements">Back to agreements</a></div>`; return; }
   $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="${doc ? '#/agreements/ready?doc=' + doc.id : '#/agreements'}">← Back</a> <a class="btn ghost sm es-hide-m" href="#/agreements/template?id=${t.id}">Edit template fields</a>`;
+  if (!doc && !form && t.linkOn && t.linkUrl) { const pick = DATA && DATA.templates.length > 1 ? `<div class="card"><label class="field" style="margin:0"><span>Agreement template</span><select class="input" data-tpl>${DATA.templates.map(x => `<option value="${x.id}" ${x.id === t.id ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select></label></div>` : '';
+    c.innerHTML = pick + linkPanelHTML(t); $('[data-cp]', c).onclick = () => copy(t.linkUrl);
+    const tp = $('[data-tpl]', c); if (tp) tp.onchange = () => A().go('/agreements/fill?id=' + tp.value + (auto ? '&auto=1' : '')); return; }
   const revising = doc && doc.status !== 'draft';
   const extra = doc ? doc.signers.slice(1).map(s => ({ name: s.name, email: s.email })) : [];
   const pre = doc ? doc.prefill || {} : null;
