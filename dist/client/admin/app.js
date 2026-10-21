@@ -56,6 +56,7 @@ const NAV = [
   { path: '/requests', label: 'Quotes & bookings', icon: 'inbox', perm: 'requests.view' },
   { path: '/chat', label: 'Live chat', icon: 'chat', perm: 'chat.view' },
   { path: '/orders', label: 'Online orders', icon: 'cart', perm: 'orders.view' },
+  { path: '/quotes', label: 'Price quotes', icon: 'doc', perm: 'invoices.view' },
   { path: '/invoices', label: 'Invoices', icon: 'doc', perm: 'invoices.view' },
   { path: '/customers', label: 'Customers', icon: 'users', perm: 'invoices.view' },
   { path: '/agreements', label: 'Agreements (e-sign)', icon: 'sign', perm: 'agreements.view' },
@@ -213,7 +214,7 @@ async function openRequest(id) {
       ${d.estimate ? `<dt>Estimate</dt><dd style="white-space:pre-line">${esc(d.estimate)}</dd>` : ''}${d.notes ? `<dt>Customer notes</dt><dd style="white-space:pre-line">${esc(d.notes)}</dd>` : ''}
       ${d.designRequested ? '<dt>Design</dt><dd>Design service requested · agreement accepted</dd>' : ''}
       ${(d.attachments || []).length ? `<dt>Attachments</dt><dd>${d.attachments.map(a => `<a href="/api/studio/file?id=${esc(a.id)}">${esc(a.name)}</a>`).join('<br>')}</dd>` : ''}</dl>
-      ${can('invoices.edit') ? `<p><a class="btn ghost sm" href="#/invoices/edit?request=${esc(r.id)}">Create invoice for this request</a></p>` : ''}
+      ${can('invoices.edit') ? `<p><a class="btn sm" href="#/quotes/edit?request=${esc(r.id)}">Create price quote</a> <a class="btn ghost sm" href="#/invoices/edit?request=${esc(r.id)}">Create invoice for this request</a></p>` : ''}
       <section class="rq-sec"><h3>Emails to the customer${replies.length ? ` <span class="rq-count">${replies.length}</span>` : ''}</h3>
         ${replies.map(replyCard).join('') || '<p class="hint" style="margin-top:0">No replies sent from the admin yet.</p>'}
         ${!canReply ? (can('requests.edit') ? '<p class="hint">This request has no email address to reply to.</p>' : '') : !draft.open ? '<button type="button" class="btn sm" data-rq-open>✉ Reply to customer</button>' : `
@@ -591,6 +592,7 @@ async function viewInvoiceEdit(params) {
   drawInvoice(c);
 }
 function drawInvoice(c) {
+  if (INV && INV.kind === 'quote') return drawQuote(c);
   if (!drawInvoice.mq) { drawInvoice.mq = matchMedia('(max-width:820px)'); drawInvoice.mq.addEventListener('change', () => { const cc = $('[data-content]'); if (INV && cc && cc.querySelector('.inv-doc,.wx')) { document.body.classList.remove('wx-inv'); drawInvoice(cc); } }); }
   if (drawInvoice.mq.matches) return drawInvoiceM(c);
   document.body.classList.remove('wx-inv');
@@ -918,6 +920,7 @@ function drawLines(c, ro) {
   });
 }
 function drawTotals(c, ro) {
+  if (INV && INV.kind === 'quote') return drawQuoteTotals(c, ro);
   const i = INV, k = calcInvoice(i, INVSET.taxes || []);
   const paid = i.paid || 0, bal = Math.max(0, k.total - paid);
   const dep = i.deposit?.items?.length ? planAmounts(i.deposit, k.total)[0] : 0;
@@ -1282,6 +1285,8 @@ async function route() {
   try {
     if (path === '/') return can('dashboard.view') ? viewHome() : viewAccount();
     if (path === '/requests') return viewRequests(params);
+    if (path === '/quotes') return viewQuotes(params);
+    if (path === '/quotes/edit') return can('invoices.view') ? viewQuoteEdit(params) : denied();
     if (path === '/invoices') return viewInvoices(params);
     if (path === '/invoices/edit') return can('invoices.view') ? viewInvoiceEdit(params) : denied();
     if (path === '/invoices/settings') return can('invoices.edit') && can('settings.edit') ? viewInvoiceSettings() : denied();
@@ -1303,6 +1308,131 @@ async function route() {
     if (path === '/catalog' || path.startsWith('/catalog/')) { if (!window.SatinCatalog) throw new Error('The catalog could not load. Refresh the page.'); return window.SatinCatalog.route(path, params); }
     go('/');
   } catch (e) { const c = $('[data-content]'); if (c) c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; else toast(e.message); }
+}
+/* ---------- price quotes (like Wix Price Quotes): send a link, the customer accepts online, it becomes an invoice ---------- */
+const Q_ST = { draft: 'Draft', sent: 'Sent', accepted: 'Accepted', declined: 'Declined', invoiced: 'Invoiced', expired: 'Expired' };
+const qPill = q => `<span class="pill q-${esc(q.status)}">${esc(Q_ST[q.status] || q.status)}</span>`;
+let qDays = 30, QSET = null;
+async function viewQuotes(params) {
+  const c = shell('Price quotes', 'Business', '<div class="card empty">Loading…</div>', '/quotes');
+  $('[data-actions]').innerHTML = can('invoices.edit') ? '<a class="btn sm" href="#/quotes/edit">+ New quote</a>' : '';
+  const d = await api('/quotes?days=' + qDays);
+  const ov = d.overview || {};
+  c.innerHTML = `<div class="card ov"><div class="ov-head"><h2>Overview</h2><select class="input" data-days>${[[30, 'Last 30 days'], [90, 'Last 90 days'], [365, 'Last 12 months'], [3650, 'All time']].map(([v, l]) => `<option value="${v}" ${v === qDays ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    <div class="ov-grid q-ov">${['sent', 'accepted', 'invoiced', 'expired'].map(k => `<div><b>${ov[k] || 0}</b><small>${Q_ST[k]}</small></div>`).join('')}</div></div>
+    <div class="inv-chips">${[['', 'All', d.quotes.length], ...Object.entries(Q_ST).map(([k, v]) => [k, v, (d.counts || {})[k] || 0])].map(([k, v, n]) => `<button type="button" class="inv-chip" data-chip="${k}">${esc(v)} <b>${n}</b></button>`).join('')}</div>
+    <div class="toolbar"><input class="input" data-q placeholder="Search number, customer, email, title"></div><div data-list></div>`;
+  let st = params.get('status') || ''; const q = $('[data-q]', c); q.value = params.get('q') || '';
+  const draw = () => {
+    const t = q.value.trim().toLowerCase();
+    const rows = d.quotes.filter(x => (!st || x.status === st) && (!t || [x.number, x.customer.name, x.customer.company, x.customer.email, x.title].join(' ').toLowerCase().includes(t)));
+    c.querySelectorAll('[data-chip]').forEach(b => b.classList.toggle('on', b.dataset.chip === st));
+    $('[data-list]', c).innerHTML = rows.length ? `<table class="table"><thead><tr><th>Number</th><th>Title</th><th>Customer</th><th>Issued on</th><th class="num">Total price</th><th>Status</th></tr></thead><tbody>${rows.slice(0, 500).map(x => `<tr class="click" data-qid="${esc(x.id)}"><td><b>${esc(x.number)}</b></td><td>${esc(x.title || '—')}</td><td>${esc(x.customer.name)}<small>${esc(x.customer.company || x.customer.email || '')}</small></td><td>${esc(dlong(x.issueDate))}</td><td class="num"><b>${money(x.total, x.currency)}</b></td><td>${qPill(x)}${x.invoiceNumber ? `<small>Invoice #${esc(x.invoiceNumber)}</small>` : ''}</td></tr>`).join('')}</tbody></table>`
+      : `<div class="card empty">${d.quotes.length ? 'No quotes match.' : 'No price quotes yet. Click “New quote” to create your first one.'}</div>`;
+    c.querySelectorAll('[data-qid]').forEach(tr => tr.onclick = () => go('/quotes/edit?id=' + tr.dataset.qid));
+  };
+  c.querySelectorAll('[data-chip]').forEach(b => b.onclick = () => { st = b.dataset.chip; draw(); });
+  q.oninput = draw; $('[data-days]', c).onchange = e => { qDays = +e.target.value; viewQuotes(params); };
+  draw();
+}
+async function viewQuoteEdit(params) {
+  const c = shell('Price quote', 'Business · Price quotes', '<div class="card empty">Loading…</div>', '/quotes');
+  const id = params.get('id');
+  const [d, look] = await Promise.all([api(id ? '/quotes/get?id=' + encodeURIComponent(id) : '/quotes/new?' + new URLSearchParams({ request: params.get('request') || '', customer: params.get('customer') || '' })), can('invoices.edit') ? api('/invoices/lookup') : { customers: [], items: [] }]);
+  INV = d.quote; INVSET = d.settings; INVLOOK = look; QSET = d.quoteSettings || {}; invDirty = false;
+  INV.items = INV.items.map(it => ({ ...it, price: id ? it.price / 100 : it.price }));
+  INV.publicUrl = d.publicUrl || '';
+  drawQuote(c);
+}
+function setQuote(q) { INV = { ...q, items: q.items.map(it => ({ ...it, price: it.price / 100 })), publicUrl: INV.publicUrl }; invDirty = false; }
+function drawQuote(c) {
+  document.body.classList.remove('wx-inv');
+  const i = INV, s = INVSET, b = i.business || s.business, locked = ['accepted', 'invoiced'].includes(i.baseStatus), ro = !can('invoices.edit') || locked;
+  const top = $('.top h1'); if (top) top.textContent = i.id ? 'Quote #' + i.number : 'New price quote';
+  $('[data-actions]').innerHTML = `<a class="btn ghost sm" href="#/quotes">← All quotes</a> ${!ro ? `<button class="btn ghost sm" data-save>${i.id ? 'Save' : 'Save draft'}</button> ` : ''}${i.id ? '<div class="more"><button class="btn ghost sm" data-more>More ▾</button><div class="menu" hidden></div></div> ' : ''}${i.invoiceId ? `<a class="btn sm" href="#/invoices/edit?id=${esc(i.invoiceId)}">Open invoice #${esc(i.invoiceNumber)}</a>` : can('invoices.edit') && i.status !== 'invoiced' ? (i.status === 'accepted' ? '<button class="btn sm" data-convert>Convert to invoice</button>' : `<button class="btn sm" data-sendq>${i.status === 'draft' ? 'Send quote' : 'Resend'}</button>`) : ''}`;
+  const cust = i.customer || {};
+  const info = [i.sentAt ? `Sent ${dlong(i.sentAt)}` : '', i.viewedAt ? `Viewed by customer ${dlong(i.viewedAt)}` : '', i.acceptedAt ? `Accepted ${dlong(i.acceptedAt)}${i.acceptedName ? ' by ' + i.acceptedName : ''}` : '', i.declinedAt ? `Declined ${dlong(i.declinedAt)}${i.declineReason ? ' — “' + i.declineReason + '”' : ''}` : '', i.requestId ? 'From a website request' : ''].filter(Boolean);
+  c.innerHTML = `${i.id ? `<div class="inv-status">${qPill(i)}${info.map(x => `<span>${esc(x)}</span>`).join('')}</div>` : ''}${locked ? `<div class="card" style="margin-bottom:14px">This quote was ${i.status === 'invoiced' ? 'accepted and turned into an invoice' : 'accepted'} — it can no longer be edited. Use <b>More → Duplicate</b> to make a new version.</div>` : ''}
+  <div class="card inv-doc"><fieldset ${ro ? 'disabled' : ''}>
+    <div class="inv-head"><div class="inv-biz">${b.logo ? `<img src="${esc(b.logo)}" alt="">` : ''}<b>${esc(b.name)}</b><div>${esc(b.address)}</div><div>${esc(b.email)} · ${esc(b.phone)}</div>${b.taxNumber ? `<div>${esc(b.taxNumber)}</div>` : ''}</div>
+      <div class="inv-meta"><h2>Price quote #${esc(i.number)}</h2>
+        <label>Issue date <input type="date" class="input" data-f="issueDate" value="${esc(i.issueDate)}"></label>
+        <label>Valid until <input type="date" class="input" data-f="validUntil" value="${esc(i.validUntil)}"></label></div></div>
+    <div class="inv-sec"><div class="lbl">Customer *</div>
+      <div class="cust-pick"><div class="cbx" data-cbx><input class="input" data-custsearch role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cbx-list" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Search customers by name, company or email" value="${esc(cust.name || '')}"><span class="cbx-caret" aria-hidden="true">▾</span>
+        <div class="cbx-list" id="cbx-list" role="listbox" aria-label="Customers" hidden></div></div>
+        ${i.customerId ? `<div class="cbx-linked"><span>✓ Saved customer</span>${ro ? '' : '<button type="button" class="linkbtn" data-editcust>Edit customer</button>'}</div>` : cust.name && !ro ? '<div class="cbx-linked new"><span>New customer — saved with the quote</span></div>' : ''}</div>
+      <div class="grid g2 cust-fields"><label class="field"><span>Company</span><input data-c="company" value="${esc(cust.company || '')}"></label><label class="field"><span>Email *</span><input type="email" data-c="email" value="${esc(cust.email || '')}"></label>
+        <label class="field"><span>Phone</span><input data-c="phone" value="${esc(cust.phone || '')}"></label><label class="field"><span>Address</span><textarea rows="2" data-c="address">${esc(cust.address || '')}</textarea></label></div></div>
+    <label class="field"><span>Quote title</span><input data-f="title" value="${esc(i.title || '')}" placeholder="e.g. Sprinter van full wrap"></label>
+    <table class="table lines"><thead><tr><th>Product or service</th><th class="num">Quantity</th><th class="num">Price</th><th>Taxes</th><th class="num">Line total</th><th></th></tr></thead><tbody data-lines></tbody></table>
+    ${ro ? '' : `<button type="button" class="btn ghost sm" data-addline>+ Add line item</button><datalist id="itemlist">${INVLOOK.items.map(x => `<option value="${esc(x.name)}">${money(x.price)}</option>`).join('')}</datalist>`}
+    <div class="inv-bottom"><div class="inv-notes"><label class="field"><span>Notes</span><textarea rows="3" data-f="notes">${esc(i.notes || '')}</textarea></label><label class="field"><span>Terms</span><textarea rows="3" data-f="terms">${esc(i.terms || '')}</textarea></label></div>
+      <div class="inv-totals" data-totals></div></div></fieldset></div>`;
+  if (!ro) custPicker(c, i);
+  c.querySelectorAll('[data-c]').forEach(el => el.oninput = () => { i.customer = { ...(i.customer || {}), [el.dataset.c]: el.value }; invDirty = true; });
+  c.querySelectorAll('[data-f]').forEach(el => el.oninput = () => { i[el.dataset.f] = el.value; invDirty = true; });
+  drawLines(c, ro); drawQuoteTotals(c, ro);
+  const al = $('[data-addline]', c); if (al) al.onclick = () => { i.items.push({ name: '', description: '', qty: 1, price: 0, taxes: [...(s.defaultTaxes || [])] }); invDirty = true; drawLines(c, ro); drawQuoteTotals(c, ro); c.querySelector('[data-lines] tr:last-child input')?.focus(); };
+  const sv = $('[data-save]'); if (sv) sv.onclick = () => saveQuote(c).then(ok => ok && toast('Quote saved'));
+  const sd = $('[data-sendq]'); if (sd) sd.onclick = () => sendQuoteModal(c);
+  const cv = $('[data-convert]'); if (cv) cv.onclick = () => quoteAct('convert', c);
+  const more = $('[data-more]');
+  if (more) { const menu = more.nextElementSibling;
+    const items = [['print', 'View / print / PDF'], ['copy', 'Copy customer link'], ...(i.status === 'draft' ? [['sent', 'Mark as sent (no email)']] : []), ...(['sent', 'expired', 'declined'].includes(i.status) ? [['accepted', 'Mark as accepted']] : []), ...(['sent', 'expired'].includes(i.status) ? [['declined', 'Mark as declined']] : []),
+      ...(i.status !== 'invoiced' && i.status !== 'draft' ? [['convert', 'Convert to invoice']] : []), ['dup', 'Duplicate'], ['newcust', 'New quote for this customer'], ['del', 'Delete quote']];
+    menu.innerHTML = items.map(([k, l]) => `<button data-m="${k}" class="${k === 'del' ? 'danger' : ''}">${l}</button>`).join('');
+    more.onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
+    document.addEventListener('click', () => { menu.hidden = true; }, { once: true });
+    menu.onclick = e => { const k = e.target.closest('[data-m]')?.dataset.m; if (!k) return; menu.hidden = true; quoteAct(k, c); }; }
+}
+function drawQuoteTotals(c, ro) {
+  const i = INV, k = calcInvoice(i, INVSET.taxes || []), box = $('[data-totals]', c); if (!box) return;
+  box.innerHTML = `<div class="tl"><span>Subtotal</span><b>${money(k.subtotal)}</b></div>
+    <div class="tl"><span>${i.discount?.type ? `Discount <select class="input xs" data-dt><option value="percent" ${i.discount.type === 'percent' ? 'selected' : ''}>%</option><option value="amount" ${i.discount.type === 'amount' ? 'selected' : ''}>CA$</option></select><input class="input xs" type="number" step="0.01" min="0" data-dv value="${esc(i.discount.value)}"> ${ro ? '' : '<button type="button" class="linkbtn" data-dx>Remove</button>'}` : ro ? 'Discount' : '<button type="button" class="linkbtn" data-dadd>+ Add discount</button>'}</span><b>${k.disc ? '−' + money(k.disc) : ''}</b></div>
+    ${k.taxes.map(t => `<div class="tl sub"><span>${esc(t.name)} (${esc(t.rate)}%)</span><b>${money(t.amount)}</b></div>`).join('')}
+    <div class="tl"><span>Tax total</span><b>${money(k.tax)}</b></div>
+    <div class="tl grand"><span>Quote total</span><b>${money(k.total)}</b></div>`;
+  const on = (sel, ev, fn) => { const el = $(sel, box); if (el) el[ev] = fn; };
+  on('[data-dadd]', 'onclick', () => { i.discount = { type: 'percent', value: 10 }; invDirty = true; drawQuoteTotals(c, ro); });
+  on('[data-dx]', 'onclick', () => { i.discount = {}; invDirty = true; drawQuoteTotals(c, ro); });
+  on('[data-dt]', 'onchange', e => { i.discount.type = e.target.value; invDirty = true; drawQuoteTotals(c, ro); });
+  on('[data-dv]', 'onchange', e => { i.discount.value = +e.target.value; invDirty = true; drawQuoteTotals(c, ro); });
+}
+async function saveQuote(c) {
+  const i = INV, btn = $('[data-save]'); if (btn) btn.disabled = true;
+  try {
+    const r = await api('/quotes/save', { id: i.id || '', customerId: i.customerId || null, customer: i.customer, title: i.title, issueDate: i.issueDate, validUntil: i.validUntil, items: i.items, discount: i.discount, notes: i.notes, terms: i.terms, requestId: i.requestId || null });
+    const isNew = !i.id; INV.publicUrl = r.publicUrl; setQuote(r.quote);
+    if (isNew) history.replaceState(null, '', '#/quotes/edit?id=' + r.quote.id);
+    drawQuote(c); return true;
+  } catch (e) { toast(e.message); return false; } finally { if (btn) btn.disabled = false; }
+}
+function sendQuoteModal(c) {
+  const i = INV;
+  const o = modal(`<header><h2>Send price quote</h2><button class="x" data-close>×</button></header><div data-msg></div>
+    <label class="field"><span>To</span><input name="to" type="email" value="${esc(i.customer?.email || '')}" required></label>
+    <label class="field"><span>Message</span><textarea name="message" rows="7">${esc(QSET.emailMessage || '')}</textarea><div class="hint">{name}, {number}, {total} and {valid} are filled in automatically. A button to review and accept the quote is added at the end.</div></label>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="btn ghost" data-link>Just copy the link</button><button class="btn" data-go>Send quote</button></div>`);
+  const done = (emailed) => { o.querySelector('.modal').innerHTML = `<header><h2>${emailed ? 'Quote sent' : 'Quote ready'}</h2><button class="x" data-close>×</button></header><p style="color:var(--mut)">${emailed ? 'We emailed the quote. You can also copy the link and send it by WhatsApp or text message:' : 'Send this link to the customer (WhatsApp, text or email). They can review the quote and accept it online:'}</p><div class="copy"><input class="input" readonly value="${esc(INV.publicUrl)}"><button class="btn" data-copy>Copy</button></div>`;
+    $('[data-copy]', o).onclick = () => { navigator.clipboard.writeText(INV.publicUrl); toast('Link copied'); }; };
+  $('[data-link]', o).onclick = async e => { e.target.disabled = true;
+    try { if (invDirty || !INV.id) { if (!(await saveQuote(c))) { e.target.disabled = false; return; } } if (INV.status === 'draft') { const r = await api('/quotes/status', { id: INV.id, status: 'sent' }); setQuote(r.quote); drawQuote(c); } done(false); }
+    catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; } };
+  $('[data-go]', o).onclick = async e => { e.target.disabled = true;
+    try { if (!(await saveQuote(c))) { e.target.disabled = false; return; }
+      const r = await api('/quotes/send', { id: INV.id, to: $('[name=to]', o).value, message: $('[name=message]', o).value }); setQuote(r.quote); drawQuote(c); done(r.emailed); }
+    catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; } };
+}
+async function quoteAct(k, c) {
+  const i = INV;
+  if (k === 'print') { if (invDirty && !(await saveQuote(c))) return; if (i.status === 'draft') return toast('Send or mark the quote as sent first — drafts are not visible to customers.'); open(i.publicUrl, '_blank', 'noopener'); }
+  if (k === 'copy') { if (i.status === 'draft') return toast('Use “Send quote” first — drafts are not visible to customers.'); navigator.clipboard.writeText(i.publicUrl); toast('Link copied'); }
+  if (['sent', 'accepted', 'declined'].includes(k)) { try { const r = await api('/quotes/status', { id: i.id, status: k }); setQuote(r.quote); drawQuote(c); toast('Quote marked as ' + Q_ST[k].toLowerCase()); } catch (er) { toast(er.message); } }
+  if (k === 'convert') confirmBox('Convert to invoice?', 'A new draft invoice is created with the same customer, items, discount and taxes. You can review it and send it from the invoice page.', async () => { try { const r = await api('/quotes/convert', { id: i.id }); toast('Invoice #' + r.invoiceNumber + ' created'); go('/invoices/edit?id=' + r.invoiceId); } catch (er) { toast(er.message); } });
+  if (k === 'dup') { const copy = JSON.parse(JSON.stringify(i)); Object.assign(copy, { id: '', status: 'draft', baseStatus: 'draft', sentAt: null, viewedAt: null, acceptedAt: null, acceptedName: '', declinedAt: null, declineReason: '', invoiceId: null, invoiceNumber: '', issueDate: todayISO(), number: '(new)' }); const d = new Date(); d.setDate(d.getDate() + (+QSET.validDays || 30)); copy.validUntil = d.toISOString().slice(0, 10); INV = copy; history.replaceState(null, '', '#/quotes/edit'); drawQuote(c); toast('Copy ready — save to create it'); }
+  if (k === 'newcust') go('/quotes/edit?customer=' + encodeURIComponent(i.customerId || ''));
+  if (k === 'del') confirmBox('Delete this quote?', 'The customer link stops working. This cannot be undone.', async () => { try { await api('/quotes/delete', { id: i.id }); invDirty = false; toast('Quote deleted'); go('/quotes'); } catch (er) { toast(er.message); } });
 }
 let refresh = () => route();
 window.SatinAdmin = { customerModal, get csrf() { return CSRF; }, $, esc, api, apiForm, popMenu, toast, go, shell, modal, confirmBox, can, fmtDate, icon, money, csvParse, downloadCSV, nav: NAV, get me() { return ME; } };

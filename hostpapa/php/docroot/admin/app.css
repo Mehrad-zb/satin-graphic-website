@@ -409,3 +409,8 @@ label.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6p
 .top>div:first-child{flex:none;min-width:0}
 .top h1{white-space:nowrap}
 .top [data-actions]{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
+
+/* price quotes */
+.pill.q-draft{background:#f3f4f6;color:#4b5563}.pill.q-sent{background:#dbeafe;color:#1d4ed8}.pill.q-accepted{background:var(--ok-bg);color:var(--ok)}.pill.q-declined{background:var(--bad-bg);color:var(--bad)}.pill.q-invoiced{background:#ede9fe;color:#6d28d9}.pill.q-expired{background:#f3f4f6;color:#6b7280}
+.q-ov{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){.q-ov{grid-template-columns:repeat(2,1fr)}}

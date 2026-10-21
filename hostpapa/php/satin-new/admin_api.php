@@ -332,6 +332,7 @@ function admin_route(string $path, string $method): void {
     if ($r === '/badges' || $r === '/badges/seen' || str_starts_with($r, '/push/')) { require_once __DIR__ . '/push.php'; push_admin_route($r, $method); }
     if ($r === '/customer-login' || str_starts_with($r, '/customer-accounts')) { require_once __DIR__ . '/customer.php'; customer_admin_route($r, $method); }
     if (str_starts_with($r, '/invoices') || str_starts_with($r, '/customers') || $r === '/analytics') { require_once __DIR__ . '/site_api.php'; require_once __DIR__ . '/invoices_api.php'; invoices_route($r, $method); }
+    if ($r === '/quotes' || str_starts_with($r, '/quotes/')) { require_once __DIR__ . '/site_api.php'; require_once __DIR__ . '/invoices_api.php'; require_once __DIR__ . '/quotes_api.php'; quotes_route($r, $method); }
     if ($r === '/promotions') { require_once __DIR__ . '/catalog.php'; promo_route($r, $method); }
     if ($r === '/estimator-pricing') { require_once __DIR__ . '/estimator_pricing.php'; ep_route($method); }
     if ($r === '/catalog' || str_starts_with($r, '/catalog/')) { require_once __DIR__ . '/catalog.php'; catalog_route($r, $method); }

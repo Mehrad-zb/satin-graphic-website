@@ -229,6 +229,7 @@ try {
     if ($path === '/api/feedback' && $method === 'POST') { require_once __DIR__ . '/feedback.php'; feedback_submit(); } // "How did you hear about us?" card
     if ($path === '/api/visit' && $method === 'POST') { require_once __DIR__ . '/invoices_api.php'; record_visit(); }
     if ($path === '/api/visit') { http_response_code(204); exit; }
+    if ($path === '/api/quote' || str_starts_with($path, '/api/quote/')) { require_once __DIR__ . '/auth.php'; require_once __DIR__ . '/invoices_api.php'; require_once __DIR__ . '/quotes_api.php'; public_quote_route($path, $method); } // price quote page (/quote/)
     if ($path === '/api/invoice' && $method === 'GET') { require_once __DIR__ . '/auth.php'; require_once __DIR__ . '/invoices_api.php'; public_invoice(); }
     if (str_starts_with($path, '/api/invoice/')) { require_once __DIR__ . '/auth.php'; require_once __DIR__ . '/invoices_api.php'; public_invoice_route($path, $method); }
 
