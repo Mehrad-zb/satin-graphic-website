@@ -42,7 +42,7 @@ function feedback_submit(): void {
 
 function feedback_report(): void {
     require_user('dashboard.view');
-    $days = in_array((int)($_GET['days'] ?? 30), [7, 30, 90, 365, 3650], true) ? (int)$_GET['days'] : 30;
+    $days = in_array((int)($_GET['days'] ?? 30), [1, 7, 30, 90, 365, 3650], true) ? (int)$_GET['days'] : 30;
     $today = toronto_today();
     $start = date('Y-m-d', strtotime("$today -" . ($days - 1) . ' days'));
     $prevStart = date('Y-m-d', strtotime("$start -$days days"));

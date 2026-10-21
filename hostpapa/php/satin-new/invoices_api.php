@@ -877,7 +877,7 @@ function invoices_route(string $r, string $method): void {
     /* ---------- analytics ---------- */
     if ($r === '/analytics' && $method === 'GET') {
         $u = require_user('dashboard.view');
-        $days = in_array((int)($_GET['days'] ?? 30), [7, 30, 90, 365], true) ? (int)$_GET['days'] : 30;
+        $days = in_array((int)($_GET['days'] ?? 30), [1, 7, 30, 90, 365], true) ? (int)$_GET['days'] : 30;
         $today = toronto_today();
         $start = date('Y-m-d', strtotime("$today -" . ($days - 1) . ' days'));
         $prevStart = date('Y-m-d', strtotime("$start -$days days"));
@@ -911,6 +911,17 @@ function invoices_route(string $r, string $method): void {
         $out['topPages'] = array_map(function ($r) use ($titles) { return ['label' => $titles[$r['k']] ?? $r['k'], 'path' => $r['k'], 'value' => (int)$r['v']]; }, $q->fetchAll());
         $out['sources'] = $top('source'); $out['devices'] = $top('device'); $out['languages'] = $top('lang');
         $out['activeNow'] = (int)$one('SELECT COUNT(DISTINCT session) v FROM site_visits WHERE ts > ?', [time() - 300]);
+        if ($days === 1) { // Today: hour-by-hour (Toronto time) instead of one point per day
+            $tz = new DateTimeZone('America/Toronto'); $hr = function ($ts) use ($tz) { return (int)(new DateTime('@' . (int)$ts))->setTimezone($tz)->format('G'); };
+            $H = range(0, 23); $out['labels'] = array_map(fn($h) => sprintf('%02d:00', $h), $H);
+            $ses = array_fill(0, 24, []); $pv = array_fill(0, 24, 0); $ct = array_fill(0, 24, 0);
+            $q = $pdo->prepare('SELECT ts, session, kind FROM site_visits WHERE day = ?'); $q->execute([$today]);
+            foreach ($q->fetchAll() as $v) { $h = $hr($v['ts']); if ($v['kind'] === 'pv') { $pv[$h]++; $ses[$h][$v['session']] = 1; } elseif ($v['kind'] === 'contact') $ct[$h]++; }
+            $rq = array_fill(0, 24, 0); $q = $pdo->prepare('SELECT created_at FROM service_requests WHERE created_at >= ?'); $q->execute([gmdate('Y-m-d', strtotime("$today -1 day"))]);
+            foreach ($q->fetchAll() as $v) { $t = strtotime($v['created_at']); if ((new DateTime('@' . $t))->setTimezone($tz)->format('Y-m-d') === $today) $rq[$hr($t)]++; }
+            $out['metrics']['sessions']['series'] = array_map('count', $ses); $out['metrics']['pageviews']['series'] = $pv; $out['metrics']['contact']['series'] = $ct; $out['metrics']['requests']['series'] = $rq;
+            foreach (['paid', 'invoiced'] as $k) if (isset($out['metrics'][$k])) $out['metrics'][$k]['series'] = array_fill(0, 24, 0);
+        }
         json_out($out);
     }
 

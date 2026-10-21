@@ -380,7 +380,7 @@ function viewSoon(path) {
 /* ---------- money, dates, charts ---------- */
 const money = (c, cur = 'CAD') => (cur === 'CAD' ? 'CA$' : '$') + (Number(c || 0) / 100).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const compact = (n, isMoney) => { const v = isMoney ? n / 100 : n; const s = Math.abs(v) >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.abs(v) >= 1e4 ? (v / 1e3).toFixed(1) + 'K' : isMoney ? v.toLocaleString('en-CA', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) : Math.round(v).toLocaleString('en-CA'); return (isMoney ? 'CA$' : '') + s; };
-const dshort = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('en-CA', { month: 'short', day: 'numeric' }) : '';
+const dshort = s => /^\d\d:00$/.test(s || '') ? s : s ? new Date(s + 'T12:00:00').toLocaleDateString('en-CA', { month: 'short', day: 'numeric' }) : '';
 const dlong = s => s ? new Date(s.length === 10 ? s + 'T12:00:00' : s).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
 const todayISO = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 const SERIES = '#2a78d6', GRID = '#e1e0d9', AXIS = '#c3c2b7', MUTED = '#898781';
@@ -460,23 +460,23 @@ async function viewHome() {
   const c = shell('Home', 'Admin', '<div class="card empty">Loading…</div>', '/');
   const [o, a] = await Promise.all([api('/overview'), api('/analytics?days=' + homeDays).catch(() => null)]);
   const r = o.requests;
-  const period = { 7: 'last 7 days', 30: 'last 30 days', 90: 'last 90 days', 365: 'last 12 months' }[homeDays];
-  const prevLabel = 'previous ' + { 7: '7 days', 30: '30 days', 90: '90 days', 365: '12 months' }[homeDays];
+  const period = { 1: 'today', 7: 'last 7 days', 30: 'last 30 days', 90: 'last 90 days', 365: 'last 12 months' }[homeDays];
+  const prevLabel = homeDays === 1 ? 'yesterday' : 'previous ' + { 7: '7 days', 30: '30 days', 90: '90 days', 365: '12 months' }[homeDays];
   const m = a ? a.metrics : {};
   const tile = (k, hero) => { const x = m[k]; if (!x) return ''; return `<div class="card stat${hero ? ' hero' : ''}"><small>${esc(x.label)}</small><b>${compact(x.value, x.money)}</b>${delta(x.value, x.prev, prevLabel)}${sparkline(bucket(a.labels, x.series, homeDays).values)}</div>`; };
   c.innerHTML = `<div data-apphome></div><div class="dash-head"><div class="welcome-l"><div class="avatar">${esc(initials(ME.name))}</div><div><h2>Welcome back, ${esc(ME.name.split(' ')[0])}</h2><p>${esc(ME.roleName)} · Satin Graphic${a && a.activeNow ? ` · <span class="live">● ${a.activeNow} on the site now</span>` : ''}</p></div></div>
     <div class="row-actions">${can('invoices.view') || can('invoices.edit') ? '<a class="btn ghost sm" href="#/invoices">Invoices</a>' : ''}${can('invoices.edit') ? '<a class="btn sm" href="#/invoices/edit">+ New invoice</a>' : ''}<a class="btn ghost sm" href="/admin/editor/">Edit website</a></div></div>
-    ${a ? `<div class="filters"><label>Your key stats for <select class="input" data-days>${[[7, 'Last 7 days'], [30, 'Last 30 days'], [90, 'Last 90 days'], [365, 'Last 12 months']].map(([v, l]) => `<option value="${v}" ${v === homeDays ? 'selected' : ''}>${l}</option>`).join('')}</select></label><span class="hint" style="margin:0">Visits count people who allowed anonymous measurement on the website.</span></div>
+    ${a ? `<div class="filters"><label>Your key stats for <select class="input" data-days>${[[1, 'Today'], [7, 'Last 7 days'], [30, 'Last 30 days'], [90, 'Last 90 days'], [365, 'Last 12 months']].map(([v, l]) => `<option value="${v}" ${v === homeDays ? 'selected' : ''}>${l}</option>`).join('')}</select></label><span class="hint" style="margin:0">Visits count people who allowed anonymous measurement on the website.</span></div>
     <div class="grid g4 tiles">${tile('sessions')}${tile('pageviews')}${tile('requests')}${tile('contact')}${m.paid ? tile('paid') + tile('invoiced') + `<a class="card stat link" href="#/invoices?status=open"><small>Outstanding</small><b>${compact(a.invoices.outstanding, true)}</b><span class="delta flat">${a.invoices.open} open invoice${a.invoices.open === 1 ? '' : 's'}</span></a><a class="card stat link" href="#/invoices?status=overdue"><small>Overdue</small><b class="${a.invoices.overdue ? 'warn-t' : ''}">${compact(a.invoices.overdue, true)}</b><span class="delta ${a.invoices.overdue ? 'down' : 'flat'}">${a.invoices.overdue ? '⚠ Needs follow-up' : 'Nothing overdue'}</span></a>` : ''}</div>
     <div class="grid g2" style="margin-top:18px"><div class="card"><h2>Site sessions <span class="sub">${period}</span></h2><div data-ch-sessions></div></div>
-      ${m.paid ? `<div class="card"><h2>Amount paid <span class="sub">${period}</span></h2><div data-ch-paid></div></div>` : `<div class="card"><h2>Requests <span class="sub">${period}</span></h2><div data-ch-req></div></div>`}</div>
+      ${m.paid && homeDays !== 1 ? `<div class="card"><h2>Amount paid <span class="sub">${period}</span></h2><div data-ch-paid></div></div>` : `<div class="card"><h2>Requests <span class="sub">${period}</span></h2><div data-ch-req></div></div>`}</div>
     <div class="grid g3" style="margin-top:18px"><div class="card"><h2>Top pages</h2>${barList(a.topPages)}</div><div class="card"><h2>Traffic sources</h2>${barList(a.sources)}</div><div class="card"><h2>Devices</h2>${barList(a.devices)}<h2 style="margin-top:18px">Languages</h2>${barList((a.languages || []).map(l => ({ ...l, label: { en: 'English', fr: 'Français', es: 'Español', fa: 'فارسی' }[l.label] || l.label })))}</div></div>` : ''}
     <div data-fb></div>
     <div class="grid g2" style="margin-top:18px">${r ? `<div class="card"><h2>Latest requests <a class="sub" href="#/requests">View all</a></h2>${r.recent.length ? requestTable(r.recent.slice(0, 5)) : '<div class="empty">No requests yet.</div>'}</div>` : ''}
     ${a && a.invoices ? `<div class="card"><h2>Recent invoices <a class="sub" href="#/invoices">View all</a></h2>${a.invoices.recent.length ? invoiceTable(a.invoices.recent, true) : '<div class="empty">No invoices yet. <a href="#/invoices/edit">Create the first one</a>.</div>'}</div>` : ''}</div>`;
   if (a) {
     const s = bucket(a.labels, m.sessions.series, homeDays); chart($('[data-ch-sessions]', c), s.labels, s.values, { name: 'Site sessions' });
-    if (m.paid) { const p = bucket(a.labels, m.paid.series, homeDays); chart($('[data-ch-paid]', c), p.labels, p.values, { kind: 'col', isMoney: true, name: 'Amount paid' }); }
+    if (m.paid && homeDays !== 1) { const p = bucket(a.labels, m.paid.series, homeDays); chart($('[data-ch-paid]', c), p.labels, p.values, { kind: 'col', isMoney: true, name: 'Amount paid' }); }
     else { const q = bucket(a.labels, m.requests.series, homeDays); chart($('[data-ch-req]', c), q.labels, q.values, { kind: 'col', name: 'Requests' }); }
     $('[data-days]', c).onchange = e => { homeDays = +e.target.value; viewHome(); };
   }

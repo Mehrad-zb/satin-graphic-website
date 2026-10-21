@@ -140,7 +140,7 @@ function es_intake_fields(array $fields): array {
     }
     return $o;
 }
-function es_intake_req(string $label, string $type): bool { return $type === 'email' || (bool)preg_match('/customer name|full name|first name|last name|^name$|e-?mail|phone|make|model/i', $label); }
+function es_intake_req(string $label, string $type): bool { return $type === 'email' || (bool)preg_match('/customer name|full name|first name|last name|^name$|e-?mail|phone|make|model|brand/i', $label); }
 /** The details form for the customer: [{id, label, type, group, required, value}]. */
 function es_intake_spec(array $fields, array $map, array $prefill): array {
     $o = []; foreach ($fields as $f) if (isset($map[$f['id']])) { $l = es_flabel($f);
@@ -203,7 +203,7 @@ function es_intake_store(array $d, array $c, string $who): array {
 /** Vehicle field label → key in the customer's saved vehicles. */
 function es_veh_key(string $l): string {
     if (preg_match('/make/i', $l) && preg_match('/model/i', $l)) return 'makeModel';
-    foreach (['make' => '/make/i', 'model' => '/model/i', 'year' => '/year/i', 'colour' => '/colou?r/i', 'plate' => '/licen[cs]e|plate/i', 'vin' => '/\bvin\b/i'] as $k => $re) if (preg_match($re, $l)) return $k;
+    foreach (['make' => '/make|brand/i', 'model' => '/model/i', 'trim' => '/\btrim\b/i', 'year' => '/year/i', 'colour' => '/colou?r/i', 'plate' => '/licen[cs]e|plate/i', 'vin' => '/\bvin\b/i'] as $k => $re) if (preg_match($re, $l)) return $k;
     return '';
 }
 /** The customer's details form also saves (or updates) them in Customers, with their vehicles, so the next agreement fills itself in. */

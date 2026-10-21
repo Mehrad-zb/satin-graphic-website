@@ -224,7 +224,7 @@ function linkModal(t) {
 /* ---------------- Agreement information form: staff fill everything (all optional), the customer only signs ---------------- */
 // saved vehicles of a customer (filled in by the customer on an agreement's details form)
 const custVehicles = x => { try { const v = typeof x.vehicles === 'string' ? JSON.parse(x.vehicles || '[]') : x.vehicles; return Array.isArray(v) ? v : []; } catch { return []; } };
-const vehKey = l => /make/i.test(l) && /model/i.test(l) ? 'makeModel' : /make/i.test(l) ? 'make' : /model/i.test(l) ? 'model' : /year/i.test(l) ? 'year' : /colou?r/i.test(l) ? 'colour' : /licen[cs]e|plate/i.test(l) ? 'plate' : /\bvin\b/i.test(l) ? 'vin' : '';
+const vehKey = l => /make/i.test(l) && /model/i.test(l) ? 'makeModel' : /make|brand/i.test(l) ? 'make' : /\btrim\b/i.test(l) ? 'trim' : /model/i.test(l) ? 'model' : /year/i.test(l) ? 'year' : /colou?r/i.test(l) ? 'colour' : /licen[cs]e|plate/i.test(l) ? 'plate' : /\bvin\b/i.test(l) ? 'vin' : '';
 // templates with an active public link (e.g. the Design Agreement): no form for us — copy the link and send it
 const linkPanelHTML = t => `<div class="card"><h2 style="margin-top:0">${esc(t.name)}</h2>
   <p class="hint" style="margin-top:-4px">Send this link to the customer — nothing to fill in here. They enter their own details, review the agreement and sign. Each customer who uses the link gets a <b>new agreement number</b>; the signed PDF is emailed to them and to you, it appears in your Agreements list, and their details are saved in Customers.</p>
@@ -345,14 +345,14 @@ async function fillPage(id, docId, auto, form) { toTop();
       const v = /company/.test(L) ? x.company : /phone/.test(L) ? x.phone : /e-?mail/.test(L) ? x.email : /first name/.test(L) ? (x.name || '').split(' ')[0] : /last name/.test(L) ? (x.name || '').split(' ').slice(1).join(' ') : /customer name|full name|^name/.test(L) ? x.name : /address/.test(L) ? x.address : '';
       if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } }
     const V = custVehicles(x)[0]; if (V) { const mm = V.makeModel || [V.make, V.model].filter(Boolean).join(' ');
-      for (const fl of [...ours, ...theirsText, ...custF]) { const el = $(`[data-v="${fl.id}"]`, c); const L = fl.label || ''; if (!el || el.type === 'checkbox' || !/vehicle|make|model|year|colou?r|licen[cs]e|plate|\bvin\b/i.test(L) || /company|e-?mail|phone|address|pick-?up/i.test(L)) continue;
+      for (const fl of [...ours, ...theirsText, ...custF]) { const el = $(`[data-v="${fl.id}"]`, c); const L = fl.label || ''; if (!el || el.type === 'checkbox' || !/vehicle|make|brand|model|trim|year|colou?r|licen[cs]e|plate|\bvin\b/i.test(L) || /company|e-?mail|phone|address|pick-?up/i.test(L)) continue;
         const k = vehKey(L), v = k === 'makeModel' ? mm : k === 'make' ? (V.make || mm.split(' ')[0] || '') : k === 'model' ? (V.model || mm.split(' ').slice(1).join(' ')) : (V[k] || '');
         if (v && (!el.value || el.dataset.auto)) { el.value = v; el.dataset.auto = 1; } } } };
   const sug = $('[data-sug]', c); let act = -1, shown = [];
   const closeSug = () => { sug.hidden = true; f.custname.setAttribute('aria-expanded', 'false'); act = -1; };
   const drawSug = () => { const q = f.custname.value.trim().toLowerCase(); if (!CUSTOMERS || !q) return closeSug();
     shown = CUSTOMERS.filter(x => [x.name, x.company, x.email, x.phone].join(' ').toLowerCase().includes(q)).slice(0, 8);
-    sug.innerHTML = shown.map((x, k) => `<button type="button" role="option" data-k="${k}" class="${k === act ? 'on' : ''}"><b>${esc(x.name)}</b><small>${esc([x.company, x.email, x.phone, (v => v ? v.makeModel || [v.year, v.make, v.model].filter(Boolean).join(' ') : '')(custVehicles(x)[0])].filter(Boolean).join(' · '))}</small></button>`).join('') + `<button type="button" class="es-sug-add" data-new>+ Add “${esc(f.custname.value.trim())}” as a new customer</button>`;
+    sug.innerHTML = shown.map((x, k) => `<button type="button" role="option" data-k="${k}" class="${k === act ? 'on' : ''}"><b>${esc(x.name)}</b><small>${esc([x.company, x.email, x.phone, (v => v ? v.makeModel || [v.year, v.make, v.model, v.trim].filter(Boolean).join(' ') : '')(custVehicles(x)[0])].filter(Boolean).join(' · '))}</small></button>`).join('') + `<button type="button" class="es-sug-add" data-new>+ Add “${esc(f.custname.value.trim())}” as a new customer</button>`;
     sug.hidden = false; f.custname.setAttribute('aria-expanded', 'true');
     $$('[data-k]', sug).forEach(b => b.onmousedown = e => { e.preventDefault(); useCustomer(shown[+b.dataset.k]); closeSug(); });
     $('[data-new]', sug).onmousedown = e => { e.preventDefault(); closeSug(); addCust(f.custname.value.trim()); }; };

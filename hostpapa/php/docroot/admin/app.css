@@ -404,3 +404,8 @@ label.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6p
 .blist{min-width:0}.blist li{min-width:0}.bl-top{min-width:0;align-items:baseline}.bl-top>span{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bl-top>b{flex:0 0 auto;white-space:nowrap}
 .grid>.card{min-width:0;overflow-x:auto}.grid>.card .table{min-width:100%}
 .grid>.card .table th,.grid>.card .table td{padding-left:8px;padding-right:8px}.grid>.card .table td{overflow-wrap:anywhere}.grid>.card .table td small,.grid>.card .table td .muted{overflow-wrap:anywhere}
+
+/* page header: title stays on one line, action buttons wrap neatly with spacing */
+.top>div:first-child{flex:none;min-width:0}
+.top h1{white-space:nowrap}
+.top [data-actions]{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
