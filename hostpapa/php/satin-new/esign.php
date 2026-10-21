@@ -164,7 +164,7 @@ function es_intake_clean(array $fields, array $map, $vals, $vehicles): array {
         if (!is_array($row)) continue; $r = [];
         foreach ($vids as $id) if (isset($byId[$id])) $r[$id] = text($row[$id] ?? '', 200);
         if (!array_filter($r, fn($x) => $x !== '')) continue;
-        foreach ($vids as $id) if (isset($byId[$id]) && $r[$id] === '' && preg_match('/make|model/i', es_flabel($byId[$id]))) json_out(['error' => 'Vehicle ' . (count($veh) + 2) . ': please fill in ' . es_flabel($byId[$id]) . '.', 'vehicle' => $k, 'field' => $id], 400);
+        foreach ($vids as $id) if (isset($byId[$id]) && $r[$id] === '' && preg_match('/make|model|brand/i', es_flabel($byId[$id]))) json_out(['error' => 'Vehicle ' . (count($veh) + 2) . ': please fill in ' . es_flabel($byId[$id]) . '.', 'vehicle' => $k, 'field' => $id], 400);
         $veh[] = $r;
     }
     return ['pf' => $pf, 'veh' => $veh, 'name' => $name, 'email' => $email];
@@ -1006,7 +1006,8 @@ function es_public_doc(array $d, array $s): array {
         'others' => array_values(array_map(fn($x) => ['name' => $x['name'], 'signed' => $x['status'] === 'signed'], array_filter($sg, fn($x) => $x['sid'] !== $s['sid']))),
         'message' => $d['message'], 'business' => $b['name'], 'businessPhone' => $b['phone'],
         'pages' => array_map(fn($p, $k) => ['w' => $p['w'], 'h' => $p['h'], 'kind' => $p['kind'] ?? 'main'] + (empty($p['img']) ? ['url' => '', 'title' => $p['title'] ?? '', 'blocks' => $p['blocks'] ?? []] : ['url' => '/api/sign/page?t=' . $s['token'] . '&n=' . $k]), $pages, array_keys($pages)), 'fields' => $out,
-        'auto' => (bool)es_auto($d), 'intake' => (es_auto($d)['intake'] ?? '') === 'pending' && $s['sid'] === 's1' ? ['fields' => es_intake_spec($fields, es_auto($d)['fields'] ?? [], $pf), 'vehicles' => []] : null,
+        'auto' => (bool)es_auto($d), 'intake' => (es_auto($d)['intake'] ?? '') === 'pending' && $s['sid'] === 's1' ? ['fields' => es_intake_spec($fields, es_auto($d)['fields'] ?? [], $pf), 'vehicles' => array_values(es_auto($d)['vehicles'] ?? [])] : null,
+        'canEditDetails' => (es_auto($d)['intake'] ?? '') === 'done' && $s['sid'] === 's1' && $s['status'] !== 'signed' && in_array($d['status'], ['sent', 'viewed'], true) && !$d['superseded'],
         'signedAt' => $d['signed_at'], 'pdf' => $d['status'] === 'signed' ? '/api/sign/pdf?t=' . $s['token'] : '', 'today' => (new DateTime('now', new DateTimeZone('America/Toronto')))->format('M j, Y')];
 }
 function esign_public_route(string $path, string $method): void {
@@ -1067,6 +1068,16 @@ function esign_public_route(string $path, string $method): void {
         try { require_once __DIR__ . '/push.php'; push_event('agreements', '✖ Agreement declined', $s['name'] . ' · ' . $d['title'], '/admin/#/agreements', 'es-' . $d['id']); } catch (Throwable $e) { }
         notify_owner('Declined: ' . $d['title'] . ' — ' . $s['name'], es_who($s) . " declined to sign \"" . $d['title'] . "\".\n" . ($reason !== '' ? "Reason: $reason\n" : '') . "\n" . es_site() . '/admin/#/agreements');
         json_out(['ok' => true]);
+    }
+    if ($path === '/api/sign/intake-edit' && $method === 'POST') { // the customer goes back to correct their details (before anyone has signed)
+        same_origin(); $v = body_json(4000); [$d, $s] = es_doc_by_token((string)($v['t'] ?? ''));
+        $a = es_auto($d);
+        if (!$a || ($a['intake'] ?? '') !== 'done' || $s['sid'] !== 's1' || $s['status'] === 'signed' || $d['superseded'] || !in_array($d['status'], ['sent', 'viewed'], true)) json_out(['error' => 'Your details can no longer be changed here. Please contact ' . es_business()['name'] . '.'], 409);
+        $a['intake'] = 'pending';
+        $pdo->prepare('UPDATE esign_docs SET auto = ?, updated_at = ? WHERE id = ?')->execute([json_encode($a), now_iso(), $d['id']]);
+        es_event($d['id'], 'editing details', es_who($s), 'Went back to correct their details');
+        [$d, $s] = es_doc_by_token((string)$v['t']);
+        json_out(['ok' => true, 'doc' => es_public_doc($d, $s)]);
     }
     if ($path === '/api/sign/intake' && $method === 'POST') { // automated agreement: the customer's details form
         same_origin(); $v = body_json(60000); [$d, $s] = es_doc_by_token((string)($v['t'] ?? ''));

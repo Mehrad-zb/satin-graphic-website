@@ -46,17 +46,19 @@ async function load() {
   if (DOC.status === 'signed' || DOC.myStatus === 'signed') return done();
   if (DOC.status === 'cancelled') return closed('This document was cancelled by ' + DOC.business + '. If you think this is a mistake, please contact them.');
   if (DOC.status === 'declined') return closed(DOC.myStatus === 'declined' ? 'You declined to sign this document. ' + DOC.business + ' has been notified.' : 'This document was declined by another signer, so it can no longer be signed. ' + DOC.business + ' has been notified.');
-  if (DOC.intake) return intakeForm(DOC, async (values, vehicles) => { const r = await api('intake', { t: TOKEN, values, vehicles }); DOC = r.doc; draw(); });
+  if (DOC.intake) return editDetails();
   draw();
 }
+function editDetails() { return intakeForm(DOC, async (values, vehicles) => { const r = await api('intake', { t: TOKEN, values, vehicles }); DOC = r.doc; draw(); }); }
+async function backToDetails() { if (!confirm('Go back and change your details? Your signature on this page is not saved yet.')) return; try { const r = await api('intake-edit', { t: TOKEN }); DOC = r.doc; scrollTo(0, 0); editDetails(); } catch (e) { alert(e.message); } }
 
 /* ---------- automated agreements: step 1 — the customer's details and vehicles ---------- */
 function intakeForm(src, submit) {
   const F = src.intake.fields, you = F.filter(f => f.group !== 'vehicle'), veh = F.filter(f => f.group === 'vehicle');
-  const extra = []; // vehicles 2…N: {id: value}
+  const extra = (src.intake.vehicles || []).map(r => ({ ...r })); // vehicles 2…N: {id: value} (kept when the customer comes back to edit)
   $('[data-bar]').hidden = true; $('[data-top-actions]').innerHTML = '';
   const inp = (f, v, attr) => `<label class="f">${esc(f.label)}${f.required ? ' <i class="rq">*</i>' : ''}<input class="input" ${attr} value="${esc(v || '')}" ${f.type === 'email' ? 'type="email" inputmode="email" autocomplete="email"' : f.type === 'tel' ? 'type="tel" inputmode="tel" autocomplete="tel"' : /first name/i.test(f.label) ? 'autocomplete="given-name"' : /last name/i.test(f.label) ? 'autocomplete="family-name"' : /name/i.test(f.label) && !/company|pick/i.test(f.label) ? 'autocomplete="name"' : /company/i.test(f.label) ? 'autocomplete="organization"' : ''} maxlength="200"></label>`;
-  const vcard = (k, row) => `<div class="card vcard" data-veh="${k}"><div class="vh"><h2>Vehicle ${k + 2}</h2><button type="button" class="link" data-vrm="${k}">Remove</button></div><div class="g2">${veh.map(f => inp({ ...f, required: /make|model/i.test(f.label) }, row[f.id], `data-x="${k}" data-id="${f.id}"`)).join('')}</div></div>`;
+  const vcard = (k, row) => `<div class="card vcard" data-veh="${k}"><div class="vh"><h2>Vehicle ${k + 2}</h2><button type="button" class="link" data-vrm="${k}">Remove</button></div><div class="g2">${veh.map(f => inp({ ...f, required: /make|model|brand/i.test(f.label) }, row[f.id], `data-x="${k}" data-id="${f.id}"`)).join('')}</div></div>`;
   const drawX = () => { $('[data-extra]').innerHTML = extra.map((r, k) => vcard(k, r)).join('');
     $$('[data-x]').forEach(i => i.oninput = () => { extra[+i.dataset.x][i.dataset.id] = i.value; });
     $$('[data-vrm]').forEach(b => b.onclick = () => { extra.splice(+b.dataset.vrm, 1); drawX(); }); };
@@ -66,6 +68,7 @@ function intakeForm(src, submit) {
     ${veh.length ? `<div class="card"><h2>Vehicle 1</h2><div class="g2">${veh.map(f => inp(f, f.value, `data-id="${f.id}"`)).join('')}</div></div><div data-extra></div>
       <div class="card addv"><button type="button" class="btn ghost wide" data-addv>+ Add another vehicle (if required)</button><small>Only if this agreement covers more than one vehicle.</small></div>` : ''}
     <div class="card"><div class="err" data-err></div><button class="btn wide" data-go>Next: review & sign →</button></div></form>`;
+  if (extra.length) drawX();
   if (veh.length) $('[data-addv]').onclick = () => { if (extra.length >= 19) return; extra.push({}); drawX(); const l = $$('.vcard').pop(); l.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => l.querySelector('input').focus({ preventScroll: true }), 300); };
   const form = $('[data-in]'); scrollTo(0, 0);
   form.onsubmit = async e => {
@@ -76,7 +79,7 @@ function intakeForm(src, submit) {
       if (f.required && !v) return bad(el, 'Please fill in: ' + f.label);
       if (f.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return bad(el, 'Please enter a valid email address.'); }
     for (const [k, r] of extra.entries()) { if (!Object.values(r).some(x => (x || '').trim())) continue;
-      for (const f of veh) if (/make|model/i.test(f.label) && !(r[f.id] || '').trim()) return bad($(`[data-x="${k}"][data-id="${f.id}"]`), `Vehicle ${k + 2}: please fill in ${f.label}.`); }
+      for (const f of veh) if (/make|model|brand/i.test(f.label) && !(r[f.id] || '').trim()) return bad($(`[data-x="${k}"][data-id="${f.id}"]`), `Vehicle ${k + 2}: please fill in ${f.label}.`); }
     go.disabled = true; go.textContent = 'Saving…';
     try { await submit(values, extra.map(r => Object.fromEntries(Object.entries(r).map(([a, b]) => [a, (b || '').trim()])))); }
     catch (er) { err.textContent = er.message; go.disabled = false; go.textContent = 'Next: review & sign →'; const el = er.field && $(`[data-id="${er.field}"]:not([data-x])`, form); if (el) bad(el, er.message); }
@@ -91,17 +94,18 @@ function initialsOf(n) { return (n || '').split(/\s+/).filter(Boolean).map(w => 
 
 function draw() {
   const first = (DOC.signerName || '').split(' ')[0];
-  $('[data-top-actions]').innerHTML = '<button class="link" data-decline>Decline</button>';
-  $('[data-decline]').onclick = declineModal;
+  $('[data-top-actions]').innerHTML = (DOC.canEditDetails ? '<button class="link" data-back>← Edit my details</button> ' : '') + '<button class="link" data-decline>Decline</button>';
+  $('[data-decline]').onclick = declineModal; if (DOC.canEditDetails) $('[data-back]').onclick = backToDetails;
   for (const f of DOC.fields) if (mine(f)) {
     if (f.value !== undefined && f.value !== '' && VALS[f.id] === undefined && ['text', 'name', 'email'].includes(f.type)) VALS[f.id] = f.value;
     if (f.type === 'name' && VALS[f.id] === undefined) VALS[f.id] = DOC.signerName || '';
     if (f.type === 'email' && VALS[f.id] === undefined) VALS[f.id] = DOC.signerEmail || '';
     if (f.type === 'date') VALS[f.id] = DOC.today;
   }
-  app.innerHTML = `${DOC.auto ? '<ol class="isteps"><li class="done"><i>✓</i>Your details</li><li class="on"><i>2</i>Review & sign</li></ol>' : ''}<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${DOC.auto ? `Here is <b>${esc(DOC.title)}</b> with your information. Please read it, then sign at the end (one signature is used everywhere it is needed) and press <b>Finish</b>.` : `${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>${DOC.version > 1 ? ' (updated version)' : ''}. Fill in the highlighted fields, then press <b>Finish</b>.`}</p>${DOC.others && DOC.others.length ? `<p class="others">Also signing: ${DOC.others.map(o => esc(o.name) + (o.signed ? ' ✓' : '')).join(', ')}. You only sign your own fields; theirs are shown greyed out.</p>` : ''}${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
+  app.innerHTML = `${DOC.auto ? `<ol class="isteps"><li class="done"><i>✓</i>Your details</li><li class="on"><i>2</i>Review & sign</li></ol>${DOC.canEditDetails ? '<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span>Entered something wrong?</span><button type="button" class="btn ghost" data-back3>← Back to my details</button></div>' : ''}` : ''}<div class="card intro"><div class="ic">✍</div><div><h1>Hi ${esc(first || 'there')}, please review and sign</h1><p>${DOC.auto ? `Here is <b>${esc(DOC.title)}</b> with your information. Please read it, then sign at the end (one signature is used everywhere it is needed) and press <b>Finish</b>.` : `${esc(DOC.business)} sent you <b>${esc(DOC.title)}</b>${DOC.version > 1 ? ' (updated version)' : ''}. Fill in the highlighted fields, then press <b>Finish</b>.`}</p>${DOC.others && DOC.others.length ? `<p class="others">Also signing: ${DOC.others.map(o => esc(o.name) + (o.signed ? ' ✓' : '')).join(', ')}. You only sign your own fields; theirs are shown greyed out.</p>` : ''}${DOC.message ? `<div class="msg">${esc(DOC.message)}</div>` : ''}</div></div>
     <div class="pages">${DOC.pages.map((p, k) => p.kind === 'addendum' ? `<div class="page addm" data-page="${k}" style="aspect-ratio:${p.w}/${p.h}"><div class="addin"><b>${esc(p.title)}</b>${(p.blocks || []).map(bk => `<h4>${esc(bk.title)}</h4><dl>${bk.items.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`).join('')}</div><span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>` : `<div class="page" data-page="${k}" style="aspect-ratio:${p.w}/${p.h};background-image:url('${esc(p.url)}')">${DOC.fields.filter(f => f.page === k).map(fieldHTML).join('')}<span class="pn">Page ${k + 1} of ${DOC.pages.length}</span></div>`).join('')}</div>`;
   $$('.fld[data-f]').forEach(bindField);
+  $$('[data-back3]').forEach(b => b.onclick = backToDetails);
   const ro = new ResizeObserver(es => es.forEach(e => sizeFonts(e.target)));
   $$('.page').forEach(p => { ro.observe(p); sizeFonts(p); });
   $('[data-bar]').hidden = false;
