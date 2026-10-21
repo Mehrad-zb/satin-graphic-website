@@ -249,3 +249,9 @@ window.satinOpenSearch = openSearch;
 
 /* coming-soon pages (list in /coming-soon.mjs) */
 try{import('/coming-soon.mjs?v=1').catch(e=>console.warn('coming-soon',e));}catch(e){}
+
+/* keep the floating WhatsApp button and chat bubble above the price / "Add to cart" bar (.sum-dock) on product pages */
+try{(()=>{const st=document.createElement('style');st.textContent='.sx-fab{margin-bottom:var(--sx-dock,0px);transition:margin .2s}.scw:not(.open){margin-bottom:var(--sx-dock,0px);transition:margin .2s}';document.head.appendChild(st);
+ let q=0;const lift=()=>{q=0;let h=0;for(const d of document.querySelectorAll('.sum-dock.on')){const r=d.getBoundingClientRect();if(r.height&&r.top<innerHeight)h=Math.max(h,innerHeight-r.top);}document.documentElement.style.setProperty('--sx-dock',h?Math.round(h+6)+'px':'0px');};
+ const soon=()=>{if(!q){q=requestAnimationFrame(lift);setTimeout(lift,350);}};
+ new MutationObserver(soon).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});addEventListener('resize',soon);soon();})();}catch(e){}
