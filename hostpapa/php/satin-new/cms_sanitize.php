@@ -387,7 +387,7 @@ function cms_content($c): array {
     return $o;
 }
 
-const CMS_SITE_THEMES = ['default', 'vivid', 'yellow-navy', 'midnight', 'ocean', 'forest', 'carbon', 'labs', 'cupertino', 'galaxy', 'obsidian', 'graphite-red', 'royal-night', 'sunset', 'mono'];
+const CMS_SITE_THEMES = ['default', 'vivid', 'yellow-navy', 'midnight', 'ocean', 'forest', 'carbon', 'labs', 'cupertino', 'galaxy', 'obsidian', 'graphite-red', 'royal-night', 'sunset', 'mono', 'explore'];
 function cms_site_theme(array $t): string {
     $id = $t['siteTheme'] ?? null;
     if (is_string($id) && in_array($id, CMS_SITE_THEMES, true)) return $id;
@@ -463,7 +463,8 @@ function cms_theme_css(array $t): string {
     foreach (array_merge($t['typo'] ?? [], $t['typoM'] ?? []) as $st) if (!empty($st['fontFamily'])) $gf[] = $st['fontFamily'];
     // Site theme: the shared modern structure + the theme's colour file are imported first; "default" (the original look) loads nothing.
     $site = cms_site_theme($t);
-    if ($site !== 'default') $imports['@theme'] = '@import url("/themes/_base-modern.css");' . "\n" . '@import url("/themes/' . $site . '.css");';
+    if ($site === 'explore') $imports['@theme'] = '@import url("/themes/explore.css");'; // Satin Explore: one complete file (+ /themes/explore.mjs, loaded by /site-extras.mjs)
+    elseif ($site !== 'default') $imports['@theme'] = '@import url("/themes/_base-modern.css");' . "\n" . '@import url("/themes/' . $site . '.css");';
     // only the fonts actually chosen are loaded (the plain request always works; the weighted one adds other weights when the family has them)
     foreach ($gf as $f) if (in_array($f, CMS_GOOGLE_FONTS, true) && !in_array($f, ['Vazirmatn', 'Inter', 'Manrope'], true)) { $q = str_replace(' ', '+', $f); $imports[$f] = '@import url("https://fonts.googleapis.com/css2?family=' . $q . '&display=swap");' . "\n" . '@import url("https://fonts.googleapis.com/css2?family=' . $q . ':wght@300;400;500;600;700;800;900&display=swap");'; }
     $map = ['accent' => '--accent', 'accent2' => '--accent-2', 'accentSoft' => '--accent-soft', 'ink' => '--ink', 'ink2' => '--ink-2', 'muted' => '--mut', 'bg' => '--bg', 'bg2' => '--bg-2', 'bg3' => '--bg-3', 'btn' => '--btn', 'btnInk' => '--btn-ink', 'line' => '--line'];

@@ -252,6 +252,16 @@ try{import('/coming-soon.mjs?v=1').catch(e=>console.warn('coming-soon',e));}catc
 
 /* keep the floating WhatsApp button and chat bubble above the price / "Add to cart" bar (.sum-dock) on product pages */
 try{(()=>{const st=document.createElement('style');st.textContent='.sx-fab{margin-bottom:var(--sx-dock,0px);transition:margin .2s}.scw:not(.open){margin-bottom:var(--sx-dock,0px);transition:margin .2s}';document.head.appendChild(st);
- let q=0;const lift=()=>{q=0;let h=0;for(const d of document.querySelectorAll('.sum-dock.on')){const r=d.getBoundingClientRect();if(r.height&&r.top<innerHeight)h=Math.max(h,innerHeight-r.top);}document.documentElement.style.setProperty('--sx-dock',h?Math.round(h+6)+'px':'0px');};
+ let q=0;const lift=()=>{q=0;let h=0;for(const d of document.querySelectorAll('.sum-dock.on,.xp-tabs')){const r=d.getBoundingClientRect();if(r.height&&r.top<innerHeight)h=Math.max(h,innerHeight-r.top);}document.documentElement.style.setProperty('--sx-dock',h?Math.round(h+6)+'px':'0px');};
  const soon=()=>{if(!q){q=requestAnimationFrame(lift);setTimeout(lift,350);}};
  new MutationObserver(soon).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});addEventListener('resize',soon);soon();})();}catch(e){}
+
+/* site theme "Satin Explore" (Website editor › Theme › Themes): its look is /themes/explore.css (imported from /batch.css when published,
+   it sets --xp-theme:1); its structure is /themes/explore.mjs. Private preview on any page: ?theme=explore · turn off: ?theme=off */
+try{(()=>{let prev=false;try{const u=new URLSearchParams(location.search).get('theme');if(u==='explore')sessionStorage.setItem('xp-preview','1');if(u==='off')sessionStorage.removeItem('xp-preview');prev=sessionStorage.getItem('xp-preview')==='1';}catch(e){}
+ const live=getComputedStyle(document.documentElement).getPropertyValue('--xp-theme').trim()==='1';
+ if(window.frameElement||(!live&&!prev))return;
+ if(!live){try{for(const sh of document.styleSheets)if(/\/batch\.css(\?|$)/.test(sh.href||''))for(let i=sh.cssRules.length-1;i>=0;i--){const r=sh.cssRules[i];if(r instanceof CSSImportRule&&/\/(themes\/|theme-vivid\.css)/.test(r.href))sh.deleteRule(i);}}catch(e){}
+  const l=document.createElement('link');l.rel='stylesheet';l.href='/themes/explore.css?v=1';document.head.appendChild(l);
+  const b=document.createElement('a');b.href='?theme=off';b.textContent='Explore theme preview · turn off';b.style.cssText='position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:3000;background:#161616;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:8px 14px;border-radius:999px;text-decoration:none;opacity:.88';document.body.appendChild(b);}
+ import('/themes/explore.mjs?v=1').catch(e=>console.warn('explore theme',e));})();}catch(e){}
