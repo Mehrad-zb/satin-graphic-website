@@ -262,6 +262,6 @@ try{(()=>{let prev=false;try{const u=new URLSearchParams(location.search).get('t
  const live=getComputedStyle(document.documentElement).getPropertyValue('--xp-theme').trim()==='1';
  if(window.frameElement||(!live&&!prev))return;
  if(!live){try{for(const sh of document.styleSheets)if(/\/batch\.css(\?|$)/.test(sh.href||''))for(let i=sh.cssRules.length-1;i>=0;i--){const r=sh.cssRules[i];if(r instanceof CSSImportRule&&/\/(themes\/|theme-vivid\.css)/.test(r.href))sh.deleteRule(i);}}catch(e){}
-  const l=document.createElement('link');l.rel='stylesheet';l.href='/themes/explore.css?v=2';document.head.appendChild(l);
+  const l=document.createElement('link');l.rel='stylesheet';l.href='/themes/explore.css?v=3';document.head.appendChild(l);
   const b=document.createElement('a');b.href='?theme=off';b.textContent='Explore theme preview · turn off';b.style.cssText='position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:3000;background:#161616;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:8px 14px;border-radius:999px;text-decoration:none;opacity:.88';document.body.appendChild(b);}
- import('/themes/explore.mjs?v=2').catch(e=>console.warn('explore theme',e));})();}catch(e){}
+ import('/themes/explore.mjs?v=3').catch(e=>console.warn('explore theme',e));})();}catch(e){}

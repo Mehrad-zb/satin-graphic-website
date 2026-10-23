@@ -51,6 +51,11 @@ const IC = {
   stickers: S('<ellipse cx="17" cy="16" rx="11" ry="6"/><path d="M6 16v16c0 3.3 4.9 6 11 6s11-2.7 11-6V16"/><ellipse cx="17" cy="16" rx="4" ry="2"/><path d="M28 22h10v18h-8"/><path d="M33 26v10"/>'),
   apparel: S('<path d="M17 6c1.5 3 4 4.5 7 4.5S29.5 9 31 6l11 6-4 9-5-2.5V42H15V18.5L10 21l-4-9z"/>'),
   design: S('<path d="M24 4l9 17-9 19-9-19z"/><path d="M24 4v18"/><circle cx="24" cy="24" r="2.5"/><path d="M15 40h18v4H15z"/>'),
+  detailing: S('<path d="M6 32v-6l4-8a3 3 0 0 1 3-2h14l5 8h5a3 3 0 0 1 3 3v5"/><path d="M6 32h3m8 0h14m8 0h1"/><circle cx="13" cy="32" r="3.5"/><circle cx="35" cy="32" r="3.5"/><path d="M11 24h21"/><path d="M38 4v6M35 7h6M44 12v4M42 14h4"/>'),
+  digital: S('<rect x="5" y="8" width="38" height="25" rx="2.5"/><path d="M18 40h12M24 33v7"/><path d="M12 26l6-7 5 4 7-9 6 8"/>'),
+  shop: S('<path d="M9 16h30l-2.5 26h-25z"/><path d="M17 20v-6a7 7 0 0 1 14 0v6"/>'),
+  contact: S('<path d="M8 10h32a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H22l-9 7v-7H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z"/><path d="M14 20h20M14 26h12"/>'),
+  work: S('<rect x="5" y="9" width="38" height="30" rx="2.5"/><circle cx="16" cy="19" r="3.5"/><path d="M5 34l11-10 8 7 7-6 12 10"/>'),
   tools: S('<path d="M5 30l22-12 4 7-22 12z"/><path d="M27 18l4 7"/><rect x="33" y="8" width="11" height="32" rx="5.5"/><path d="M38.5 8v32"/>'),
 };
 const WAICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.3 3.3 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.3 13.3 0 0 0 5.1 4.5c1.9.8 2.6.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg>';
@@ -71,7 +76,9 @@ const SERVICES = [
 ];
 const NAV = ['/satin/vehicle-wraps/', '/satin/print-shop/', '/satin/window-graphics/', '/satin/apparel/', '/satin/portfolio/', '/satin/design-studio/'];
 const WORK = [['/satin/img/job-greenlife-van-960.webp', '/satin/vehicle-wraps/commercial/'], ['/satin/img/wall-restaurant-960.webp', '/satin/wallpaper/'], ['/satin/img/job-tesla-flip-960.webp', '/satin/vehicle-wraps/color-change/']];
-const CAT_IMG = { wraps: '/satin/img/sprinter-wrapped-960.webp', print: '/satin/img/print-business-cards.optimized.webp', apparel: '/satin/img/satin-shirt-logo.webp', windows: '/satin/img/window-vinyl.optimized.webp', shop: '/satin/img/wrap-prints-printer.webp', detailing: '/satin/img/detail-hand-960.webp', portfolio: '/satin/img/job-camaro-960.webp', studio: '/satin/img/design-studio.optimized.webp' };
+const CAT_IMG = { wraps: '/satin/img/sprinter-wrapped-960.webp', print: '/satin/img/print-business-cards.optimized.webp', apparel: '/satin/img/satin-shirt-logo.webp', windows: '/satin/img/window-vinyl.optimized.webp', shop: '/satin/img/wrap-prints-printer.webp', detailing: '/satin/img/detail-hand-960.webp', portfolio: '/satin/img/job-camaro-960.webp', studio: '/satin/img/design-studio.optimized.webp', digital: '/satin/img/home-video-poster-910.webp', contact: '/satin/img/install-detail-900.webp' };
+const CAT_IC = { wraps: 'van', print: 'print', apparel: 'apparel', windows: 'tint', detailing: 'detailing', digital: 'digital', shop: 'shop', studio: 'design', contact: 'contact', portfolio: 'work' };
+const catIc = it => IC[CAT_IC[it?.key] || 'van'];
 const catImg = it => CAT_IMG[it?.key] || '/satin/img/hero-fleet-satin.webp';
 const catAll = it => linkHref(((it?.groups || [])[0]?.links || [])[0]?.href || it?.href || '/satin/');
 const TEL = 'tel:+19056959147', TEL2 = 'tel:+19059626222', WA = 'https://wa.me/19059626222';
@@ -124,7 +131,7 @@ function markActive(hdr) {
 }
 function megaHTML(active = 0) {
   const items = menu();
-  return `<div class="xp-cats" role="tablist">${items.map((it, i) => `<button type="button" role="tab" data-i="${i}" class="${i === active ? 'on' : ''}"><img src="${catImg(it)}" alt="" decoding="async"><span>${esc(it.label)}</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>`).join('')}</div><div class="xp-groups">${groupsHTML(items[active])}</div><a class="xp-feat" href="${catAll(items[active])}">${featHTML(items[active])}</a>`;
+  return `<div class="xp-cats" role="tablist">${items.map((it, i) => `<button type="button" role="tab" data-i="${i}" class="${i === active ? 'on' : ''}"><span class="xp-ci">${catIc(it)}</span><span>${esc(it.label)}</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>`).join('')}</div><div class="xp-groups">${groupsHTML(items[active])}</div><a class="xp-feat" href="${catAll(items[active])}">${featHTML(items[active])}</a>`;
 }
 function featHTML(it) { return it ? `<span class="xp-feat-i"><img src="${catImg(it)}" alt="" decoding="async"></span><span class="xp-feat-t"><small>${esc(T.feat)}</small><b>${esc(it.label)}</b><em>${esc(T.see)} ${UI.arrow}</em></span>` : ''; }
 function groupsHTML(it) {
@@ -160,16 +167,16 @@ function langHref(l) { const p = location.pathname.replace(/^\/satin\/(fa|fr|es)
 function drawer() {
   if (document.querySelector('.xp-dr')) return;
   const items = menu();
-  const row = (img, label, sub, body, href) => body
-    ? `<details class="xp-dr-c"><summary><img src="${img}" alt="" loading="lazy"><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></summary><div class="xp-dr-in">${body}</div></details>`
-    : `<a class="xp-dr-c xp-dr-a" href="${href}"><img src="${img}" alt="" loading="lazy"><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></a>`;
+  const row = (ic, label, sub, body, href) => body
+    ? `<details class="xp-dr-c"><summary><span class="xp-ci">${ic}</span><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></summary><div class="xp-dr-in">${body}</div></details>`
+    : `<a class="xp-dr-c xp-dr-a" href="${href}"><span class="xp-ci">${ic}</span><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></a>`;
   const el = document.createElement('div'); el.className = 'xp-dr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', T.menu);
   el.innerHTML = `<div class="xp-dr-head"><a href="${PRE}/" class="xp-dr-logo"><img src="/satin/img/logo.png" alt="Satin Graphic"></a><button type="button" class="xp-dr-x" aria-label="${esc(T.close)}">${UI.x}</button></div>
     <button type="button" class="xp-search xp-dr-s">${UI.search}<span>${esc(T.search)}</span></button>
     <div class="xp-dr-q"><button type="button" data-quote="" class="q">${esc(T.quote)}</button><a href="${WA}" target="_blank" rel="noopener" class="w">${WAICON}<span>${esc(T.wa)}</span></a><a href="${TEL}" class="c"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span>${esc(T.call)}</span></a></div>
-    <div class="xp-dr-list">${items.map(it => row(catImg(it), it.label, (it.groups || []).map(g => g.label).slice(0, 3).join(' · '),
+    <div class="xp-dr-list">${items.map(it => row(catIc(it), it.label, (it.groups || []).map(g => g.label).slice(0, 3).join(' · '),
       `<a class="xp-dr-all" href="${catAll(it)}">${esc(T.see)} ${UI.arrow}</a>` + (it.groups || []).map(g => `<div class="xp-g"><h4>${esc(g.label)}</h4><div class="xp-dr-links">${(g.links || []).filter(l => l.active !== false).map(l => `<a href="${linkHref(l.href)}">${esc(l.label)}${isSoon(l.href) ? ` <span class="cs-badge">${esc(T.soon)}</span>` : ''}</a>`).join('')}</div></div>`).join(''))).join('')}
-      ${row(CAT_IMG.portfolio, T.nav[4], T.workS, '', loc('/satin/portfolio/'))}${row(CAT_IMG.studio, T.nav[5], T.studioS, '', loc('/satin/design-studio/'))}</div>
+      ${items.some(i => i.key === 'portfolio') ? '' : row(IC.work, T.nav[4], T.workS, '', loc('/satin/portfolio/'))}${items.some(i => i.key === 'studio') ? '' : row(IC.design, T.nav[5], T.studioS, '', loc('/satin/design-studio/'))}</div>
     <div class="xp-dr-foot"><a href="${loc('/satin/login/')}" class="xp-dr-acc">${UI.user}<span>${esc(T.login)}</span></a>
       <div class="xp-dr-lang" aria-label="${esc(T.lang)}">${[['en', 'English'], ['fr', 'Français'], ['es', 'Español'], ['fa', 'فارسی']].map(([l, n]) => `<a href="${langHref(l)}" class="${l === LANG ? 'on' : ''}" lang="${l}">${n}</a>`).join('')}</div>
       <div class="xp-dr-ct"><b>${esc(T.contact)}</b><a href="${TEL}">(905) 695-9147</a><a href="${TEL2}">(905) 962-6222</a><small>${esc(T.hours)}</small></div></div>`;
