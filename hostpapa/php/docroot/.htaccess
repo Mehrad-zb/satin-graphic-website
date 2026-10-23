@@ -382,6 +382,11 @@ RewriteRule ^api/ api.php [L,QSA]
 RewriteRule ^sitemap\.xml$ api.php [L]
 RewriteRule ^admin$ /admin/ [R=301,L]
 
+# page addresses without the /satin/ prefix (old links, ads like /vehicle-wraps/vaughan): 301 to the same page under /satin/ when it exists
+RewriteCond %{REQUEST_URI} !^/(satin|admin|api|cms|studio|themes|esign|invoice|quote|pay|checkout|visualizer|apparel|print-templates)(/|$) [NC]
+RewriteCond %{DOCUMENT_ROOT}/satin/$1/index.html -f
+RewriteRule ^([a-z0-9][a-z0-9/-]*?)/?$ https://satingraphic.ca/satin/$1/ [R=301,L,NC]
+
 # Our Work project pages: admin-added ones (no static file) and shipped ones with the owner's renames (portfolio.php)
 RewriteRule ^satin/(?:(?:fa|fr|es)/)?portfolio/projects/[a-z0-9-]+/?$ api.php [L,QSA]
 
