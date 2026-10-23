@@ -56,6 +56,12 @@ const IC = {
   shop: S('<path d="M9 16h30l-2.5 26h-25z"/><path d="M17 20v-6a7 7 0 0 1 14 0v6"/>'),
   contact: S('<path d="M8 10h32a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H22l-9 7v-7H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z"/><path d="M14 20h20M14 26h12"/>'),
   work: S('<rect x="5" y="9" width="38" height="30" rx="2.5"/><circle cx="16" cy="19" r="3.5"/><path d="M5 34l11-10 8 7 7-6 12 10"/>'),
+  calc: S('<rect x="10" y="4" width="28" height="40" rx="3"/><rect x="15" y="9" width="18" height="8" rx="1"/><path d="M16 24h0M24 24h0M32 24h0M16 31h0M24 31h0M32 31h0M16 38h0M24 38h0M32 38h0" stroke-width="3.2"/>'),
+  help: S('<circle cx="24" cy="24" r="19"/><path d="M18.5 18.5a5.5 5.5 0 1 1 7.6 5.1c-1.3.6-2.1 1.8-2.1 3.2V29"/><path d="M24 35h0" stroke-width="3.2"/>'),
+  calendar: S('<rect x="6" y="9" width="36" height="33" rx="3"/><path d="M6 18h36M15 5v8M33 5v8"/><path d="M14 26h0M22 26h0M30 26h0M14 34h0M22 34h0" stroke-width="3.2"/>'),
+  info: S('<circle cx="17" cy="16" r="6"/><path d="M5 39c1-7 6-11 12-11s11 4 12 11"/><circle cx="34" cy="18" r="5"/><path d="M31 28.5c1-.3 2-.5 3-.5 5 0 9 3.5 10 10"/>'),
+  template: S('<rect x="6" y="6" width="36" height="36" rx="3"/><path d="M6 16h36M18 16v26"/>'),
+  grid: S('<rect x="7" y="7" width="14" height="14" rx="2"/><rect x="27" y="7" width="14" height="14" rx="2"/><rect x="7" y="27" width="14" height="14" rx="2"/><rect x="27" y="27" width="14" height="14" rx="2"/>'),
   tools: S('<path d="M5 30l22-12 4 7-22 12z"/><path d="M27 18l4 7"/><rect x="33" y="8" width="11" height="32" rx="5.5"/><path d="M38.5 8v32"/>'),
 };
 const WAICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.3 3.3 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.3 13.3 0 0 0 5.1 4.5c1.9.8 2.6.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg>';
@@ -162,32 +168,66 @@ function syncTabs() {
   const n = document.querySelector('.hdr [data-cart-n]')?.textContent.trim(), nb = t.querySelector('[data-xp-n]');
   if (nb && nb.textContent !== (n || '')) nb.textContent = n || ''; if (nb) nb.hidden = !n || n === '0';
 }
-/* phone menu: one full-screen panel — search, quick actions, picture rows for every category (tap to open its links), account, language, contact */
+/* phone menu, step by step: 1) categories  →  2) the category's sections as icon tiles  →  3) the section's pages.
+   A back button at the top goes one step back; categories with a single section skip step 2. */
 function langHref(l) { const p = location.pathname.replace(/^\/satin\/(fa|fr|es)(?=\/|$)/, '/satin'); return l === 'en' ? p : p.replace(/^\/satin/, '/satin/' + l); }
+const GRP_IC = [[/estimat|price|prix|precio|قیمت/i, 'calc'], [/commercial|fleet|flotte|تجاری/i, 'van'], [/colou?r|ppf|protect|رنگ/i, 'ppf'], [/offset/i, 'print'], [/large|banner|sign|بنر|تابلو/i, 'signs'],
+  [/label|sticker|étiquet|etiquet|استیکر/i, 'stickers'], [/help|aide|ayuda|راهنما/i, 'help'], [/apparel|vêtement|ropa|پوشاک|لباس/i, 'apparel'], [/decorat|embroid|چاپ روی/i, 'design'], [/window graphic|vitrine|vidrio|graphic/i, 'walls'],
+  [/tint|teinte|polariz|دودی/i, 'tint'], [/wallpaper|papier|papel|کاغذ/i, 'walls'], [/care|detail|soin|cuidado/i, 'detailing'], [/plan|visit|book|réserv|reserv|رزرو/i, 'calendar'], [/grow|online|digital|en ligne|en línea/i, 'digital'],
+  [/template|gabarit|plantilla|قالب/i, 'template'], [/design/i, 'design'], [/shop|boutique|tienda|فروشگاه/i, 'shop'], [/touch|contact|تماس/i, 'contact'], [/about|propos|nosotros|درباره/i, 'info']];
+const grpIc = g => IC[(GRP_IC.find(([re]) => re.test(g?.label || '')) || [, 'grid'])[1]] || IC.grid;
+const CHEV = '<svg class="xp-chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 function drawer() {
   if (document.querySelector('.xp-dr')) return;
   const items = menu();
-  const row = (ic, label, sub, body, href) => body
-    ? `<details class="xp-dr-c"><summary><span class="xp-ci">${ic}</span><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></summary><div class="xp-dr-in">${body}</div></details>`
-    : `<a class="xp-dr-c xp-dr-a" href="${href}"><span class="xp-ci">${ic}</span><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></a>`;
-  const el = document.createElement('div'); el.className = 'xp-dr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', T.menu);
-  el.innerHTML = `<div class="xp-dr-head"><a href="${PRE}/" class="xp-dr-logo"><img src="/satin/img/logo.png" alt="Satin Graphic"></a><button type="button" class="xp-dr-x" aria-label="${esc(T.close)}">${UI.x}</button></div>
-    <button type="button" class="xp-search xp-dr-s">${UI.search}<span>${esc(T.search)}</span></button>
+  const el = document.createElement('div'); el.className = 'xp-dr xp-dr3'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', T.menu);
+  el.innerHTML = `<div class="xp-dr-head"><button type="button" class="xp-dr-back" aria-label="Back" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button><a href="${PRE}/" class="xp-dr-logo"><img src="/satin/img/logo.png" alt="Satin Graphic"></a><b class="xp-dr-title"></b><button type="button" class="xp-dr-x" aria-label="${esc(T.close)}">${UI.x}</button></div><div class="xp-dr-stage"></div>`;
+  document.body.append(el); document.documentElement.classList.add('xp-dr-open'); document.documentElement.style.overflow = 'hidden';
+  const stage = el.querySelector('.xp-dr-stage'), back = el.querySelector('.xp-dr-back'), title = el.querySelector('.xp-dr-title'), logo = el.querySelector('.xp-dr-logo');
+  const stack = [];
+  const show = (html, label, dir) => {
+    const pn = document.createElement('div'); pn.className = 'xp-pn ' + (dir || ''); pn.innerHTML = html; stage.append(pn);
+    const old = [...stage.children].filter(x => x !== pn);
+    requestAnimationFrame(() => { pn.classList.remove('in-r', 'in-l'); old.forEach(o => { o.classList.add(dir === 'in-l' ? 'out-r' : 'out-l'); setTimeout(() => o.remove(), 260); }); });
+    back.hidden = !stack.length; logo.hidden = !!stack.length; title.textContent = label || ''; el.scrollTop = 0;
+    wire(pn);
+  };
+  const home = () => `<button type="button" class="xp-search xp-dr-s">${UI.search}<span>${esc(T.search)}</span></button>
     <div class="xp-dr-q"><button type="button" data-quote="" class="q">${esc(T.quote)}</button><a href="${WA}" target="_blank" rel="noopener" class="w">${WAICON}<span>${esc(T.wa)}</span></a><a href="${TEL}" class="c"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span>${esc(T.call)}</span></a></div>
-    <div class="xp-dr-list">${items.map(it => row(catIc(it), it.label, (it.groups || []).map(g => g.label).slice(0, 3).join(' · '),
-      `<a class="xp-dr-all" href="${catAll(it)}">${esc(T.see)} ${UI.arrow}</a>` + (it.groups || []).map(g => `<div class="xp-g"><h4>${esc(g.label)}</h4><div class="xp-dr-links">${(g.links || []).filter(l => l.active !== false).map(l => `<a href="${linkHref(l.href)}">${esc(l.label)}${isSoon(l.href) ? ` <span class="cs-badge">${esc(T.soon)}</span>` : ''}</a>`).join('')}</div></div>`).join(''))).join('')}
-      ${items.some(i => i.key === 'portfolio') ? '' : row(IC.work, T.nav[4], T.workS, '', loc('/satin/portfolio/'))}${items.some(i => i.key === 'studio') ? '' : row(IC.design, T.nav[5], T.studioS, '', loc('/satin/design-studio/'))}</div>
+    <div class="xp-l1">${items.map((it, i) => `<button type="button" class="xp-r1" data-cat="${i}"><span class="xp-ci">${catIc(it)}</span><b>${esc(it.label)}</b>${CHEV}</button>`).join('')}
+      ${items.some(i => i.key === 'portfolio') ? '' : `<a class="xp-r1" href="${loc('/satin/portfolio/')}"><span class="xp-ci">${IC.work}</span><b>${esc(T.nav[4])}</b>${CHEV}</a>`}${items.some(i => i.key === 'studio') ? '' : `<a class="xp-r1" href="${loc('/satin/design-studio/')}"><span class="xp-ci">${IC.design}</span><b>${esc(T.nav[5])}</b>${CHEV}</a>`}</div>
     <div class="xp-dr-foot"><a href="${loc('/satin/login/')}" class="xp-dr-acc">${UI.user}<span>${esc(T.login)}</span></a>
       <div class="xp-dr-lang" aria-label="${esc(T.lang)}">${[['en', 'English'], ['fr', 'Français'], ['es', 'Español'], ['fa', 'فارسی']].map(([l, n]) => `<a href="${langHref(l)}" class="${l === LANG ? 'on' : ''}" lang="${l}">${n}</a>`).join('')}</div>
       <div class="xp-dr-ct"><b>${esc(T.contact)}</b><a href="${TEL}">(905) 695-9147</a><a href="${TEL2}">(905) 962-6222</a><small>${esc(T.hours)}</small></div></div>`;
-  document.body.append(el); document.documentElement.classList.add('xp-dr-open'); document.documentElement.style.overflow = 'hidden';
+  const links = g => (g.links || []).filter(l => l.active !== false);
+  const cat = i => { const it = items[i];
+    return `<a class="xp-dr-all" href="${catAll(it)}"><span class="xp-ci">${catIc(it)}</span><span><small>${esc(T.see)}</small><b>${esc(it.label)}</b></span>${CHEV}</a>
+      <div class="xp-tiles">${(it.groups || []).map((g, j) => `<button type="button" class="xp-tile" data-grp="${i}:${j}"><span class="xp-ci">${grpIc(g)}</span><b>${esc(g.label)}</b><small>${links(g).length}</small></button>`).join('')}</div>`; };
+  const grp = (i, j) => { const g = items[i].groups[j];
+    return `<div class="xp-l3-h"><span class="xp-ci">${grpIc(g)}</span><b>${esc(g.label)}</b></div><div class="xp-l3">${links(g).map(l => `<a href="${linkHref(l.href)}"><span>${esc(l.label)}${isSoon(l.href) ? ` <span class="cs-badge">${esc(T.soon)}</span>` : ''}</span>${CHEV}</a>`).join('')}</div>`; };
+  const open = (kind, a, b) => {
+    stack.push([kind, a, b]);
+    if (kind === 'cat') show(cat(a), items[a].label, 'in-r');
+    else show(grp(a, b), items[a].label, 'in-r');
+  };
+  const goBack = () => {
+    stack.pop(); const top = stack[stack.length - 1];
+    if (!top) show(home(), '', 'in-l');
+    else if (top[0] === 'cat') show(cat(top[1]), items[top[1]].label, 'in-l');
+    else show(grp(top[1], top[2]), items[top[1]].label, 'in-l');
+  };
+  function wire(pn) {
+    pn.querySelector('.xp-dr-s')?.addEventListener('click', () => { close(); setTimeout(openSearch, 260); });
+    pn.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { const i = +b.dataset.cat; const gs = items[i].groups || []; if (gs.length === 1) { stack.push(['cat', i]); open('grp', i, 0); } else open('cat', i); });
+    pn.querySelectorAll('[data-grp]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.grp.split(':').map(Number); open('grp', i, j); });
+  }
+  back.onclick = () => { if (stack.length && stack[stack.length - 1][0] === 'grp' && stack.length === 2 && (items[stack[0][1]].groups || []).length === 1) stack.pop(); goBack(); };
+  show(home(), '', '');
   requestAnimationFrame(() => el.classList.add('on'));
   const close = () => { el.classList.remove('on'); document.documentElement.classList.remove('xp-dr-open'); document.documentElement.style.overflow = ''; setTimeout(() => el.remove(), 250); removeEventListener('keydown', k); };
   const k = e => { if (e.key === 'Escape') close(); };
   addEventListener('keydown', k);
-  el.querySelector('.xp-dr-s').onclick = () => { close(); setTimeout(openSearch, 260); };
   el.addEventListener('click', e => { if (e.target.closest('.xp-dr-x') || e.target.closest('a') || e.target.closest('[data-quote]')) close(); });
-  el.querySelectorAll('details').forEach(d => d.addEventListener('toggle', () => { if (d.open) el.querySelectorAll('details').forEach(o => { if (o !== d) o.open = false; }); }));
 }
 /* the header ☰ button opens the new phone menu instead of the old drawer */
 addEventListener('click', e => { const b = e.target.closest?.('.hdr [data-burger]'); if (!b) return; e.preventDefault(); e.stopImmediatePropagation(); drawer(); }, true);

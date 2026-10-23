@@ -268,3 +268,46 @@ html[dir=rtl] .xp-dr-a i::before{transform:translateX(2px) rotate(135deg)}
 html[dir=rtl] .xp-dr-links a::after{transform:rotate(135deg)}
 .xp-dr-links a:active{color:var(--xp-red)}
 .xp-cats button span.xp-ci{flex:0 0 42px;width:42px}.xp-dr-c summary>span.xp-ci,.xp-dr-a>span.xp-ci{flex:0 0 52px;display:grid}
+
+/* ---------- v4: phone menu step by step (categories → section tiles → pages) ---------- */
+.xp-dr3{padding:0}
+.xp-dr3 .xp-dr-head{padding:10px 16px;border-bottom:1px solid var(--line);gap:8px}
+.xp-dr-back{width:44px;height:44px;border:0;border-radius:50%;background:#e6e9ed;display:grid;place-items:center;color:var(--ink);cursor:pointer;flex:none}
+.xp-dr-back[hidden],.xp-dr-logo[hidden]{display:none!important}
+.xp-dr-title{flex:1;font-size:17px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xp-dr-title:empty{display:none}
+.xp-dr3 .xp-dr-logo{margin-inline-end:auto}
+.xp-dr-stage{position:relative;overflow:hidden}
+.xp-pn{padding:14px 16px calc(28px + env(safe-area-inset-bottom,0px));transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .26s}
+.xp-pn.in-r{transform:translateX(40%);opacity:0}.xp-pn.in-l{transform:translateX(-40%);opacity:0}
+.xp-pn.out-l,.xp-pn.out-r{position:absolute;inset:0 0 auto;opacity:0;pointer-events:none}
+.xp-pn.out-l{transform:translateX(-40%)}.xp-pn.out-r{transform:translateX(40%)}
+html[dir=rtl] .xp-pn.in-r,html[dir=rtl] .xp-pn.out-r{transform:translateX(-40%)}html[dir=rtl] .xp-pn.in-l,html[dir=rtl] .xp-pn.out-l{transform:translateX(40%)}
+html[dir=rtl] .xp-chev,html[dir=rtl] .xp-dr-back svg{transform:scaleX(-1)}
+.xp-dr3 .xp-dr-s{width:100%;max-width:none;margin:0 0 12px}
+.xp-l1{background:#fff;border-radius:16px;overflow:hidden}
+.xp-r1{display:flex;align-items:center;gap:14px;width:100%;padding:10px 14px 10px 12px;border:0;border-bottom:1px solid var(--line-soft);background:none;color:var(--ink);text-decoration:none;text-align:start;font:inherit;cursor:pointer}
+.xp-r1:last-child{border-bottom:0}
+.xp-r1 b{flex:1;font-size:16px;font-weight:700}
+.xp-r1 .xp-ci{width:42px;height:42px;border-radius:12px}.xp-r1 .xp-ci svg{width:28px;height:28px}
+.xp-chev{color:#aab0b8;flex:none}
+.xp-r1:active{background:var(--bg)}
+.xp-dr-all{display:flex!important;align-items:center;gap:14px;margin:0 0 14px!important;padding:14px;border-radius:16px;background:var(--ink);color:#fff!important;text-decoration:none}
+.xp-dr-all .xp-ci{background:rgba(255,255,255,.12);color:#fff;width:48px;height:48px}
+.xp-dr-all>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:2px}
+.xp-dr-all small{font-size:12px;font-weight:600;opacity:.7}
+.xp-dr-all b{font-size:17px}
+.xp-dr-all .xp-chev{color:#fff}
+.xp-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xp-tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:16px 14px 14px;border:0;border-radius:16px;background:#fff;color:var(--ink);text-align:start;font:inherit;cursor:pointer;min-height:128px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.xp-tile .xp-ci{width:52px;height:52px;border-radius:14px}.xp-tile .xp-ci svg{width:34px;height:34px}
+.xp-tile b{font-size:15px;font-weight:700;line-height:1.25}
+.xp-tile small{position:absolute;top:14px;inset-inline-end:14px;min-width:24px;height:24px;padding:0 7px;border-radius:12px;background:var(--bg);color:var(--mut);font-size:12px;font-weight:700;line-height:24px;text-align:center}
+.xp-tile:active{transform:scale(.98)}
+.xp-l3-h{display:flex;align-items:center;gap:12px;margin:2px 2px 12px}
+.xp-l3-h .xp-ci{width:44px;height:44px;border-radius:12px;background:var(--xp-red);color:#fff}
+.xp-l3-h b{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.xp-l3{background:#fff;border-radius:16px;overflow:hidden}
+.xp-l3 a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;border-bottom:1px solid var(--line-soft);color:var(--ink);text-decoration:none;font-size:15.5px;font-weight:600}
+.xp-l3 a:last-child{border-bottom:0}
+.xp-l3 a:active{background:var(--bg);color:var(--xp-red)}
