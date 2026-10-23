@@ -13,25 +13,25 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const HOME_RE = /^\/satin(?:\/(?:fa|fr|es))?\/?$/;
 
 const T = {
-  en: { all: 'All products & services', search: 'Search all products & services', account: 'Account', cart: 'Cart', quote: 'Get a quote', home: 'Home', cats: 'Categories', srch: 'Search', close: 'Close', see: 'See all',
+  en: { feat: 'Featured', menu: 'Menu', call: 'Call us', wa: 'WhatsApp', login: 'Account / Log in', lang: 'Language', contact: 'Contact', hours: 'Mon–Fri 9–5 · Sat 10–3', studioS: 'Design your wrap online', workS: 'Real projects from our shop', all: 'All products & services', search: 'Search all products & services', account: 'Account', cart: 'Cart', quote: 'Get a quote', home: 'Home', cats: 'Categories', srch: 'Search', close: 'Close', see: 'See all',
     nav: ['Vehicle wraps', 'Print & signs', 'Walls & windows', 'Apparel', 'Our work', 'Design Studio'],
     h1a: 'Plain in.', h1b: 'Branded', h1c: 'out.', sub: 'Vehicle wraps · Printing · Signage · Vaughan, ON', scroll: 'Scroll', endA: 'Pick your vehicle.', endB: 'See your price.', price: 'See price',
     q: 'What can we make for you?', qs: 'Everything for your brand, all in one place.', explore: 'Explore our services', cant: 'Can’t find what you need?', az: 'Browse all products A–Z', ask: 'Ask our team', made: 'Made by Satin', madeS: 'Real projects from our Vaughan workshop', soon: 'Soon',
     svc: ['Vehicle wraps', 'PPF & detailing', 'Window tint', 'Signs & displays', 'Walls & windows', 'Business printing', 'Stickers & labels', 'Custom apparel', 'Design & templates', 'Materials & tools'],
     work: ['Commercial van wrap', 'Café feature wall', 'Colour-flip Tesla wrap'], veh: { sedan: 'Sedan', suv: 'SUV', van: 'Sprinter Van', pickup: 'Pickup Truck', minivan: 'Minivan', bus: 'Bus', box: 'Box Truck', trailer: 'Trailer' } },
-  fa: { all: 'همه محصولات و خدمات', search: 'جستجو در همه محصولات و خدمات', account: 'حساب', cart: 'سبد', quote: 'دریافت قیمت', home: 'خانه', cats: 'دسته‌ها', srch: 'جستجو', close: 'بستن', see: 'مشاهده همه',
+  fa: { feat: 'ویژه', menu: 'منو', call: 'تماس', wa: 'واتس‌اپ', login: 'حساب / ورود', lang: 'زبان', contact: 'تماس', hours: 'دوشنبه–جمعه ۹–۵ · شنبه ۱۰–۳', studioS: 'طرح روکش را آنلاین بسازید', workS: 'پروژه‌های واقعی کارگاه ما', all: 'همه محصولات و خدمات', search: 'جستجو در همه محصولات و خدمات', account: 'حساب', cart: 'سبد', quote: 'دریافت قیمت', home: 'خانه', cats: 'دسته‌ها', srch: 'جستجو', close: 'بستن', see: 'مشاهده همه',
     nav: ['روکش خودرو', 'چاپ و تابلو', 'دیوار و شیشه', 'پوشاک', 'نمونه‌کارها', 'استودیوی طراحی'],
     h1a: 'ساده وارد شو.', h1b: 'برند‌دار', h1c: 'بیرون بیا.', sub: 'روکش خودرو · چاپ · تابلو · وان، انتاریو', scroll: 'اسکرول کنید', endA: 'خودروی خود را انتخاب کنید.', endB: 'قیمت را ببینید.', price: 'دیدن قیمت',
     q: 'چه چیزی برایتان بسازیم؟', qs: 'همه چیز برای برند شما، در یک جا.', explore: 'خدمات ما', cant: 'چیزی که می‌خواهید را پیدا نکردید؟', az: 'همه محصولات', ask: 'از تیم ما بپرسید', made: 'ساخت ستین', madeS: 'پروژه‌های واقعی از کارگاه ما در وان', soon: 'به‌زودی',
     svc: ['روکش خودرو', 'PPF و دیتیلینگ', 'دودی شیشه', 'تابلو و استند', 'دیوار و شیشه', 'چاپ تجاری', 'استیکر و لیبل', 'پوشاک سفارشی', 'طراحی و قالب', 'مواد و ابزار'],
     work: ['روکش ون تجاری', 'دیوارنگاره کافه', 'روکش تغییر رنگ تسلا'], veh: { sedan: 'سدان', suv: 'شاسی‌بلند', van: 'ون اسپرینتر', pickup: 'وانت', minivan: 'مینی‌ون', bus: 'اتوبوس', box: 'کامیون باکس', trailer: 'تریلر' } },
-  fr: { all: 'Tous les produits et services', search: 'Rechercher produits et services', account: 'Compte', cart: 'Panier', quote: 'Obtenir un prix', home: 'Accueil', cats: 'Catégories', srch: 'Recherche', close: 'Fermer', see: 'Tout voir',
+  fr: { feat: 'En vedette', menu: 'Menu', call: 'Appeler', wa: 'WhatsApp', login: 'Compte / Connexion', lang: 'Langue', contact: 'Contact', hours: 'Lun–ven 9 h–17 h · sam 10 h–15 h', studioS: 'Créez votre covering en ligne', workS: 'Projets réels de notre atelier', all: 'Tous les produits et services', search: 'Rechercher produits et services', account: 'Compte', cart: 'Panier', quote: 'Obtenir un prix', home: 'Accueil', cats: 'Catégories', srch: 'Recherche', close: 'Fermer', see: 'Tout voir',
     nav: ['Covering', 'Impression & enseignes', 'Murs & vitres', 'Vêtements', 'Réalisations', 'Studio de création'],
     h1a: 'Neutre à l’entrée.', h1b: 'Brandé', h1c: 'à la sortie.', sub: 'Covering · Impression · Enseignes · Vaughan (Ont.)', scroll: 'Défiler', endA: 'Choisissez votre véhicule.', endB: 'Voyez votre prix.', price: 'Voir le prix',
     q: 'Que pouvons-nous créer pour vous?', qs: 'Tout pour votre marque, au même endroit.', explore: 'Nos services', cant: 'Vous ne trouvez pas?', az: 'Tous les produits de A à Z', ask: 'Demandez à notre équipe', made: 'Fait par Satin', madeS: 'Projets réels de notre atelier de Vaughan', soon: 'Bientôt',
     svc: ['Covering de véhicules', 'PPF & esthétique', 'Teinte de vitres', 'Enseignes & présentoirs', 'Murs & vitres', 'Impression d’affaires', 'Autocollants & étiquettes', 'Vêtements personnalisés', 'Design & gabarits', 'Matériaux & outils'],
     work: ['Covering de fourgon commercial', 'Mur décoratif de café', 'Tesla couleur caméléon'], veh: { sedan: 'Berline', suv: 'VUS', van: 'Fourgon Sprinter', pickup: 'Camionnette', minivan: 'Minifourgonnette', bus: 'Autobus', box: 'Camion cube', trailer: 'Remorque' } },
-  es: { all: 'Todos los productos y servicios', search: 'Buscar productos y servicios', account: 'Cuenta', cart: 'Carrito', quote: 'Obtener precio', home: 'Inicio', cats: 'Categorías', srch: 'Buscar', close: 'Cerrar', see: 'Ver todo',
+  es: { feat: 'Destacado', menu: 'Menú', call: 'Llamar', wa: 'WhatsApp', login: 'Cuenta / Entrar', lang: 'Idioma', contact: 'Contacto', hours: 'Lun–vie 9–5 · sáb 10–3', studioS: 'Diseña tu rotulación en línea', workS: 'Proyectos reales de nuestro taller', all: 'Todos los productos y servicios', search: 'Buscar productos y servicios', account: 'Cuenta', cart: 'Carrito', quote: 'Obtener precio', home: 'Inicio', cats: 'Categorías', srch: 'Buscar', close: 'Cerrar', see: 'Ver todo',
     nav: ['Rotulación', 'Impresión y letreros', 'Paredes y vidrios', 'Ropa', 'Trabajos', 'Estudio de diseño'],
     h1a: 'Entra simple.', h1b: 'Sale con', h1c: 'tu marca.', sub: 'Rotulación · Impresión · Letreros · Vaughan, ON', scroll: 'Desliza', endA: 'Elige tu vehículo.', endB: 'Mira tu precio.', price: 'Ver precio',
     q: '¿Qué podemos hacer por ti?', qs: 'Todo para tu marca, en un solo lugar.', explore: 'Nuestros servicios', cant: '¿No encuentras lo que buscas?', az: 'Todos los productos de la A a la Z', ask: 'Pregunta a nuestro equipo', made: 'Hecho por Satin', madeS: 'Proyectos reales de nuestro taller en Vaughan', soon: 'Pronto',
@@ -53,6 +53,7 @@ const IC = {
   design: S('<path d="M24 4l9 17-9 19-9-19z"/><path d="M24 4v18"/><circle cx="24" cy="24" r="2.5"/><path d="M15 40h18v4H15z"/>'),
   tools: S('<path d="M5 30l22-12 4 7-22 12z"/><path d="M27 18l4 7"/><rect x="33" y="8" width="11" height="32" rx="5.5"/><path d="M38.5 8v32"/>'),
 };
+const WAICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.3 3.3 0 0 0-1 2.5 5.8 5.8 0 0 0 1.2 3.1 13.3 13.3 0 0 0 5.1 4.5c1.9.8 2.6.9 3.6.7a3 3 0 0 0 2-1.4 2.4 2.4 0 0 0 .2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.8 9.8 0 0 1-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4a9.8 9.8 0 1 1 8.3 4.6zm8.4-18.2A11.8 11.8 0 0 0 1.8 17.9L.1 24l6.3-1.6a11.8 11.8 0 0 0 5.6 1.4A11.8 11.8 0 0 0 20.4 3.6z"/></svg>';
 const UI = {
   grid: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg>',
   chev: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
@@ -70,6 +71,10 @@ const SERVICES = [
 ];
 const NAV = ['/satin/vehicle-wraps/', '/satin/print-shop/', '/satin/window-graphics/', '/satin/apparel/', '/satin/portfolio/', '/satin/design-studio/'];
 const WORK = [['/satin/img/job-greenlife-van-960.webp', '/satin/vehicle-wraps/commercial/'], ['/satin/img/wall-restaurant-960.webp', '/satin/wallpaper/'], ['/satin/img/job-tesla-flip-960.webp', '/satin/vehicle-wraps/color-change/']];
+const CAT_IMG = { wraps: '/satin/img/sprinter-wrapped-960.webp', print: '/satin/img/print-business-cards.optimized.webp', apparel: '/satin/img/satin-shirt-logo.webp', windows: '/satin/img/window-vinyl.optimized.webp', shop: '/satin/img/wrap-prints-printer.webp', detailing: '/satin/img/detail-hand-960.webp', portfolio: '/satin/img/job-camaro-960.webp', studio: '/satin/img/design-studio.optimized.webp' };
+const catImg = it => CAT_IMG[it?.key] || '/satin/img/hero-fleet-satin.webp';
+const catAll = it => linkHref(((it?.groups || [])[0]?.links || [])[0]?.href || it?.href || '/satin/');
+const TEL = 'tel:+19056959147', TEL2 = 'tel:+19059626222', WA = 'https://wa.me/19059626222';
 const isSoon = h => SOON.includes(h.replace(/\/+$/, ''));
 
 /* menu data: the same list the site's own menu uses (inline JSON on every page) */
@@ -119,8 +124,9 @@ function markActive(hdr) {
 }
 function megaHTML(active = 0) {
   const items = menu();
-  return `<div class="xp-cats" role="tablist">${items.map((it, i) => `<button type="button" role="tab" data-i="${i}" class="${i === active ? 'on' : ''}">${esc(it.label)}<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>`).join('')}</div><div class="xp-groups">${groupsHTML(items[active])}</div>`;
+  return `<div class="xp-cats" role="tablist">${items.map((it, i) => `<button type="button" role="tab" data-i="${i}" class="${i === active ? 'on' : ''}"><img src="${catImg(it)}" alt="" decoding="async"><span>${esc(it.label)}</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>`).join('')}</div><div class="xp-groups">${groupsHTML(items[active])}</div><a class="xp-feat" href="${catAll(items[active])}">${featHTML(items[active])}</a>`;
 }
+function featHTML(it) { return it ? `<span class="xp-feat-i"><img src="${catImg(it)}" alt="" decoding="async"></span><span class="xp-feat-t"><small>${esc(T.feat)}</small><b>${esc(it.label)}</b><em>${esc(T.see)} ${UI.arrow}</em></span>` : ''; }
 function groupsHTML(it) {
   if (!it) return '';
   return (it.groups || []).map(g => `<div class="xp-g"><h4>${esc(g.label)}</h4>${(g.links || []).filter(l => l.active !== false).map(l => `<a href="${linkHref(l.href)}">${esc(l.label)}${isSoon(l.href) ? ` <span class="cs-badge">${esc(T.soon)}</span>` : ''}</a>`).join('')}</div>`).join('');
@@ -128,7 +134,7 @@ function groupsHTML(it) {
 function wireMega(root) {
   const items = menu();
   root.querySelectorAll('.xp-cats [data-i]').forEach(b => {
-    const go = () => { root.querySelectorAll('.xp-cats [data-i]').forEach(x => x.classList.toggle('on', x === b)); root.querySelector('.xp-groups').innerHTML = groupsHTML(items[+b.dataset.i]); };
+    const go = () => { root.querySelectorAll('.xp-cats [data-i]').forEach(x => x.classList.toggle('on', x === b)); root.querySelector('.xp-groups').innerHTML = groupsHTML(items[+b.dataset.i]); const f = root.querySelector('.xp-feat'); f.href = catAll(items[+b.dataset.i]); f.innerHTML = featHTML(items[+b.dataset.i]); };
     b.onmouseenter = go; b.onfocus = go; b.onclick = go;
   });
 }
@@ -139,7 +145,7 @@ function tabs() {
   const t = document.createElement('nav'); t.className = 'xp-tabs'; t.setAttribute('aria-label', 'Shortcuts');
   t.innerHTML = `<a href="${PRE}/" data-t="home">${UI.home}<span>${esc(T.home)}</span></a><button type="button" data-t="cats">${UI.grid.replace(/18/g, '23')}<span>${esc(T.cats)}</span></button><button type="button" data-t="search">${UI.search.replace(/19/g, '23')}<span>${esc(T.srch)}</span></button><button type="button" data-t="cart">${UI.cart.replace(/21/g, '23')}<span>${esc(T.cart)}</span><b data-xp-n hidden></b></button>`;
   document.body.append(t);
-  t.querySelector('[data-t=cats]').onclick = sheet;
+  t.querySelector('[data-t=cats]').onclick = drawer;
   t.querySelector('[data-t=search]').onclick = openSearch;
   t.querySelector('[data-t=cart]').onclick = openCart;
 }
@@ -149,6 +155,35 @@ function syncTabs() {
   const n = document.querySelector('.hdr [data-cart-n]')?.textContent.trim(), nb = t.querySelector('[data-xp-n]');
   if (nb && nb.textContent !== (n || '')) nb.textContent = n || ''; if (nb) nb.hidden = !n || n === '0';
 }
+/* phone menu: one full-screen panel — search, quick actions, picture rows for every category (tap to open its links), account, language, contact */
+function langHref(l) { const p = location.pathname.replace(/^\/satin\/(fa|fr|es)(?=\/|$)/, '/satin'); return l === 'en' ? p : p.replace(/^\/satin/, '/satin/' + l); }
+function drawer() {
+  if (document.querySelector('.xp-dr')) return;
+  const items = menu();
+  const row = (img, label, sub, body, href) => body
+    ? `<details class="xp-dr-c"><summary><img src="${img}" alt="" loading="lazy"><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></summary><div class="xp-dr-in">${body}</div></details>`
+    : `<a class="xp-dr-c xp-dr-a" href="${href}"><img src="${img}" alt="" loading="lazy"><span><b>${esc(label)}</b><small>${esc(sub)}</small></span><i></i></a>`;
+  const el = document.createElement('div'); el.className = 'xp-dr'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', T.menu);
+  el.innerHTML = `<div class="xp-dr-head"><a href="${PRE}/" class="xp-dr-logo"><img src="/satin/img/logo.png" alt="Satin Graphic"></a><button type="button" class="xp-dr-x" aria-label="${esc(T.close)}">${UI.x}</button></div>
+    <button type="button" class="xp-search xp-dr-s">${UI.search}<span>${esc(T.search)}</span></button>
+    <div class="xp-dr-q"><button type="button" data-quote="" class="q">${esc(T.quote)}</button><a href="${WA}" target="_blank" rel="noopener" class="w">${WAICON}<span>${esc(T.wa)}</span></a><a href="${TEL}" class="c"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span>${esc(T.call)}</span></a></div>
+    <div class="xp-dr-list">${items.map(it => row(catImg(it), it.label, (it.groups || []).map(g => g.label).slice(0, 3).join(' · '),
+      `<a class="xp-dr-all" href="${catAll(it)}">${esc(T.see)} ${UI.arrow}</a>` + (it.groups || []).map(g => `<div class="xp-g"><h4>${esc(g.label)}</h4><div class="xp-dr-links">${(g.links || []).filter(l => l.active !== false).map(l => `<a href="${linkHref(l.href)}">${esc(l.label)}${isSoon(l.href) ? ` <span class="cs-badge">${esc(T.soon)}</span>` : ''}</a>`).join('')}</div></div>`).join(''))).join('')}
+      ${row(CAT_IMG.portfolio, T.nav[4], T.workS, '', loc('/satin/portfolio/'))}${row(CAT_IMG.studio, T.nav[5], T.studioS, '', loc('/satin/design-studio/'))}</div>
+    <div class="xp-dr-foot"><a href="${loc('/satin/login/')}" class="xp-dr-acc">${UI.user}<span>${esc(T.login)}</span></a>
+      <div class="xp-dr-lang" aria-label="${esc(T.lang)}">${[['en', 'English'], ['fr', 'Français'], ['es', 'Español'], ['fa', 'فارسی']].map(([l, n]) => `<a href="${langHref(l)}" class="${l === LANG ? 'on' : ''}" lang="${l}">${n}</a>`).join('')}</div>
+      <div class="xp-dr-ct"><b>${esc(T.contact)}</b><a href="${TEL}">(905) 695-9147</a><a href="${TEL2}">(905) 962-6222</a><small>${esc(T.hours)}</small></div></div>`;
+  document.body.append(el); document.documentElement.classList.add('xp-dr-open'); document.documentElement.style.overflow = 'hidden';
+  requestAnimationFrame(() => el.classList.add('on'));
+  const close = () => { el.classList.remove('on'); document.documentElement.classList.remove('xp-dr-open'); document.documentElement.style.overflow = ''; setTimeout(() => el.remove(), 250); removeEventListener('keydown', k); };
+  const k = e => { if (e.key === 'Escape') close(); };
+  addEventListener('keydown', k);
+  el.querySelector('.xp-dr-s').onclick = () => { close(); setTimeout(openSearch, 260); };
+  el.addEventListener('click', e => { if (e.target.closest('.xp-dr-x') || e.target.closest('a') || e.target.closest('[data-quote]')) close(); });
+  el.querySelectorAll('details').forEach(d => d.addEventListener('toggle', () => { if (d.open) el.querySelectorAll('details').forEach(o => { if (o !== d) o.open = false; }); }));
+}
+/* the header ☰ button opens the new phone menu instead of the old drawer */
+addEventListener('click', e => { const b = e.target.closest?.('.hdr [data-burger]'); if (!b) return; e.preventDefault(); e.stopImmediatePropagation(); drawer(); }, true);
 function sheet() {
   if (document.querySelector('.xp-sheet')) return;
   const items = menu();
@@ -233,7 +268,8 @@ function hero(sec) {
 
 /* ---------- keep everything in place across the site's page changes ---------- */
 function hdrHeight() { const h = document.querySelector('header.hdr'); if (h) document.documentElement.style.setProperty('--xp-hdr', Math.round(h.getBoundingClientRect().bottom > 0 ? h.offsetHeight : 0) + 'px'); }
-function run() { try { header(); tabs(); syncTabs(); home(); hdrHeight(); } catch (e) { console.warn('explore theme', e); } }
+const NEW_HOME = false; // the scroll-video home page is kept here but switched off (Mehrad prefers the original home page)
+function run() { try { header(); tabs(); syncTabs(); if (NEW_HOME) home(); hdrHeight(); } catch (e) { console.warn('explore theme', e); } }
 document.documentElement.classList.add('xp');
 run();
 let q = 0; new MutationObserver(() => { if (q) return; q = requestAnimationFrame(() => { q = 0; run(); }); }).observe(document.body, { childList: true, subtree: true });
