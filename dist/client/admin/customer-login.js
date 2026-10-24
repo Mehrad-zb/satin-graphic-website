@@ -58,7 +58,7 @@ async function view() {
       <li>در <b>App settings → Basic</b> دامنهٔ <code>satingraphic.ca</code>، لینک Privacy Policy، Terms و User data deletion (صفحهٔ حریم خصوصی) را وارد کنید. <b>App ID</b> و <b>App secret</b> را کپی و اینجا ذخیره کنید.</li>
       <li>اپ را <b>Live</b> کنید؛ در حالت Development فقط افرادی که روی اپ نقش دارند می‌توانند وارد شوند.</li></ol>
       <p>کلیدهای مخفی (Secret) فقط در دیتابیس سرور ذخیره می‌شوند و دیگر نمایش داده نمی‌شوند (فقط ۴ رقم آخر). دکمه‌های Google و Facebook تا وقتی تنظیم نشده‌اند به مشتری نشان داده نمی‌شوند.</p></div></div></div>` : ''}
-    ${acc ? `<div class="card" style="margin-top:18px"><h2>Website accounts <small class="hint">${acc.accounts.length}</small></h2><div class="toolbar"><input class="input" data-q placeholder="Search name, email, phone"></div><div data-list></div></div>` : ''}`;
+    ${acc ? `<div class="card" style="margin-top:18px"><h2>Website accounts <small class="hint">${acc.accounts.length}</small> <a class="btn ghost sm" href="#/web-members" style="float:right">Open Website members (filters, designs) →</a></h2><div class="toolbar"><input class="input" data-q placeholder="Search name, email, phone"></div><div data-list></div></div>` : ''}`;
   c.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => { navigator.clipboard.writeText($(`[data-copyval="${b.dataset.copy}"]`, c).value); A().toast('Copied'); });
   const f = $('[data-f]', c);
   const msg = t => { $('[data-msg]', c).innerHTML = `<div class="err">${esc(t)}</div>`; };

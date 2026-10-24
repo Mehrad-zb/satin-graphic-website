@@ -1023,10 +1023,10 @@ function customer_admin_route(string $r, string $method): void {
     }
     if ($r === '/customer-accounts' && $method === 'GET') {
         require_user('invoices.view');
-        $rows = $pdo->query('SELECT id, email, name, phone, company, pass_hash, email_verified, google_sub, facebook_id, status, created_at, last_login, last_method FROM customer_accounts ORDER BY created_at DESC LIMIT 2000')->fetchAll();
+        $rows = $pdo->query('SELECT id, email, name, phone, company, address, pass_hash, email_verified, google_sub, facebook_id, status, created_at, last_login, last_method FROM customer_accounts ORDER BY created_at DESC LIMIT 2000')->fetchAll();
         $counts = [];
         if (cust_has_orders_table()) foreach ($pdo->query("SELECT lower(email) e, customer_id, COUNT(*) n FROM shop_orders GROUP BY lower(email), customer_id")->fetchAll() as $o) { $counts['e:' . $o['e']] = ($counts['e:' . $o['e']] ?? 0) + (int)$o['n']; if ($o['customer_id'] !== '') $counts['c:' . $o['customer_id']] = ($counts['c:' . $o['customer_id']] ?? 0) + (int)$o['n']; }
-        json_out(['accounts' => array_map(fn($a) => ['id' => $a['id'], 'email' => $a['email'], 'name' => $a['name'], 'phone' => $a['phone'], 'company' => $a['company'], 'verified' => (bool)(int)$a['email_verified'],
+        json_out(['accounts' => array_map(fn($a) => ['id' => $a['id'], 'email' => $a['email'], 'name' => $a['name'], 'phone' => $a['phone'], 'company' => $a['company'], 'address' => (is_array($ad = json_decode((string)($a['address'] ?? ''), true)) ? $ad : null), 'verified' => (bool)(int)$a['email_verified'],
             'methods' => array_values(array_filter([$a['pass_hash'] !== '' ? 'email' : null, (string)$a['google_sub'] !== '' ? 'google' : null, (string)$a['facebook_id'] !== '' ? 'facebook' : null])),
             'status' => $a['status'], 'createdAt' => $a['created_at'], 'lastLogin' => $a['last_login'], 'lastMethod' => $a['last_method'],
             'orders' => max($counts['c:' . $a['id']] ?? 0, (int)$a['email_verified'] ? ($counts['e:' . strtolower($a['email'])] ?? 0) : 0)], $rows)]);

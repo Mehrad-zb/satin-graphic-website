@@ -104,6 +104,52 @@ function shop_admin_route(string $r, string $method): void {
 function shop_admin_inner(string $r, string $method): void {
     $pdo = shop_db();
 
+    /* ---------- Studio designs (approved / submitted for review in Design Studio) ---------- */
+    if ($r === '/shop/designs' && $method === 'GET') {
+        require_user('orders.view');
+        require_once __DIR__ . '/customer.php';
+        $q = $pdo->query("SELECT id, design, customer_id, updated_at FROM shop_designs WHERE design LIKE '%\"approvedAt\"%' ORDER BY updated_at DESC LIMIT 800");
+        $cache = []; $out = [];
+        $LABEL = ['mockup' => 'Mockup', 'preview' => 'Preview', 'printpdf' => 'Print PDF', 'print' => 'Print file', 'artwork' => 'Artwork SVG', 'source' => 'Editable JSON'];
+        foreach ($q->fetchAll() as $row) {
+            $d = json_decode((string)$row['design'], true) ?: [];
+            $cid = (string)$row['customer_id']; $cu = null;
+            if ($cid !== '') { if (!array_key_exists($cid, $cache)) { $a = cust_by('id', $cid); $cache[$cid] = $a ? ['id' => $a['id'], 'name' => $a['name'], 'email' => $a['email'], 'phone' => $a['phone']] : null; } $cu = $cache[$cid]; }
+            $files = []; $mock = null;
+            foreach ((array)($d['generated'] ?? []) as $g) { if (!is_array($g)) continue; $role = (string)($g['role'] ?? ''); if ($role === 'mockup' && !$mock) $mock = $g['id']; if ($role === 'preview') continue;
+                $files[] = ['id' => $g['id'], 'name' => (string)($g['name'] ?? ''), 'role' => $role, 'label' => ($LABEL[$role] ?? 'File') . ($role === 'print' || $role === 'artwork' ? ' ' . (preg_match('/-(driver-side|passenger-side|rear|front|top|front-side|back|side-\d+)/', (string)($g['name'] ?? ''), $m) ? $m[1] : '') : '')]; }
+            foreach ((array)($d['originals'] ?? []) as $o) if (is_array($o)) $files[] = ['id' => $o['id'], 'name' => (string)($o['name'] ?? ''), 'role' => 'upload', 'label' => 'Upload'];
+            $rule = shop_studio_rule((string)($d['productId'] ?? ''));
+            $out[] = ['id' => $row['id'], 'product' => (string)($rule['label'] ?? ($d['productId'] ?? '')), 'vehicle' => trim((string)($d['options']['vehicleModel'] ?? '')), 'glass' => !empty($d['options']['vehicleGlass']),
+                'approvedAt' => $d['approvedAt'] ?? null, 'submittedAt' => $d['review']['submittedAt'] ?? null, 'updatedAt' => $row['updated_at'], 'review' => is_array($d['review'] ?? null) ? $d['review'] : null,
+                'ref' => (string)($d['review']['ref'] ?? ''), 'customer' => $cu, 'mockup' => $mock, 'files' => $files];
+        }
+        json_out(['designs' => $out]);
+    }
+    if ($r === '/shop/designs/file' && $method === 'GET') {
+        require_user('orders.view');
+        $q = $pdo->prepare('SELECT design FROM shop_designs WHERE id = ?'); $q->execute([(string)($_GET['design'] ?? '')]); $row = $q->fetch();
+        $d = $row ? (json_decode((string)$row['design'], true) ?: []) : []; $fid = (string)($_GET['id'] ?? ''); $ok = false;
+        foreach (array_merge((array)($d['generated'] ?? []), (array)($d['originals'] ?? [])) as $g) if (is_array($g) && ($g['id'] ?? '') === $fid) $ok = true;
+        $f = $ok ? shop_file($fid) : null;
+        if (!$f) json_out(['error' => 'File not found'], 404);
+        shop_send_file($f, ($_GET['inline'] ?? '') === '1');
+    }
+    if ($r === '/shop/designs/status' && $method === 'POST') {
+        $u = require_user('orders.edit');
+        $v = body_json(2000); $id = (string)($v['id'] ?? ''); $st = (string)($v['status'] ?? '');
+        if (!in_array($st, ['submitted', 'reviewing', 'quoted', 'approved_customer', 'production', 'done', 'cancelled'], true)) json_out(['error' => 'Choose a valid status'], 400);
+        $q = $pdo->prepare('SELECT design FROM shop_designs WHERE id = ?'); $q->execute([$id]); $row = $q->fetch();
+        if (!$row) json_out(['error' => 'Design not found'], 404);
+        $d = json_decode((string)$row['design'], true) ?: [];
+        if (!is_array($d['review'] ?? null)) $d['review'] = ['ref' => 'SG-' . strtoupper(substr(str_replace('-', '', $id), 0, 8)), 'submittedAt' => now_iso()];
+        $d['review']['history'] = array_slice(array_merge((array)($d['review']['history'] ?? []), [['at' => now_iso(), 'by' => (string)$u['name'], 'status' => $st]]), -50);
+        $d['review']['status'] = $st;
+        $pdo->prepare('UPDATE shop_designs SET design = ? WHERE id = ?')->execute([json_encode($d, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), $id]);
+        audit($u, 'studio design status', ($d['review']['ref'] ?? $id) . ' → ' . $st);
+        json_out(['ok' => true]);
+    }
+
     /* ---------- orders ---------- */
     if ($r === '/shop/orders' && $method === 'GET') {
         require_user('orders.view');

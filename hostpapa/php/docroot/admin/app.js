@@ -56,9 +56,11 @@ const NAV = [
   { path: '/requests', label: 'Quotes & bookings', icon: 'inbox', perm: 'requests.view' },
   { path: '/chat', label: 'Live chat', icon: 'chat', perm: 'chat.view' },
   { path: '/orders', label: 'Online orders', icon: 'cart', perm: 'orders.view' },
+  { path: '/designs', label: 'Studio designs', icon: 'image', perm: 'orders.view' },
   { path: '/quotes', label: 'Price quotes', icon: 'doc', perm: 'invoices.view' },
   { path: '/invoices', label: 'Invoices', icon: 'doc', perm: 'invoices.view' },
   { path: '/customers', label: 'Customers', icon: 'users', perm: 'invoices.view' },
+  { path: '/web-members', label: 'Website members', icon: 'user', perm: 'invoices.view' },
   { path: '/agreements', label: 'Agreements (e-sign)', icon: 'sign', perm: 'agreements.view' },
   { path: '/coupons', label: 'Coupons', icon: 'tag', perm: 'pricing.edit' },
   { path: '/payments', label: 'Payments (Square & PayPal)', icon: 'card', perm: 'payments.manage' },
@@ -1008,22 +1010,35 @@ function refundModal(c, p) {
 }
 
 /* ---------- customers ---------- */
-async function viewCustomers() {
+async function viewCustomers(params = new URLSearchParams()) {
   const c = shell('Customers', 'Business', '<div class="card empty">Loading…</div>', '/customers');
   $('[data-actions]').innerHTML = `<div class="cust-acts">${can('invoices.edit') ? '<button class="btn ghost sm" data-imp>⬆ Import CSV</button>' : ''}<button class="btn ghost sm" data-exp>⬇ Export CSV</button>${can('invoices.edit') ? '<button class="btn sm" data-newc>+ Add customer</button>' : ''}</div>`;
   const [d, web] = await Promise.all([api('/customers'), api('/customer-accounts/map').catch(() => ({ accounts: {} }))]); // web: website accounts by email (customer-login.js)
-  const webPill = x => { const a = x.email && web.accounts[String(x.email).toLowerCase()]; return a ? ` <span class="pill ${a.verified ? 'confirmed' : ''}" title="Website account · sign-in: ${esc(a.methods.join(', ') || '—')}${a.verified ? '' : ' · email not confirmed'}">Web account · ${esc(a.methods.map(m => m[0].toUpperCase() + m.slice(1)).join(' / ') || '—')}</span>` : ''; };
-  c.innerHTML = `<div class="toolbar"><input class="input" data-q placeholder="Search name, company, email, phone, notes"><span class="cust-count" data-count></span></div><div data-list></div>`;
+  const webPill = x => { const a = x.email && web.accounts[String(x.email).toLowerCase()]; return a ? ` <a href="#/web-members?q=${encodeURIComponent(x.email)}" class="pill ${a.verified ? 'confirmed' : ''}" title="Website member · sign-in: ${esc(a.methods.join(', ') || '—')}${a.verified ? '' : ' · email not confirmed'} — open member">Website member · ${esc(a.methods.map(m => m[0].toUpperCase() + m.slice(1)).join(' / ') || '—')}</a>` : ''; };
+  const RG = [['all', 'All time'], ['today', 'Today'], ['7', 'Last 7 days'], ['30', 'Last 30 days'], ['90', 'Last 90 days'], ['year', 'This year'], ['custom', 'Custom dates']];
+  const rgDates = (r, f, t) => { const n = new Date(), iso = x => x.toISOString().slice(0, 10), back = k => { const x = new Date(n); x.setDate(x.getDate() - k + 1); return iso(x); }; return r === 'today' ? [iso(n), iso(n)] : /^\d+$/.test(r) ? [back(+r), iso(n)] : r === 'year' ? [n.getFullYear() + '-01-01', iso(n)] : r === 'custom' ? [f || '', t || ''] : ['', '']; };
+  c.innerHTML = `<div class="toolbar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><input class="input" data-q placeholder="Search name, company, email, phone, notes" value="${esc(params.get('q') || '')}" style="flex:1;min-width:220px">
+    <select class="input" data-by style="width:auto"><option value="created">Customer since</option><option value="last">Last invoice</option></select>
+    <select class="input" data-range style="width:auto">${RG.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select>
+    <span data-custom style="display:none;gap:6px;align-items:center"><input class="input" type="date" data-from style="width:auto"> – <input class="input" type="date" data-to style="width:auto"></span>
+    <select class="input" data-web style="width:auto"><option value="">All customers</option><option value="web">Website members</option><option value="noweb">No website account</option><option value="bal">With balance</option></select>
+    <span class="cust-count" data-count></span></div><div data-list></div>`;
   let rows = d.customers;
   const draw = () => {
     const t = $('[data-q]', c).value.trim().toLowerCase();
-    rows = d.customers.filter(x => !t || [x.name, x.company, x.email, x.phone, x.address, x.notes].join(' ').toLowerCase().includes(t));
+    const by = $('[data-by]', c).value, rg = $('[data-range]', c).value, wf = $('[data-web]', c).value; $('[data-custom]', c).style.display = rg === 'custom' ? 'inline-flex' : 'none';
+    const [df, dt] = rgDates(rg, $('[data-from]', c).value, $('[data-to]', c).value);
+    const isWeb = x => !!(x.email && web.accounts[String(x.email).toLowerCase()]);
+    rows = d.customers.filter(x => { const w = String(x[by] || '').slice(0, 10);
+      if ((df || dt) && !w) return false; if (df && w < df) return false; if (dt && w > dt) return false;
+      if (wf === 'web' && !isWeb(x)) return false; if (wf === 'noweb' && isWeb(x)) return false; if (wf === 'bal' && !x.balance) return false;
+      return !t || [x.name, x.company, x.email, x.phone, x.address, x.notes].join(' ').toLowerCase().includes(t); });
     $('[data-count]', c).textContent = `${rows.length} of ${d.customers.length}`;
     $('[data-list]', c).innerHTML = rows.length ? `<table class="table"><thead><tr><th>Customer</th><th>Phone</th><th class="num">Invoices</th><th class="num">Billed</th><th class="num">Balance</th><th></th></tr></thead><tbody>${rows.slice(0, 500).map(x => `<tr><td><b>${esc(x.name)}</b>${webPill(x)}<small>${esc([x.company, x.email].filter(Boolean).join(' · '))}</small></td><td>${esc(x.phone)}</td><td class="num">${x.invoices}</td><td class="num">${money(x.billed)}</td><td class="num">${x.balance ? `<b class="warn-t">${money(x.balance)}</b>` : '—'}</td>
       <td style="text-align:right;white-space:nowrap">${can('invoices.edit') ? `<button class="btn ghost sm" data-edc="${esc(x.id)}">Edit</button> <a class="btn sm" href="#/invoices/edit?customer=${esc(x.id)}">Invoice</a>` : ''}</td></tr>`).join('')}</tbody></table>${rows.length > 500 ? '<p class="hint">Showing the first 500 — search to narrow the list. Export includes every match.</p>' : ''}` : `<div class="card empty">${d.customers.length ? 'No customers match.' : 'No customers yet. Add one, import a CSV file, or create an invoice.'}</div>`;
     c.querySelectorAll('[data-edc]').forEach(b => b.onclick = () => customerModal(d.customers.find(x => x.id === b.dataset.edc)));
   };
-  $('[data-q]', c).oninput = draw; draw();
+  c.querySelectorAll('[data-q],[data-by],[data-range],[data-from],[data-to],[data-web]').forEach(el => { el.oninput = draw; el.onchange = draw; }); draw();
   const nc = $('[data-newc]'); if (nc) nc.onclick = () => customerModal(null);
   $('[data-exp]').onclick = () => exportCustomers(rows, rows.length !== d.customers.length);
   const ib = $('[data-imp]'); if (ib) ib.onclick = () => importCustomers();
@@ -1290,7 +1305,9 @@ async function route() {
     if (path === '/invoices') return viewInvoices(params);
     if (path === '/invoices/edit') return can('invoices.view') ? viewInvoiceEdit(params) : denied();
     if (path === '/invoices/settings') return can('invoices.edit') && can('settings.edit') ? viewInvoiceSettings() : denied();
-    if (path === '/customers') return viewCustomers();
+    if (path === '/customers') return viewCustomers(params);
+    if (path === '/web-members') { if (!window.SatinDesigns) throw new Error('This page could not load. Refresh the page.'); return can('invoices.view') ? window.SatinDesigns.route(path, params) : denied(); }
+    if (path === '/designs') { if (!window.SatinDesigns) throw new Error('This page could not load. Refresh the page.'); return window.SatinDesigns.route(path, params); }
     if (path === '/customer-login') { if (!window.SatinCustLogin) throw new Error('This page could not load. Refresh the page.'); return window.SatinCustLogin.route(path, params); }
     if (path === '/business') return viewBusiness();
     if (path === '/members') return viewMembers();
