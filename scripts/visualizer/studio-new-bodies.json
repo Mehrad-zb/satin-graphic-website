@@ -163,5 +163,20 @@
 "vehicle_0": "Mid-size"
 }
 }
+],
+"vehicle-minivan": [
+{
+"id": "minivan-sienna",
+"name": "Toyota Sienna (2021+)",
+"type": "Vans",
+"spec": {
+"length": 203.5,
+"height": 68.5,
+"width": 78.5
+},
+"price": {
+"vehicle_0": "Passenger"
+}
+}
 ]
 }
