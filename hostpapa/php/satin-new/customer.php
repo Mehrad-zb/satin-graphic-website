@@ -565,7 +565,7 @@ function cust_design_summary(array $row): array {
     $layers = 0; foreach ((array)($d['sides'] ?? []) as $sd) $layers += is_array($sd['layers'] ?? null) ? count($sd['layers']) : 0;
     return ['id' => $row['id'], 'productId' => (string)($d['productId'] ?? ''), 'updatedAt' => $row['updated_at'], 'approved' => !empty($d['approvedAt']), 'layers' => $layers,
         'values' => is_array($d['options']['values'] ?? null) ? $d['options']['values'] : (object)[], 'thumb' => (string)($row['thumb_id'] ?? '') ?: null,
-        'mockup' => $gen['mockup'][0]['id'] ?? null, 'prints' => $prints];
+        'mockup' => $gen['mockup'][0]['id'] ?? null, 'prints' => $prints, 'review' => is_array($d['review'] ?? null) ? $d['review'] : null];
 }
 /** This browser's studio session (created when missing), so an account design can be edited or ordered here. */
 function cust_shop_session(): array {

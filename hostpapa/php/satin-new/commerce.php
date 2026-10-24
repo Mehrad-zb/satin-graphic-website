@@ -806,6 +806,30 @@ function shop_route_inner(string $path, string $method): void {
             }
             json_out(['saved' => true, 'id' => $v['id']]);
         }
+        // Vehicle designs: "Submit design" sends the approved design to the team for review (signed-in customers only); it shows in My account → Saved designs
+        if ($r === '/submit-review' && $method === 'POST') {
+            require_once __DIR__ . '/customer.php';
+            $cu = cust_current();
+            if (!$cu) json_out(['error' => 'Sign in to submit your design.', 'login' => true], 401);
+            $v = shop_input(4000); $did = (string)($v['designId'] ?? '');
+            if (!shop_is_uuid($did)) throw new ShopError('Save the design first.');
+            $q = $pdo->prepare('SELECT * FROM shop_designs WHERE id = ? AND session_id = ?'); $q->execute([$did, $s['id']]); $row = $q->fetch();
+            if (!$row) json_out(['error' => 'Design not found.'], 404);
+            $d = json_decode((string)$row['design'], true) ?: [];
+            if (empty($d['approvedAt'])) json_out(['error' => 'Approve the design first.'], 409);
+            if (empty($d['review']['ref'])) {
+                $ref = 'SG-' . strtoupper(substr(str_replace('-', '', $did), 0, 8));
+                $d['review'] = ['status' => 'submitted', 'submittedAt' => now_iso(), 'ref' => $ref];
+                $pdo->prepare('UPDATE shop_designs SET design = ?, customer_id = ?, updated_at = ? WHERE id = ?')->execute([json_encode($d, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), $cu['id'], now_iso(), $did]);
+                $rule = shop_studio_rule((string)($d['productId'] ?? ''));
+                $label = (string)($rule['label'] ?? ($d['productId'] ?? 'Vehicle design'));
+                $veh = trim((string)($d['options']['vehicleModel'] ?? '') . ' ' . (string)($d['options']['vehicleBody'] ?? ''));
+                $details = json_encode(['notes' => "Vehicle design submitted from Design Studio for review.\nDesign ID: $did" . (!empty($d['options']['vehicleGlass']) ? "\nWindows: design on the windows too (perforated window film)." : '') . "\nOpen it in Admin → Orders / Design Studio files, or ask the customer to share it from My account.", 'vehicle' => $veh, 'designId' => $did, 'source' => 'design-studio'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                $rid = sprintf('%08x-%04x-4%03x-%04x-%012x', random_int(0, 0xffffffff), random_int(0, 0xffff), random_int(0, 0xfff), random_int(0x8000, 0xbfff), random_int(0, 0xffffffffffff));
+                try { if (function_exists('save_request')) save_request($rid, 'quote', 'Design Studio: ' . $label, (string)($cu['name'] ?: $cu['email']), (string)$cu['email'], (string)($cu['phone'] ?? ''), '', '', (string)$details); else notify_owner('Satin website: vehicle design submitted ' . $ref, ($cu['name'] ?: $cu['email']) . " submitted a vehicle design ($label).\nDesign ID: $did"); } catch (Throwable $e) { error_log('satin design review: ' . $e->getMessage()); }
+            }
+            json_out(['ok' => true, 'ref' => $d['review']['ref'], 'status' => $d['review']['status']]);
+        }
         shop_studio_orders($r, $method, $s);
         json_out(['error' => 'Not found.'], 404);
     }
