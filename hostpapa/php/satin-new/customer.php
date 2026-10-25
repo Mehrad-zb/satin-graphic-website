@@ -1031,6 +1031,66 @@ function customer_admin_route(string $r, string $method): void {
             'status' => $a['status'], 'createdAt' => $a['created_at'], 'lastLogin' => $a['last_login'], 'lastMethod' => $a['last_method'],
             'orders' => max($counts['c:' . $a['id']] ?? 0, (int)$a['email_verified'] ? ($counts['e:' . strtolower($a['email'])] ?? 0) : 0)], $rows)]);
     }
+    if ($r === '/customer-accounts/detail' && $method === 'GET') {
+        $u = require_user('invoices.view');
+        $can = fn(string $p) => in_array($p, $u['permissions'], true);
+        $a = cust_by('id', (string)($_GET['id'] ?? ''));
+        if (!$a) json_out(['error' => 'Account not found'], 404);
+        $email = strtolower((string)$a['email']); $verified = (bool)(int)$a['email_verified'];
+        $safe = function (callable $f) { try { return $f(); } catch (Throwable $e) { return []; } };
+        $J = fn($s) => json_decode((string)$s, true);
+        $acc = ['id' => $a['id'], 'email' => $a['email'], 'name' => $a['name'], 'phone' => $a['phone'], 'company' => $a['company'], 'address' => is_array($J($a['address'])) ? $J($a['address']) : null,
+            'verified' => $verified, 'methods' => array_values(array_filter([$a['pass_hash'] !== '' ? 'email' : null, (string)$a['google_sub'] !== '' ? 'google' : null, (string)$a['facebook_id'] !== '' ? 'facebook' : null])),
+            'status' => $a['status'], 'createdAt' => $a['created_at'], 'updatedAt' => $a['updated_at'], 'lastLogin' => $a['last_login'], 'lastMethod' => $a['last_method']];
+        // orders: placed while signed in, or (confirmed email) with the same email
+        $orders = !$can('orders.view') ? null : $safe(function () use ($pdo, $a, $email, $verified, $J) {
+            if (!cust_has_orders_table()) return [];
+            $q = $pdo->prepare('SELECT * FROM shop_orders WHERE customer_id = ?' . ($verified ? ' OR lower(email) = ?' : '') . ' ORDER BY created_at DESC LIMIT 200');
+            $q->execute($verified ? [$a['id'], $email] : [$a['id']]);
+            return array_map(function ($o) use ($J) { $items = $J($o['items']) ?: [];
+                return ['id' => $o['id'], 'number' => $o['number'], 'status' => $o['status'], 'stage' => cust_stage($o), 'payment' => cust_pay_status($o), 'total' => (int)$o['total'], 'currency' => $o['currency'] ?: 'CAD',
+                    'createdAt' => $o['created_at'], 'paidAt' => $o['paid_at'], 'card' => (string)($o['card'] ?? ''), 'shipping' => (string)(($J($o['shipping']) ?: [])['label'] ?? ''),
+                    'items' => array_map(fn($i) => ['name' => ($i['jobName'] ?? '') !== '' ? $i['jobName'] : (string)($i['name'] ?? 'Item'), 'qty' => $i['values']['quantity'] ?? null, 'net' => isset($i['price']['net']) ? (int)$i['price']['net'] : null,
+                        'choices' => implode(' · ', array_filter(array_map(fn($c) => is_array($c) && ($c['text'] ?? '') !== '' ? $c['label'] . ': ' . $c['text'] : '', (array)($i['choices'] ?? []))))], $items)]; }, $q->fetchAll());
+        });
+        // designs saved in the account (Design Studio)
+        $designs = !$can('orders.view') ? null : $safe(function () use ($pdo, $a, $J) {
+            require_once __DIR__ . '/commerce.php';
+            $q = $pdo->prepare('SELECT * FROM shop_designs WHERE customer_id = ? ORDER BY updated_at DESC LIMIT 200'); $q->execute([$a['id']]);
+            $LABEL = ['mockup' => 'Mockup', 'printpdf' => 'Print PDF', 'print' => 'Print file', 'artwork' => 'Artwork SVG', 'source' => 'Editable JSON'];
+            return array_map(function ($row) use ($J, $LABEL) { $d = $J($row['design']) ?: []; $files = []; $mock = null;
+                foreach ((array)($d['generated'] ?? []) as $g) { if (!is_array($g)) continue; $role = (string)($g['role'] ?? ''); if ($role === 'mockup' && !$mock) $mock = $g['id']; if ($role === 'preview') continue;
+                    $files[] = ['id' => $g['id'], 'name' => (string)($g['name'] ?? ''), 'role' => $role, 'label' => ($LABEL[$role] ?? 'File') . ($role === 'print' || $role === 'artwork' ? ' ' . (preg_match('/-(driver-side|passenger-side|rear|front|top|front-side|back|side-\d+)/', (string)($g['name'] ?? ''), $m) ? $m[1] : '') : '')]; }
+                foreach ((array)($d['originals'] ?? []) as $o) if (is_array($o)) $files[] = ['id' => $o['id'], 'name' => (string)($o['name'] ?? ''), 'role' => 'upload', 'label' => 'Upload'];
+                $rule = shop_studio_rule((string)($d['productId'] ?? ''));
+                return ['id' => $row['id'], 'product' => (string)($rule['label'] ?? ($d['productId'] ?? '')), 'vehicle' => trim((string)($d['options']['vehicleModel'] ?? '')), 'glass' => !empty($d['options']['vehicleGlass']),
+                    'approvedAt' => $d['approvedAt'] ?? null, 'updatedAt' => $row['updated_at'], 'review' => is_array($d['review'] ?? null) ? $d['review'] : null, 'ref' => (string)($d['review']['ref'] ?? ''),
+                    'mockup' => $mock, 'thumb' => (string)($row['thumb_id'] ?? '') ?: null, 'files' => $files]; }, $q->fetchAll());
+        });
+        // quote & booking requests sent from the website
+        $requests = !$can('requests.view') ? null : $safe(function () use ($pdo, $email) {
+            $q = $pdo->prepare('SELECT id, type, service, status, created_at, preferred_date, preferred_time FROM service_requests WHERE lower(email) = ? ORDER BY created_at DESC LIMIT 200'); $q->execute([$email]);
+            return array_map(fn($x) => ['id' => $x['id'], 'ref' => 'SG-' . strtoupper(substr($x['id'], 0, 8)), 'type' => $x['type'], 'service' => $x['service'], 'status' => $x['status'], 'createdAt' => $x['created_at'], 'date' => trim($x['preferred_date'] . ' ' . $x['preferred_time'])], $q->fetchAll());
+        });
+        // Customers (invoices / quotes) with the same email
+        $cust = $safe(function () use ($email) { require_once __DIR__ . '/invoices_api.php'; $q = idb()->prepare('SELECT id, name, company, phone, address, notes, created_at FROM inv_customers WHERE lower(email) = ?'); $q->execute([$email]); return $q->fetchAll(); });
+        $ids = array_column($cust, 'id');
+        $in = $ids ? implode(',', array_fill(0, count($ids), '?')) : '';
+        $invoices = $safe(function () use ($ids, $in) { if (!$ids) return [];
+            $q = idb()->prepare("SELECT id, number_text, status, title, issue_date, due_date, total, paid, currency FROM invoices WHERE customer_id IN ($in) ORDER BY issue_date DESC LIMIT 200"); $q->execute($ids);
+            return array_map(fn($x) => ['id' => $x['id'], 'number' => $x['number_text'], 'status' => $x['status'], 'title' => $x['title'], 'date' => $x['issue_date'], 'due' => $x['due_date'], 'total' => (int)$x['total'], 'paid' => (int)$x['paid'], 'currency' => $x['currency']], $q->fetchAll()); });
+        $quotes = $safe(function () use ($ids, $in) { if (!$ids) return []; require_once __DIR__ . '/quotes_api.php';
+            $q = qdb()->prepare("SELECT id, number_text, status, title, issue_date, total, currency, accepted_at FROM quotes WHERE customer_id IN ($in) ORDER BY issue_date DESC LIMIT 200"); $q->execute($ids);
+            return array_map(fn($x) => ['id' => $x['id'], 'number' => $x['number_text'], 'status' => $x['status'], 'title' => $x['title'], 'date' => $x['issue_date'], 'total' => (int)$x['total'], 'currency' => $x['currency'], 'acceptedAt' => $x['accepted_at']], $q->fetchAll()); });
+        $chats = !$can('chat.view') ? null : $safe(function () use ($pdo, $email) {
+            $q = $pdo->prepare('SELECT id, status, created_at, last_message_at, last_preview FROM chat_conversations WHERE lower(email) = ? ORDER BY last_message_at DESC LIMIT 100'); $q->execute([$email]);
+            return array_map(fn($x) => ['id' => $x['id'], 'status' => $x['status'], 'createdAt' => $x['created_at'], 'lastAt' => $x['last_message_at'], 'preview' => $x['last_preview']], $q->fetchAll()); });
+        $agreements = !$can('agreements.view') ? null : $safe(function () use ($pdo, $email) {
+            $q = $pdo->prepare('SELECT id, number, title, status, created_at, sent_at, signed_at FROM esign_docs WHERE lower(signer_email) = ? ORDER BY created_at DESC LIMIT 100'); $q->execute([$email]);
+            return array_map(fn($x) => ['id' => $x['id'], 'number' => (int)$x['number'], 'title' => $x['title'], 'status' => $x['status'], 'createdAt' => $x['created_at'], 'sentAt' => $x['sent_at'], 'signedAt' => $x['signed_at']], $q->fetchAll()); });
+        json_out(['account' => $acc, 'customers' => array_map(fn($c) => ['id' => $c['id'], 'name' => $c['name'], 'company' => $c['company'], 'phone' => $c['phone'], 'address' => $c['address'], 'notes' => $c['notes'], 'createdAt' => $c['created_at']], $cust),
+            'orders' => $orders, 'designs' => $designs, 'requests' => $requests, 'invoices' => $invoices, 'quotes' => $quotes, 'chats' => $chats, 'agreements' => $agreements]);
+    }
     if ($r === '/customer-accounts/map' && $method === 'GET') {
         require_user('invoices.view');
         $map = [];

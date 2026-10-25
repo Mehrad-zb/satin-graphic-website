@@ -109,36 +109,75 @@ async function members(params) {
   c.querySelectorAll('[data-q],[data-by],[data-range],[data-from],[data-to],[data-m],[data-f]').forEach(el => { el.oninput = draw; el.onchange = draw; });
   draw();
 }
-function detail(a, reload) {
+const ORDER_ST = { new: 'New', artwork_check: 'Artwork check', in_production: 'In production', ready: 'Ready', completed: 'Completed', cancelled: 'Cancelled' };
+const PAY_ST = { paid: 'Paid', awaiting_payment: 'Awaiting payment', refunded: 'Refunded', cancelled: 'Cancelled' };
+const cap = t => String(t || '').replace(/_/g, ' ').replace(/^./, c => c.toUpperCase());
+async function detail(a, reload) {
   if (!a) return;
-  const ds = a.designs || [];
-  const row = (k, v) => v ? `<tr><th style="width:130px;text-align:left;color:var(--mut);font-weight:500">${k}</th><td>${v}</td></tr>` : '';
-  const o = A().modal(`<header><h2>${esc(a.name || a.email)}</h2><button class="x" data-close>×</button></header>
-    <table class="table" style="margin-bottom:12px"><tbody>
-      ${row('Email', `<a href="mailto:${esc(a.email)}">${esc(a.email)}</a> ${a.verified ? '<span class="pill confirmed">Confirmed</span>' : '<span class="pill">Not confirmed</span>'}`)}
-      ${row('Phone', a.phone ? `<a href="tel:${esc(a.phone)}">${esc(a.phone)}</a>` : '')}${row('Company', esc(a.company))}${row('Address', esc(addrText(a.address)))}
-      ${row('Sign-in', pills(a.methods))}${row('Joined', esc(A().fmtDate(a.createdAt)))}${row('Last sign-in', a.lastLogin ? esc(A().fmtDate(a.lastLogin)) + (a.lastMethod ? ' · ' + esc(METHOD[a.lastMethod] || a.lastMethod) : '') : '—')}
-      ${row('Status', a.status === 'active' ? 'Active' : '<span class="pill cancelled">Disabled</span>')}
-      ${row('Orders', a.orders ? `<a href="#/orders?q=${encodeURIComponent(a.email)}">${a.orders} order${a.orders > 1 ? 's' : ''} →</a>` : '0')}
-      ${row('Customers', a.cust ? `In Customers · ${a.cust.invoices} invoice${a.cust.invoices === 1 ? '' : 's'} <a href="#/customers?q=${encodeURIComponent(a.email)}">Open →</a>` : 'Not in Customers yet')}
-    </tbody></table>
-    <h3 style="margin:6px 0">Designs <small class="hint">${ds.length}</small></h3>
-    ${ds.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px">${ds.map(d => `<div style="border:1px solid var(--line,#e5e7eb);border-radius:10px;padding:8px">
-      ${d.mockup ? `<a href="${fileURL(d.id, d.mockup, true)}" target="_blank" rel="noopener"><img src="${fileURL(d.id, d.mockup, true)}" alt="" loading="lazy" style="width:100%;height:110px;object-fit:contain;background:#f3f4f6;border-radius:8px;display:block"></a>` : ''}
-      <b style="display:block;margin-top:6px">${esc(d.product)}</b><small>${esc([d.vehicle, d.ref, A().fmtDate(d.submittedAt || d.approvedAt || d.updatedAt)].filter(Boolean).join(' · '))}</small>
-      <div style="margin-top:4px">${d.review ? `<span class="pill ${PILL[d.review.status] || ''}">${esc(STATUS[d.review.status] || d.review.status)}</span>` : '<span class="pill">Approved</span>'}</div>
-      <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${d.files.filter(x => x.role !== 'mockup').map(x => `<a class="btn ghost sm" href="${fileURL(d.id, x.id, false)}" title="${esc(x.name)}">${esc(x.label)}</a>`).join('')}</div></div>`).join('')}</div>
-      <p><a class="btn ghost sm" href="#/designs" data-close>Open Studio designs →</a></p>` : `<p class="hint">${A().can('orders.view') ? 'This member has not approved or submitted a Design Studio design yet.' : 'You need Online orders access to see designs.'}</p>`}
-    <div class="confirm-acts" style="margin-top:14px">
-      ${!a.cust && A().can('invoices.edit') ? '<button class="btn" data-addc>Add to Customers</button>' : ''}
-      ${A().can('members.manage') ? `<button class="btn ghost" data-st>${a.status === 'active' ? 'Disable account' : 'Enable account'}</button>` : ''}
-      <button class="btn ghost" data-close>Close</button></div>`);
-  const ad = o.querySelector('[data-addc]');
+  const o = A().modal(`<header><h2>${esc(a.name || a.email)}</h2><button class="x" data-close>×</button></header><div class="empty">Loading the full history…</div>`);
+  const m = o.querySelector('.modal'); m.style.width = 'min(1080px, 100%)'; m.style.maxHeight = '92vh';
+  let d;
+  try { d = await A().api('/customer-accounts/detail?id=' + encodeURIComponent(a.id)); } catch (e) { m.innerHTML = `<header><h2>${esc(a.name || a.email)}</h2><button class="x" data-close>×</button></header><div class="err">${esc(e.message)}</div>`; return; }
+  const ac = d.account, M = A().money, F = x => !x ? '—' : /^\d{4}-\d{2}-\d{2}$/.test(x) ? esc(new Date(x + 'T12:00:00').toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })) : esc(A().fmtDate(x));
+  const orders = d.orders || [], designs = d.designs || [], reqs = d.requests || [], invs = d.invoices || [], quotes = d.quotes || [], chats = d.chats || [], agr = d.agreements || [];
+  const spent = orders.filter(x => x.payment === 'paid').reduce((t, x) => t + x.total, 0) + invs.filter(x => x.status !== 'void' && x.status !== 'draft').reduce((t, x) => t + x.paid, 0);
+  const owing = invs.filter(x => x.status !== 'void' && x.status !== 'draft').reduce((t, x) => t + Math.max(0, x.total - x.paid), 0);
+  const row = (k, v) => v ? `<tr><th style="width:140px;text-align:left;color:var(--mut);font-weight:500;vertical-align:top">${k}</th><td>${v}</td></tr>` : '';
+  const card = (n, l, tab) => `<button type="button" class="card" data-go="${tab}" style="text-align:left;padding:12px 14px;cursor:pointer;border:1px solid var(--line,#e5e7eb)"><b style="font-size:20px;display:block">${n}</b><small style="color:var(--mut)">${l}</small></button>`;
+  const table = (head, rows, empty) => rows.length ? `<table class="table"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>` : `<p class="hint">${empty}</p>`;
+  const noAccess = '<p class="hint">Your role cannot see this section.</p>';
+  // timeline: everything this person did, newest first
+  const ev = [[ac.createdAt, 'Created a website account', ''], ...(ac.lastLogin ? [[ac.lastLogin, 'Last signed in', METHOD[ac.lastMethod] || '']] : []),
+    ...orders.map(x => [x.createdAt, `Placed order <a href="#/orders?id=${esc(x.id)}">#${esc(x.number)}</a>`, `${M(x.total, x.currency)} · ${PAY_ST[x.payment] || cap(x.payment)}`]),
+    ...orders.filter(x => x.paidAt).map(x => [x.paidAt, `Paid order #${esc(x.number)}`, M(x.total, x.currency)]),
+    ...designs.map(x => [x.review?.submittedAt || x.approvedAt || x.updatedAt, x.review ? `Submitted design ${esc(x.ref)} for review` : x.approvedAt ? 'Approved a design' : 'Saved a design', esc([x.product, x.vehicle].filter(Boolean).join(' · '))]),
+    ...reqs.map(x => [x.createdAt, `Sent a ${esc(x.type || 'quote')} request <a href="#/requests?q=${esc(x.ref)}">${esc(x.ref)}</a>`, esc(x.service)]),
+    ...invs.map(x => [x.date, `Invoice <a href="#/invoices/edit?id=${esc(x.id)}">${esc(x.number)}</a>`, `${M(x.total, x.currency)} · ${cap(x.status)}`]),
+    ...quotes.map(x => [x.date, `Price quote <a href="#/quotes/edit?id=${esc(x.id)}">${esc(x.number)}</a>`, `${M(x.total, x.currency)} · ${cap(x.status)}`]),
+    ...chats.map(x => [x.createdAt, `Started a <a href="#/chat?id=${esc(x.id)}">live chat</a>`, esc(x.preview || '')]),
+    ...agr.map(x => [x.signedAt || x.sentAt || x.createdAt, x.signedAt ? 'Signed an agreement' : 'Agreement sent', esc(x.title)])].filter(x => x[0]).sort((p, q) => String(q[0]).localeCompare(String(p[0])));
+  const TABS = [['overview', 'Overview'], ['orders', `Orders (${orders.length})`], ['designs', `Designs (${designs.length})`], ['requests', `Requests (${reqs.length})`], ['billing', `Invoices & quotes (${invs.length + quotes.length})`], ['chats', `Chats (${chats.length})`], ['agreements', `Agreements (${agr.length})`], ['timeline', 'History']];
+  const P = {
+    overview: `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px">${card(orders.length, 'Online orders', 'orders')}${card(designs.length, 'Designs', 'designs')}${card(reqs.length, 'Quote / booking requests', 'requests')}${card(invs.length + quotes.length, 'Invoices & quotes', 'billing')}${card(M(spent), 'Paid so far', 'billing')}${card(owing ? `<span class="warn-t">${M(owing)}</span>` : '—', 'Balance owing', 'billing')}</div>
+      <table class="table"><tbody>
+      ${row('Email', `<a href="mailto:${esc(ac.email)}">${esc(ac.email)}</a> ${ac.verified ? '<span class="pill confirmed">Confirmed</span>' : '<span class="pill">Not confirmed</span>'}`)}
+      ${row('Phone', ac.phone ? `<a href="tel:${esc(ac.phone)}">${esc(ac.phone)}</a>` : '—')}${row('Company', esc(ac.company) || '—')}${row('Address', esc(addrText(ac.address)) || '—')}
+      ${row('Sign-in', pills(ac.methods))}${row('Joined', F(ac.createdAt))}${row('Last sign-in', ac.lastLogin ? F(ac.lastLogin) + (ac.lastMethod ? ' · ' + esc(METHOD[ac.lastMethod] || ac.lastMethod) : '') : '—')}${row('Profile updated', F(ac.updatedAt))}
+      ${row('Status', ac.status === 'active' ? '<span class="pill confirmed">Active</span>' : '<span class="pill cancelled">Disabled</span>')}
+      ${row('Customers', d.customers.length ? d.customers.map(c => `<div><b>${esc(c.name)}</b>${c.company ? ' · ' + esc(c.company) : ''} <a href="#/customers?q=${encodeURIComponent(ac.email)}">Open in Customers →</a>${c.address ? `<small>${esc(c.address)}</small>` : ''}${c.notes ? `<small>Notes: ${esc(c.notes)}</small>` : ''}</div>`).join('') : 'Not in Customers yet')}
+      </tbody></table>`,
+    orders: d.orders === null ? noAccess : table(['Order', 'Date', 'Items', 'Total', 'Payment', 'Stage', ''], orders.map(x => `<tr><td><b>#${esc(x.number)}</b>${x.shipping ? `<small>${esc(x.shipping)}</small>` : ''}</td><td>${F(x.createdAt)}</td>
+        <td>${x.items.map(i => `<div>${esc(i.name)}${i.qty ? ` × ${esc(i.qty)}` : ''}${i.net != null ? ` · ${M(i.net, x.currency)}` : ''}${i.choices ? `<small>${esc(i.choices)}</small>` : ''}</div>`).join('')}</td>
+        <td class="num"><b>${M(x.total, x.currency)}</b>${x.card ? `<small>${esc(x.card)}</small>` : ''}</td><td><span class="pill ${x.payment === 'paid' ? 'confirmed' : x.payment === 'awaiting_payment' ? 'pending' : 'cancelled'}">${esc(PAY_ST[x.payment] || cap(x.payment))}</span>${x.paidAt ? `<small>${F(x.paidAt)}</small>` : ''}</td>
+        <td>${esc(ORDER_ST[x.stage] || cap(x.stage))}</td><td><a class="btn ghost sm" href="#/orders?id=${esc(x.id)}">Open</a></td></tr>`), 'No online orders yet.'),
+    designs: d.designs === null ? noAccess : designs.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">${designs.map(x => { const img = x.mockup || x.thumb; return `<div style="border:1px solid var(--line,#e5e7eb);border-radius:10px;padding:8px">
+        ${img ? `<a href="${fileURL(x.id, img, true)}" target="_blank" rel="noopener"><img src="${fileURL(x.id, img, true)}" alt="" loading="lazy" style="width:100%;height:130px;object-fit:contain;background:#f3f4f6;border-radius:8px;display:block"></a>` : '<div style="height:130px;background:#f3f4f6;border-radius:8px"></div>'}
+        <b style="display:block;margin-top:6px">${esc(x.product || 'Design')}</b><small>${esc([x.vehicle, x.glass ? 'on windows too' : '', x.ref].filter(Boolean).join(' · '))}</small><small>${F(x.review?.submittedAt || x.approvedAt || x.updatedAt)}</small>
+        <div style="margin-top:4px">${x.review ? `<span class="pill ${PILL[x.review.status] || ''}">${esc(STATUS[x.review.status] || x.review.status)}</span>` : x.approvedAt ? '<span class="pill confirmed">Approved</span>' : '<span class="pill">Draft</span>'}</div>
+        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${x.files.filter(f => f.role !== 'mockup').map(f => `<a class="btn ghost sm" href="${fileURL(x.id, f.id, false)}" title="${esc(f.name)}">${esc(f.label)}</a>`).join('')}</div></div>`; }).join('')}</div>` : '<p class="hint">No Design Studio designs saved in this account yet.</p>',
+    requests: d.requests === null ? noAccess : table(['Reference', 'Date', 'Type', 'Service', 'Preferred', 'Status'], reqs.map(x => `<tr><td><a href="#/requests?q=${esc(x.ref)}"><b>${esc(x.ref)}</b></a></td><td>${F(x.createdAt)}</td><td>${esc(cap(x.type))}</td><td>${esc(x.service)}</td><td>${esc(x.date || '—')}</td><td><span class="pill ${esc(x.status)}">${esc(cap(x.status))}</span></td></tr>`), 'No quote or booking requests from this email.'),
+    billing: `<h3 style="margin:4px 0 8px">Invoices</h3>${table(['Invoice', 'Date', 'Title', 'Total', 'Paid', 'Status'], invs.map(x => `<tr><td><a href="#/invoices/edit?id=${esc(x.id)}"><b>${esc(x.number)}</b></a></td><td>${esc(x.date)}</td><td>${esc(x.title)}</td><td class="num">${M(x.total, x.currency)}</td><td class="num">${M(x.paid, x.currency)}</td><td><span class="pill ${x.status === 'paid' ? 'confirmed' : ''}">${esc(cap(x.status))}</span></td></tr>`), d.customers.length ? 'No invoices yet.' : 'No invoices — this member is not in Customers yet.')}
+      <h3 style="margin:16px 0 8px">Price quotes</h3>${table(['Quote', 'Date', 'Title', 'Total', 'Status'], quotes.map(x => `<tr><td><a href="#/quotes/edit?id=${esc(x.id)}"><b>${esc(x.number)}</b></a></td><td>${esc(x.date)}</td><td>${esc(x.title)}</td><td class="num">${M(x.total, x.currency)}</td><td><span class="pill ${x.status === 'accepted' ? 'confirmed' : ''}">${esc(cap(x.status))}</span></td></tr>`), 'No price quotes yet.')}`,
+    chats: d.chats === null ? noAccess : table(['Started', 'Last message', 'Preview', 'Status', ''], chats.map(x => `<tr><td>${F(x.createdAt)}</td><td>${F(x.lastAt)}</td><td>${esc(x.preview || '')}</td><td>${esc(cap(x.status))}</td><td><a class="btn ghost sm" href="#/chat?id=${esc(x.id)}">Open</a></td></tr>`), 'No live chats from this email.'),
+    agreements: d.agreements === null ? noAccess : table(['#', 'Title', 'Sent', 'Signed', 'Status'], agr.map(x => `<tr><td>${x.number || ''}</td><td><a href="#/agreements">${esc(x.title)}</a></td><td>${F(x.sentAt)}</td><td>${F(x.signedAt)}</td><td><span class="pill ${x.status === 'signed' ? 'confirmed' : ''}">${esc(cap(x.status))}</span></td></tr>`), 'No agreements sent to this email.'),
+    timeline: ev.length ? `<ul style="list-style:none;padding:0;margin:0">${ev.map(e => `<li style="display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--line,#eee)"><span style="min-width:170px;color:var(--mut);font-size:13px">${F(e[0])}</span><span>${e[1]}${e[2] ? `<small style="display:block;color:var(--mut)">${e[2]}</small>` : ''}</span></li>`).join('')}</ul>` : '<p class="hint">Nothing yet.</p>',
+  };
+  m.innerHTML = `<header><h2>${esc(ac.name || ac.email)} <small class="hint">${esc(ac.email)}</small></h2><button class="x" data-close>×</button></header>
+    <div data-tabs style="display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px">${TABS.map(([k, l]) => `<button type="button" class="btn ghost sm" data-tab="${k}">${esc(l)}</button>`).join('')}</div>
+    <div data-pane></div>
+    <div class="confirm-acts" style="margin-top:16px">
+      ${!d.customers.length && A().can('invoices.edit') ? '<button class="btn" data-addc>Add to Customers</button>' : ''}
+      ${A().can('members.manage') ? `<button class="btn ghost" data-st>${ac.status === 'active' ? 'Disable account' : 'Enable account'}</button>` : ''}
+      <button class="btn ghost" data-close>Close</button></div>`;
+  const show = k => { m.querySelector('[data-pane]').innerHTML = P[k]; m.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === k; b.classList.toggle('ghost', !on); }); m.querySelectorAll('[data-pane] [data-go]').forEach(b => b.onclick = () => show(b.dataset.go)); };
+  m.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => show(b.dataset.tab));
+  show('overview');
+  const ad = m.querySelector('[data-addc]');
   if (ad) ad.onclick = async () => { ad.disabled = true;
-    try { await A().api('/customers/save', { name: a.name || a.email, company: a.company || '', email: a.email, phone: a.phone || '', address: addrText(a.address) }); A().toast('Added to Customers'); o.remove(); reload(); } catch (e) { A().toast(e.message); ad.disabled = false; } };
-  const sb = o.querySelector('[data-st]');
-  if (sb) sb.onclick = () => { o.remove(); A().confirmBox(a.status === 'active' ? 'Disable this account?' : 'Enable this account?', a.status === 'active' ? 'The customer is signed out and cannot sign in until you enable the account again. Orders and designs are kept.' : 'The customer can sign in again.', async () => {
-    try { await A().api('/customer-accounts/status', { id: a.id, status: a.status === 'active' ? 'disabled' : 'active' }); reload(); } catch (e) { A().toast(e.message); } }); };
+    try { await A().api('/customers/save', { name: ac.name || ac.email, company: ac.company || '', email: ac.email, phone: ac.phone || '', address: addrText(ac.address) }); A().toast('Added to Customers'); o.remove(); reload(); } catch (e) { A().toast(e.message); ad.disabled = false; } };
+  const sb = m.querySelector('[data-st]');
+  if (sb) sb.onclick = () => { o.remove(); A().confirmBox(ac.status === 'active' ? 'Disable this account?' : 'Enable this account?', ac.status === 'active' ? 'The customer is signed out and cannot sign in until you enable the account again. Orders and designs are kept.' : 'The customer can sign in again.', async () => {
+    try { await A().api('/customer-accounts/status', { id: ac.id, status: ac.status === 'active' ? 'disabled' : 'active' }); reload(); } catch (e) { A().toast(e.message); } }); };
 }
 window.SatinDesigns = { route: (path, params) => path === '/web-members' ? members(params) : route(), members };
 })();

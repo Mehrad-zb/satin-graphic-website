@@ -128,9 +128,9 @@ function shop_admin_inner(string $r, string $method): void {
     }
     if ($r === '/shop/designs/file' && $method === 'GET') {
         require_user('orders.view');
-        $q = $pdo->prepare('SELECT design FROM shop_designs WHERE id = ?'); $q->execute([(string)($_GET['design'] ?? '')]); $row = $q->fetch();
+        $q = $pdo->prepare('SELECT * FROM shop_designs WHERE id = ?'); $q->execute([(string)($_GET['design'] ?? '')]); $row = $q->fetch();
         $d = $row ? (json_decode((string)$row['design'], true) ?: []) : []; $fid = (string)($_GET['id'] ?? ''); $ok = false;
-        foreach (array_merge((array)($d['generated'] ?? []), (array)($d['originals'] ?? [])) as $g) if (is_array($g) && ($g['id'] ?? '') === $fid) $ok = true;
+        foreach (array_merge((array)($d['generated'] ?? []), (array)($d['originals'] ?? [])) as $g) if (is_array($g) && ($g['id'] ?? '') === $fid) $ok = true; if (!$ok && $fid !== '' && (string)($row['thumb_id'] ?? '') === $fid) $ok = true;
         $f = $ok ? shop_file($fid) : null;
         if (!$f) json_out(['error' => 'File not found'], 404);
         shop_send_file($f, ($_GET['inline'] ?? '') === '1');
