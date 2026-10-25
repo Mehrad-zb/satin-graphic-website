@@ -150,6 +150,28 @@ function shop_admin_inner(string $r, string $method): void {
         json_out(['ok' => true]);
     }
 
+    /* Admin → "Open / PDF / SVG" on a customer design: a copy of the design (and its files) in this admin browser's Design Studio session.
+       The customer's own design is never changed. */
+    if ($r === '/shop/designs/open' && $method === 'POST') {
+        $u = require_user('orders.view');
+        require_once __DIR__ . '/customer.php';
+        $v = body_json(1000);
+        $q = $pdo->prepare('SELECT * FROM shop_designs WHERE id = ?'); $q->execute([(string)($v['id'] ?? '')]); $row = $q->fetch();
+        if (!$row) json_out(['error' => 'Design not found'], 404);
+        $sid = cust_shop_session()['id'];
+        $json = (string)$row['design']; $map = [];
+        foreach (cust_design_file_ids(json_decode($json, true) ?: []) as $fid) {
+            $f = shop_file($fid); if (!$f || !in_array($f['kind'], ['upload', 'generated'], true)) continue;
+            if (hash_equals((string)$f['session_id'], $sid)) continue;
+            $p = shop_file_path($f); $data = is_file($p) ? (string)file_get_contents($p) : ''; if ($data === '') continue;
+            $map[$fid] = shop_store_bytes($data, $f['kind'] === 'generated' ? 'generated' : 'upload', $sid, (string)$f['name'], (string)$f['mime'], (int)$f['width'], (int)$f['height'], json_decode((string)($f['meta'] ?? ''), true) ?: null)['id'];
+        }
+        $new = uuid();
+        $pdo->prepare('INSERT INTO shop_designs (id,session_id,design,updated_at,customer_id,thumb_id) VALUES (?,?,?,?,?,?)')->execute([$new, $sid, strtr($json, $map), now_iso(), 'admin:' . $u['id'], '']);
+        audit($u, 'opened customer design', (string)$row['id']);
+        $d = json_decode($json, true) ?: [];
+        json_out(['ok' => true, 'id' => $new, 'productId' => (string)($d['productId'] ?? ''), 'body' => (string)($d['options']['vehicleBody'] ?? '')]);
+    }
     /* ---------- orders ---------- */
     if ($r === '/shop/orders' && $method === 'GET') {
         require_user('orders.view');

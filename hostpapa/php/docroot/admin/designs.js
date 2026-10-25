@@ -15,6 +15,16 @@ function rangeDates(r, from, to) {
   if (r === 'custom') return [from || '', to || ''];
   return ['', ''];
 }
+/* Opens a copy of the customer's design in this browser's Design Studio: mode 'pdf' downloads the print-ready PDF, 'svg' every side as SVG, '' just opens it. */
+async function openStudio(id, mode) {
+  const w = window.open('', '_blank'); if (w) w.document.write('<p style="font:16px system-ui;padding:24px">Opening the design in Design Studio…</p>');
+  try { const o = await A().api('/shop/designs/open', { id });
+    const u = '/satin/design-studio/?' + new URLSearchParams({ product: o.productId, designId: o.id, ...(o.body ? { body: o.body } : {}), ...(mode ? { export: mode } : {}) });
+    if (w) w.location.href = u; else location.href = u;
+  } catch (e) { if (w) w.close(); A().toast(e.message); }
+}
+const studioBtns = id => `<button type="button" class="btn sm" data-studio="pdf" data-did="${esc(id)}" title="Print-ready PDF made in Design Studio">⬇ PDF</button><button type="button" class="btn ghost sm" data-studio="svg" data-did="${esc(id)}" title="Every side as an SVG file">⬇ SVG</button><button type="button" class="btn ghost sm" data-studio="" data-did="${esc(id)}" title="Open a copy in Design Studio (the customer's design is not changed)">Open in Studio</button>`;
+const bindStudio = root => root.querySelectorAll('[data-studio]').forEach(b => b.onclick = e => { e.stopPropagation(); openStudio(b.dataset.did, b.dataset.studio); });
 const fileURL = (d, id, inline) => `/api/admin/shop/designs/file?design=${encodeURIComponent(d)}&id=${encodeURIComponent(id)}${inline ? '&inline=1' : ''}`;
 
 async function route() {
@@ -49,8 +59,9 @@ async function route() {
       <td>${d.customer ? `<b>${esc(d.customer.name || '—')}</b><small>${esc([d.customer.email, d.customer.phone].filter(Boolean).join(' · '))}</small>` : '<small>Not signed in</small>'}</td>
       <td>${esc(A().fmtDate(d.submittedAt || d.approvedAt || d.updatedAt))}</td>
       <td>${d.review ? `<select class="input" data-status="${esc(d.id)}" style="width:auto">${Object.entries(STATUS).map(([k, l]) => `<option value="${k}" ${d.review.status === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>` : '<span class="pill">Approved</span>'}</td>
-      <td><div style="display:flex;flex-wrap:wrap;gap:4px;max-width:360px">${d.files.map(x => `<a class="btn ghost sm" href="${fileURL(d.id, x.id, x.role === 'mockup' || x.role === 'preview')}" ${x.role === 'mockup' || x.role === 'preview' ? 'target="_blank" rel="noopener"' : ''} title="${esc(x.name)}">${esc(x.label)}</a>`).join('')}</div></td></tr>`).join('')}</tbody></table>`
+      <td><div style="display:flex;flex-wrap:wrap;gap:4px;max-width:360px">${studioBtns(d.id)}${d.files.map(x => `<a class="btn ghost sm" href="${fileURL(d.id, x.id, x.role === 'mockup' || x.role === 'preview')}" ${x.role === 'mockup' || x.role === 'preview' ? 'target="_blank" rel="noopener"' : ''} title="${esc(x.name)}">${esc(x.label)}</a>`).join('')}</div></td></tr>`).join('')}</tbody></table>`
       : `<div class="empty">${all.length ? 'No designs match these filters.' : 'No customer has approved or submitted a design yet.'}</div>`;
+    bindStudio(c);
     c.querySelectorAll('[data-status]').forEach(s => s.onchange = async () => {
       try { await A().api('/shop/designs/status', { id: s.dataset.status, status: s.value }); const d = all.find(x => x.id === s.dataset.status); if (d?.review) d.review.status = s.value; A().toast('Status saved'); } catch (e) { A().toast(e.message); }
     });
@@ -154,7 +165,7 @@ async function detail(a, reload) {
         ${img ? `<a href="${fileURL(x.id, img, true)}" target="_blank" rel="noopener"><img src="${fileURL(x.id, img, true)}" alt="" loading="lazy" style="width:100%;height:130px;object-fit:contain;background:#f3f4f6;border-radius:8px;display:block"></a>` : '<div style="height:130px;background:#f3f4f6;border-radius:8px"></div>'}
         <b style="display:block;margin-top:6px">${esc(x.product || 'Design')}</b><small>${esc([x.vehicle, x.glass ? 'on windows too' : '', x.ref].filter(Boolean).join(' · '))}</small><small>${F(x.review?.submittedAt || x.approvedAt || x.updatedAt)}</small>
         <div style="margin-top:4px">${x.review ? `<span class="pill ${PILL[x.review.status] || ''}">${esc(STATUS[x.review.status] || x.review.status)}</span>` : x.approvedAt ? '<span class="pill confirmed">Approved</span>' : '<span class="pill">Draft</span>'}</div>
-        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${x.files.filter(f => f.role !== 'mockup').map(f => `<a class="btn ghost sm" href="${fileURL(x.id, f.id, false)}" title="${esc(f.name)}">${esc(f.label)}</a>`).join('')}</div></div>`; }).join('')}</div>` : '<p class="hint">No Design Studio designs saved in this account yet.</p>',
+        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${studioBtns(x.id)}${x.files.filter(f => f.role !== 'mockup').map(f => `<a class="btn ghost sm" href="${fileURL(x.id, f.id, false)}" title="${esc(f.name)}">${esc(f.label)}</a>`).join('')}</div></div>`; }).join('')}</div>` : '<p class="hint">No Design Studio designs saved in this account yet.</p>',
     requests: d.requests === null ? noAccess : table(['Reference', 'Date', 'Type', 'Service', 'Preferred', 'Status'], reqs.map(x => `<tr><td><a href="#/requests?q=${esc(x.ref)}"><b>${esc(x.ref)}</b></a></td><td>${F(x.createdAt)}</td><td>${esc(cap(x.type))}</td><td>${esc(x.service)}</td><td>${esc(x.date || '—')}</td><td><span class="pill ${esc(x.status)}">${esc(cap(x.status))}</span></td></tr>`), 'No quote or booking requests from this email.'),
     billing: `<h3 style="margin:4px 0 8px">Invoices</h3>${table(['Invoice', 'Date', 'Title', 'Total', 'Paid', 'Status'], invs.map(x => `<tr><td><a href="#/invoices/edit?id=${esc(x.id)}"><b>${esc(x.number)}</b></a></td><td>${esc(x.date)}</td><td>${esc(x.title)}</td><td class="num">${M(x.total, x.currency)}</td><td class="num">${M(x.paid, x.currency)}</td><td><span class="pill ${x.status === 'paid' ? 'confirmed' : ''}">${esc(cap(x.status))}</span></td></tr>`), d.customers.length ? 'No invoices yet.' : 'No invoices — this member is not in Customers yet.')}
       <h3 style="margin:16px 0 8px">Price quotes</h3>${table(['Quote', 'Date', 'Title', 'Total', 'Status'], quotes.map(x => `<tr><td><a href="#/quotes/edit?id=${esc(x.id)}"><b>${esc(x.number)}</b></a></td><td>${esc(x.date)}</td><td>${esc(x.title)}</td><td class="num">${M(x.total, x.currency)}</td><td><span class="pill ${x.status === 'accepted' ? 'confirmed' : ''}">${esc(cap(x.status))}</span></td></tr>`), 'No price quotes yet.')}`,
@@ -169,7 +180,7 @@ async function detail(a, reload) {
       ${!d.customers.length && A().can('invoices.edit') ? '<button class="btn" data-addc>Add to Customers</button>' : ''}
       ${A().can('members.manage') ? `<button class="btn ghost" data-st>${ac.status === 'active' ? 'Disable account' : 'Enable account'}</button>` : ''}
       <button class="btn ghost" data-close>Close</button></div>`;
-  const show = k => { m.querySelector('[data-pane]').innerHTML = P[k]; m.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === k; b.classList.toggle('ghost', !on); }); m.querySelectorAll('[data-pane] [data-go]').forEach(b => b.onclick = () => show(b.dataset.go)); };
+  const show = k => { m.querySelector('[data-pane]').innerHTML = P[k]; m.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === k; b.classList.toggle('ghost', !on); }); m.querySelectorAll('[data-pane] [data-go]').forEach(b => b.onclick = () => show(b.dataset.go)); bindStudio(m); };
   m.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => show(b.dataset.tab));
   show('overview');
   const ad = m.querySelector('[data-addc]');
