@@ -201,3 +201,71 @@ a{color:var(--blue)}
   .wx-o .cbx-opt{padding:12px 4px;border-bottom:1px solid #eceef2}
 }
 .ep-from{margin:10px 0 4px;padding:10px 12px;border-radius:8px;background:#f1f6ff;font-size:14px}.ep-from small{display:block;margin-top:2px}
+
+/* ===== Wix Studio look (October 2026): one soft grey shell for the top bar, side menu and workspace, white cards,
+   black main buttons, Wix Madefor type. Phones keep their own layout. ===== */
+:root{--bg:#f3f3f3;--line:#e2e2e2;--side:#f3f3f3;--side-2:#e9e9e9;--top:#f3f3f3;--ink:#000;--ink-2:#333;--mut:#6b6b6b;--r:8px;
+  --shadow:0 0 0 1px #0000000a,0 2px 6px #0000000d;--blue:#116dff;--accent:#116dff;--accent-2:#eaf2ff;
+  --wx-font:"Wix Madefor Text","Wix Madefor Display",Inter,-apple-system,"Segoe UI",sans-serif}
+body{background:var(--bg);color:var(--ink);font-family:var(--wx-font);-webkit-font-smoothing:antialiased}
+body,button,input,select,textarea{font-family:var(--wx-font)}
+a{color:inherit}
+.link,a.blue{color:#116dff}
+/* buttons: black main action, white outlined secondary */
+.btn{background:#000;color:#fff;border:1px solid #000;border-radius:6px;font-weight:500;font-size:14px;padding:7px 16px;line-height:1.35}
+.btn:hover{background:#2e2e2e;border-color:#2e2e2e}
+.btn.ghost{background:#fff;color:#000;border:1px solid #c9c9c9}
+.btn.ghost:hover{background:#f6f6f6;border-color:#9a9a9a}
+.btn.sm{padding:4px 12px;font-size:13px;border-radius:6px}
+.btn.danger{background:#fff;color:#c4161c;border-color:#e8b4b6}.btn.danger:hover{background:#fdf0f0}
+.btn.dangerfill{background:#c4161c;border-color:#c4161c}
+/* cards and tables: white, softly lifted */
+.card{border-radius:var(--r);box-shadow:var(--shadow);border:0;background:#fff}
+.table{border-radius:var(--r);box-shadow:var(--shadow);background:#fff;border:0}
+.table th{background:#fff;color:#000;font-weight:500;font-size:13px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.table td{padding:16px 20px;border-bottom:1px solid #ececec;font-size:14px;color:#000}
+.table tr.click:hover td,.table tbody tr:hover td{background:#f7f7f7}
+.pill{border-radius:4px;font-weight:400;font-size:13px;padding:3px 12px}
+.pill.inv-paid,.pill.confirmed,.pill.completed,.pill.active,.pill.es-signed{background:#c6efc9;color:#0f3d14}
+.field input,.field select,.field textarea,.input{border:1px solid #d4d4d4;border-radius:6px;background:#fff;color:#000}
+.field input:hover,.field select:hover,.input:hover{border-color:#a8a8a8}
+.field input:focus,.field select:focus,.field textarea:focus,.input:focus{border-color:#116dff;box-shadow:0 0 0 2px #116dff26;outline:0}
+/* figures: large and light */
+.stat b,.ov-grid b{font-weight:400;letter-spacing:-.01em;font-family:"Wix Madefor Display",var(--wx-font)}
+.ov-grid b{font-size:26px}
+.ov-grid small,.stat small{color:var(--mut)}
+.ov-head h2,.card h2{font-weight:500;font-size:17px;font-family:"Wix Madefor Display",var(--wx-font)}
+.tabs button.on{color:#000;border-color:#000}
+@media(min-width:821px){
+  /* top bar: same grey as the workspace, hairline below */
+  .wtop{background:var(--top);color:#000;border-bottom:1px solid var(--line);height:48px;box-shadow:none}
+  .wt-logo{border-right:0}
+  .wt-logo img{filter:none}
+  .wt-site{color:#000;background:transparent;font-weight:500;font-size:14px}
+  .wt-site:hover{background:#e6e6e6}
+  .wt-search input{background:#fff;border:1px solid #dcdcdc;color:#000;border-radius:6px}
+  .wt-search input::placeholder{color:#8a8a8a}
+  .wt-search input:focus{border-color:#116dff}
+  .wt-search>svg{color:#8a8a8a}
+  .wt-icons{border-left:0}
+  .wt-icons a{color:#333}
+  .wt-icons a:hover{background:#e6e6e6;color:#000}
+  /* side menu: grey like the page, plain text, darker grey pill for the open page */
+  .shell{grid-template-columns:232px 1fr;min-height:calc(100vh - 48px)}
+  .side{top:48px;height:calc(100vh - 48px);background:var(--side);color:#000;border-right:0}
+  .nav{padding:14px 8px}
+  .nav a{color:#000;font-size:14px;font-weight:400;padding:6px 10px;border-radius:6px}
+  .nav a svg{opacity:.7;color:#000}
+  .nav a:hover{background:var(--side-2)}
+  .nav a.on{background:#e1e1e1;color:#000;font-weight:500}
+  .nav a.on svg{opacity:1}
+  .nav .group{background:#dcdcdc;margin:10px 10px}
+  .me{border-top:1px solid var(--line);background:var(--side)}
+  .me small,.me button{color:var(--mut)}
+  .me b{color:#000;font-weight:500}
+  /* page heading: large and light */
+  .top h1{font-family:"Wix Madefor Display",var(--wx-font);font-size:28px;font-weight:400;letter-spacing:-.01em;color:#000}
+  .top .crumb{color:var(--mut);font-size:13px}
+  .content{padding-top:18px}
+}
+@media(min-width:821px){.wt-logo img{mix-blend-mode:multiply}}
