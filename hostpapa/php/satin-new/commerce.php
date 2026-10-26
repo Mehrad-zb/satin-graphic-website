@@ -1189,7 +1189,8 @@ function shop_studio_rule(string $productId): ?array {
     if (!$p || empty($p['ruleId'])) foreach ($all as $x) if (($x['studioProductId'] ?? '') === $productId && !empty($x['ruleId'])) { $p = $x; break; }
     // Design Studio vehicle products → their wrap estimator rule (used when the catalogue has no studioProductId link yet).
     $vehicles = ['vehicle-van' => 'wrap-transit-van', 'vehicle-sprinter' => 'wrap-sprinter-van', 'vehicle-cargo-van' => 'wrap-cargo-van', 'vehicle-pickup' => 'wrap-pickup-truck',
-        'vehicle-minivan' => 'wrap-minivan', 'vehicle-suv' => 'wrap-suv', 'vehicle-sedan' => 'wrap-sedan', 'vehicle-box-truck' => 'wrap-box-truck', 'vehicle-trailer' => 'wrap-trailer'];
+        'vehicle-minivan' => 'wrap-minivan', 'vehicle-suv' => 'wrap-suv', 'vehicle-sedan' => 'wrap-sedan', 'vehicle-box-truck' => 'wrap-box-truck', 'vehicle-trailer' => 'wrap-trailer',
+        'aop-tshirt' => 'apparel-allover-tshirt'];
     if ((!$p || empty($p['ruleId'])) && isset($vehicles[$productId])) return shop_rule($vehicles[$productId]);
     return $p ? shop_rule((string)$p['ruleId']) : null;
 }
