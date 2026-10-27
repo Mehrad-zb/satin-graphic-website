@@ -1,0 +1,252 @@
+/* Satin Admin — theme switcher (Classic / Glass / Lavender) and motion.
+   Classic = theme.css as is. Glass and Lavender change the desktop layout (icon rail); phones keep their own layout.
+   Motion runs in every theme and is switched off for people who ask their system for reduced motion. */
+
+/* ---------- motion (all themes) ---------- */
+@keyframes fxIn{from{opacity:0;transform:translateY(14px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fxWord{from{opacity:0;transform:translateY(.35em);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes fxPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
+@keyframes fxTip{from{opacity:0;transform:translate(-6px,-50%)}to{opacity:1;transform:translate(0,-50%)}}
+@keyframes fxMenu{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
+.fx-in{animation:fxIn .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--fx-i,0) * 55ms)}
+.fx-w{display:inline-block;animation:fxWord .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--fx-i,0) * 70ms)}
+.nav a.on svg{animation:fxPop .45s cubic-bezier(.2,.8,.2,1) both}
+.card,.table,.btn,.inv-chip,.nav a{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background-color .25s,color .25s,border-color .25s}
+.btn:active{transform:scale(.97)}
+html.fx-switch body,html.fx-switch .wtop,html.fx-switch .side,html.fx-switch .card,html.fx-switch .table,html.fx-switch .main{transition:background .45s,color .45s,border-color .45s,box-shadow .45s}
+@media(prefers-reduced-motion:reduce){.fx-in,.fx-w,.nav a.on svg{animation:none!important}}
+
+/* ---------- theme switcher (top bar) ---------- */
+.fx-sw{position:relative;display:flex}
+.fx-sw>button{display:grid;place-items:center;width:34px;height:34px;border-radius:6px;border:0;background:none;color:inherit;cursor:pointer}
+.fx-sw>button svg{width:19px;height:19px}
+.fx-sw>button:hover{background:#0000000f}
+.fx-pop{position:absolute;right:0;top:42px;z-index:60;width:250px;padding:8px;border-radius:14px;background:#fff;color:#111;box-shadow:0 18px 50px #0000002e,0 0 0 1px #0000000d;animation:fxMenu .22s cubic-bezier(.2,.8,.2,1) both}
+.fx-pop[hidden]{display:none}
+.fx-pop b{display:block;font-size:12px;font-weight:600;color:#6b6b6b;padding:4px 8px 8px}
+.fx-pop button{display:flex;align-items:center;gap:12px;width:100%;padding:8px;border:0;border-radius:10px;background:none;cursor:pointer;font:inherit;font-size:14px;color:#111;text-align:left}
+.fx-pop button:hover{background:#f2f2f4}
+.fx-pop button.on{background:#ececf0;font-weight:600}
+.fx-pop i{width:44px;height:30px;border-radius:8px;flex:none;box-shadow:inset 0 0 0 1px #00000014}
+.fx-pop i.t-classic{background:linear-gradient(90deg,#f3f3f3 0 30%,#fff 30%)}
+.fx-pop i.t-glass{background:url(/admin/icons/glass-bokeh.jpg) center/cover}
+.fx-pop i.t-lav{background:linear-gradient(90deg,#111 0 22%,#f4f2fb 22%),#f4f2fb;position:relative}
+.fx-pop small{display:block;font-size:12px;color:#777;font-weight:400}
+.fx-tipbox{position:fixed;z-index:80;pointer-events:none;padding:5px 11px;border-radius:8px;font-size:12.5px;font-weight:500;white-space:nowrap;background:#111;color:#fff;box-shadow:0 6px 18px #0003;transform:translate(0,-50%);animation:fxTip .18s ease both}
+
+/* =====================================================================
+   Shared icon-rail layout for Glass and Lavender (desktop only)
+   ===================================================================== */
+@media(min-width:821px){
+  html.th-glass .shell,html.th-lav .shell{grid-template-columns:84px 1fr}
+  html.th-glass .side,html.th-lav .side{background:transparent;border:0;align-items:center;padding:14px 0 16px;overflow:visible}
+  html.th-glass .nav,html.th-lav .nav{flex:0 1 auto;width:56px;align-items:center;gap:4px;padding:10px 0;border-radius:30px;overflow-y:auto;scrollbar-width:none}
+  html.th-glass .nav::-webkit-scrollbar,html.th-lav .nav::-webkit-scrollbar{display:none}
+  html.th-glass .nav a,html.th-lav .nav a{width:40px;height:40px;flex:none;padding:0;justify-content:center;border-radius:50%;gap:0}
+  html.th-glass .nav a>span,html.th-lav .nav a>span{display:none}
+  html.th-glass .nav a svg,html.th-lav .nav a svg{width:18px;height:18px;opacity:.9;color:inherit}
+  html.th-glass .nav a:hover,html.th-lav .nav a:hover{transform:scale(1.08)}
+  html.th-glass .nav .group,html.th-lav .nav .group{width:22px;height:1px;margin:6px auto;flex:none}
+  html.th-glass .me,html.th-lav .me{background:transparent;flex-direction:column;gap:6px;border:0;padding:12px 0 0;margin-top:auto}
+  html.th-glass .me>div:not(.avatar),html.th-lav .me>div:not(.avatar){display:none}
+  html.th-glass .me .avatar,html.th-lav .me .avatar{width:38px;height:38px;font-size:13px}
+  html.th-glass .me button,html.th-lav .me button{font-size:0;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
+  html.th-glass .me button::before,html.th-lav .me button::before{content:"⏻";font-size:16px}
+  html.th-glass .top,html.th-lav .top{padding-top:26px}
+  html.th-glass .top h1,html.th-lav .top h1{font-size:30px;font-weight:400;letter-spacing:-.02em}
+}
+
+/* =====================================================================
+   GLASS — warm blurred room behind frosted panels
+   ===================================================================== */
+@keyframes fxDrift{0%{transform:translate3d(0,0,0) scale(1.15)}50%{transform:translate3d(-3%,2%,0) scale(1.22)}100%{transform:translate3d(0,0,0) scale(1.15)}}
+@media(min-width:821px){
+  html.th-glass{--g-bg:rgba(255,255,255,.4);--g-bg2:rgba(255,255,255,.62);--g-line:rgba(255,255,255,.65);--g-hair:rgba(15,40,55,.1);--ink:#122029;--ink-2:#2c3d48;--mut:rgba(18,32,41,.62);--line:rgba(15,40,55,.1);--bg:transparent;--blue:#122029;--accent:#122029;--accent-2:rgba(255,255,255,.55)}
+  html.th-glass body{background:#9cc9d8;color:var(--ink)}
+  html.th-glass body::before{content:"";position:fixed;inset:-4%;z-index:-1;pointer-events:none;background:#9cc9d8 url(/admin/icons/glass-bokeh.jpg) center/cover no-repeat;filter:blur(2px) saturate(1.05);animation:fxDrift 40s ease-in-out infinite}
+  html.th-glass body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,0) 40%,rgba(20,40,20,.06))}
+  /* floating glass top bar */
+  html.th-glass .wtop{margin:12px 14px 0;height:52px;border-radius:999px;background:var(--g-bg);border:1px solid var(--g-line);color:var(--ink);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);box-shadow:0 10px 30px rgba(15,45,60,.12);top:12px}
+  html.th-glass .wt-logo{border-right:1px solid var(--g-hair)}
+  html.th-glass .wt-logo img{filter:none;mix-blend-mode:multiply}
+  html.th-glass .wt-site{color:var(--ink);background:transparent}
+  html.th-glass .wt-site:hover,html.th-glass .wt-icons a:hover,html.th-glass .fx-sw>button:hover{background:rgba(255,255,255,.45)}
+  html.th-glass .wt-search input{background:rgba(255,255,255,.45);border:1px solid var(--g-line);border-radius:999px;color:var(--ink)}
+  html.th-glass .wt-search input::placeholder{color:var(--mut)}
+  html.th-glass .wt-search>svg,html.th-glass .wt-icons a,html.th-glass .fx-sw>button{color:var(--ink-2)}
+  html.th-glass .wt-icons{border-left:1px solid var(--g-hair)}
+  html.th-glass .shell{min-height:calc(100vh - 64px)}
+  html.th-glass .side{top:76px;height:calc(100vh - 76px)}
+  /* glass icon rail */
+  html.th-glass .nav{background:var(--g-bg);border:1px solid var(--g-line);backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);box-shadow:0 10px 30px rgba(15,45,60,.12)}
+  html.th-glass .nav a{color:var(--ink-2)}
+  html.th-glass .nav a:hover{background:rgba(255,255,255,.55)}
+  html.th-glass .nav a.on{background:#fff;color:var(--ink);box-shadow:0 4px 14px rgba(15,45,60,.18)}
+  html.th-glass .nav .group{background:var(--g-hair)}
+  html.th-glass .me button{color:var(--ink-2);background:var(--g-bg);border:1px solid var(--g-line);backdrop-filter:blur(20px)}
+  html.th-glass .avatar{background:#122029}
+  /* panels */
+  html.th-glass .card,html.th-glass .table,html.th-glass .modal,html.th-glass .wt-sug,html.th-glass .menu-pop,html.th-glass .more .menu{background:var(--g-bg);border:1px solid var(--g-line);border-radius:20px;
+    backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);box-shadow:0 12px 36px rgba(15,45,60,.12)}
+  html.th-glass .modal,html.th-glass .wt-sug,html.th-glass .menu-pop,html.th-glass .more .menu{background:rgba(250,253,255,.85)}
+  html.th-glass .qa-b,html.th-glass .kn-c,html.th-glass .tip{background:var(--g-bg);border:1px solid var(--g-line);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 10px 30px rgba(15,45,60,.1);color:var(--ink)}
+  html.th-glass .qa-b:hover,html.th-glass .kn-c:hover{background:rgba(255,255,255,.62);transform:translateY(-2px)}
+  html.th-glass .qa-i{background:rgba(255,255,255,.6)}
+  html.th-glass .qa-b.primary .qa-i{background:#122029;color:#fff}
+  html.th-glass .table th{background:transparent;color:var(--ink-2);border-bottom:1px solid var(--g-hair)}
+  html.th-glass .table td{background:transparent;border-bottom:1px solid var(--g-hair);color:var(--ink)}
+  html.th-glass .table tr.click:hover td,html.th-glass .table tbody tr:hover td{background:rgba(255,255,255,.35)}
+  html.th-glass .table small,html.th-glass .card small,html.th-glass .top .crumb{color:var(--mut)}
+  html.th-glass .top h1{color:var(--ink)}
+  html.th-glass .ov-grid>div+div{border-color:var(--g-hair)}
+  /* controls */
+  html.th-glass .btn{background:rgba(14,26,34,.86);border:1px solid rgba(14,26,34,.86);color:#fff;border-radius:999px;backdrop-filter:blur(10px)}
+  html.th-glass .btn:hover{background:#000;transform:translateY(-1px);box-shadow:0 8px 20px rgba(14,26,34,.25)}
+  html.th-glass .btn.ghost{background:rgba(255,255,255,.5);border:1px solid var(--g-line);color:var(--ink)}
+  html.th-glass .btn.ghost:hover{background:rgba(255,255,255,.75)}
+  html.th-glass .field input,html.th-glass .field select,html.th-glass .field textarea,html.th-glass .input{background:rgba(255,255,255,.5);border:1px solid var(--g-line);border-radius:12px;color:var(--ink)}
+  html.th-glass .input:focus,html.th-glass .field input:focus,html.th-glass .field select:focus,html.th-glass .field textarea:focus{background:rgba(255,255,255,.8);border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.5)}
+  html.th-glass .inv-chip{background:rgba(255,255,255,.4);border-color:var(--g-line);backdrop-filter:blur(14px)}
+  html.th-glass .inv-chip.on{background:#122029;color:#fff;border-color:#122029}
+  html.th-glass .pill{background:rgba(255,255,255,.6);color:var(--ink)}
+  html.th-glass .pill.inv-paid,html.th-glass .pill.confirmed,html.th-glass .pill.completed,html.th-glass .pill.active,html.th-glass .pill.es-signed{background:rgba(196,240,200,.85);color:#163d1a}
+  html.th-glass .pill.inv-sent,html.th-glass .pill.contacted,html.th-glass .pill.quoted,html.th-glass .pill.es-sent{background:rgba(255,255,255,.7);color:#122029}
+  html.th-glass .pill.inv-overdue,html.th-glass .pill.es-declined{background:rgba(255,215,210,.85);color:#8f1d14}
+  html.th-glass .card:hover{box-shadow:0 16px 44px rgba(15,45,60,.16)}
+  html.th-glass a{color:inherit}
+  html.th-glass .linkbtn,html.th-glass .hint{color:#0d5c7a}
+}
+
+/* =====================================================================
+   LAVENDER — light canvas, black icon rail, soft violet accents
+   ===================================================================== */
+@keyframes fxBloom{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(18deg) scale(1.06)}}
+@media(min-width:821px){
+  html.th-lav{--bg:#ecebf3;--line:#e6e4ef;--ink:#16151c;--ink-2:#3a3846;--mut:#7b7889;--blue:#16151c;--accent:#7c5cf0;--accent-2:#efeafe;--r:20px}
+  html.th-lav body{background:var(--bg);color:var(--ink)}
+  html.th-lav .wtop{background:transparent;border:0;color:var(--ink);height:60px;box-shadow:none}
+  html.th-lav .wt-logo{border:0}
+  html.th-lav .wt-logo img{filter:none;mix-blend-mode:multiply}
+  html.th-lav .wt-site{color:var(--ink);background:#fff;border-radius:999px;padding:7px 14px;box-shadow:0 1px 2px #0000000d}
+  html.th-lav .wt-search input{background:#fff;border:1px solid transparent;border-radius:999px;color:var(--ink);box-shadow:0 1px 2px #0000000d}
+  html.th-lav .wt-search input:focus{border-color:var(--accent)}
+  html.th-lav .wt-icons{border:0}
+  html.th-lav .wt-icons a,html.th-lav .fx-sw>button{color:var(--ink-2);border-radius:50%}
+  html.th-lav .wt-icons a:hover,html.th-lav .fx-sw>button:hover{background:#fff}
+  html.th-lav .shell{min-height:calc(100vh - 60px)}
+  html.th-lav .side{top:60px;height:calc(100vh - 60px);padding-top:4px}
+  /* black rail */
+  html.th-lav .nav{background:#121116;box-shadow:0 14px 34px #16151c40}
+  html.th-lav .nav a{color:#a9a7b5}
+  html.th-lav .nav a:hover{background:#26242e;color:#fff}
+  html.th-lav .nav a.on{background:#cbbcff;color:#16151c;box-shadow:0 0 0 4px #cbbcff33}
+  html.th-lav .nav .group{background:#2c2a34}
+  html.th-lav .me button{color:var(--ink-2);background:#fff}
+  html.th-lav .avatar{background:var(--accent)}
+  /* big rounded canvas */
+  html.th-lav .main{background:#f8f7fc;border-radius:30px;margin:4px 14px 14px 0;box-shadow:0 1px 2px #0000000a,0 10px 40px #16151c0d;min-height:calc(100vh - 78px)}
+  html.th-lav .card,html.th-lav .table{background:#fff;border:0;border-radius:20px;box-shadow:0 1px 2px #0000000a,0 6px 22px #16151c0f}
+  html.th-lav .card:hover{box-shadow:0 2px 4px #0000000a,0 14px 34px #16151c17}
+  html.th-lav .card.ov,html.th-lav .welcome{position:relative;overflow:hidden;background:linear-gradient(115deg,#d9cfff 0%,#e9e2ff 45%,#f7e3f6 100%)}
+  html.th-lav .card.ov::after,html.th-lav .welcome::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;pointer-events:none;
+    background:conic-gradient(from 0deg,#b49cff,#e6b5f2,#9f86ff,#d8c6ff,#b49cff);filter:blur(18px);opacity:.55;animation:fxBloom 14s ease-in-out infinite}
+  html.th-lav .card.ov>*{position:relative;z-index:1}
+  html.th-lav .ov-grid>div+div{border-color:#16151c1a}
+  html.th-lav .modal,html.th-lav .wt-sug,html.th-lav .menu-pop,html.th-lav .more .menu{border-radius:18px}
+  html.th-lav .table th{background:#fff;color:var(--mut);font-weight:500;border-bottom:1px solid var(--line)}
+  html.th-lav .table td{border-bottom:1px solid #f0eef6}
+  html.th-lav .table tr.click:hover td,html.th-lav .table tbody tr:hover td{background:#faf8ff}
+  html.th-lav .top h1{color:var(--ink)}
+  /* controls */
+  html.th-lav .btn{background:#16151c;border:1px solid #16151c;color:#fff;border-radius:999px}
+  html.th-lav .btn:hover{background:#000;transform:translateY(-1px);box-shadow:0 8px 20px #16151c33}
+  html.th-lav .btn.ghost{background:#fff;color:var(--ink);border:1px solid #e3e0ec}
+  html.th-lav .btn.ghost:hover{background:#f3f0fb;border-color:#d3cce8}
+  html.th-lav .field input,html.th-lav .field select,html.th-lav .field textarea,html.th-lav .input{background:#fff;border:1px solid #e3e0ec;border-radius:12px;color:var(--ink)}
+  html.th-lav .input:focus,html.th-lav .field input:focus,html.th-lav .field select:focus,html.th-lav .field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #7c5cf026}
+  html.th-lav .inv-chip{background:#fff;border-color:#e6e3f0}
+  html.th-lav .inv-chip.on{background:#16151c;color:#fff;border-color:#16151c}
+  html.th-lav .pill{border-radius:999px}
+  html.th-lav .pill.inv-sent,html.th-lav .pill.contacted,html.th-lav .pill.quoted,html.th-lav .pill.es-sent{background:#efeafe;color:#5b3fd6}
+  html.th-lav .pill.inv-paid,html.th-lav .pill.confirmed,html.th-lav .pill.completed,html.th-lav .pill.active,html.th-lav .pill.es-signed{background:#d9f5df;color:#17602a}
+  html.th-lav .tabs button.on{color:var(--accent);border-color:var(--accent)}
+  html.th-lav .qa-b,html.th-lav .kn-c{border-radius:20px;border:0;box-shadow:0 1px 2px #0000000a,0 6px 22px #16151c0f}
+  html.th-lav .qa-b:hover,html.th-lav .kn-c:hover{transform:translateY(-2px);box-shadow:0 2px 4px #0000000a,0 14px 34px #16151c17}
+  html.th-lav .qa-b.primary .qa-i{background:var(--accent);color:#fff}
+  html.th-lav .qa-i{background:#f1edfc;color:#5b3fd6}
+  html.th-lav a{color:inherit}
+  html.th-lav .linkbtn,html.th-lav .hint{color:var(--accent)}
+}
+
+/* =====================================================================
+   Phones (≤820px): same three themes, phone layout kept (header, bottom tab bar, card lists)
+   ===================================================================== */
+.fx-sw-m{display:none}
+@media(max-width:820px){
+  .fx-sw-m{display:flex;flex:none;margin-left:auto}
+  /* phone fixes for every theme: card lists sit on the page, overview figures fit three across */
+  .table{background:none!important;box-shadow:none!important;border:0!important}
+  .ov-grid b{font-size:16px!important;letter-spacing:-.02em;white-space:nowrap}
+  .ov-grid small{font-size:11.5px}
+  .fx-sw-m>button{width:40px;height:40px;border-radius:50%}
+  .fx-sw-m .fx-pop{position:fixed;left:12px;right:12px;width:auto;top:calc(62px + env(safe-area-inset-top,0px))}
+  .fx-pop button{padding:10px 8px}
+
+  /* ---- Glass ---- */
+  html.th-glass{--g-bg:rgba(255,255,255,.5);--g-line:rgba(255,255,255,.7);--g-hair:rgba(15,40,55,.1);--ink:#122029;--ink-2:#2c3d48;--mut:rgba(18,32,41,.62);--line:rgba(15,40,55,.1);--accent:#122029;--blue:#122029}
+  html.th-glass body{background:#9cc9d8;color:var(--ink)}
+  html.th-glass body::before{content:"";position:fixed;inset:-6%;z-index:-1;pointer-events:none;background:#9cc9d8 url(/admin/icons/glass-bokeh.jpg) center/cover no-repeat;animation:fxDrift 40s ease-in-out infinite}
+  html.th-glass .main,html.th-glass .content{background:transparent}
+  html.th-glass .top{background:rgba(255,255,255,.45);border-bottom:1px solid var(--g-line);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
+  html.th-glass .top h1,html.th-glass .app-back{color:var(--ink)}
+  html.th-glass .bnav{background:rgba(255,255,255,.72);border-top:1px solid var(--g-line);-webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5)}
+  html.th-glass .bnav a{color:var(--ink-2)}
+  html.th-glass .bnav a.on{color:var(--ink)}
+  html.th-glass .side{background:rgba(245,250,252,.82);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:var(--ink)}
+  html.th-glass .side .nav a{color:var(--ink)}
+  html.th-glass .side .nav a.on{background:#fff}
+  html.th-glass .card,html.th-glass .table tbody tr,html.th-glass .qa-b,html.th-glass .kn-c,html.th-glass .tip{background:var(--g-bg);border:1px solid var(--g-line);border-radius:18px;-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 8px 24px rgba(15,45,60,.1);color:var(--ink)}
+  html.th-glass .table td{background:transparent;color:var(--ink)}
+  html.th-glass .table small,html.th-glass .card small{color:var(--mut)}
+  html.th-glass .qa-i{background:rgba(255,255,255,.65)}
+  html.th-glass .qa-b.primary .qa-i{background:#122029;color:#fff}
+  html.th-glass .btn{background:rgba(14,26,34,.88);border-color:rgba(14,26,34,.88);color:#fff;border-radius:999px}
+  html.th-glass .btn.ghost{background:rgba(255,255,255,.55);border-color:var(--g-line);color:var(--ink)}
+  html.th-glass .field input,html.th-glass .field select,html.th-glass .field textarea,html.th-glass .input{background:rgba(255,255,255,.6);border-color:var(--g-line);border-radius:12px;color:var(--ink)}
+  html.th-glass .inv-chip{background:rgba(255,255,255,.5);border-color:var(--g-line)}
+  html.th-glass .inv-chip.on{background:#122029;color:#fff}
+  html.th-glass .pill.inv-sent,html.th-glass .pill.contacted,html.th-glass .pill.quoted,html.th-glass .pill.es-sent{background:rgba(255,255,255,.75);color:#122029}
+  html.th-glass .modal,html.th-glass .menu-pop{background:rgba(250,253,255,.9);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+  html.th-glass a{color:inherit}
+
+  /* ---- Lavender ---- */
+  html.th-lav{--bg:#ecebf3;--line:#e6e4ef;--ink:#16151c;--ink-2:#3a3846;--mut:#7b7889;--accent:#7c5cf0;--accent-2:#efeafe;--blue:#16151c}
+  html.th-lav body{background:var(--bg);color:var(--ink)}
+  html.th-lav .top{background:#ecebf3f2;border-bottom:0}
+  html.th-lav body.has-bnav{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  html.th-lav .bnav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:24px;background:#121116;box-shadow:0 14px 34px #16151c55}
+  html.th-lav .bnav a{color:#a9a7b5;border-radius:18px}
+  html.th-lav .bnav a.on{color:#16151c;background:#cbbcff}
+  html.th-lav .bnav .navb{box-shadow:0 0 0 2px #121116}
+  html.th-lav .side{background:#121116;color:#e9e8ee}
+  html.th-lav .side .nav a{color:#c9c7d3}
+  html.th-lav .side .nav a.on{background:#cbbcff;color:#16151c}
+  html.th-lav .card,html.th-lav .table tbody tr,html.th-lav .qa-b,html.th-lav .kn-c{background:#fff;border:0;border-radius:20px;box-shadow:0 1px 2px #0000000a,0 6px 22px #16151c0f}
+  html.th-lav .card.ov,html.th-lav .welcome{position:relative;overflow:hidden;background:linear-gradient(115deg,#d9cfff 0%,#e9e2ff 45%,#f7e3f6 100%)}
+  html.th-lav .card.ov::after,html.th-lav .welcome::after{content:"";position:absolute;right:-50px;top:-60px;width:180px;height:180px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,#b49cff,#e6b5f2,#9f86ff,#d8c6ff,#b49cff);filter:blur(16px);opacity:.5;animation:fxBloom 14s ease-in-out infinite}
+  html.th-lav .card.ov>*{position:relative;z-index:1}
+  html.th-lav .qa-i{background:#f1edfc;color:#5b3fd6}
+  html.th-lav .qa-b.primary .qa-i{background:var(--accent);color:#fff}
+  html.th-lav .btn{background:#16151c;border-color:#16151c;color:#fff;border-radius:999px}
+  html.th-lav .btn.ghost{background:#fff;color:var(--ink);border-color:#e3e0ec}
+  html.th-lav .field input,html.th-lav .field select,html.th-lav .field textarea,html.th-lav .input{background:#fff;border-color:#e3e0ec;border-radius:12px}
+  html.th-lav .inv-chip{background:#fff;border-color:#e6e3f0}
+  html.th-lav .inv-chip.on{background:#16151c;color:#fff}
+  html.th-lav .pill{border-radius:999px}
+  html.th-lav .pill.inv-sent,html.th-lav .pill.contacted,html.th-lav .pill.quoted,html.th-lav .pill.es-sent{background:#efeafe;color:#5b3fd6}
+  html.th-lav .avatar{background:var(--accent)}
+  html.th-lav a{color:inherit}
+  html.th-lav .linkbtn,html.th-lav .hint{color:var(--accent)}
+  html.th-lav #toast,html.th-glass #toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+}
