@@ -956,6 +956,15 @@ async function saveInvoice(c, extra = {}) {
   } catch (e) { toast(e.message); return false; }
   finally { if (btn) btn.disabled = false; }
 }
+/* after sending an invoice or quote: go back to its list and show the link to copy there */
+function sentNotice(path, title, text, url) {
+  const show = () => { const o = modal(`<header><h2>${esc(title)}</h2><button class="x" data-close>×</button></header><p style="color:var(--mut)">${esc(text)}</p><div class="copy"><input class="input" readonly value="${esc(url)}"><button class="btn" data-copy>Copy</button></div>`);
+    $('[data-copy]', o).onclick = () => { navigator.clipboard.writeText(url); toast('Link copied'); }; };
+  toast(title);
+  if (location.hash === '#' + path) { route(); show(); return; }
+  addEventListener('hashchange', () => setTimeout(show, 0), { once: true });
+  go(path);
+}
 function sendInvoiceModal(c) {
   const i = INV, s = INVSET;
   const o = modal(`<header><h2>Send invoice</h2><button class="x" data-close>×</button></header><div data-msg></div>
@@ -967,9 +976,8 @@ function sendInvoiceModal(c) {
     try {
       if (!(await saveInvoice(c))) { e.target.disabled = false; return; }
       const r = await api('/invoices/send', { id: INV.id, to: $('[name=to]', o).value, message: $('[name=message]', o).value });
-      setInv(r.invoice); drawInvoice(c);
-      o.querySelector('.modal').innerHTML = `<header><h2>${r.emailed ? 'Invoice sent' : 'Invoice ready'}</h2><button class="x" data-close>×</button></header><p style="color:var(--mut)">${r.emailed ? 'We emailed the invoice. You can also copy the link and send it by text message:' : 'The email could not be sent from the server. Copy the link and send it to the customer:'}</p><div class="copy"><input class="input" readonly value="${esc(INV.publicUrl)}"><button class="btn" data-copy>Copy</button></div>`;
-      $('[data-copy]', o).onclick = () => { navigator.clipboard.writeText(INV.publicUrl); toast('Link copied'); };
+      setInv(r.invoice); o.remove();
+      sentNotice('/invoices', r.emailed ? 'Invoice sent' : 'Invoice ready', r.emailed ? 'We emailed the invoice. You can also copy the link and send it by text message:' : 'The email could not be sent from the server. Copy the link and send it to the customer:', INV.publicUrl);
     } catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; }
   };
 }
@@ -1431,8 +1439,8 @@ function sendQuoteModal(c) {
     <label class="field"><span>To</span><input name="to" type="email" value="${esc(i.customer?.email || '')}" required></label>
     <label class="field"><span>Message</span><textarea name="message" rows="7">${esc(QSET.emailMessage || '')}</textarea><div class="hint">{name}, {number}, {total} and {valid} are filled in automatically. A button to review and accept the quote is added at the end.</div></label>
     <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap"><button class="btn ghost" data-link>Just copy the link</button><button class="btn" data-go>Send quote</button></div>`);
-  const done = (emailed) => { o.querySelector('.modal').innerHTML = `<header><h2>${emailed ? 'Quote sent' : 'Quote ready'}</h2><button class="x" data-close>×</button></header><p style="color:var(--mut)">${emailed ? 'We emailed the quote. You can also copy the link and send it by WhatsApp or text message:' : 'Send this link to the customer (WhatsApp, text or email). They can review the quote and accept it online:'}</p><div class="copy"><input class="input" readonly value="${esc(INV.publicUrl)}"><button class="btn" data-copy>Copy</button></div>`;
-    $('[data-copy]', o).onclick = () => { navigator.clipboard.writeText(INV.publicUrl); toast('Link copied'); }; };
+  const done = (emailed) => { o.remove(); invDirty = false; // back to the list of quotes, with the link to copy
+    sentNotice('/quotes', emailed ? 'Quote sent' : 'Quote ready', emailed ? 'We emailed the quote. You can also copy the link and send it by WhatsApp or text message:' : 'Send this link to the customer (WhatsApp, text or email). They can review the quote and accept it online:', INV.publicUrl); };
   $('[data-link]', o).onclick = async e => { e.target.disabled = true;
     try { if (invDirty || !INV.id) { if (!(await saveQuote(c))) { e.target.disabled = false; return; } } if (INV.status === 'draft') { const r = await api('/quotes/status', { id: INV.id, status: 'sent' }); setQuote(r.quote); drawQuote(c); } done(false); }
     catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; } };
