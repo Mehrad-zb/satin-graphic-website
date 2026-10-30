@@ -8,7 +8,7 @@ function admin_route(string $path, string $method): void {
     header('X-Frame-Options: SAMEORIGIN');
     $r = substr($path, strlen('/api/admin'));
     $pdo = adb();
-    if (str_starts_with($r, '/requests')) migrate_replies($pdo);
+    if (str_starts_with($r, '/requests')) { migrate_replies($pdo); require_once __DIR__ . '/thread.php'; thread_db(); }
 
     // ---------- session ----------
     if ($r === '/me' && $method === 'GET') {
@@ -173,6 +173,7 @@ function admin_route(string $path, string $method): void {
         $body = str_replace("\r\n", "\n", text($_POST['body'] ?? '', 20000));
         $sig = str_replace("\r\n", "\n", text($_POST['signature'] ?? '', 1000));
         if ($subject === '') json_out(['error' => 'Add a subject.'], 400);
+        if (stripos($subject, request_ref($row['id'])) === false) $subject = mb_substr($subject, 0, 185) . ' [' . request_ref($row['id']) . ']'; // lets an emailed answer find its request
         if ($body === '') json_out(['error' => 'Write your message first.'], 400);
         if (rate_limited('reply:' . $u['id'], 40, 3600)) json_out(['error' => 'Too many emails in the last hour. Try again later.'], 429);
         try { $files = reply_take_uploads(); } catch (InvalidArgumentException $e) { json_out(['error' => $e->getMessage()], 400); }
@@ -329,7 +330,7 @@ function admin_route(string $path, string $method): void {
 
     if (str_starts_with($r, '/shop/')) { require_once __DIR__ . '/commerce_admin.php'; shop_admin_route($r, $method); }
     if (str_starts_with($r, '/chat/')) { require_once __DIR__ . '/chat_admin.php'; chat_admin_route($r, $method); }
-    if ($r === '/badges' || $r === '/badges/seen' || str_starts_with($r, '/push/')) { require_once __DIR__ . '/push.php'; push_admin_route($r, $method); }
+    if ($r === '/badges' || $r === '/badges/seen' || $r === '/notifications' || $r === '/notifications/seen' || str_starts_with($r, '/push/')) { require_once __DIR__ . '/push.php'; push_admin_route($r, $method); }
     if ($r === '/customer-login' || str_starts_with($r, '/customer-accounts')) { require_once __DIR__ . '/customer.php'; customer_admin_route($r, $method); }
     if (str_starts_with($r, '/invoices') || str_starts_with($r, '/customers') || $r === '/analytics') { require_once __DIR__ . '/site_api.php'; require_once __DIR__ . '/invoices_api.php'; invoices_route($r, $method); }
     if ($r === '/quotes' || str_starts_with($r, '/quotes/')) { require_once __DIR__ . '/site_api.php'; require_once __DIR__ . '/invoices_api.php'; require_once __DIR__ . '/quotes_api.php'; quotes_route($r, $method); }
@@ -408,7 +409,7 @@ function reply_list(string $requestId): array {
     $q = adb()->prepare('SELECT * FROM request_replies WHERE request_id = ? ORDER BY created_at, id'); $q->execute([$requestId]);
     return array_map(fn($x) => ['id' => $x['id'], 'userName' => $x['user_name'], 'to' => $x['to_email'], 'subject' => $x['subject'], 'body' => $x['body'], 'signature' => $x['signature'],
         'attachments' => array_map(fn($f) => ['name' => $f['name'], 'size' => (int)$f['size'], 'mime' => $f['mime']], json_decode((string)$x['attachments'], true) ?: []),
-        'sent' => (bool)(int)$x['sent'], 'error' => $x['error'], 'createdAt' => $x['created_at']], $q->fetchAll());
+        'sent' => (bool)(int)$x['sent'], 'error' => $x['error'], 'createdAt' => $x['created_at'], 'direction' => $x['direction'] ?? 'out', 'source' => $x['source'] ?? 'admin'], $q->fetchAll());
 }
 /** Does the file start like the type its extension claims? (Admin uploads, but never mail out a mislabelled executable.) */
 function reply_sniff_ok(string $ext, string $head): bool {
@@ -479,10 +480,12 @@ function reply_compose(array $row, string $to, string $subject, string $body, st
     $facts = reply_request_facts($row); $intro = reply_received_line($row);
     $quoted = "$intro\n>\n";
     foreach ($facts as [$l, $v]) { $lines = explode("\n", str_replace("\r", '', $v)); $quoted .= "> $l: " . array_shift($lines) . "\n"; foreach ($lines as $x) $quoted .= ">   $x\n"; }
-    $text = rtrim($body) . "\n\n" . ($sig !== '' ? "-- \n" . rtrim($sig) . "\n\n" : '') . rtrim($quoted) . "\n";
+    $turl = ''; try { require_once __DIR__ . '/thread.php'; $turl = thread_url($row['id']); } catch (Throwable $e2) { error_log('satin thread url: ' . $e2->getMessage()); }
+    $text = rtrim($body) . "\n\n" . ($sig !== '' ? "-- \n" . rtrim($sig) . "\n\n" : '') . ($turl !== '' ? "Reply to this email, or see the whole conversation and answer on our website:\n$turl\n\n" : '') . rtrim($quoted) . "\n";
     $html = '<!doctype html><html><body style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#16181d">'
         . '<div dir="auto" style="white-space:pre-wrap">' . $e(rtrim($body)) . '</div>'
         . ($sig !== '' ? '<div style="margin-top:18px;padding-top:10px;border-top:1px solid #e5e7eb;color:#4b5563;font-size:13px;white-space:pre-wrap">' . $e(rtrim($sig)) . '</div>' : '')
+        . ($turl !== '' ? '<div style="margin-top:20px"><a href="' . $e($turl) . '" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:11px 18px;border-radius:8px;font-weight:bold;font-size:14px">View conversation &amp; reply online</a><div style="color:#6b7280;font-size:12px;margin-top:6px">Or simply reply to this email.</div></div>' : '')
         . '<div style="margin-top:24px;color:#6b7280;font-size:12.5px">' . $e($intro) . '</div>'
         . '<blockquote style="margin:8px 0 0;padding:4px 0 4px 12px;border-left:3px solid #d1d5db;color:#374151"><table role="presentation" style="border-collapse:collapse;font-size:13px">'
         . implode('', array_map(fn($r) => '<tr><td style="padding:3px 14px 3px 0;color:#6b7280;vertical-align:top;white-space:nowrap">' . $e($r[0]) . '</td><td style="padding:3px 0;white-space:pre-wrap">' . $e($r[1]) . '</td></tr>', $facts))

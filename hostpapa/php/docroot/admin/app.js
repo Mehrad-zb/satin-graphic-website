@@ -52,6 +52,7 @@ const icon = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 
 const NAV = [
   { path: '/', label: 'Home', icon: 'home', perm: 'dashboard.view' },
+  { path: '/inbox', label: 'Notifications', icon: 'bell' },
   { group: 'Business' },
   { path: '/requests', label: 'Quotes & bookings', icon: 'inbox', perm: 'requests.view' },
   { path: '/chat', label: 'Live chat', icon: 'chat', perm: 'chat.view' },
@@ -75,7 +76,7 @@ const NAV = [
   { group: 'Team' },
   { path: '/members', label: 'Members & roles', icon: 'users', perm: 'members.manage' },
   { path: '/activity', label: 'Activity log', icon: 'list', perm: 'audit.view' },
-  { path: '/notifications', label: 'Notifications & app', icon: 'bell' },
+  { path: '/notifications', label: 'Notification settings & app', icon: 'cog' },
   { path: '/account', label: 'My account', icon: 'user' }
 ];
 
@@ -143,12 +144,12 @@ function shell(title, crumb, body, path) {
   const srch = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
   app.innerHTML = `<header class="wtop"><a class="wt-logo" href="#/" aria-label="Admin home"><img src="/satin/img/logo.png" alt="Satin"></a><a class="wt-site" href="/satin/" target="_blank" rel="noopener">Satin Graphic ${icon('ext')}</a>
     <div class="wt-search">${srch}<input data-wsearch placeholder="Search admin pages…" aria-label="Search admin pages" autocomplete="off"><div class="wt-sug" data-wsug hidden></div></div>
-    <div class="wt-icons">${can('chat.view') ? `<a href="#/chat" title="Live chat" aria-label="Live chat">${icon('chat')}</a>` : ''}<a href="#/notifications" title="Notifications & app" aria-label="Notifications">${icon('bell')}</a><a class="wt-me" href="#/account" title="${esc(ME.name)}"><span class="avatar">${esc(initials(ME.name))}</span></a></div></header>
+    <div class="wt-icons">${can('chat.view') ? `<a href="#/chat" title="Live chat" aria-label="Live chat">${icon('chat')}</a>` : ''}<a href="#/inbox" title="Notifications" aria-label="Notifications" data-badge="notifs">${icon('bell')}</a><a class="wt-me" href="#/account" title="${esc(ME.name)}"><span class="avatar">${esc(initials(ME.name))}</span></a></div></header>
   <div class="shell"><aside class="side" data-side>
     <div class="brand"><img src="/satin/img/logo.png" alt="Satin"><small>Admin</small></div>
     <nav class="nav">${nav}<a href="/satin/" target="_blank" rel="noopener">${icon('ext')}<span>View website</span></a></nav>
     <div class="me"><div class="avatar">${esc(initials(ME.name))}</div><div><b>${esc(ME.name)}</b><small>${esc(ME.roleName)}</small></div><button data-logout>Sign out</button></div>
-  </aside><div class="main"><header class="top"><div style="display:flex;align-items:center;gap:10px"><button class="menu-toggle" data-menu aria-label="Menu">${icon('menu')}</button><div><div class="crumb">${crumb}</div><h1>${title}</h1></div></div><div data-actions></div></header>
+  </aside><div class="main"><header class="top"><div style="display:flex;align-items:center;gap:10px"><button class="menu-toggle" data-menu aria-label="Menu">${icon('menu')}</button><div><div class="crumb">${crumb}</div><h1>${title}</h1></div></div><a class="m-bell" href="#/inbox" aria-label="Notifications" data-badge="notifs">${icon('bell')}</a><div data-actions></div></header>
   <div class="content" data-content>${body}</div></div></div>`;
   $('[data-logout]').onclick = async () => { await api('/logout', {}).catch(() => {}); ME = null; go('/login'); };
   $('[data-menu]').onclick = () => $('[data-side]').classList.toggle('open');
@@ -186,10 +187,13 @@ async function viewRequests(params) {
   let t; $('[data-q]').oninput = () => { clearTimeout(t); t = setTimeout(load, 250); };
   $('[data-status]').onchange = load; $('[data-type]').onchange = load;
   load();
+  if (params.get('id')) openRequest(params.get('id'));
 }
 const REPLY_EXT = ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'docx', 'xlsx', 'ai', 'eps', 'svg', 'zip'];
 const fsize = b => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
 function replyCard(x) {
+  if (x.direction === 'in') return `<article class="rq-reply rq-in"><div class="rq-reply-h"><span class="avatar sm">${esc(initials(x.userName))}</span><div><b>${esc(x.userName)}</b><small>${esc(fmtDate(x.createdAt))} · replied ${x.source === 'email' ? 'by email' : 'on the website'}</small></div><span class="pill new">Customer</span></div>
+    <div class="rq-body" dir="auto" data-clamp>${esc(x.body)}</div><button type="button" class="linkbtn rq-more" data-more-body hidden>Show full message</button></article>`;
   return `<article class="rq-reply ${x.sent ? '' : 'failed'}"><div class="rq-reply-h"><span class="avatar sm">${esc(initials(x.userName))}</span><div><b>${esc(x.userName)}</b><small>${esc(fmtDate(x.createdAt))} · to ${esc(x.to)}</small></div>
     ${x.sent ? '<span class="pill confirmed">Sent</span>' : '<span class="pill cancelled">Not sent</span>'}</div>
     <div class="rq-subj">${esc(x.subject)}</div><div class="rq-body" dir="auto" data-clamp>${esc(x.body)}${x.signature ? `<div class="rq-sig">${esc(x.signature)}</div>` : ''}</div>
@@ -217,8 +221,8 @@ async function openRequest(id) {
       ${d.designRequested ? '<dt>Design</dt><dd>Design service requested · agreement accepted</dd>' : ''}
       ${(d.attachments || []).length ? `<dt>Attachments</dt><dd>${d.attachments.map(a => `<a href="/api/studio/file?id=${esc(a.id)}">${esc(a.name)}</a>`).join('<br>')}</dd>` : ''}</dl>
       ${can('invoices.edit') ? `<p><a class="btn sm" href="#/quotes/edit?request=${esc(r.id)}">Create price quote</a> <a class="btn ghost sm" href="#/invoices/edit?request=${esc(r.id)}">Create invoice for this request</a></p>` : ''}
-      <section class="rq-sec"><h3>Emails to the customer${replies.length ? ` <span class="rq-count">${replies.length}</span>` : ''}</h3>
-        ${replies.map(replyCard).join('') || '<p class="hint" style="margin-top:0">No replies sent from the admin yet.</p>'}
+      <section class="rq-sec"><h3>Conversation${replies.length ? ` <span class="rq-count">${replies.length}</span>` : ''}</h3>
+        ${replies.map(replyCard).join('') || '<p class="hint" style="margin-top:0">No replies yet. Your emails and the customer’s answers (from the website or by email) show up here.</p>'}
         ${!canReply ? (can('requests.edit') ? '<p class="hint">This request has no email address to reply to.</p>' : '') : !draft.open ? '<button type="button" class="btn sm" data-rq-open>✉ Reply to customer</button>' : `
         <form class="rq-compose" data-reply novalidate><h4>Reply to customer</h4>
           <label class="field"><span>To</span><input class="ro" readonly value="${esc(r.name ? `${r.name} <${r.email}>` : r.email)}"></label>
@@ -509,6 +513,32 @@ async function customerReport(box, days, period) {
     : `<div class="empty small">No answers yet for this period. Visitors see a small “How did you hear about us?” card in the corner of the website; answers show up here.</div>`}</div>`;
 }
 
+/* ---------- notification centre (bell): every staff event, newest first; tap one to open it ---------- */
+const NOTIF_TYPES = { requests: ['Quotes & bookings', '📝'], chat: ['Chat', '💬'], orders: ['Orders', '🛒'], invoices: ['Invoices & quotes', '💰'], agreements: ['Agreements', '✍️'], quotes: ['Price checks', '💲'], visits: ['Visitors', '👀'] };
+const ago = s => { const t = (Date.now() - new Date(s)) / 1000; if (t < 60) return 'just now'; if (t < 3600) return Math.floor(t / 60) + ' min ago'; if (t < 86400) return Math.floor(t / 3600) + ' h ago'; if (t < 7 * 86400) return Math.floor(t / 86400) + ' d ago'; return new Date(s).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }); };
+async function viewInbox(params) {
+  const c = shell('Notifications', 'Satin Admin', '<div class="card empty">Loading…</div>', '/inbox');
+  $('[data-actions]').innerHTML = '<a class="btn ghost sm" href="#/notifications">Settings</a>';
+  let type = params.get('type') || '', items = [], more = false;
+  const load = async (append) => {
+    const qs = new URLSearchParams({ type }); if (append && items.length) qs.set('before', items[items.length - 1].createdAt);
+    const d = await api('/notifications?' + qs);
+    items = append ? items.concat(d.items) : d.items; more = d.items.length === 60;
+    draw(d.types || []);
+  };
+  const draw = types => {
+    const chips = [['', 'All'], ...types.map(t => [t, (NOTIF_TYPES[t] || [t])[0]])];
+    c.innerHTML = `<div class="inv-chips">${chips.map(([k, l]) => `<button type="button" class="inv-chip ${type === k ? 'on' : ''}" data-nt="${k}">${esc(l)}</button>`).join('')}</div>
+      ${items.length ? `<div class="card ntf-list">${items.map((x, n) => `<a class="ntf ${x.unread ? 'unread' : ''}" href="${esc(x.url.startsWith('/admin/#') ? x.url.slice(7) : x.url)}" data-n="${n}"><span class="ntf-ic">${(NOTIF_TYPES[x.type] || ['', '🔔'])[1]}</span><span class="ntf-t"><b dir="auto">${esc(x.title.replace(/^(\p{Extended_Pictographic}|\u2716|\u2705)\uFE0F?\s*/u, ''))}</b><small dir="auto">${esc(x.body)}</small></span><time title="${esc(fmtDate(x.createdAt))}">${esc(ago(x.createdAt))}</time></a>`).join('')}</div>
+      ${more ? '<div style="text-align:center;margin-top:14px"><button class="btn ghost sm" data-more>Show older</button></div>' : ''}` : `<div class="card empty">${type ? 'Nothing here yet.' : 'No notifications yet. New quote requests, bookings, chats, orders, payments and signed agreements show up here.'}</div>`}
+      <p class="hint" style="margin-top:14px">To get these on your phone too, turn on push in <a href="#/notifications">Notification settings</a>.${type === 'visits' ? '' : ' Visitor alerts are under “Visitors”.'}</p>`;
+    c.querySelectorAll('[data-nt]').forEach(b => b.onclick = () => { type = b.dataset.nt; history.replaceState(null, '', '#/inbox' + (type ? '?type=' + type : '')); load(); });
+    const m = $('[data-more]', c); if (m) m.onclick = () => { m.disabled = true; load(true); };
+  };
+  try { await load(); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; return; }
+  setTimeout(async () => { try { await api('/notifications/seen', {}); dispatchEvent(new Event('satin-notifs-seen')); } catch {} }, 1200);
+}
+
 /* ---------- invoices list ---------- */
 function invoiceTable(rows, short) {
   const acts = !short && can('invoices.edit');
@@ -560,13 +590,30 @@ async function viewInvoices(params) {
     $('[data-list]', c).innerHTML = rows.length ? invoiceTable(rows.slice(0, 500)) : `<div class="card empty">${d.invoices.length ? 'No invoices match.' : 'No invoices yet. Click “New invoice” to create your first one.'}</div>`;
     bindInvRows(c);
     c.querySelectorAll('[data-invmenu]').forEach(b => b.onclick = e => { e.stopPropagation(); const inv = d.invoices.find(x => x.id === b.dataset.invmenu); if (!inv) return;
-      popMenu(b, [['open', 'Open invoice'], ['del', 'Delete invoice…', 'danger']], k => {
-        if (k === 'open') go('/invoices/edit?id=' + inv.id);
-        if (k === 'del') deleteInvoice(inv, () => { params.set('status', st.value); params.set('q', q.value); viewInvoices(params); });
-      }); });
+      const again = () => { params.set('status', st.value); params.set('q', q.value); viewInvoices(params); };
+      popMenu(b, [['open', 'Open / edit'], ['preview', 'Preview / print / PDF'], ['copy', 'Copy customer link'], ...(!['paid', 'void', 'refunded'].includes(inv.status) ? [['pay', 'Record payment']] : []), ['send', inv.status === 'draft' ? 'Send invoice' : 'Resend invoice'], ['dup', 'Duplicate'], ...(inv.status !== 'void' ? [['void', 'Void invoice']] : []), ['del', 'Delete invoice…', 'danger']], k => listInvAct(k, inv, again));
+    });
   };
   st.onchange = draw; q.oninput = draw; $('[data-days]', c).onchange = e => { invDays = +e.target.value; viewInvoices(params); };
   draw();
+}
+
+/* row ⋯ menu on the invoices list: act without opening the invoice */
+async function loadInvFull(id) {
+  const d = await api('/invoices/get?id=' + encodeURIComponent(id));
+  INV = d.invoice; INVSET = d.settings; INVMETHODS = d.methods || {}; invDirty = false;
+  INV.items = INV.items.map(it => ({ ...it, price: it.price / 100 })); INV.deposit = normPlan(INV.deposit); INV.publicUrl = d.publicUrl || '';
+  return INV;
+}
+async function listInvAct(k, inv, again) {
+  if (k === 'open') return go('/invoices/edit?id=' + inv.id);
+  if (k === 'send' || k === 'dup') return go('/invoices/edit?id=' + inv.id + '&do=' + k);
+  if (k === 'del') return deleteInvoice(inv, again);
+  let i; try { i = await loadInvFull(inv.id); } catch (er) { return toast(er.message); }
+  if (k === 'preview') open(i.publicUrl, '_blank', 'noopener');
+  if (k === 'copy') { navigator.clipboard.writeText(i.publicUrl); toast('Link copied'); }
+  if (k === 'pay') paymentModal(null, again);
+  if (k === 'void') confirmBox(`Void invoice #${i.number}?`, 'The customer link will show it as VOID (no more payments) and it no longer counts as outstanding. Payments already received stay listed — refund them separately if needed. This cannot be undone.', async () => { try { await api('/invoices/void', { id: i.id }); toast('Invoice voided'); again(); } catch (er) { toast(er.message); } });
 }
 
 /* ---------- invoice editor ---------- */
@@ -592,6 +639,8 @@ async function viewInvoiceEdit(params) {
   INV.deposit = normPlan(INV.deposit);
   INV.publicUrl = d.publicUrl || '';
   drawInvoice(c);
+  const todo = params.get('do');
+  if (todo && id) { history.replaceState(null, '', '#/invoices/edit?id=' + encodeURIComponent(id)); if (todo === 'dup') invAct('dup', c); if (todo === 'send' && can('invoices.edit')) sendInvoiceModal(c); }
 }
 function drawInvoice(c) {
   if (INV && INV.kind === 'quote') return drawQuote(c);
@@ -635,7 +684,7 @@ function drawInvoice(c) {
   syncTerms();
   drawLines(c, ro); drawTotals(c, ro);
   const al = $('[data-addline]', c); if (al) al.onclick = () => { i.items.push({ name: '', description: '', qty: 1, price: 0, taxes: [...(s.defaultTaxes || [])] }); invDirty = true; drawLines(c, ro); drawTotals(c, ro); c.querySelector('[data-lines] tr:last-child input')?.focus(); };
-  const sv = $('[data-save]'); if (sv) sv.onclick = () => saveInvoice(c).then(ok => ok && toast('Invoice saved'));
+  const sv = $('[data-save]'); if (sv) sv.onclick = () => saveInvoice(c).then(ok => { if (ok) { toast('Invoice saved'); go('/invoices'); } });
   const sd = $('[data-sendinv]'); if (sd) sd.onclick = () => sendInvoiceModal(c);
   const pay = $('[data-pay]', c); if (pay) pay.onclick = () => paymentModal(c);
   c.querySelectorAll('[data-refund]').forEach(bt => bt.onclick = () => refundModal(c, i.payments.find(p => p.id === bt.dataset.refund)));
@@ -719,7 +768,7 @@ function drawInvoiceM(c) {
   c.querySelectorAll('[data-delpay]').forEach(bt => bt.onclick = () => confirmBox('Remove this entry?', 'The amounts paid and the balance due are recalculated.', async () => { try { const r = await api('/invoices/payment/delete', { paymentId: bt.dataset.delpay }); setInv(r.invoice); drawInvoice(c); toast('Payment removed'); } catch (e) { toast(e.message); } }));
   on('[data-next]', e => popMenu(e.currentTarget, [['send', i.status === 'draft' ? 'Send invoice' : 'Resend invoice'], ['save', i.id ? 'Save changes' : 'Save as draft'], ...(i.id ? invMenuItems(i).map(([k, l]) => [k, l, k === 'void' || k === 'del' ? 'danger' : '']) : [])], k => {
     if (k === 'send') sendInvoiceModal(c);
-    else if (k === 'save') saveInvoice(c).then(ok => ok && toast('Invoice saved'));
+    else if (k === 'save') saveInvoice(c).then(ok => { if (ok) { toast('Invoice saved'); go('/invoices'); } });
     else invAct(k, c); }));
 }
 function drawItemsM(c, ro) {
@@ -981,7 +1030,7 @@ function sendInvoiceModal(c) {
     } catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; }
   };
 }
-function paymentModal(c) {
+function paymentModal(c, after) {
   const i = INV; const k = calcInvoice(i, INVSET.taxes || []); const bal = Math.max(0, k.total - (i.paid || 0));
   const o = modal(`<header><h2>Record payment</h2><button class="x" data-close>×</button></header><div data-msg></div>
     <p style="margin-top:0;color:var(--mut)">Balance due: <b>${money(bal)}</b></p>
@@ -994,7 +1043,7 @@ function paymentModal(c) {
     try {
       if (invDirty && !(await saveInvoice(c))) { e.target.disabled = false; return; }
       const r = await api('/invoices/payment', { id: INV.id, amount: $('[name=amount]', o).value, date: $('[name=date]', o).value, method: $('[name=method]', o).value, note: $('[name=note]', o).value });
-      o.remove(); setInv(r.invoice); drawInvoice(c); toast('Payment recorded');
+      o.remove(); setInv(r.invoice); if (after) after(); else drawInvoice(c); toast('Payment recorded');
     } catch (er) { $('[data-msg]', o).innerHTML = `<div class="err">${esc(er.message)}</div>`; e.target.disabled = false; }
   };
 }
@@ -1321,6 +1370,7 @@ async function route() {
     if (path === '/members') return viewMembers();
     if (path === '/activity') return viewActivity();
     if (path === '/account') return viewAccount();
+    if (path === '/inbox') return viewInbox(params);
     if (['/sales', '/website', '/more'].includes(path)) { if (!window.SatinPWA) throw new Error('This page could not load. Refresh the page.'); return window.SatinPWA.hub(path); }
     if (path === '/notifications') { if (!window.SatinPWA) throw new Error('This page could not load. Refresh the page.'); return window.SatinPWA.route(path, params); }
     if (path === '/editor') { location.href = '/admin/editor/'; return; }
@@ -1399,7 +1449,7 @@ function drawQuote(c) {
   c.querySelectorAll('[data-f]').forEach(el => el.oninput = () => { i[el.dataset.f] = el.value; invDirty = true; });
   drawLines(c, ro); drawQuoteTotals(c, ro);
   const al = $('[data-addline]', c); if (al) al.onclick = () => { i.items.push({ name: '', description: '', qty: 1, price: 0, taxes: [...(s.defaultTaxes || [])] }); invDirty = true; drawLines(c, ro); drawQuoteTotals(c, ro); c.querySelector('[data-lines] tr:last-child input')?.focus(); };
-  const sv = $('[data-save]'); if (sv) sv.onclick = () => saveQuote(c).then(ok => ok && toast('Quote saved'));
+  const sv = $('[data-save]'); if (sv) sv.onclick = () => saveQuote(c).then(ok => { if (ok) { toast('Quote saved'); go('/quotes'); } });
   const sd = $('[data-sendq]'); if (sd) sd.onclick = () => sendQuoteModal(c);
   const cv = $('[data-convert]'); if (cv) cv.onclick = () => quoteAct('convert', c);
   const more = $('[data-more]');

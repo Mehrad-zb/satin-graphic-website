@@ -50,6 +50,39 @@ function booking_slots(string $date): array {
     return array_values(array_filter($s['bookingTimes'] ?? [], fn($t) => ($date !== $today || $t > $now) && !in_array($t, $booked, true)));
 }
 
+/** Staff email for a new quote / booking: one clean table, one row per answer, long text kept readable. */
+function request_mail_html(string $type, string $ref, string $id, string $service, string $name, string $email, string $phone, string $date, string $time, array $d): string {
+    $h = fn($x) => htmlspecialchars((string)$x, ENT_QUOTES, 'UTF-8');
+    $val = function ($v) use ($h) {
+        if (is_bool($v)) return $v ? 'Yes' : 'No';
+        if (is_array($v)) return $h(implode(', ', array_map(fn($x) => is_scalar($x) ? (string)$x : json_encode($x, JSON_UNESCAPED_UNICODE), $v)));
+        return nl2br($h(trim((string)$v)));
+    };
+    $label = fn($k) => ucfirst(trim(preg_replace('/\s+/', ' ', preg_replace('/([a-z])([A-Z])/', '$1 $2', str_replace(['_', '-'], ' ', (string)$k)))));
+    $rows = [['Reference', $h($ref)], ['Type', $type === 'booking' ? 'Booking' : 'Quote request'], ['Service', $h($service)], ['Name', $h($name)],
+        ['Email', '<a href="mailto:' . $h($email) . '" style="color:#1d4ed8">' . $h($email) . '</a>'],
+        ['Phone', $phone !== '' ? '<a href="tel:' . $h($phone) . '" style="color:#1d4ed8">' . $h($phone) . '</a>' : '—']];
+    if ($date) $rows[] = ['Preferred date', $h(trim("$date $time"))];
+    $map = ['vehicle' => 'Vehicle', 'vehicleSize' => 'Vehicle size', 'plan' => 'Package', 'services' => 'Services', 'estimate' => 'Estimate', 'contactPreference' => 'Contact by', 'designRequested' => 'Design service'];
+    foreach ($map as $k => $l) if (isset($d[$k]) && $d[$k] !== '' && $d[$k] !== [] && $d[$k] !== null && !($k === 'designRequested' && !$d[$k]) && !($k === 'services' && $d[$k] === [$service])) $rows[] = [$l, $val($d[$k])];
+    foreach (($d['custom'] ?? []) as $k => $v) if (trim((string)$v) !== '') $rows[] = [$h($label($k)), $val($v)];
+    if (!empty($d['notes'])) $rows[] = ['Message', $val($d['notes'])];
+    $att = [];
+    foreach (($d['attachments'] ?? []) as $a) $att[] = '📎 ' . $h($a['name'] ?? 'file') . (isset($a['size']) ? ' <span style="color:#8a8f98">(' . round($a['size'] / 1048576, 2) . ' MB)</span>' : '');
+    if ($att) $rows[] = ['Attachments', implode('<br>', $att) . '<br><span style="color:#8a8f98;font-size:12px">Download them from the request in the admin.</span>'];
+    $tr = '';
+    foreach ($rows as $i => [$k, $v]) $tr .= '<tr style="background:' . ($i % 2 ? '#ffffff' : '#f7f8fa') . '"><td style="padding:10px 14px;width:34%;vertical-align:top;font-weight:bold;color:#4b5563;font-size:13px;border-bottom:1px solid #eceef2">' . $k . '</td><td dir="auto" style="padding:10px 14px;vertical-align:top;font-size:14px;color:#111827;border-bottom:1px solid #eceef2;word-break:break-word">' . $v . '</td></tr>';
+    $url = site_url() . '/admin/#/requests?id=' . rawurlencode($id);
+    return '<!doctype html><html><body style="margin:0;background:#f4f5f7;font-family:Arial,Helvetica,sans-serif;color:#16181d"><table role="presentation" width="100%" style="border-collapse:collapse"><tr><td align="center" style="padding:24px 12px">'
+        . '<table role="presentation" width="100%" style="max-width:620px;background:#ffffff;border-radius:12px;border-collapse:separate;overflow:hidden">'
+        . '<tr><td style="padding:22px 24px 6px"><div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#e81e4c;font-weight:bold">New ' . ($type === 'booking' ? 'booking' : 'quote request') . '</div>'
+        . '<div style="font-size:20px;font-weight:bold;margin-top:4px">' . $h($name) . ($service !== '' ? ' · ' . $h($service) : '') . '</div></td></tr>'
+        . '<tr><td style="padding:12px 24px"><table role="presentation" width="100%" style="border-collapse:collapse;border:1px solid #eceef2;border-radius:8px">' . $tr . '</table></td></tr>'
+        . '<tr><td style="padding:6px 24px 24px"><a href="' . $h($url) . '" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:8px;font-weight:bold;font-size:14px">Open in admin</a>'
+        . '<span style="color:#8a8f98;font-size:12px;margin-left:10px">Reply to this email to answer ' . $h($name) . ' directly.</span></td></tr></table>'
+        . '<p style="font-size:11px;color:#8a8f98;margin:14px 0 0">Satin Graphic website · ' . $h(gmdate('Y-m-d H:i')) . ' UTC</p></td></tr></table></body></html>';
+}
+
 function save_request(string $id, string $type, string $service, string $name, string $email, string $phone, string $date, string $time, string $details): array {
     $pdo = db();
     $ref = 'SG-' . strtoupper(substr($id, 0, 8));
@@ -67,8 +100,10 @@ function save_request(string $id, string $type, string $service, string $name, s
     foreach (['notes', 'estimate', 'vehicle', 'plan', 'contactPreference'] as $k) if (!empty($d[$k])) $lines[] = ucfirst($k) . ': ' . $d[$k];
     foreach (($d['custom'] ?? []) as $k => $v) $lines[] = "$k: $v";
     foreach (($d['attachments'] ?? []) as $a) $lines[] = 'Attachment: ' . $a['name'] . ' (' . round($a['size'] / 1048576, 2) . ' MB) — open the request in the admin to download';
-    notify_owner("Satin website: new $type request $ref", implode("\n", $lines));
-    try { require_once __DIR__ . '/auth.php'; require_once __DIR__ . '/push.php'; push_event('requests', ($type === 'booking' ? '📅 New booking ' : '📝 New quote request ') . $ref, "$name · $service", '/admin/#/requests', 'req-' . $ref); } catch (Throwable $e) { } // staff devices (Admin → Notifications)
+    $to = cfg('notify_email'); require_once __DIR__ . '/auth.php';
+    if ($to) mail_out((string)$to, "New $type request $ref — $name" . ($service !== '' ? " · $service" : ''), implode("\n", $lines) . "\n\nOpen in admin: " . site_url() . '/admin/#/requests?id=' . $id,
+        request_mail_html($type, $ref, $id, $service, $name, $email, $phone, $date, $time, $d), ['fromName' => 'Satin Website', 'replyTo' => $email]);
+    try { require_once __DIR__ . '/auth.php'; require_once __DIR__ . '/push.php'; push_event('requests', ($type === 'booking' ? '📅 New booking ' : '📝 New quote request ') . $ref, "$name · $service", '/admin/#/requests?id=' . $id, 'req-' . $ref); } catch (Throwable $e) { } // staff devices (Admin → Notifications)
     return [$ref, 201];
 }
 
@@ -77,7 +112,8 @@ try {
     if (str_starts_with($path, '/satin/img/ext/') && ($method === 'GET' || $method === 'HEAD')) { require_once __DIR__ . '/ext_images.php'; ext_serve($path); }
     if ($path === '/cms/portfolio-data.mjs' && ($method === 'GET' || $method === 'HEAD')) { require_once __DIR__ . '/portfolio.php'; pf_data_module(); }
     if ($path === '/api/admin/ext-images' || $path === '/api/admin/ext-images/warm') { require_once __DIR__ . '/ext_images.php'; ext_admin_route($path, $method); }
-    if (str_starts_with($path, '/api/admin/')) { require __DIR__ . '/admin_api.php'; admin_route($path, $method); }
+    if (str_starts_with($path, '/api/admin/')) { require_once __DIR__ . '/admin_api.php'; admin_route($path, $method); }
+    if ($path === '/api/thread' || str_starts_with($path, '/api/thread/')) { require_once __DIR__ . '/thread.php'; thread_public_route($path, $method); } // conversation page (/messages/)
     // ---------- website chat widget (chat.php) ----------
     if (str_starts_with($path, '/api/chat/')) { require_once __DIR__ . '/chat.php'; chat_route($path, $method); }
     // ---------- online ordering: uploads, cart/checkout, payments, templates (commerce.php) ----------

@@ -251,7 +251,7 @@ function public_quote_route(string $path, string $method): void {
             try { $inv = q_make_invoice($r, 'Quote accepted online', true); $invNo = $inv['number_text']; if (($c['email'] ?? '') !== '') inv_send_mail($inv, inv_settings(), $c['email'], "Hi {name},\n\nThank you for accepting our quote #" . $r['number_text'] . ". Here is your invoice {number} for {total}.\n\nThank you,\nSatin Graphic"); }
             catch (Throwable $e) { error_log('quote invoice: ' . $e->getMessage()); }
         }
-        try { require_once __DIR__ . '/push.php'; push_event('invoices', '✅ Quote accepted', '#' . $r['number_text'] . ' · ' . ($c['name'] ?? '') . ' · ' . money_fmt((int)$r['total'], $r['currency']), '/admin/#/quotes', 'q-' . $r['id']); } catch (Throwable $e) { }
+        try { require_once __DIR__ . '/push.php'; push_event('invoices', '✅ Quote accepted', '#' . $r['number_text'] . ' · ' . ($c['name'] ?? '') . ' · ' . money_fmt((int)$r['total'], $r['currency']), '/admin/#/quotes/edit?id=' . $r['id'], 'q-' . $r['id']); } catch (Throwable $e) { }
         notify_owner('Quote accepted: #' . $r['number_text'] . ' — ' . ($c['name'] ?? ''), $name . ' accepted price quote #' . $r['number_text'] . ' (' . money_fmt((int)$r['total'], $r['currency']) . ').' . ($invNo ? "\nInvoice #$invNo was created and emailed to the customer." : '') . "\n\n" . site_url() . '/admin/#/quotes');
         json_out(['ok' => true, 'quote' => q_public(q_get($r['id']))]);
     }

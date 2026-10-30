@@ -65,6 +65,15 @@ const CSS = `
 @media(max-width:820px){.hdr .sx-hbtn.wa{display:none}}
 [dir=rtl] .sx-fab{right:auto;left:20px}
 html.drawer-open .sx-fab,html.drawer-open .scw-launch{display:none!important}
+html body .sx-fab.sx-fab{left:auto!important;right:23px!important;width:46px!important;height:46px!important;padding:0!important;border-radius:50%!important;justify-content:center!important;gap:0!important;bottom:calc(env(safe-area-inset-bottom,0px) + 84px + var(--scw-lift,0px))!important;box-shadow:0 6px 18px #0003!important}
+html[dir=rtl] body .sx-fab.sx-fab{right:auto!important;left:23px!important}
+html body .sx-fab.sx-fab .sx-l{display:none!important}
+html body .sx-fab.sx-fab svg{width:26px!important;height:26px!important}
+html body .scw .scw-launch{width:52px!important;height:52px!important}
+html body .scw .scw-launch svg{width:24px;height:24px}
+@media(max-width:560px){html body .sx-fab.sx-fab{right:17px!important;width:44px!important;height:44px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 76px + var(--scw-lift,0px))!important}html[dir=rtl] body .sx-fab.sx-fab{right:auto!important;left:17px!important}html body .sx-fab.sx-fab svg{width:24px!important;height:24px!important}html body .scw .scw-launch{width:50px!important;height:50px!important}}
+.service-banner>picture{position:absolute;inset:0;z-index:-2;display:block}
+.service-banner>picture>img{width:100%;height:100%;object-fit:cover;display:block}
 .vpick{margin-top:34px;background:#17191e;color:#fff;border-radius:22px;padding:26px 26px 22px}
 .vpick h2{font-size:clamp(24px,3vw,34px);line-height:1.1;margin:0 0 6px;color:#fff}
 .vpick p{margin:0 0 18px;color:#c9ccd4;font-size:16px}
@@ -265,3 +274,15 @@ try{(()=>{let prev=false;try{const u=new URLSearchParams(location.search).get('t
   const l=document.createElement('link');l.rel='stylesheet';l.href='/themes/explore.css?v=4';document.head.appendChild(l);
   const b=document.createElement('a');b.href='?theme=off';b.textContent='Explore theme preview · turn off';b.style.cssText='position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:3000;background:#161616;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:8px 14px;border-radius:999px;text-decoration:none;opacity:.88';document.body.appendChild(b);}
  import('/themes/explore.mjs?v=4').catch(e=>console.warn('explore theme',e));})();}catch(e){}
+
+/* WhatsApp button always sits just above the chat button (same column, 12px gap), whatever lifts the chat button
+   (cookie banner, sticky price bar, theme). Falls back to the CSS position when the chat button is not shown. */
+try{(()=>{let q=0;const place=()=>{q=0;const f=document.querySelector('.sx-fab'),l=document.querySelector('.scw:not(.open) .scw-launch');if(!f)return;
+ if(!l||!l.offsetWidth){['bottom','right','left','margin-bottom'].forEach(p=>f.style.removeProperty(p));return;}
+ const r=l.getBoundingClientRect(),w=f.offsetWidth||46,rtl=document.documentElement.dir==='rtl',set=(p,v)=>{if(f.style.getPropertyValue(p)!==v)f.style.setProperty(p,v,'important');};
+ set('margin-bottom','0px');set('bottom',Math.round(innerHeight-r.top+12)+'px');
+ if(rtl){set('left',Math.round(r.left+(r.width-w)/2)+'px');set('right','auto');}
+ else{set('right',Math.round(innerWidth-r.right+(r.width-w)/2)+'px');set('left','auto');}};
+ const soon=()=>{if(!q)q=requestAnimationFrame(place);[250,500,800].forEach(t=>setTimeout(place,t));};
+ document.addEventListener('transitionend',soon,true);addEventListener('scroll',soon,{passive:true});addEventListener('resize',soon);setInterval(place,600);
+ new MutationObserver(soon).observe(document.body,{childList:true});soon();})();}catch(e){}

@@ -71,12 +71,14 @@ const SUB = {
   '/templates': 'Vehicle templates for wrap pricing', '/banner': 'Slides at the top of the home page', '/portfolio': 'Projects shown on “Our Work”',
   '/business': 'Name, address, hours, Google & SEO', '/customer-login': 'Customer accounts, Google / Facebook sign-in',
   '/members': 'Staff, invitations, roles and permissions', '/activity': 'Who changed what, and when', '/notifications': 'Push notifications on this phone, install the app',
-  '/account': 'Your profile and password'
+  '/account': 'Your profile and password', '/inbox': 'New requests, chats, orders, payments and signatures — tap one to open it'
 };
+addEventListener('satin-notifs-seen', () => { notifs = 0; paint(); });
 
 /* ---------- badges ---------- */
 const SECTIONS = { orders: '/orders', requests: '/requests', chat: '/chat', invoices: '/invoices', customers: '/customers', catalog: '/catalog' };
 const LABELS = { orders: 'new online orders / payments', requests: 'new quote & booking requests', chat: 'unread chats', invoices: 'new invoice payments', customers: 'new customer accounts', catalog: 'new product reviews' };
+let notifs = 0;
 let badges = {}, total = 0, baseTitle = 'Satin Admin', timer = 0;
 const secOfPath = p => Object.keys(SECTIONS).find(k => SECTIONS[k] === p);
 const setBadge = (el, n, title, pulse) => {
@@ -99,12 +101,13 @@ function paint() {
     const n = Object.entries(SECTIONS).reduce((s, [sec, p]) => s + (hubOf(p) === tab ? (badges[sec] || 0) : 0), 0);
     setBadge(a, n, '', tab === '/chat');
   });
+  $$('[data-badge="notifs"], .nav a[href="#/inbox"]').forEach(a => setBadge(a, notifs, `${notifs} new notification${notifs === 1 ? '' : 's'}`));
   const t = (total ? `(${total}) ` : '') + baseTitle; if (document.title !== t) document.title = t;
   P()?.appBadge(total);
 }
 async function poll() {
   clearTimeout(timer);
-  try { if (A()?.me) { const d = await A().api('/badges'); badges = d.badges || {}; total = d.total || 0; paint(); } } catch {}
+  try { if (A()?.me) { const d = await A().api('/badges'); badges = d.badges || {}; total = d.total || 0; notifs = d.notifs || 0; paint(); } } catch {}
   timer = setTimeout(poll, document.hidden ? 120000 : 25000);
 }
 async function markSeen() {
@@ -412,6 +415,7 @@ async function route() {
         <label>Sender name<input data-m="fromName" placeholder="Satin Graphic"></label><label>Reply-to address<input data-m="replyTo" type="email" placeholder="info@satingraphic.ca"></label>
         <label>From address without SMTP<input data-m="from" type="email" placeholder="no-reply@satingraphic.ca"></label></div>
         <div class="shop-acts"><button class="btn sm" data-msave>Save</button> <input data-mto type="email" placeholder="test address" style="max-width:220px"> <button class="btn ghost sm" data-mtest>Send a test email</button></div>
+        <div class="hint" style="margin-top:10px" data-inb>Customer answers by email: the website reads the same mailbox (IMAP) every few minutes and adds answers that mention a request number (SG-…) to that request. <button type="button" class="linkbtn" data-inbcheck>Check now</button> <span data-inbout></span></div>
         <p class="hint" data-mout></p></div>` : ''}`;
     const prefs = () => Object.fromEntries($$('[data-pref]', c).map(i => [i.dataset.pref, i.checked]));
     const out = $('[data-out]', c);
@@ -427,6 +431,7 @@ async function route() {
       a.api('/push/mail').then(m => { for (const k of ['host', 'user', 'fromName', 'replyTo', 'from']) f(k).value = m[k] || ''; f('port').value = String(m.port || 587); f('pass').placeholder = m.hasPass ? 'saved — leave empty to keep' : 'app password'; $('[data-mto]', mc).value = a.me?.email || ''; }).catch(e => { mo.textContent = e.message; });
       const mb = (b, fn) => async () => { b.disabled = true; mo.className = 'hint'; try { await fn(); } catch (e) { mo.textContent = e.message; mo.className = 'err'; } finally { b.disabled = false; } };
       const ms = $('[data-msave]', mc); ms.onclick = mb(ms, async () => { const v = {}; for (const k of ['host', 'user', 'pass', 'fromName', 'replyTo', 'from']) v[k] = f(k).value.trim(); v.port = Number(f('port').value); await a.api('/push/mail', v); f('pass').value = ''; mo.textContent = 'Saved. Send a test to check.'; mo.className = 'okmsg'; });
+      const ic = $('[data-inbcheck]', mc); ic.onclick = mb(ic, async () => { const o = $('[data-inbout]', mc); o.textContent = 'Checking…'; const r = await a.api('/push/inbound/check', {}); o.textContent = r.ok ? `OK — ${r.checked} new email(s) checked, ${r.added} customer answer(s) added.` : (r.error || 'Could not read the mailbox.') + ' (Uses the SMTP mailbox and app password above; for Gmail, IMAP must be on.)'; });
       const mt = $('[data-mtest]', mc); mt.onclick = mb(mt, async () => { const r = await a.api('/push/mail/test', { to: $('[data-mto]', mc).value.trim() }); mo.className = r.ok && !r.smtpError ? 'okmsg' : 'err'; mo.textContent = r.ok ? `Sent via ${r.via}.` + (r.smtpError ? ` SMTP did not work (${r.smtpError}), so the hosting mail server was used — check the mailbox and app password.` : ' Check the inbox (and the spam folder the first time).') : 'The email could not be sent.'; });
     }
     const ib = $('[data-install]', c); if (ib) ib.onclick = async () => { if (await P().install()) a.toast('Installed'); draw(); };

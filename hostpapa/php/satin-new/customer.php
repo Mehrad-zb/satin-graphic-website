@@ -435,6 +435,7 @@ function cust_invoices(array $c): array {
     }
     return $out;
 }
+function cust_thread_link(string $id): string { try { require_once __DIR__ . '/thread.php'; return '/messages/?t=' . thread_token($id); } catch (Throwable $e) { return ''; } }
 function cust_requests(array $c): array {
     if (!(int)$c['email_verified']) return [];
     try {
@@ -443,7 +444,7 @@ function cust_requests(array $c): array {
     } catch (Throwable $e) { return []; }
     $labels = ['pending_confirmation' => 'Received', 'contacted' => 'Contacted', 'quoted' => 'Quoted', 'confirmed' => 'Confirmed', 'completed' => 'Completed', 'cancelled' => 'Cancelled'];
     return array_map(fn($r) => ['reference' => 'SG-' . strtoupper(substr((string)$r['id'], 0, 8)), 'type' => $r['type'], 'service' => $r['service'], 'date' => $r['preferred_date'], 'time' => $r['preferred_time'],
-        'status' => $r['status'], 'statusLabel' => $labels[$r['status']] ?? $r['status'], 'createdAt' => $r['created_at']], $q->fetchAll());
+        'status' => $r['status'], 'statusLabel' => $labels[$r['status']] ?? $r['status'], 'createdAt' => $r['created_at'], 'thread' => cust_thread_link((string)$r['id'])], $q->fetchAll());
 }
 /** Called by commerce.php right after an online order is created: remembers the signed-in account on the order. */
 function cust_attach_order(string $orderId): void {

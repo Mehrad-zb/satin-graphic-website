@@ -11,7 +11,7 @@ const FA = {
   'Reset your password': 'بازیابی رمز عبور', 'Send reset link': 'ارسال لینک بازیابی', 'Back to sign in': 'بازگشت به ورود', 'Choose a new password': 'رمز جدید را انتخاب کنید',
   'New password': 'رمز جدید', 'Save new password': 'ذخیرهٔ رمز جدید', 'Confirm your email': 'تأیید ایمیل', 'Confirm and sign in': 'تأیید و ورود',
   'At least 10 characters, with letters and numbers.': 'حداقل ۱۰ نویسه، شامل حرف و عدد.', 'Dashboard': 'داشبورد', 'Orders': 'سفارش‌ها', 'Invoices': 'فاکتورها',
-  'Quotes & bookings': 'استعلام‌ها و نوبت‌ها', 'Profile': 'پروفایل', 'Sign out': 'خروج', 'Recent orders': 'سفارش‌های اخیر', 'View all orders': 'همهٔ سفارش‌ها',
+  'Quotes & bookings': 'استعلام‌ها و نوبت‌ها', 'Messages': 'پیام‌ها', 'Profile': 'پروفایل', 'Sign out': 'خروج', 'Recent orders': 'سفارش‌های اخیر', 'View all orders': 'همهٔ سفارش‌ها',
   'Order': 'سفارش', 'Date': 'تاریخ', 'Items': 'اقلام', 'Status': 'وضعیت', 'Payment': 'پرداخت', 'Total': 'جمع کل', 'View': 'مشاهده', 'Re-order': 'سفارش مجدد',
   'Pay now': 'پرداخت', 'Paid': 'پرداخت شده', 'Awaiting payment': 'در انتظار پرداخت', 'Refunded': 'بازپرداخت شده', 'Cancelled': 'لغو شده', 'Received': 'دریافت شد',
   'Artwork check': 'بررسی فایل', 'In production': 'در حال تولید', 'Ready': 'آماده', 'Completed': 'تکمیل شد', 'Open': 'باز', 'Overdue': 'سررسید گذشته', 'Partly paid': 'پرداخت جزئی',
@@ -218,7 +218,7 @@ function invoicesView(main) { main.innerHTML = `<div class="acct-block"><div cla
 function requestsView(main) {
   const r = OVERVIEW.requests;
   main.innerHTML = `<div class="acct-block"><div class="acct-bh"><h2>${t('Quotes & bookings')}</h2><a class="link" href="${BASE}/contact/">${t('Get a quote')}</a></div>${r.length ? `<div class="acct-table req" role="table"><div class="acct-tr acct-th" role="row"><span>${t('Reference')}</span><span>${t('Date')}</span><span>${t('Service')}</span><span>${t('Status')}</span></div>
-    ${r.map(x => `<div class="acct-tr" role="row"><span data-l="${t('Reference')}"><b>${esc(x.reference)}</b></span><span data-l="${t('Date')}">${day(x.createdAt)}${x.date ? `<small class="tiny"> → ${esc(x.date)} ${esc(x.time)}</small>` : ''}</span><span data-l="${t('Service')}">${esc(x.service)} <small class="tiny">${esc(x.type === 'booking' ? 'Booking' : 'Quote')}</small></span><span data-l="${t('Status')}">${chip(x.statusLabel, x.status === 'cancelled' ? 'bad' : x.status === 'completed' || x.status === 'confirmed' ? 'good' : 'info')}</span></div>`).join('')}</div>` : `<div class="acct-empty"><p>${t('No quote or booking requests yet.')}</p></div>`}</div>`;
+    ${r.map(x => `<div class="acct-tr" role="row"><span data-l="${t('Reference')}"><b>${esc(x.reference)}</b></span><span data-l="${t('Date')}">${day(x.createdAt)}${x.date ? `<small class="tiny"> → ${esc(x.date)} ${esc(x.time)}</small>` : ''}</span><span data-l="${t('Service')}">${esc(x.service)} <small class="tiny">${esc(x.type === 'booking' ? 'Booking' : 'Quote')}</small></span><span data-l="${t('Status')}">${chip(x.statusLabel, x.status === 'cancelled' ? 'bad' : x.status === 'completed' || x.status === 'confirmed' ? 'good' : 'info')}${x.thread ? ` <a class="link tiny" href="${esc(x.thread)}">${t('Messages')}</a>` : ''}</span></div>`).join('')}</div>` : `<div class="acct-empty"><p>${t('No quote or booking requests yet.')}</p></div>`}</div>`;
 }
 async function orderView(main, id, host) {
   const { order: o } = await api('order?id=' + encodeURIComponent(id));

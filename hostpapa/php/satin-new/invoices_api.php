@@ -359,7 +359,7 @@ function inv_record_online(array $r, string $provider, string $pid, int $amount,
         inv_mail_update($r, "A refund of $m has been issued for invoice #{$r['number_text']}. It can take a few business days to appear on your statement.");
     } else {
         audit(null, 'invoice paid online', '#' . $r['number_text'] . ' ' . $m . ' via ' . $provider);
-        try { require_once __DIR__ . '/push.php'; $cu = json_decode((string)$r['customer'], true) ?: []; push_event('invoices', '💰 Invoice #' . $r['number_text'] . ' paid ' . $m, trim(($cu['name'] ?? '') . ' · ' . $provider . ' · ' . (INV_STATUS_LABELS[inv_status($r)] ?? '')), '/admin/#/invoices', 'inv-' . $r['number_text']); } catch (Throwable $e) {}
+        try { require_once __DIR__ . '/push.php'; $cu = json_decode((string)$r['customer'], true) ?: []; push_event('invoices', '💰 Invoice #' . $r['number_text'] . ' paid ' . $m, trim(($cu['name'] ?? '') . ' · ' . $provider . ' · ' . (INV_STATUS_LABELS[inv_status($r)] ?? '')), '/admin/#/invoices/edit?id=' . $r['id'], 'inv-' . $r['number_text']); } catch (Throwable $e) {}
         notify_owner("Satin website: invoice #{$r['number_text']} paid $m online", "Invoice #{$r['number_text']} received $m ($note). Status: " . (INV_STATUS_LABELS[inv_status($r)] ?? '') . ', balance ' . money_fmt(max(0, (int)$r['total'] - (int)$r['paid']), $r['currency']) . ".\n" . inv_public_url($r));
         inv_mail_update($r, "We received your payment of $m for invoice #{$r['number_text']}. Thank you!");
     }

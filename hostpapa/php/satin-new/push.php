@@ -24,6 +24,8 @@ function push_db(): PDO {
     $pdo->exec("CREATE TABLE IF NOT EXISTS admin_seen (user_id $k NOT NULL, section $k NOT NULL, seen_at $s NOT NULL, PRIMARY KEY (user_id, section))$cs");
     $pdo->exec("CREATE TABLE IF NOT EXISTS push_subscriptions (id $k PRIMARY KEY, user_id $k NOT NULL, endpoint_hash $k NOT NULL, endpoint $t NOT NULL, p256dh $s NOT NULL, auth $s NOT NULL,
         prefs $t NOT NULL, agent $s NOT NULL, created_at $s NOT NULL, last_ok_at $s NOT NULL, fails INTEGER NOT NULL)$cs");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS admin_notifications (id $k PRIMARY KEY, type $k NOT NULL, title $s NOT NULL, body $t NOT NULL, url $s NOT NULL, created_at $s NOT NULL)$cs");
+    if (!$my) $pdo->exec('CREATE INDEX IF NOT EXISTS idx_notif_at ON admin_notifications (created_at)'); else { try { $pdo->exec('CREATE INDEX idx_notif_at ON admin_notifications (created_at)'); } catch (Throwable $e) { } }
     if (!$my) $pdo->exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_push_ep ON push_subscriptions (endpoint_hash)');
     else { try { $pdo->exec('CREATE UNIQUE INDEX idx_push_ep ON push_subscriptions (endpoint_hash)'); } catch (Throwable $e) { } }
     return $pdo;
@@ -172,6 +174,15 @@ function push_sub_row(array $r): array {
     return ['id' => $r['id'], 'endpointHash' => $r['endpoint_hash'], 'prefs' => push_prefs_clean(json_decode((string)$r['prefs'], true)), 'agent' => $r['agent'], 'createdAt' => $r['created_at'], 'lastOkAt' => $r['last_ok_at'] ?: null, 'fails' => (int)$r['fails']];
 }
 
+/** Notification centre: the event types this staff member may see. */
+function notif_types(array $u): array { return array_keys(array_filter(PUSH_EVENTS, fn($perm) => in_array($perm, $u['permissions'], true))); }
+function notif_unread(array $u): int {
+    $types = notif_types($u); if (!$types) return 0;
+    $seen = badge_seen_map($u['id'])['notifs'] ?? null;
+    if ($seen === null) { badge_mark_seen($u['id'], 'notifs'); return 0; }
+    try { $q = push_db()->prepare('SELECT COUNT(*) n FROM admin_notifications WHERE created_at > ? AND type <> \'visits\' AND type IN (' . implode(',', array_fill(0, count($types), '?')) . ')');
+        $q->execute(array_merge([$seen], $types)); return (int)($q->fetch()['n'] ?? 0); } catch (Throwable $e) { return 0; }
+}
 /** Queues a notification for staff who can see $type and opted in on a device. Sent after the response. */
 function push_event(string $type, string $title, string $body, string $url, string $tag = ''): void {
     if (!isset(PUSH_EVENTS[$type])) return;
@@ -188,6 +199,12 @@ function push_flush(): void {
     $queue = $GLOBALS['push_queue'] ?? []; $GLOBALS['push_queue'] = [];
     if (!$queue) return;
     $pdo = push_db();
+    // every event is also kept for the admin notification centre (bell), whether or not anyone has push turned on
+    try {
+        $ins = $pdo->prepare('INSERT INTO admin_notifications (id,type,title,body,url,created_at) VALUES (?,?,?,?,?,?)');
+        foreach ($queue as $m) $ins->execute([bin2hex(random_bytes(12)), $m['type'], mb_substr($m['title'], 0, 200), mb_substr($m['body'], 0, 500), mb_substr($m['url'], 0, 250), now_iso()]);
+        if (random_int(1, 40) === 1) $pdo->prepare('DELETE FROM admin_notifications WHERE created_at < ?')->execute([gmdate('Y-m-d\TH:i:s.v\Z', time() - 120 * 86400)]);
+    } catch (Throwable $e) { error_log('satin notif store: ' . $e->getMessage()); }
     $subs = $pdo->query("SELECT s.*, u.role FROM push_subscriptions s JOIN admin_users u ON u.id = s.user_id WHERE u.status = 'active' AND s.fails < 20")->fetchAll();
     if (!$subs) return;
     $jobs = [];
@@ -235,7 +252,26 @@ function push_admin_route(string $r, string $method): void {
     if ($r === '/badges' && $method === 'GET') {
         $u = require_user();
         $b = badge_counts($u);
-        json_out(['badges' => $b, 'total' => array_sum($b)]);
+        if (in_array('requests.view', $u['permissions'], true)) { try { require_once __DIR__ . '/thread.php'; thread_poll_later(); } catch (Throwable $e) { } } // pick up emailed customer answers
+        json_out(['badges' => $b, 'total' => array_sum($b), 'notifs' => notif_unread($u)]);
+    }
+    if ($r === '/notifications' && $method === 'GET') {
+        $u = require_user(); $pdo = push_db();
+        $types = notif_types($u); $want = (string)($_GET['type'] ?? '');
+        if ($want !== '') $types = array_values(array_intersect($types, [$want])); elseif (($_GET['visits'] ?? '') !== '1') $types = array_values(array_diff($types, ['visits']));
+        $seen = badge_seen_map($u['id'])['notifs'] ?? '';
+        $items = [];
+        if ($types) {
+            $before = (string)($_GET['before'] ?? ''); $p = $types; $w = '';
+            if (preg_match('/^\d{4}-\d\d-\d\dT[\d:.]+Z$/', $before)) { $w = ' AND created_at < ?'; $p[] = $before; }
+            $q = $pdo->prepare('SELECT * FROM admin_notifications WHERE type IN (' . implode(',', array_fill(0, count($types), '?')) . ")$w ORDER BY created_at DESC LIMIT 60");
+            $q->execute($p);
+            foreach ($q->fetchAll() as $x) $items[] = ['id' => $x['id'], 'type' => $x['type'], 'title' => $x['title'], 'body' => $x['body'], 'url' => $x['url'], 'createdAt' => $x['created_at'], 'unread' => $seen !== '' && $x['created_at'] > $seen];
+        }
+        json_out(['items' => $items, 'types' => notif_types($u), 'seenAt' => $seen]);
+    }
+    if ($r === '/notifications/seen' && $method === 'POST') {
+        $u = require_user(); badge_mark_seen($u['id'], 'notifs'); json_out(['ok' => true]);
     }
     if ($r === '/badges/seen' && $method === 'POST') {
         $u = require_user();
@@ -246,6 +282,7 @@ function push_admin_route(string $r, string $method): void {
         $b = badge_counts($u);
         json_out(['ok' => true, 'badges' => $b, 'total' => array_sum($b)]);
     }
+    if ($r === '/push/inbound/check' && $method === 'POST') { require_user('settings.edit'); require_once __DIR__ . '/thread.php'; json_out(thread_poll_inbox(true)); }
     if ($r === '/push/mail' && $method === 'GET') { // Email delivery settings (password never sent back)
         require_user('settings.edit'); $s = mail_settings();
         json_out(['host' => $s['host'], 'port' => $s['port'], 'user' => $s['user'], 'hasPass' => $s['pass'] !== '', 'from' => $s['from'], 'fromName' => $s['fromName'], 'replyTo' => $s['replyTo']]);

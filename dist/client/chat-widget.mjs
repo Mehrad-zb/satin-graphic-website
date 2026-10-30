@@ -137,7 +137,8 @@ async function init() {
     const b = document.querySelector('.consent-banner');
     const h = b ? b.getBoundingClientRect() : null;
     const base = innerWidth <= 560 ? 14 : 20;
-    root.style.setProperty('--scw-lift', h && h.height > 0 ? Math.max(0, innerHeight - h.top - base + 10) + 'px' : '0px');
+    const v = h && h.height > 0 ? Math.max(0, innerHeight - h.top - base + 10) + 'px' : '0px';
+    root.style.setProperty('--scw-lift', v); document.documentElement.style.setProperty('--scw-lift', v); // the WhatsApp button moves up with the chat button
   };
   lift(); requestAnimationFrame(lift); setTimeout(lift, 800);
   new MutationObserver(lift).observe(document.body, { childList: true }); addEventListener('resize', lift);
