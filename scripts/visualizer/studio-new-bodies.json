@@ -177,6 +177,32 @@
 "price": {
 "vehicle_0": "Passenger"
 }
+},
+{
+"id": "minivan-odyssey-2015",
+"name": "Honda Odyssey (2014–2017)",
+"type": "Vans",
+"spec": {
+"length": 202.9,
+"height": 69.6,
+"width": 79.2
+},
+"price": {
+"vehicle_0": "Passenger"
+}
+},
+{
+"id": "minivan-odyssey-2022",
+"name": "Honda Odyssey (2018+)",
+"type": "Vans",
+"spec": {
+"length": 205.2,
+"height": 69.6,
+"width": 78.5
+},
+"price": {
+"vehicle_0": "Passenger"
+}
 }
 ]
 }

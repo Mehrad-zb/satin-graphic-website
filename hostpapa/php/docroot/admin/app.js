@@ -142,7 +142,7 @@ function shell(title, crumb, body, path) {
   const nav = items.map((n, i) => n.group ? (items[i + 1] && !items[i + 1].group ? `<div class="group">${n.group}</div>` : '') :
     `<a href="${n.href || '#' + n.path}" class="${path === n.path ? 'on' : ''}">${icon(n.icon)}<span>${n.label}</span>${n.soon ? '<span class="soon">Soon</span>' : ''}</a>`).join('');
   const srch = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
-  app.innerHTML = `<header class="wtop"><a class="wt-logo" href="#/" aria-label="Admin home"><img src="/satin/img/logo.png" alt="Satin"></a><a class="wt-site" href="/satin/" target="_blank" rel="noopener">Satin Graphic ${icon('ext')}</a>
+  app.innerHTML = `<header class="wtop"><meta charset="utf-8"><a class="wt-logo" href="#/" aria-label="Admin home"><img src="/satin/img/logo.png" alt="Satin"></a><a class="wt-site" href="/satin/" target="_blank" rel="noopener">Satin Graphic ${icon('ext')}</a>
     <div class="wt-search">${srch}<input data-wsearch placeholder="Search admin pages…" aria-label="Search admin pages" autocomplete="off"><div class="wt-sug" data-wsug hidden></div></div>
     <div class="wt-icons">${can('chat.view') ? `<a href="#/chat" title="Live chat" aria-label="Live chat">${icon('chat')}</a>` : ''}<a href="#/inbox" title="Notifications" aria-label="Notifications" data-badge="notifs">${icon('bell')}</a><a class="wt-me" href="#/account" title="${esc(ME.name)}"><span class="avatar">${esc(initials(ME.name))}</span></a></div></header>
   <div class="shell"><aside class="side" data-side>
