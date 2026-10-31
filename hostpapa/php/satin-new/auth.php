@@ -52,7 +52,16 @@ function adb(): PDO { $pdo = db(); migrate_admin($pdo); return $pdo; }
 function uuid(): string { $b = random_bytes(16); $b[6] = chr((ord($b[6]) & 0x0f) | 0x40); $b[8] = chr((ord($b[8]) & 0x3f) | 0x80); return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($b), 4)); }
 function token(): string { return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='); }
 function thash(string $t): string { return hash('sha256', $t); }
-function client_ip(): string { return substr((string)($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? ''), 0, 64); }
+/** Client address for rate limits. X-Forwarded-For is only trusted when the direct peer is a local/private proxy, and then only its last hop (the one that proxy added), so a visitor cannot pick a fake IP to dodge limits. */
+function client_ip(): string {
+    $ra = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+    $xff = (string)($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '');
+    if ($xff !== '' && $ra !== '' && filter_var($ra, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        $parts = array_map('trim', explode(',', $xff)); $last = end($parts);
+        if (filter_var($last, FILTER_VALIDATE_IP)) return substr($last, 0, 64);
+    }
+    return substr($ra, 0, 64);
+}
 
 function all_roles(): array {
     $roles = [];

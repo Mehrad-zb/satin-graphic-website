@@ -19,12 +19,27 @@ AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml text/javasc
 </IfModule>
 </IfModule>
 
+# security: backups, editor leftovers, logs, databases and env files are never served
+<FilesMatch "(\.(bak|orig|old|tmp|swp|sql|sqlite3?|db|env|ini|log)(-\w*|\.\d+|~)?|~)$">
+Require all denied
+</FilesMatch>
+<FilesMatch "^\.(env|git|svn|hg|DS_Store|user\.ini)">
+Require all denied
+</FilesMatch>
+
 # the staging hostname is never indexed, even when it shares this docroot with the live domain
 SetEnvIfNoCase Host "^new\.satingraphic\.ca(:[0-9]+)?$" SATIN_STAGING_HOST
 
 <IfModule mod_headers.c>
 Header always set X-Content-Type-Options nosniff
 Header always set Referrer-Policy strict-origin-when-cross-origin
+# security: HTTPS only for a year, no framing by other sites, no camera/mic/location, no plugins
+Header always set Strict-Transport-Security "max-age=31536000"
+Header always set Content-Security-Policy "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self' https:; upgrade-insecure-requests"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), usb=(), serial=(), bluetooth=(), payment=(self), interest-cohort=()"
+Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+Header always unset X-Powered-By
+Header unset X-Powered-By
 Header always set X-Robots-Tag "noindex, nofollow" env=SATIN_STAGING_HOST
 <FilesMatch "\.html$">
 Header set Cache-Control "no-cache"
@@ -66,6 +81,12 @@ ExpiresByType font/woff2 "access plus 30 days"
 </IfModule>
 
 RewriteEngine On
+# security: plain http always moves to https (skipped when the proxy in front already speaks https, so no loop)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteCond %{HTTP_HOST} ^(www\.)?satingraphic\.ca$ [NC]
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # AutoSSL / ACME domain validation must reach its file over plain http, before any redirect
 RewriteRule ^\.well-known/(acme-challenge|pki-validation)/ - [L]

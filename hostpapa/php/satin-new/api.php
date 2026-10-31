@@ -8,6 +8,7 @@ require __DIR__ . '/lib.php';
 require __DIR__ . '/formula.php';
 require __DIR__ . '/catalog.php';
 
+@ini_set('display_errors', '0'); @ini_set('expose_php', '0'); header_remove('X-Powered-By');
 header('X-Content-Type-Options: nosniff');
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -282,6 +283,10 @@ try {
     if ($path === '/api/quote-requests') {
         if ($method !== 'POST') json_out(['error' => 'Method not allowed'], 405);
         same_origin();
+        require_once __DIR__ . '/auth.php';
+        $rk = 'quotereq:' . client_ip();
+        if (rate_limited($rk, 15, 3600)) json_out(['error' => 'Too many requests. Please call 905-695-9147 or try again later.'], 429);
+        note_attempt($rk);
         $v = body_json(64000);
         $name = text($v['name'] ?? '', 120); $email = strtolower(text($v['email'] ?? '', 254)); $service = text($v['service'] ?? '', 120); $phone = text($v['phone'] ?? '', 40);
         if (!preg_match('/^[a-f0-9-]{36}$/i', (string)($v['id'] ?? '')) || mb_strlen($name) < 2 || !preg_match('/^\S+@\S+\.\S+$/', $email) || mb_strlen($phone) < 7 || !$service || ($v['consent'] ?? null) !== true || !empty($v['website']))

@@ -5,6 +5,11 @@ ErrorDocument 404 /satin/404/
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /satin/
+  # security: plain http always moves to https (skipped when the proxy in front already speaks https)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteCond %{HTTP_HOST} ^(www\.)?satingraphic\.ca$ [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   # Normalize explicit index.html URLs and preserve query strings.
   RewriteCond %{THE_REQUEST} \s/+satin/(?:[^?\s]*/)?index\.html[?\s] [NC]
   RewriteRule ^(.*)index\.html$ /satin/$1 [R=301,L]
