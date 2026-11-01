@@ -29,6 +29,7 @@ const fmtDate = s => { if (!s) return '—'; const d = new Date(s); return isNaN
 const initials = n => (n || '?').split(/\s+/).map(x => x[0]).slice(0, 2).join('').toUpperCase();
 
 const ICON = {
+  shield: '<path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
   home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
   inbox: '<path d="M4 4h16v16H4z"/><path d="M4 14h5l1 3h4l1-3h5"/>',
   edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
@@ -76,6 +77,7 @@ const NAV = [
   { group: 'Team' },
   { path: '/members', label: 'Members & roles', icon: 'users', perm: 'members.manage' },
   { path: '/activity', label: 'Activity log', icon: 'list', perm: 'audit.view' },
+  { path: '/security', label: 'Security', icon: 'shield', perm: 'members.manage' },
   { path: '/notifications', label: 'Notification settings & app', icon: 'cog' },
   { path: '/account', label: 'My account', icon: 'user' }
 ];
@@ -98,7 +100,16 @@ function viewLogin(setupNeeded) {
     <button class="btn block" type="submit">Sign in</button>
     <p class="hint" style="text-align:center;margin-top:16px"><a href="#/forgot">Forgot your password?</a></p></form>`);
   const f = $('[data-f]'); f.email.focus();
-  f.onsubmit = e => { e.preventDefault(); submitting(f, async () => { const r = await api('/login', { email: f.email.value, password: f.password.value }); CSRF = r.csrf; await boot('/'); }); };
+  f.onsubmit = e => { e.preventDefault(); submitting(f, async () => {
+    const body = { email: f.email.value, password: f.password.value }; if (f.code) body.code = f.code.value;
+    let r; try { r = await api('/login', body); } catch (er) {
+      if (er.data && er.data.twofa && !f.code) { // password was right: ask for the authenticator code
+        f.querySelector('button[type=submit]').insertAdjacentHTML('beforebegin', '<label class="field"><span>6-digit code from your authenticator app</span><input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required></label>');
+        f.email.readOnly = f.password.readOnly = true; f.code.focus(); showErr(er.message, true); return;
+      }
+      if (f.code) { f.code.value = ''; f.code.focus(); } throw er;
+    }
+    CSRF = r.csrf; await boot('/'); }); };
 }
 function viewSetup() {
   authCard('Set up the owner account', 'Enter the owner email. We will send a secure link to choose your password.', `<form data-f>
@@ -131,7 +142,9 @@ async function viewJoin(token, reset) {
   f.onsubmit = e => { e.preventDefault(); submitting(f, async () => {
     if (f.password.value !== f.password2.value) throw new Error('Passwords do not match.');
     const r = await api('/accept', { token, name: f.name ? f.name.value : '', password: f.password.value });
-    CSRF = r.csrf; history.replaceState(null, '', '/admin/'); await boot('/');
+    history.replaceState(null, '', '/admin/');
+    if (r.twofa) { viewLogin(false); showErr('Password saved. Sign in with your new password and your authenticator code.', true); return; }
+    CSRF = r.csrf; await boot('/');
   }); };
 }
 
@@ -299,8 +312,8 @@ async function viewMembers() {
     ${membersTab === 'members' ? `<table class="table"><thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Last sign-in</th><th></th></tr></thead><tbody>
       ${d.members.map(m => `<tr><td><b>${esc(m.name)}</b>${m.id === ME.id ? ' <small style="display:inline">(you)</small>' : ''}<small>${esc(m.email)}</small></td>
         <td>${m.role === 'owner' && ME.role !== 'owner' ? '<span class="pill owner">Owner</span>' : `<select class="input" style="padding:6px 8px" data-role="${m.id}" ${m.id === ME.id && m.role === 'owner' ? 'disabled' : ''}>${d.roles.filter(r => r.id !== 'owner' || ME.role === 'owner').map(r => `<option value="${r.id}" ${r.id === m.role ? 'selected' : ''}>${esc(r.name)}</option>`).join('')}</select>`}</td>
-        <td><span class="pill ${esc(m.status)}">${m.status === 'active' ? 'Active' : 'Suspended'}</span></td><td>${esc(fmtDate(m.lastLogin))}</td>
-        <td style="text-align:right;white-space:nowrap">${m.id === ME.id || (m.role === 'owner' && ME.role !== 'owner') ? '' : `<button class="btn ghost sm" data-susp="${m.id}" data-to="${m.status === 'active' ? 'suspended' : 'active'}">${m.status === 'active' ? 'Suspend' : 'Reactivate'}</button> <button class="btn danger sm" data-rm="${m.id}">Remove</button>`}</td></tr>`).join('')}
+        <td><span class="pill ${esc(m.status)}">${m.status === 'active' ? 'Active' : 'Suspended'}</span>${m.twofa ? ' <span class="pill confirmed" title="Two-step sign-in is on">2-step</span>' : ''}</td><td>${esc(fmtDate(m.lastLogin))}</td>
+        <td style="text-align:right;white-space:nowrap">${m.id === ME.id || (m.role === 'owner' && ME.role !== 'owner') ? '' : `<button class="btn ghost sm" data-susp="${m.id}" data-to="${m.status === 'active' ? 'suspended' : 'active'}">${m.status === 'active' ? 'Suspend' : 'Reactivate'}</button> ${m.twofa && ME.role === 'owner' ? `<button class="btn ghost sm" data-r2fa="${m.id}">Reset 2-step</button> ` : ''}<button class="btn danger sm" data-rm="${m.id}">Remove</button>`}</td></tr>`).join('')}
       ${d.invites.map(i => `<tr><td><b>${esc(i.name || i.email)}</b><small>${esc(i.email)}</small></td><td>${esc(roleName(i.role))}</td><td><span class="pill">Invited</span></td><td><small>Expires ${esc(fmtDate(new Date(i.expiresAt * 1000).toISOString()))}</small></td><td style="text-align:right"><button class="btn ghost sm" data-revoke="${i.id}">Cancel invite</button></td></tr>`).join('')}
       </tbody></table>` : `<p style="color:var(--mut);margin-top:0">Each member gets one role. Built-in roles cover common jobs; create a custom role to choose exactly which parts of the admin someone can use.</p>
       <div class="grid g2">${d.roles.map(r => `<div class="role-card"><h3>${esc(r.name)} ${r.system ? '<span class="pill">Built-in</span>' : `<span><button class="btn ghost sm" data-editrole="${r.id}">Edit</button> <button class="btn danger sm" data-delrole="${r.id}">Delete</button></span>`}</h3><p>${esc(r.description || '')}</p>
@@ -310,6 +323,7 @@ async function viewMembers() {
     c.querySelectorAll('[data-role]').forEach(s => s.onchange = () => act('/members/update', { id: s.dataset.role, role: s.value }, 'Role updated'));
     c.querySelectorAll('[data-susp]').forEach(b => b.onclick = () => act('/members/update', { id: b.dataset.susp, status: b.dataset.to }, b.dataset.to === 'active' ? 'Member reactivated' : 'Member suspended'));
     c.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => confirmBox('Remove this member?', 'They will lose access immediately.', () => act('/members/remove', { id: b.dataset.rm }, 'Member removed')));
+    c.querySelectorAll('[data-r2fa]').forEach(b => b.onclick = () => confirmBox('Reset two-step sign-in?', 'Use this if the member lost their phone. They will be signed out and can sign in with just their password, then turn it on again.', () => act('/members/2fa-reset', { id: b.dataset.r2fa }, 'Two-step sign-in reset')));
     c.querySelectorAll('[data-revoke]').forEach(b => b.onclick = () => act('/invites/revoke', { id: b.dataset.revoke }, 'Invitation cancelled'));
     c.querySelectorAll('[data-editrole]').forEach(b => b.onclick = () => roleModal(d, roles[b.dataset.editrole]));
     c.querySelectorAll('[data-delrole]').forEach(b => b.onclick = () => confirmBox('Delete this role?', 'Only roles with no members can be deleted.', () => act('/roles/delete', { id: b.dataset.delrole }, 'Role deleted')));
@@ -374,9 +388,58 @@ function viewAccount() {
     <h2>What you can do</h2><div class="chips">${PERMS.map(p => `<span class="chip">${esc(p)}</span>`).join('')}</div></div>
     <div class="card"><h2>Change password</h2><div data-msg></div><form data-f><label class="field"><span>Current password</span><input name="current" type="password" autocomplete="current-password" required></label>
     <label class="field"><span>New password</span><input name="next" type="password" autocomplete="new-password" required minlength="10"><div class="hint">At least 10 characters, with letters and numbers. Other devices will be signed out.</div></label>
-    <button class="btn" type="submit">Update password</button></form></div></div>`;
+    <button class="btn" type="submit">Update password</button></form></div>
+    <div class="card" data-2fa><h2>Two-step sign-in</h2><p class="hint">Loading…</p></div></div>`;
   const f = $('[data-f]', c);
   f.onsubmit = async e => { e.preventDefault(); try { await api('/password', { current: f.current.value, next: f.next.value }); f.reset(); showErr('Password updated.', true); } catch (er) { showErr(er); } };
+  twofaCard($('[data-2fa]', c));
+}
+/* Two-step sign-in (authenticator app: Google Authenticator, Microsoft Authenticator, 1Password…) */
+async function twofaCard(box) {
+  const msg = (t, ok) => `<div class="${ok ? 'okmsg' : 'err'}">${esc(t)}</div>`;
+  const st = await api('/2fa').catch(() => ({ on: false }));
+  if (st.on) {
+    box.innerHTML = `<h2>Two-step sign-in <span class="pill confirmed">On</span></h2><p class="hint" style="margin-top:0">Signing in needs your password and a code from your authenticator app.</p><div data-m></div>
+      <details><summary class="hint" style="cursor:pointer">Turn off</summary><form data-off style="margin-top:12px"><label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
+      <label class="field"><span>Code from the app</span><input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required></label><button class="btn danger sm" type="submit">Turn off two-step sign-in</button></form></details>`;
+    const fo = $('[data-off]', box);
+    fo.onsubmit = async e => { e.preventDefault(); try { await api('/2fa/disable', { password: fo.password.value, code: fo.code.value }); toast('Two-step sign-in turned off'); twofaCard(box); } catch (er) { $('[data-m]', box).innerHTML = msg(er.message); } };
+    return;
+  }
+  box.innerHTML = `<h2>Two-step sign-in <span class="pill">Off</span></h2><p class="hint" style="margin-top:0">Protect the admin even if someone learns your password: sign-in will also ask for a 6-digit code from an app on your phone.</p><div data-m></div><button class="btn" data-start>Turn on</button>`;
+  $('[data-start]', box).onclick = async () => {
+    try {
+      const s = await api('/2fa/setup', {}); const { qrSvg } = await import('./qr.mjs?v=1');
+      box.innerHTML = `<h2>Turn on two-step sign-in</h2><ol class="hint" style="padding-left:18px;margin-top:0"><li>Open Google Authenticator, Microsoft Authenticator or another authenticator app on your phone.</li><li>Scan this code (or type the key).</li><li>Enter the 6-digit code the app shows.</li></ol>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="background:#fff;padding:6px;border-radius:10px;line-height:0">${qrSvg(s.uri, 180)}</div><div><small class="hint">Key</small><div style="font-family:ui-monospace,monospace;font-size:14px;word-break:break-all;max-width:260px">${esc(s.secret.replace(/(.{4})/g, '$1 ').trim())}</div></div></div>
+        <div data-m></div><form data-on style="margin-top:12px"><label class="field"><span>Code from the app</span><input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required></label><button class="btn" type="submit">Confirm and turn on</button> <button class="btn ghost" type="button" data-cancel>Cancel</button></form>`;
+      const fn = $('[data-on]', box); fn.code.focus();
+      $('[data-cancel]', box).onclick = () => twofaCard(box);
+      fn.onsubmit = async e => { e.preventDefault(); try { await api('/2fa/enable', { code: fn.code.value }); toast('Two-step sign-in is on'); twofaCard(box); } catch (er) { $('[data-m]', box).innerHTML = msg(er.message); } };
+    } catch (er) { $('[data-m]', box).innerHTML = msg(er.message); }
+  };
+}
+/* Security: checklist + the twice-daily file watch (satin-new/secwatch.php) */
+async function viewSecurity() {
+  const c = shell('Security', 'Team', '<div class="card empty">Loading…</div>', '/security');
+  $('[data-actions]').innerHTML = '<button class="btn sm" data-chk>Check now</button>';
+  const draw = d => {
+    const w = d.watch, row = (ok, t, s) => `<li style="display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)"><span style="font-size:18px">${ok ? '✅' : '⚠️'}</span><div><b>${esc(t)}</b><small style="display:block;color:var(--mut)">${s}</small></div></li>`;
+    const files = (t, a) => a && a.length ? `<h3 style="margin:14px 0 6px;font-size:14px">${esc(t)}</h3><ul style="margin:0;padding-left:18px;font:12.5px/1.6 ui-monospace,monospace;word-break:break-all">${a.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : '';
+    c.innerHTML = `<div class="grid g2"><div class="card"><h2>Checklist</h2><ul style="list-style:none;margin:0;padding:0">
+      ${row(d.https, 'Secure connection (HTTPS)', d.https ? 'All pages load over HTTPS; plain http moves to https.' : 'This page did not load over HTTPS.')}
+      ${row(d.members2fa === d.members, 'Two-step sign-in', `${d.members2fa} of ${d.members} active members use it. ${d.members2fa === d.members ? '' : 'Each member turns it on in <a href="#/account">My account</a>.'}`)}
+      ${row(d.smtp, 'Email sign-in for sending', d.smtp ? 'Emails are sent through your mailbox (less spam).' : 'Not set — emails go through the hosting server and may land in spam. Add the mailbox app password in <a href="#/notifications">Notification settings → Email delivery</a>.')}
+      ${row(w && !w.scripts.length, 'No server scripts in upload folders', w ? (w.scripts.length ? 'Found: ' + esc(w.scripts.slice(0, 5).join(', ')) : 'Upload folders only hold files, not programs.') : 'Not checked yet.')}
+      ${row(w && !w.leftovers.length, 'No backup or dump files on the website', w ? (w.leftovers.length ? 'Found (blocked from download, but should be deleted): ' + esc(w.leftovers.slice(0, 5).join(', ')) + (w.leftovers.length > 5 ? ' …' : '') : 'Nothing found.') : 'Not checked yet.')}
+      ${row(true, 'Security headers & blocked files', 'HSTS, frame protection, camera/mic/location off, backups and .env files blocked.')}
+      </ul></div>
+      <div class="card"><h2>File watch</h2><p class="hint" style="margin-top:0">Twice a day the admin looks over the website's code files and tells you (bell 🛡) if any were added, changed or removed. After a website update this is expected; if nobody updated the site, it may be a break-in.</p>
+      ${w ? `<dl class="kv"><dt>Last check</dt><dd>${esc(fmtDate(new Date(w.at * 1000).toISOString()))}</dd><dt>Code files watched</dt><dd>${w.files}</dd><dt>Since the check before</dt><dd>${w.first ? 'First check — this list is now the baseline.' : `${w.changed} changed · ${w.added} new · ${w.removed} removed`}</dd></dl>
+        ${w.lists ? files('Changed', w.lists.changed) + files('New', w.lists.added) + files('Removed', w.lists.removed) : ''}` : '<p>Not checked yet. Press “Check now”.</p>'}</div></div>`;
+  };
+  try { draw(await api('/security')); } catch (e) { c.innerHTML = `<div class="card err">${esc(e.message)}</div>`; }
+  $('[data-chk]').onclick = async e => { e.target.disabled = true; try { await api('/security/check', {}); draw(await api('/security')); toast('Checked'); } catch (er) { toast(er.message); } e.target.disabled = false; };
 }
 function viewSoon(path) {
   const info = { '/editor': ['Website editor', 'A full-screen, drag-and-drop editor: add text, images, buttons, sections and forms, manage pages and menus, set site colours and fonts, edit for mobile, save drafts and publish.'],
@@ -514,7 +577,7 @@ async function customerReport(box, days, period) {
 }
 
 /* ---------- notification centre (bell): every staff event, newest first; tap one to open it ---------- */
-const NOTIF_TYPES = { requests: ['Quotes & bookings', '📝'], chat: ['Chat', '💬'], orders: ['Orders', '🛒'], invoices: ['Invoices & quotes', '💰'], agreements: ['Agreements', '✍️'], quotes: ['Price checks', '💲'], visits: ['Visitors', '👀'] };
+const NOTIF_TYPES = { requests: ['Quotes & bookings', '📝'], chat: ['Chat', '💬'], orders: ['Orders', '🛒'], invoices: ['Invoices & quotes', '💰'], agreements: ['Agreements', '✍️'], security: ['Security', '🛡'], quotes: ['Price checks', '💲'], visits: ['Visitors', '👀'] };
 const ago = s => { const t = (Date.now() - new Date(s)) / 1000; if (t < 60) return 'just now'; if (t < 3600) return Math.floor(t / 60) + ' min ago'; if (t < 86400) return Math.floor(t / 3600) + ' h ago'; if (t < 7 * 86400) return Math.floor(t / 86400) + ' d ago'; return new Date(s).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }); };
 async function viewInbox(params) {
   const c = shell('Notifications', 'Satin Admin', '<div class="card empty">Loading…</div>', '/inbox');
@@ -1369,6 +1432,7 @@ async function route() {
     if (path === '/business') return viewBusiness();
     if (path === '/members') return viewMembers();
     if (path === '/activity') return viewActivity();
+    if (path === '/security') return can('members.manage') ? viewSecurity() : denied();
     if (path === '/account') return viewAccount();
     if (path === '/inbox') return viewInbox(params);
     if (['/sales', '/website', '/more'].includes(path)) { if (!window.SatinPWA) throw new Error('This page could not load. Refresh the page.'); return window.SatinPWA.hub(path); }

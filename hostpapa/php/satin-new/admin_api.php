@@ -8,6 +8,9 @@ function admin_route(string $path, string $method): void {
     header('X-Frame-Options: SAMEORIGIN');
     $r = substr($path, strlen('/api/admin'));
     $pdo = adb();
+    require_once __DIR__ . '/twofa.php'; twofa_db();
+    if (str_starts_with($r, '/2fa')) twofa_route($r, $method, $pdo);
+    if ($r === '/security' || $r === '/security/check') { require_once __DIR__ . '/secwatch.php'; secwatch_route($r, $method); }
     if (str_starts_with($r, '/requests')) { migrate_replies($pdo); require_once __DIR__ . '/thread.php'; thread_db(); }
 
     // ---------- session ----------
@@ -28,6 +31,11 @@ function admin_route(string $path, string $method): void {
         if (!$u || !password_verify($pass, $u['pass_hash']) || $u['status'] !== 'active') {
             note_attempt($key); note_attempt('login:' . $email);
             json_out(['error' => 'Email or password is not correct.'], 401);
+        }
+        if (!empty($u['totp_secret'])) {
+            $code = (string)($v['code'] ?? '');
+            if ($code === '') json_out(['error' => 'Enter the 6-digit code from your authenticator app.', 'twofa' => true], 401);
+            if (!twofa_check($u, $code)) { note_attempt($key); note_attempt('login:' . $email); json_out(['error' => 'That code is not correct. Try the newest code in your app.', 'twofa' => true], 401); }
         }
         if (password_needs_rehash($u['pass_hash'], PASSWORD_DEFAULT)) $pdo->prepare('UPDATE admin_users SET pass_hash = ? WHERE id = ?')->execute([password_hash($pass, PASSWORD_DEFAULT), $u['id']]);
         $s = start_session($u); audit($u, 'login');
@@ -111,6 +119,7 @@ function admin_route(string $path, string $method): void {
         $pdo->prepare('UPDATE admin_invites SET used_at = ? WHERE token_hash = ?')->execute([now_iso(), $i['token_hash']]);
         $pdo->commit();
         $q = $pdo->prepare('SELECT * FROM admin_users WHERE id = ?'); $q->execute([$uid]); $user = $q->fetch();
+        if (!empty($user['totp_secret'])) { audit($user, 'password reset'); json_out(['ok' => true, 'twofa' => true]); } // still needs the authenticator code: sign in normally
         $s = start_session($user); audit($user, $i['purpose'] === 'reset' ? 'password reset' : 'joined', $user['role']);
         json_out(['ok' => true, 'csrf' => $s['csrf']]);
     }
@@ -279,6 +288,17 @@ function admin_route(string $path, string $method): void {
         $pdo->prepare('UPDATE admin_users SET role = ?, status = ? WHERE id = ?')->execute([$role, $status, $m['id']]);
         if ($status !== 'active') $pdo->prepare('DELETE FROM admin_sessions WHERE user_id = ?')->execute([$m['id']]);
         audit($u, 'updated member', "{$m['email']}: $role, $status");
+        json_out(['ok' => true]);
+    }
+    if ($r === '/members/2fa-reset' && $method === 'POST') {
+        $u = require_user('members.manage');
+        $v = body_json(2000);
+        $q = $pdo->prepare('SELECT * FROM admin_users WHERE id = ?'); $q->execute([(string)($v['id'] ?? '')]); $m = $q->fetch();
+        if (!$m) json_out(['error' => 'Member not found'], 404);
+        if ($u['role'] !== 'owner' || $m['id'] === $u['id']) json_out(['error' => 'Only the owner can reset two-step sign-in for another member.'], 403);
+        $pdo->prepare('UPDATE admin_users SET totp_secret = NULL, totp_pending = NULL WHERE id = ?')->execute([$m['id']]);
+        $pdo->prepare('DELETE FROM admin_sessions WHERE user_id = ?')->execute([$m['id']]);
+        audit($u, 'reset two-step sign-in', $m['email']);
         json_out(['ok' => true]);
     }
     if ($r === '/members/remove' && $method === 'POST') {

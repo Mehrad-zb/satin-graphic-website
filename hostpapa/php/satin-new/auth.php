@@ -129,7 +129,7 @@ function require_user(?string $perm = null): array {
 }
 
 function public_user(array $u): array {
-    return ['id' => $u['id'], 'email' => $u['email'], 'name' => $u['name'], 'role' => $u['role'], 'status' => $u['status'] ?? 'active', 'lastLogin' => $u['last_login'] ?? null, 'createdAt' => $u['created_at'] ?? null];
+    return ['id' => $u['id'], 'email' => $u['email'], 'name' => $u['name'], 'role' => $u['role'], 'status' => $u['status'] ?? 'active', 'twofa' => !empty($u['totp_secret']), 'lastLogin' => $u['last_login'] ?? null, 'createdAt' => $u['created_at'] ?? null];
 }
 
 function valid_password(string $p): ?string {

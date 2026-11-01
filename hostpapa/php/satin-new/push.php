@@ -10,7 +10,7 @@ declare(strict_types=1);
 // Routed from admin_api.php (/api/admin/badges*, /api/admin/push/*).
 require_once __DIR__ . '/auth.php';
 
-const PUSH_EVENTS = ['chat' => 'chat.view', 'orders' => 'orders.view', 'requests' => 'requests.view', 'invoices' => 'invoices.view', 'quotes' => 'requests.view', 'visits' => 'dashboard.view', 'agreements' => 'agreements.view'];
+const PUSH_EVENTS = ['chat' => 'chat.view', 'orders' => 'orders.view', 'requests' => 'requests.view', 'invoices' => 'invoices.view', 'quotes' => 'requests.view', 'visits' => 'dashboard.view', 'agreements' => 'agreements.view', 'security' => 'members.manage'];
 const BADGE_SECTIONS = ['orders' => 'orders.view', 'requests' => 'requests.view', 'chat' => 'chat.view', 'invoices' => 'invoices.view', 'customers' => 'invoices.view', 'catalog' => 'pricing.edit'];
 
 function push_db(): PDO {
@@ -253,6 +253,7 @@ function push_admin_route(string $r, string $method): void {
         $u = require_user();
         $b = badge_counts($u);
         if (in_array('requests.view', $u['permissions'], true)) { try { require_once __DIR__ . '/thread.php'; thread_poll_later(); } catch (Throwable $e) { } } // pick up emailed customer answers
+        try { require_once __DIR__ . '/secwatch.php'; secwatch_later(); } catch (Throwable $e) { } // twice-daily look over the website files (Admin → Security)
         json_out(['badges' => $b, 'total' => array_sum($b), 'notifs' => notif_unread($u)]);
     }
     if ($r === '/notifications' && $method === 'GET') {
