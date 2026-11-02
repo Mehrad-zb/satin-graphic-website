@@ -214,6 +214,39 @@ function replyCard(x) {
     ${x.attachments.length ? `<div class="rq-att">${x.attachments.map((f, n) => `<a href="/api/admin/requests/reply-file?id=${encodeURIComponent(x.id)}&n=${n}" download="${esc(f.name)}">📎 ${esc(f.name)} <small>${fsize(f.size)}</small></a>`).join('')}</div>` : ''}
     ${!x.sent && x.error ? `<div class="err" style="margin:8px 0 0">${esc(x.error)}</div>` : ''}</article>`;
 }
+/* Request details in plain words: "option_0: Product: Business Cards" → Product · Business Cards, and the price-calculator
+   JSON (or quote-cart items) → a small table with the price. Form answers that the calculator also gives (product, quantity) are left out. */
+function requestFacts(d) {
+  const custom = d.custom || {}, form = [], calc = { rows: [], price: '', items: [] };
+  let est = null; try { est = typeof d.estimate === 'string' && /^\s*[\[{]/.test(d.estimate) ? JSON.parse(d.estimate) : null; } catch { est = null; }
+  const money = c => '$' + (Number(c) || 0).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (est && !Array.isArray(est) && typeof est === 'object') {
+    if (est.product) calc.rows.push(['Product', String(est.product)]);
+    for (const c of est.choices || []) { if (!c || !c.label) continue; let v = c.value; if (v === 0 || v === '0' || v === false) v = 'No'; else if (v === true) v = 'Yes'; if (v === '' || v == null) continue; calc.rows.push([String(c.label), String(v)]); }
+    if (est.notes) calc.rows.push(['Calculator notes', String(est.notes)]);
+    if (est.subtotal != null && est.subtotal !== '') calc.price = money(est.subtotal / 100) + ' ' + (est.currency || 'CAD');
+  } else if (Array.isArray(est)) {
+    calc.items = est.filter(x => x && typeof x === 'object').map(x => ({ name: String(x.name || x.title || 'Item'), lines: (Array.isArray(x.lines) ? x.lines : []).map(String), total: x.total != null ? money(x.total) : '' }));
+  }
+  const inCalc = new Set(calc.rows.map(r => r[0].toLowerCase()));
+  for (const [k, v] of Object.entries(custom)) {
+    const m = /^option_\d+$/.test(k) && /^([^:]{1,60}):\s*([\s\S]*)$/.exec(String(v));
+    const label = m ? m[1].trim() : k.replace(/[_-]/g, ' '), val = m ? m[2] : String(v);
+    if (!String(val).trim()) continue;
+    if ((calc.rows.length || calc.items.length) && /^(product|quantity)$/i.test(label) && (inCalc.has(label.toLowerCase()) || /^quantity$/i.test(label))) continue;
+    form.push([label.charAt(0).toUpperCase() + label.slice(1), val]);
+  }
+  const text = !est && d.estimate ? String(d.estimate) : '';
+  return { form, calc, text };
+}
+function requestFactsHtml(d) {
+  const f = requestFacts(d), row = ([k, v]) => `<dt>${esc(k)}</dt><dd style="white-space:pre-line">${esc(v)}</dd>`;
+  let h = f.form.map(row).join('');
+  if (f.calc.rows.length || f.calc.price) h += `<dt>Price calculator</dt><dd><div class="rq-calc">${f.calc.rows.map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}${f.calc.price ? `<div class="tot"><span>Estimated price</span><b>${esc(f.calc.price)}</b></div>` : ''}</div></dd>`;
+  if (f.calc.items.length) h += `<dt>Quote cart</dt><dd><div class="rq-calc">${f.calc.items.map(x => `<div class="it"><b>${esc(x.name)}${x.total ? ` · ${esc(x.total)}` : ''}</b>${x.lines.map(l => `<small>${esc(l)}</small>`).join('')}</div>`).join('')}</div></dd>`;
+  if (f.text) h += `<dt>Estimate</dt><dd style="white-space:pre-line">${esc(f.text)}</dd>`;
+  return h;
+}
 async function openRequest(id) {
   const o = document.createElement('div'); o.className = 'overlay'; o.innerHTML = '<div class="drawer"><div class="empty">Loading…</div></div>'; document.body.append(o);
   const close = () => o.remove(); o.onclick = e => { if (e.target === o) close(); };
@@ -229,8 +262,7 @@ async function openRequest(id) {
       <dt>Received</dt><dd>${esc(fmtDate(r.createdAt))}</dd>${r.preferredDate ? `<dt>Preferred time</dt><dd>${esc(r.preferredDate)} ${esc(r.preferredTime)}</dd>` : ''}
       ${d.contactPreference ? `<dt>Contact by</dt><dd>${esc(d.contactPreference)}</dd>` : ''}${d.vehicle ? `<dt>Vehicle</dt><dd>${esc(d.vehicle)}</dd>` : ''}${d.plan ? `<dt>Plan</dt><dd>${esc(d.plan)}</dd>` : ''}
       ${(d.services || []).length ? `<dt>Services</dt><dd>${(d.services || []).map(esc).join(', ')}</dd>` : ''}
-      ${Object.entries(custom).map(([k, v]) => `<dt>${esc(k.replace(/[_-]/g, ' '))}</dt><dd>${esc(v)}</dd>`).join('')}
-      ${d.estimate ? `<dt>Estimate</dt><dd style="white-space:pre-line">${esc(d.estimate)}</dd>` : ''}${d.notes ? `<dt>Customer notes</dt><dd style="white-space:pre-line">${esc(d.notes)}</dd>` : ''}
+      ${requestFactsHtml(d)}${d.notes ? `<dt>Customer notes</dt><dd style="white-space:pre-line">${esc(d.notes)}</dd>` : ''}
       ${d.designRequested ? '<dt>Design</dt><dd>Design service requested · agreement accepted</dd>' : ''}
       ${(d.attachments || []).length ? `<dt>Attachments</dt><dd>${d.attachments.map(a => `<a href="/api/studio/file?id=${esc(a.id)}">${esc(a.name)}</a>`).join('<br>')}</dd>` : ''}</dl>
       ${can('invoices.edit') ? `<p><a class="btn sm" href="#/quotes/edit?request=${esc(r.id)}">Create price quote</a> <a class="btn ghost sm" href="#/invoices/edit?request=${esc(r.id)}">Create invoice for this request</a></p>` : ''}

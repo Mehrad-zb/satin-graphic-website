@@ -483,8 +483,12 @@ function reply_request_facts(array $row): array {
     if ($row['preferred_date']) $rows[] = ['Preferred date/time', trim($row['preferred_date'] . ' ' . $row['preferred_time'])];
     foreach (['contactPreference' => 'Contact by', 'vehicle' => 'Vehicle', 'plan' => 'Plan'] as $k => $l) if (!empty($d[$k]) && is_scalar($d[$k])) $rows[] = [$l, (string)$d[$k]];
     if (!empty($d['services']) && is_array($d['services'])) $rows[] = ['Services', implode(', ', array_map('strval', array_filter($d['services'], 'is_scalar')))];
-    foreach (is_array($d['custom'] ?? null) ? $d['custom'] : [] as $k => $v) $rows[] = [ucfirst(str_replace(['_', '-'], ' ', (string)$k)), is_scalar($v) ? (string)$v : implode(', ', array_map('strval', array_filter((array)$v, 'is_scalar')))];
-    if (!empty($d['estimate']) && is_scalar($d['estimate'])) $rows[] = ['Estimate', (string)$d['estimate']];
+    [$form, $calc, $price, $items, $etext] = request_facts($d);
+    foreach ($form as $r) $rows[] = $r;
+    foreach ($calc as [$k, $v]) $rows[] = [$k, $v];
+    if ($price) $rows[] = ['Estimated price', $price];
+    if ($items) $rows[] = ['Quote cart', implode("\n", $items)];
+    if ($etext !== '') $rows[] = ['Estimate', $etext];
     if (!empty($d['designRequested'])) $rows[] = ['Design', 'Design service requested'];
     if (!empty($d['notes']) && is_scalar($d['notes'])) $rows[] = ['Notes', (string)$d['notes']];
     if (!empty($d['attachments']) && is_array($d['attachments'])) $rows[] = ['Attachments', implode("\n", array_map(fn($a) => (string)($a['name'] ?? 'file'), array_filter($d['attachments'], 'is_array')))];

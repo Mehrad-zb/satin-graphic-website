@@ -432,3 +432,15 @@ label.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6p
 .pill.new{background:#dbeafe;color:#1e40af}
 .m-bell{display:none}
 @media(max-width:820px){.main>.top .m-bell{display:grid;place-items:center;position:relative;width:38px;height:38px;border-radius:50%;color:inherit;margin-left:auto;flex:0 0 auto}.main>.top .m-bell svg{width:22px;height:22px}.main>.top .m-bell .navb{position:absolute;top:-2px;right:-4px;margin:0}}
+/* request drawer: price-calculator choices as a small table */
+.rq-calc{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px}
+.rq-calc>div{display:flex;justify-content:space-between;gap:12px;padding:7px 10px;border-top:1px solid var(--line)}
+.rq-calc>div:first-child{border-top:0}
+.rq-calc span{color:var(--mut)}
+.rq-calc b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+.rq-calc .tot{background:var(--soft,#f6f7f9)}
+.rq-calc .tot b{font-size:14.5px}
+.rq-calc .it{flex-direction:column;gap:2px}
+.rq-calc .it b{text-align:left}
+.rq-calc .it small{color:var(--mut)}
+@media(max-width:760px){.drawer .kv{gap:2px 0}.drawer .kv dt{font-size:12.5px;margin-top:10px}.drawer .kv dt:first-child{margin-top:0}}

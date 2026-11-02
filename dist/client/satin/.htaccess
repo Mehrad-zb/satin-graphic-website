@@ -10,6 +10,13 @@ ErrorDocument 404 /satin/404/
   RewriteCond %{HTTP:X-Forwarded-Proto} !=https
   RewriteCond %{HTTP_HOST} ^(www\.)?satingraphic\.ca$ [NC]
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # short print-shop links (/satin/print-shop/business-cards/) go to the page in its category (offset, large-format or labels)
+  RewriteCond %{DOCUMENT_ROOT}/satin/$1print-shop/offset/$2/index.html -f
+  RewriteRule ^((?:fa/|es/|fr/)?)print-shop/([a-z0-9-]+)/?$ /satin/$1print-shop/offset/$2/ [R=301,L]
+  RewriteCond %{DOCUMENT_ROOT}/satin/$1print-shop/large-format/$2/index.html -f
+  RewriteRule ^((?:fa/|es/|fr/)?)print-shop/([a-z0-9-]+)/?$ /satin/$1print-shop/large-format/$2/ [R=301,L]
+  RewriteCond %{DOCUMENT_ROOT}/satin/$1print-shop/labels/$2/index.html -f
+  RewriteRule ^((?:fa/|es/|fr/)?)print-shop/([a-z0-9-]+)/?$ /satin/$1print-shop/labels/$2/ [R=301,L]
   # Normalize explicit index.html URLs and preserve query strings.
   RewriteCond %{THE_REQUEST} \s/+satin/(?:[^?\s]*/)?index\.html[?\s] [NC]
   RewriteRule ^(.*)index\.html$ /satin/$1 [R=301,L]

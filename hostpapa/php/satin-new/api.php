@@ -64,9 +64,18 @@ function request_mail_html(string $type, string $ref, string $id, string $servic
         ['Email', '<a href="mailto:' . $h($email) . '" style="color:#1d4ed8">' . $h($email) . '</a>'],
         ['Phone', $phone !== '' ? '<a href="tel:' . $h($phone) . '" style="color:#1d4ed8">' . $h($phone) . '</a>' : '—']];
     if ($date) $rows[] = ['Preferred date', $h(trim("$date $time"))];
-    $map = ['vehicle' => 'Vehicle', 'vehicleSize' => 'Vehicle size', 'plan' => 'Package', 'services' => 'Services', 'estimate' => 'Estimate', 'contactPreference' => 'Contact by', 'designRequested' => 'Design service'];
+    $map = ['vehicle' => 'Vehicle', 'vehicleSize' => 'Vehicle size', 'plan' => 'Package', 'services' => 'Services', 'contactPreference' => 'Contact by', 'designRequested' => 'Design service'];
     foreach ($map as $k => $l) if (isset($d[$k]) && $d[$k] !== '' && $d[$k] !== [] && $d[$k] !== null && !($k === 'designRequested' && !$d[$k]) && !($k === 'services' && $d[$k] === [$service])) $rows[] = [$l, $val($d[$k])];
-    foreach (($d['custom'] ?? []) as $k => $v) if (trim((string)$v) !== '') $rows[] = [$h($label($k)), $val($v)];
+    [$form, $calc, $price, $items, $etext] = request_facts($d);
+    foreach ($form as [$k, $v]) $rows[] = [$h($k), $val($v)];
+    if ($calc || $price) {
+        $t = '';
+        foreach ($calc as [$k, $v]) $t .= '<tr><td style="padding:3px 12px 3px 0;color:#6b7280;vertical-align:top">' . $h($k) . '</td><td style="padding:3px 0;font-weight:bold">' . nl2br($h($v)) . '</td></tr>';
+        if ($price) $t .= '<tr><td style="padding:6px 12px 3px 0;color:#6b7280;border-top:1px solid #e5e7eb">Estimated price</td><td style="padding:6px 0 3px;font-weight:bold;font-size:15px;border-top:1px solid #e5e7eb">' . $h($price) . '</td></tr>';
+        $rows[] = ['Price calculator', '<table role="presentation" style="border-collapse:collapse;font-size:13px">' . $t . '</table>'];
+    }
+    if ($items) $rows[] = ['Quote cart', implode('<br><br>', array_map(fn($x) => nl2br($h($x)), $items))];
+    if ($etext !== '') $rows[] = ['Estimate', $val($etext)];
     if (!empty($d['notes'])) $rows[] = ['Message', $val($d['notes'])];
     $att = [];
     foreach (($d['attachments'] ?? []) as $a) $att[] = '📎 ' . $h($a['name'] ?? 'file') . (isset($a['size']) ? ' <span style="color:#8a8f98">(' . round($a['size'] / 1048576, 2) . ' MB)</span>' : '');

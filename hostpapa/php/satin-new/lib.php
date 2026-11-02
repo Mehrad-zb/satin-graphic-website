@@ -76,6 +76,42 @@ function same_origin(): void {
     if ($host === '' || !in_array($origin, ['https://' . $host, 'http://' . $host], true)) json_out(['error' => 'Invalid request origin'], 403);
 }
 
+/** Request details in plain words, shared by the staff email and the quoted copy in replies:
+ *  custom "option_0" => "Product: Business Cards" becomes ['Product', 'Business Cards'], the price-calculator JSON becomes
+ *  rows + an estimated price, a quote-cart JSON becomes item lines. Form answers the calculator already gives (product, quantity) are dropped.
+ *  Returns [form rows, calculator rows, price text, cart lines, plain estimate text]. */
+function request_facts(array $d): array {
+    $est = null; $raw = $d['estimate'] ?? '';
+    if (is_string($raw) && preg_match('/^\s*[\[{]/', $raw)) $est = json_decode($raw, true);
+    $calc = []; $price = ''; $items = [];
+    $money = fn($n) => '$' . number_format((float)$n, 2);
+    if (is_array($est) && !array_is_list($est)) {
+        if (!empty($est['product'])) $calc[] = ['Product', (string)$est['product']];
+        foreach ((array)($est['choices'] ?? []) as $c) {
+            if (!is_array($c) || empty($c['label'])) continue;
+            $v = $c['value'] ?? '';
+            if ($v === 0 || $v === '0' || $v === false) $v = 'No'; elseif ($v === true) $v = 'Yes';
+            if (!is_scalar($v) || (string)$v === '') continue;
+            $calc[] = [(string)$c['label'], (string)$v];
+        }
+        if (!empty($est['notes']) && is_scalar($est['notes'])) $calc[] = ['Calculator notes', (string)$est['notes']];
+        if (isset($est['subtotal']) && is_numeric($est['subtotal'])) $price = $money($est['subtotal'] / 100) . ' ' . (is_string($est['currency'] ?? null) ? $est['currency'] : 'CAD');
+    } elseif (is_array($est)) {
+        foreach ($est as $x) if (is_array($x)) $items[] = trim((string)($x['name'] ?? 'Item') . (isset($x['total']) && is_numeric($x['total']) ? ' · ' . $money($x['total']) : '') . "\n" . implode("\n", array_map('strval', array_filter((array)($x['lines'] ?? []), 'is_scalar'))));
+    }
+    $form = [];
+    foreach (is_array($d['custom'] ?? null) ? $d['custom'] : [] as $k => $v) {
+        $v = is_scalar($v) ? (string)$v : implode(', ', array_map('strval', array_filter((array)$v, 'is_scalar')));
+        if (preg_match('/^option_\d+$/', (string)$k) && preg_match('/^([^:]{1,60}):\s*(.*)$/s', $v, $m)) { $label = trim($m[1]); $v = $m[2]; }
+        else $label = ucfirst(str_replace(['_', '-'], ' ', (string)$k));
+        if (trim($v) === '') continue;
+        if (($calc || $items) && preg_match('/^(product|quantity)$/i', $label)) continue;
+        $form[] = [ucfirst($label), $v];
+    }
+    $text = ($est === null && is_scalar($raw) && trim((string)$raw) !== '') ? (string)$raw : '';
+    return [$form, $calc, $price, $items, $text];
+}
+
 function clean_custom($value): array {
     if (!is_array($value) || array_is_list($value)) return [];
     $out = [];

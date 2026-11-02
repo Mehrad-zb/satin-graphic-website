@@ -280,9 +280,39 @@ try{(()=>{let prev=false;try{const u=new URLSearchParams(location.search).get('t
 try{(()=>{let q=0;const place=()=>{q=0;const f=document.querySelector('.sx-fab'),l=document.querySelector('.scw:not(.open) .scw-launch');if(!f)return;
  if(!l||!l.offsetWidth){['bottom','right','left','margin-bottom'].forEach(p=>f.style.removeProperty(p));return;}
  const r=l.getBoundingClientRect(),w=f.offsetWidth||46,rtl=document.documentElement.dir==='rtl',set=(p,v)=>{if(f.style.getPropertyValue(p)!==v)f.style.setProperty(p,v,'important');};
- set('margin-bottom','0px');set('bottom',Math.round(innerHeight-r.top+12)+'px');
+ const de=document.documentElement,vw=de.clientWidth||innerWidth,vh=de.clientHeight||innerHeight; // fixed positions are measured without the scrollbar
+ set('margin-bottom','0px');set('bottom',Math.round(vh-r.top+12)+'px');
  if(rtl){set('left',Math.round(r.left+(r.width-w)/2)+'px');set('right','auto');}
- else{set('right',Math.round(innerWidth-r.right+(r.width-w)/2)+'px');set('left','auto');}};
+ else{set('right',Math.round(vw-r.right+(r.width-w)/2)+'px');set('left','auto');}};
  const soon=()=>{if(!q)q=requestAnimationFrame(place);[250,500,800].forEach(t=>setTimeout(place,t));};
  document.addEventListener('transitionend',soon,true);addEventListener('scroll',soon,{passive:true});addEventListener('resize',soon);setInterval(place,600);
  new MutationObserver(soon).observe(document.body,{childList:true});soon();})();}catch(e){}
+
+/* Quote form opened from a price calculator: the calculator already sends product, quantity and every option with the
+   request, so the generic "Product / Quantity" questions are taken out (they contradicted the calculator, e.g. "11–100"
+   next to 500 cards). If no other question is left, step 2 (contact details) opens directly. */
+try{(()=>{let fromCalc=false,skipped=false;
+ document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-quote]');if(b){fromCalc=!!b.dataset.estimate;skipped=false;}else if(e.target.closest&&e.target.closest('[data-cart-quote]')){fromCalc=false;}},true);
+ const fix=()=>{if(!fromCalc)return;const m=document.getElementById('modal');if(!m||!m.classList.contains('open'))return;
+  const qs=[...m.querySelectorAll('[data-qd]')];if(!qs.length)return;
+  qs.forEach(sel=>{if(/^(product|quantity)$/i.test(sel.dataset.qd))(sel.closest('label.field')||sel).remove();});
+  const left=m.querySelectorAll('[data-qd]').length,fields=m.querySelector('.fields');
+  if(fields&&!m.querySelector('[data-calc-note]'))fields.insertAdjacentHTML('beforebegin','<p class="small" data-calc-note>Your price-calculator choices (product, quantity and options) are attached to this request.</p>');
+  if(!left&&!skipped){skipped=true;const n=m.querySelector('[data-qnext]');if(n)n.click();}};
+ new MutationObserver(fix).observe(document.body,{childList:true,subtree:true});})();}catch(e){}
+
+/* Phones: the floating WhatsApp and chat buttons step aside (fade out) while they would sit on top of the price calculator,
+   its summary or any form, so no field, option or price is hidden under them. They come back as soon as that part scrolls away.
+   (The header still has the WhatsApp button.) */
+try{(()=>{const st=document.createElement('style');st.textContent='@media(max-width:760px){html.sx-tuck .sx-fab,html.sx-tuck .scw:not(.open) .scw-launch{opacity:0!important;pointer-events:none!important;transform:scale(.6)!important}.sx-fab,.scw-launch{transition:opacity .18s,transform .18s}}';document.head.appendChild(st);
+ const ZONES='.rule-cfg,.cfg,form,.rule-summary,.sum-dock,[data-pricing-bootstrap],.quote-form,.fields';let q=0;
+ const check=()=>{q=0;const de=document.documentElement;if(innerWidth>760){de.classList.remove('sx-tuck');return;}
+  const btns=[document.querySelector('.sx-fab'),document.querySelector('.scw:not(.open) .scw-launch')].filter(b=>b&&b.offsetWidth);
+  let hit=false;for(const z of document.querySelectorAll(ZONES)){if(z.closest('#modal,.scw,.d-panel'))continue;const r=z.getBoundingClientRect();if(!r.height)continue;
+   for(const b of btns){const a=b.getBoundingClientRect();if(a.left<r.right&&a.right>r.left&&a.top<r.bottom&&a.bottom>r.top){hit=true;break;}}if(hit)break;}
+  de.classList.toggle('sx-tuck',hit);};
+ const soon=()=>{if(!q)q=requestAnimationFrame(check);};
+ addEventListener('scroll',soon,{passive:true});addEventListener('resize',soon);setInterval(soon,900);soon();})();}catch(e){}
+
+/* price summary: a little space between the notes box and the subtotal row */
+try{const st=document.createElement('style');st.textContent='.rule-summary .sum-extras{margin-bottom:14px}#modal [data-mbody]>div:first-child{padding-right:52px}:root:has(#modal.open) .sx-fab,:root:has(#modal.open) .scw:not(.open){display:none!important}';document.head.appendChild(st);}catch(e){}
