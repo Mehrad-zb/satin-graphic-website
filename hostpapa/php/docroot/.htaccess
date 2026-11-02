@@ -97,7 +97,7 @@ ForceType application/json
 RewriteRule ^\.well-known/(assetlinks\.json|apple-app-site-association)$ - [L]
 
 # old Wix URLs (274 mapped in data/old-site-redirects.json + catch-alls); "?" drops Wix query strings
-RewriteRule \.|^satin/ - [S=277]
+RewriteRule \.|^satin/ - [S=279]
 RewriteRule ^a-frame-signs/?$ https://satingraphic.ca/satin/print-shop/large-format/a-frame-signs/? [R=301,L,NC]
 RewriteRule ^about-satin-graphic/?$ https://satingraphic.ca/satin/about/? [R=301,L,NC]
 RewriteRule ^backdrops/?$ https://satingraphic.ca/satin/print-shop/large-format/? [R=301,L,NC]
@@ -171,6 +171,8 @@ RewriteRule ^post/which-wall-mural-material-should-i-choose/?$ https://satingrap
 RewriteRule ^postcards/?$ https://satingraphic.ca/satin/print-shop/offset/postcards/? [R=301,L,NC]
 RewriteRule ^posters/?$ https://satingraphic.ca/satin/print-shop/large-format/? [R=301,L,NC]
 RewriteRule ^print-shop/?$ https://satingraphic.ca/satin/print-shop/? [R=301,L,NC]
+RewriteRule ^floor-graphics?/?$ https://satingraphic.ca/satin/window-graphics/? [R=301,L,NC]
+RewriteRule ^product/custom-window-graphics?/?$ https://satingraphic.ca/satin/window-graphics/? [R=301,L,NC]
 RewriteRule ^product-page/100lb-gloss-text-booklet-8-5-x-11/?$ https://satingraphic.ca/satin/print-shop/offset/? [R=301,L,NC]
 RewriteRule ^product-page/100lb-gloss-text-booklet-8-5-x-5-5/?$ https://satingraphic.ca/satin/print-shop/offset/? [R=301,L,NC]
 RewriteRule ^product-page/100lb-gloss-text-brochure/?$ https://satingraphic.ca/satin/print-shop/offset/brochures/? [R=301,L,NC]
