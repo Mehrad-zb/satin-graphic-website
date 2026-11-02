@@ -96,7 +96,7 @@ function drawWraps(m) {
   m.innerHTML = `<h1>Vehicle wraps</h1>
     <section class="step"><h2><span>1</span> Vehicle type</h2><div class="types">${VEH.types.map(t => { const b = t.bodies[0]; return `<button class="type ${v.type?.id === t.id ? 'on' : ''}" data-type="${t.id}">${b ? `<img loading="lazy" src="${esc(b.img)}" alt="">` : `<span class="busicon">${icon('car')}</span>`}<b>${esc(t.name)}</b></button>`; }).join('')}</div>
     <p class="hint">Tip: type the car in the search box at the top (e.g. “RAV4”, “Ram 1500”, “Transit 148 high”).</p></section>
-    ${v.type && v.type.bodies.length ? `<section class="step"><h2><span>2</span> Closest body ${v.model ? `<em>· ${esc(v.model)}</em>` : ''}</h2><div class="bodies">${v.type.bodies.map(b => `<button class="body ${v.body?.id === b.id ? 'on' : ''}" data-body="${b.id}"><img loading="lazy" src="${esc(b.img)}" alt=""><b>${esc(b.name)}</b></button>`).join('')}</div></section>` : ''}
+    ${v.type && v.type.bodies.length ? `<section class="step"><h2><span>2</span> Closest body ${v.model ? `<em>· ${esc(v.model)}</em>` : '<em class="opt">optional — or choose the size below</em>'}</h2><div class="bodies">${v.type.bodies.map(b => `<button class="body ${v.body?.id === b.id ? 'on' : ''}" data-body="${b.id}"><img loading="lazy" src="${esc(b.img)}" alt=""><b>${esc(b.name)}</b></button>`).join('')}</div></section>` : ''}
     <div data-form></div>`;
   m.onclick = e => {
     const t = e.target.closest('[data-type]'); if (t) { pickVehicle(VEH.types.find(x => x.id === t.dataset.type)); return; }
@@ -105,7 +105,7 @@ function drawWraps(m) {
   if (cur?.rule) drawForm();
 }
 async function pickVehicle(type, body, model, set) {
-  body = body || (type.bodies.length ? type.bodies[0] : null);
+  body = body || null; // vehicle type alone = the website estimator's own starting choices; a body/model sets the size
   const product = PRODUCTS.find(p => p.ruleId === type.ruleId) || { id: type.ruleId, name: type.name, ruleId: type.ruleId, path: '' };
   const keep = cur?.rule?.id === type.ruleId ? cur.idx : null;
   await openProduct(product, { vehicle: { type, body, model: model || null }, keep });

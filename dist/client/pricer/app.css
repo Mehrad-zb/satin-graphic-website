@@ -119,3 +119,4 @@ dt.t,dd.t{color:var(--ink);font-weight:700;font-size:15px}
 .withtax{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--soft)}
 .withtax span{color:var(--mut);font-size:13px}.withtax b{font-size:18px;font-variant-numeric:tabular-nums}
 .lines.bd{margin-top:12px}
+.main h2 em.opt{color:var(--mut);font-weight:500}

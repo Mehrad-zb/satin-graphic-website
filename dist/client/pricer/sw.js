@@ -1,5 +1,5 @@
 /* Satin Pricer: keeps the app shell for a quick start; prices are always fetched live (never cached). */
-const C = 'pricer-v2', SHELL = ['/pricer/', '/pricer/app.css?v=2', '/pricer/app.mjs?v=2', '/pricer/vehicles.json?v=1', '/pricer/icon-192.png'];
+const C = 'pricer-v3', SHELL = ['/pricer/', '/pricer/app.css?v=3', '/pricer/app.mjs?v=3', '/pricer/vehicles.json?v=1', '/pricer/icon-192.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(C).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
