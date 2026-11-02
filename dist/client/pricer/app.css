@@ -116,3 +116,6 @@ dt.t,dd.t{color:var(--ink);font-weight:700;font-size:15px}
 @media(max-width:760px){.app{display:block;height:auto}.top{position:sticky;top:0}.rail{flex-direction:row;overflow-x:auto;border:0;position:sticky;top:64px;z-index:4}.rail span{display:inline}.rail button[data-tab=recent]{margin:0}.side{border:0}.main{padding:16px}}
 .field.wide{grid-column:1/-1}
 @media(min-width:761px){html,body{overflow:hidden}}
+.withtax{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--soft)}
+.withtax span{color:var(--mut);font-size:13px}.withtax b{font-size:18px;font-variant-numeric:tabular-nums}
+.lines.bd{margin-top:12px}

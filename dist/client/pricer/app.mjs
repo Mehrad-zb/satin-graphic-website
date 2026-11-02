@@ -208,6 +208,17 @@ function choiceLines() {
   }
   return out.filter(([, v]) => v !== '');
 }
+/* the same "Vehicle base × multipliers" breakdown the website estimator shows */
+function wrapBreakdown() {
+  const r = cur.rule; if (!/^wrap-/.test(r.id) || !cur.quote || !(r.constants || {}).base) return '';
+  const rows = [['Vehicle base', money(r.constants.base * 100)]];
+  for (const f of r.fields) {
+    const v = cur.values[f.key];
+    if (f.type === 'select') { const lbl = f.options[cur.idx[f.key]]?.label || ''; if (f.unit === 'add') { if (v) rows.push([`${f.label}: ${lbl}`, '+ ' + money(v * 100)]); } else if (!/^vehicle_/.test(f.key) || v !== 1) rows.push([/^vehicle_/.test(f.key) ? `${f.label}: ${lbl}` : lbl + (f.key === 'material' ? ' film' : f.key === 'finish' ? ' finish' : ''), '× ' + Number(v).toFixed(2)]); }
+    else if (f.key === 'roof' && v) rows.push(['Roof wrap', '× ' + Number(r.constants.roofMultiplier || 1).toFixed(2)]);
+  }
+  return `<ul class="lines bd">${rows.map(([k, v]) => `<li><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('')}</ul>`;
+}
 function title() {
   if (cur.vehicle) { const v = cur.vehicle, base = v.body ? v.body.name : v.type.name; return v.model && v.model !== base ? `${v.model} · ${v.type.name}` : base; }
   return cur.product.name;
@@ -219,11 +230,13 @@ function drawSide(busy) {
   s.innerHTML = `<div class="price ${busy ? 'busy' : ''}">
     <small class="ttl">${esc(title())}</small>
     ${cur.err ? `<p class="err">${esc(cur.err)}</p>` : !q ? '<div class="big">…</div>' : por ? '<div class="big por">Price on request</div><p class="hint">This product is priced by our team (supplier price or custom size). Design fee only below.</p>' : `
-      <div class="big">${money(q.total)}</div><small class="sub">incl. ${tax}% HST · CAD</small>
+      <div class="big">${money(q.subtotal)}</div><small class="sub">Before tax · CAD — same as the website</small>
+      <div class="withtax"><span>With ${tax}% HST</span><b>${money(q.total)}</b></div>
       <dl><dt>Subtotal</dt><dd>${money(q.subtotal)}</dd>${q.discount ? `<dt>Discount</dt><dd>−${money(q.discount)}</dd>` : ''}<dt>HST ${tax}%</dt><dd>${money(q.tax)}</dd><dt class="t">Total</dt><dd class="t">${money(q.total)}</dd>
       ${q.deposit && q.deposit !== q.total ? `<dt>Deposit to book</dt><dd>${money(q.deposit)}</dd><dt>Balance</dt><dd>${money(q.balance)}</dd>` : ''}</dl>`}
     ${cur.rule.priceNote ? `<p class="hint">${esc(cur.rule.priceNote)}</p>` : ''}
     ${cur.rule.turnaround ? `<p class="hint">Turnaround: ${esc(cur.rule.turnaround)}</p>` : ''}
+    ${wrapBreakdown()}
     <ul class="lines">${choiceLines().map(([k, v]) => `<li><span>${esc(k)}</span><b>${esc(v)}</b></li>`).join('')}</ul>
     <label class="cust"><span>Customer name (optional)</span><input data-cust value="${esc(cur.customer || '')}" placeholder="for the copied text"></label>
     <div class="acts"><button class="btn" data-copy ${q && !cur.err ? '' : 'disabled'}>${icon('copy')} Copy for customer</button>
@@ -232,7 +245,7 @@ function drawSide(busy) {
   </div>`;
   $('[data-cust]', s).oninput = e => { cur.customer = e.target.value; };
   $('[data-copy]', s).onclick = () => copy(fullText());
-  $('[data-short]', s).onclick = () => copy(por ? 'Price on request' : `${title()}: ${money(q.total)} CAD incl. HST (${money(q.subtotal)} + HST)`);
+  $('[data-short]', s).onclick = () => copy(por ? 'Price on request' : `${title()}: ${money(q.subtotal)} + HST (${money(q.total)} CAD with HST)`);
   $('[data-reset]', s).onclick = () => { cur = null; drawMain(); drawSide(); };
 }
 function fullText() {
@@ -243,9 +256,9 @@ function fullText() {
   L.push('');
   if (onRequest()) L.push('Price: on request — we will confirm it shortly.');
   else {
-    L.push(`Subtotal: ${money(q.subtotal)}`);
+    L.push(`Price: ${money(q.subtotal)} + HST`);
     if (q.discount) L.push(`Discount: −${money(q.discount)}`);
-    L.push(`HST (${tax}%): ${money(q.tax)}`, `Total: ${money(q.total)} CAD`);
+    L.push(`HST (${tax}%): ${money(q.tax)}`, `Total with HST: ${money(q.total)} CAD`);
     if (q.deposit && q.deposit !== q.total) L.push(`Deposit to book: ${money(q.deposit)}`);
   }
   if (cur.rule.turnaround) L.push(`Turnaround: ${cur.rule.turnaround}`);
@@ -255,12 +268,12 @@ function fullText() {
 async function copy(text) {
   try { await navigator.clipboard.writeText(text); } catch { const t = document.createElement('textarea'); t.value = text; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); }
   toast('Copied — paste it in WhatsApp or a text');
-  if (cur?.quote) { const rec = store.get('recent', []); rec.unshift({ at: Date.now(), title: title(), total: onRequest() ? null : cur.quote.total, text, tab: S.tab }); store.set('recent', rec.slice(0, 30)); }
+  if (cur?.quote) { const rec = store.get('recent', []); rec.unshift({ at: Date.now(), title: title(), total: onRequest() ? null : cur.quote.subtotal, text, tab: S.tab }); store.set('recent', rec.slice(0, 30)); }
 }
 function drawRecent(m) {
   const rec = store.get('recent', []);
   m.innerHTML = `<h1>Recent prices</h1><p class="hint">The last prices copied on this computer.</p>
-    ${rec.length ? `<div class="recent">${rec.map((r, i) => `<article><div><b>${esc(r.title)}</b><small>${esc(new Date(r.at).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }))}</small></div><span>${r.total == null ? 'On request' : money(r.total)}</span><button class="btn ghost sm" data-rc="${i}">${icon('copy')} Copy again</button></article>`).join('')}</div>` : '<p class="empty">Nothing yet.</p>'}`;
+    ${rec.length ? `<div class="recent">${rec.map((r, i) => `<article><div><b>${esc(r.title)}</b><small>${esc(new Date(r.at).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' }))}</small></div><span>${r.total == null ? 'On request' : money(r.total) + ' + HST'}</span><button class="btn ghost sm" data-rc="${i}">${icon('copy')} Copy again</button></article>`).join('')}</div>` : '<p class="empty">Nothing yet.</p>'}`;
   m.onclick = e => { const b = e.target.closest('[data-rc]'); if (b) { navigator.clipboard.writeText(rec[+b.dataset.rc].text).then(() => toast('Copied')); } };
 }
 
