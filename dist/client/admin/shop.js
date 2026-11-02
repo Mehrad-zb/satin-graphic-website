@@ -361,17 +361,23 @@ function editTemplate(t, cats) {
     <label class="field"><span>Body / configuration</span><input name="body" maxlength="120" value="${esc(x.body)}" placeholder="High roof, extended"></label>
     <div class="hint" style="margin:-8px 0 14px">Make and model must match the names in the website’s vehicle list (e.g. “Ford”, “Transit”) so customers can find it.</div>
     <label class="field"><span>Description</span><textarea name="description" rows="3" maxlength="2000">${esc(x.description)}</textarea></label>
-    <label class="field"><span>Vector file (PDF, AI, EPS or SVG · up to 50 MB)</span><input type="file" data-up="template" accept=".pdf,.ai,.eps,.svg,application/pdf,image/svg+xml,application/postscript"><div class="hint" data-fname>${x.file ? 'Current: ' + esc(x.file.name) + ' · ' + size(x.file.size) : 'No file yet'}</div></label>
-    <label class="field"><span>Preview image (PNG, JPG or WebP · up to 5 MB)</span><input type="file" data-up="preview" accept="image/png,image/jpeg,image/webp"><div class="hint" data-pname>${x.preview ? `<img src="${esc(x.preview.url)}" alt="" style="max-height:80px">` : 'No preview yet'}</div></label>
+    <div class="tpl-up"><div class="tpl-up-h"><b>1 · Preview image</b><span>shown on the website</span></div>
+      <label class="field"><span>PNG, JPG or WebP · up to 5 MB</span><input type="file" data-up="preview" accept="image/png,image/jpeg,image/webp"></label>
+      <div class="hint">On upload the picture is made smaller, lower quality and covered with a <b>satingraphic.ca</b> watermark, so customers can see it but not use it. The original picture is not kept.</div>
+      <div class="hint" data-pname>${x.preview ? `<img src="${esc(x.preview.url)}" alt="Preview" class="tpl-prev">` : 'No preview yet'}</div></div>
+    <div class="tpl-up"><div class="tpl-up-h"><b>2 · Original files (ZIP)</b><span>sent to the customer after payment</span></div>
+      <label class="field"><span>One .zip with all the files (AI, PDF, EPS, SVG…) · up to 50 MB</span><input type="file" data-up="template" accept=".zip,application/zip,application/x-zip-compressed"></label>
+      <div class="hint" data-fname>${x.file ? 'Current: ' + esc(x.file.name) + ' · ' + size(x.file.size) : 'No file yet'}</div></div>
     <label class="field"><span><input type="checkbox" name="published" ${x.published ? 'checked' : ''} style="width:auto"> Published (shown and for sale on the website)</span><div class="hint">Only publish files you have the right to resell.</div></label>
     <div class="shop-acts"><button class="btn" type="submit">Save template</button>${t ? '<button class="btn danger sm" type="button" data-del>Delete</button>' : ''}${t && t.published ? `<a class="btn ghost sm" href="${esc(t.url)}" target="_blank" rel="noopener">View product page</a>` : ''}</div></form>`);
   const f = $('[data-f]', o), msg = m => { $('[data-msg]', o).innerHTML = m ? `<div class="err">${esc(m)}</div>` : ''; };
   $$('[data-up]', o).forEach(inp => inp.onchange = async () => {
     const file = inp.files[0]; if (!file) return; const kind = inp.dataset.up, label = $(kind === 'preview' ? '[data-pname]' : '[data-fname]', o);
     if (file.size > (kind === 'preview' ? 5e6 : 50 * 1048576)) { msg('This file is too large.'); inp.value = ''; return; }
+    if (kind !== 'preview' && !/\.zip$/i.test(file.name)) { msg('Put all the template files in one ZIP file (right-click the folder → Compress / Send to → Compressed folder) and upload the .zip.'); inp.value = ''; return; }
     label.textContent = 'Uploading ' + file.name + '…'; f.querySelector('[type=submit]').disabled = true; msg('');
     try { const r = await upload('/shop/templates/upload', file, { kind: kind === 'preview' ? 'preview' : 'file' });
-      if (kind === 'preview') { previewId = r.file.id; label.innerHTML = `<img src="/api/admin/shop/templates/file?id=${esc(r.file.id)}&inline=1" alt="" style="max-height:80px">`; }
+      if (kind === 'preview') { previewId = r.file.id; label.innerHTML = `<img src="/api/admin/shop/templates/file?id=${esc(r.file.id)}&inline=1" alt="Watermarked preview" class="tpl-prev"><br>Watermarked preview · ${esc(r.file.name)} · ${size(r.file.size)}`; }
       else { fileId = r.file.id; label.textContent = 'Uploaded: ' + r.file.name + ' · ' + size(r.file.size); }
     } catch (e) { msg(e.message); label.textContent = 'Upload failed'; inp.value = ''; }
     f.querySelector('[type=submit]').disabled = false;

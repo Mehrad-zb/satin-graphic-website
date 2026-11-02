@@ -444,3 +444,9 @@ label.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6p
 .rq-calc .it b{text-align:left}
 .rq-calc .it small{color:var(--mut)}
 @media(max-width:760px){.drawer .kv{gap:2px 0}.drawer .kv dt{font-size:12.5px;margin-top:10px}.drawer .kv dt:first-child{margin-top:0}}
+/* vehicle template editor: preview + original ZIP blocks */
+.tpl-up{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.tpl-up-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:8px}
+.tpl-up-h span{color:var(--mut);font-size:12.5px}
+.tpl-up .field{margin-bottom:8px}
+.tpl-prev{display:block;max-width:100%;max-height:220px;border-radius:8px;margin-top:6px;border:1px solid var(--line)}

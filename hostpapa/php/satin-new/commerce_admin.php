@@ -418,9 +418,10 @@ function shop_admin_inner(string $r, string $method): void {
         if (empty($_FILES['file'])) json_out(['error' => (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 0 ? 'The file is larger than this server accepts (' . ini_get('post_max_size') . '). Ask the host to raise upload_max_filesize / post_max_size.' : 'Choose a file.'], 400);
         $kind = ($_POST['kind'] ?? '') === 'preview' ? 'preview' : 'template';
         $design = ($_POST['kind'] ?? '') === 'design'; // wrap design delivery file (Admin → Products): also accepts a ZIP package
+        $tplZip = ($_POST['kind'] ?? '') === 'file'; // vehicle template download: one ZIP with all the files (Admin → Vehicle templates)
         $row = $kind === 'preview'
-            ? shop_store_upload($_FILES['file'], 'preview', 'admin:' . $u['id'], SHOP_PREVIEW_MAX, ['image/png', 'image/jpeg', 'image/webp'])
-            : shop_store_upload($_FILES['file'], 'template', 'admin:' . $u['id'], SHOP_TEMPLATE_MAX, array_merge(['application/pdf', 'application/postscript', 'image/svg+xml'], $design ? ['application/zip'] : []), true);
+            ? shop_watermark_preview(shop_store_upload($_FILES['file'], 'preview', 'admin:' . $u['id'], SHOP_PREVIEW_MAX, ['image/png', 'image/jpeg', 'image/webp'])) // reduced + watermarked; the original is not kept
+            : shop_store_upload($_FILES['file'], 'template', 'admin:' . $u['id'], SHOP_TEMPLATE_MAX, $tplZip ? ['application/zip'] : array_merge(['application/pdf', 'application/postscript', 'image/svg+xml'], $design ? ['application/zip'] : []), true);
         json_out(['file' => ['id' => $row['id'], 'name' => $row['name'], 'size' => $row['size'], 'mime' => $row['mime']]], 201);
     }
     if ($r === '/shop/templates/save' && $method === 'POST') {
@@ -439,7 +440,7 @@ function shop_admin_inner(string $r, string $method): void {
         if ($fileId !== '') { $f = shop_file($fileId); if (!$f || $f['kind'] !== 'template') json_out(['error' => 'Upload the template file again.'], 400); }
         if ($previewId !== '') { $f = shop_file($previewId); if (!$f || $f['kind'] !== 'preview') json_out(['error' => 'Upload the preview image again.'], 400); }
         $published = ($t['published'] ?? false) === true;
-        if ($published && $fileId === '') json_out(['error' => 'Upload the vector file before publishing.'], 400);
+        if ($published && $fileId === '') json_out(['error' => 'Upload the original files (ZIP) before publishing.'], 400);
         if ($published && $price <= 0) json_out(['error' => 'Set a price before publishing.'], 400);
         $vals = [$name, $t['category'], $make, $model, $year, text($t['trim'] ?? '', 120), text($t['body'] ?? '', 120), text($t['description'] ?? '', 2000), $price, $fileId, $previewId, $published ? 1 : 0, now_iso()];
         if ($old) {

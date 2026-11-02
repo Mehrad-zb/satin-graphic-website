@@ -295,6 +295,53 @@ function shop_store_upload(array $f, string $kind, string $sessionId, int $max, 
         ->execute(array_values($row));
     return $row;
 }
+/** Vehicle-template preview protection: the stored preview is replaced by a smaller, lower-quality JPEG with a tiled
+ *  "satingraphic.ca" watermark, so the picture on the website cannot be used as artwork. The original image is not kept.
+ *  Returns the updated file row (mime/size/width/height), or the row unchanged if GD is missing. */
+const SHOP_PREVIEW_EDGE = 900, SHOP_PREVIEW_QUALITY = 58;
+function shop_watermark_preview(array $row): array {
+    if (!function_exists('imagecreatefromstring')) return $row;
+    $p = shop_file_path($row);
+    $src = @imagecreatefromstring((string)@file_get_contents($p)); if (!$src) return $row;
+    $w0 = imagesx($src); $h0 = imagesy($src); $k = min(1, SHOP_PREVIEW_EDGE / max($w0, $h0));
+    $w = max(1, (int)round($w0 * $k)); $h = max(1, (int)round($h0 * $k));
+    $im = imagecreatetruecolor($w, $h);
+    imagefill($im, 0, 0, imagecolorallocate($im, 255, 255, 255)); // transparent PNGs get a white background
+    imagecopyresampled($im, $src, 0, 0, 0, 0, $w, $h, $w0, $h0); imagedestroy($src);
+    $text = 'satingraphic.ca';
+    $font = '';
+    foreach ([function_exists('docroot') ? docroot() . '/satin/fonts/manrope.ttf' : '', dirname(__DIR__) . '/public_html/satin/fonts/manrope.ttf', dirname(__DIR__) . '/new.satingraphic.ca/satin/fonts/manrope.ttf'] as $f) if ($f !== '' && is_file($f)) { $font = $f; break; }
+    $dark = imagecolorallocatealpha($im, 20, 22, 28, 82); $light = imagecolorallocatealpha($im, 255, 255, 255, 70);
+    if ($font !== '' && function_exists('imagettftext')) {
+        $size = max(11, (int)round(min($w, $h) / 17));
+        $box = imagettfbbox($size, 0, $font, $text); $tl = abs($box[2] - $box[0]); // text length before rotation
+        $sx = (int)($tl * cos(deg2rad(28)) + $size * 2.2); $sy = (int)($tl * sin(deg2rad(28)) + $size * 2.6); $row_i = 0;
+        for ($y = -$sy; $y < $h + $sy; $y += $sy, $row_i++)
+            for ($x = -$sx + ($row_i % 2) * (int)($sx / 2); $x < $w + $sx; $x += $sx) {
+                imagettftext($im, $size, 28, $x + 1, $y + 1, $light, $font, $text);
+                imagettftext($im, $size, 28, $x, $y, $dark, $font, $text);
+            }
+        $bs = max(11, (int)round($w / 42)); $band = (int)round($bs * 2.4);
+        imagefilledrectangle($im, 0, $h - $band, $w, $h, imagecolorallocatealpha($im, 22, 24, 29, 30));
+        $label = 'PREVIEW · satingraphic.ca'; $lb = imagettfbbox($bs, 0, $font, $label);
+        imagettftext($im, $bs, 0, (int)(($w - abs($lb[4] - $lb[0])) / 2), $h - (int)(($band - $bs) / 2), imagecolorallocate($im, 255, 255, 255), $font, $label);
+    } else { // no FreeType: built-in font, drawn small and stretched into a tile
+        $tile = imagecreatetruecolor(150, 24); imagesavealpha($tile, true); imagefill($tile, 0, 0, imagecolorallocatealpha($tile, 0, 0, 0, 127));
+        imagestring($tile, 5, 6, 4, $text, imagecolorallocatealpha($tile, 20, 22, 28, 70));
+        $tw = (int)round($w / 4.5); $th = (int)round($tw * 24 / 150);
+        for ($y = 0, $i = 0; $y < $h; $y += $th * 3, $i++) for ($x = ($i % 2) * (int)($tw / 2) - $tw; $x < $w; $x += (int)($tw * 1.4)) imagecopyresampled($im, $tile, $x, $y, 0, 0, $tw, $th, 150, 24);
+        imagedestroy($tile);
+    }
+    imageinterlace($im, 1);
+    ob_start(); imagejpeg($im, null, SHOP_PREVIEW_QUALITY); $jpg = (string)ob_get_clean(); imagedestroy($im);
+    if (strlen($jpg) < 100 || @file_put_contents($p, $jpg) === false) return $row;
+    $name = preg_replace('/\.(png|jpe?g|webp)$/i', '', (string)$row['name']) . '-preview.jpg';
+    shop_db()->prepare('UPDATE shop_files SET mime = ?, size = ?, width = ?, height = ?, name = ? WHERE id = ?')->execute(['image/jpeg', strlen($jpg), $w, $h, $name, $row['id']]);
+    return array_merge($row, ['mime' => 'image/jpeg', 'size' => strlen($jpg), 'width' => $w, 'height' => $h, 'name' => $name]);
+}
+/** Older previews uploaded before the watermark existed are converted the first time they are shown. */
+function shop_preview_protected(array $f): array { return str_ends_with((string)$f['name'], '-preview.jpg') ? $f : shop_watermark_preview($f); }
+
 function shop_clean_name(string $n): string { $n = preg_replace('/[^a-zA-Z0-9._ -]/', '_', mb_substr(trim(basename($n)), 0, 120)); return $n !== '' ? $n : 'upload'; }
 function shop_file(string $id): ?array { if (!shop_is_id($id)) return null; $q = shop_db()->prepare('SELECT * FROM shop_files WHERE id = ?'); $q->execute([$id]); return $q->fetch() ?: null; }
 function shop_owned_file(string $id, string $sessionId): array {
@@ -699,6 +746,7 @@ function shop_route_inner(string $path, string $method): void {
         $q = $pdo->prepare('SELECT preview_id FROM shop_templates WHERE id = ? AND published = 1 AND deleted = 0'); $q->execute([(string)($_GET['id'] ?? '')]);
         $t = $q->fetch(); $f = $t ? shop_file($t['preview_id']) : null;
         if (!$f) json_out(['error' => 'Preview not found'], 404);
+        $f = shop_preview_protected($f); // watermarked, reduced copy only
         shop_send_file($f, true, 'public, max-age=86400');
     }
 
