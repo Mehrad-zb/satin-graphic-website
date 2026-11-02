@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16181d">
+<title>Satin Pricer</title>
+<link rel="manifest" href="/pricer/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/pricer/icon-192.png">
+<link rel="apple-touch-icon" href="/pricer/icon-192.png">
+<link rel="stylesheet" href="/pricer/app.css?v=1">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><img src="/pricer/icon-192.png" alt=""><div><b>Satin Pricer</b><small>Website prices · always up to date</small></div></div>
+    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search a car or product — Corolla, F-150, Sprinter, business cards…" autocomplete="off" spellcheck="false"></label>
+    <div class="search-pop" id="qpop" hidden></div>
+    <button class="install" id="install" hidden>Install app</button>
+  </header>
+  <nav class="rail" id="rail"></nav>
+  <main class="main" id="main"><div class="loading">Loading prices…</div></main>
+  <aside class="side" id="side"></aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="/pricer/app.mjs?v=1"></script>
+</body>
+</html>

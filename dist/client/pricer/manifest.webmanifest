@@ -1,0 +1,18 @@
+{
+  "id": "/pricer/",
+  "name": "Satin Pricer",
+  "short_name": "Satin Pricer",
+  "description": "In-shop price tool for Satin Graphic: vehicle wraps, PPF, tint, print, signs and apparel — live website prices.",
+  "start_url": "/pricer/",
+  "scope": "/pricer/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#16181d",
+  "theme_color": "#16181d",
+  "lang": "en-CA",
+  "icons": [
+    { "src": "/pricer/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/pricer/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/pricer/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

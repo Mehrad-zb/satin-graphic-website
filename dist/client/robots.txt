@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /pricer/
 
 # Search engines and AI assistants are welcome to read and cite this site
 User-agent: GPTBot
@@ -26,6 +27,7 @@ User-agent: Amazonbot
 User-agent: meta-externalagent
 Allow: /
 Disallow: /admin/
+Disallow: /pricer/
 
 Sitemap: https://satingraphic.ca/satin/sitemap.xml
 Sitemap: https://satingraphic.ca/sitemap.xml

@@ -179,7 +179,7 @@ try {
         try { // push: someone priced a product (once per visitor + product a day)
             require_once __DIR__ . '/auth.php';
             $pk = 'pushquote:' . substr(hash('sha256', client_ip() . '|' . ($_SERVER['HTTP_USER_AGENT'] ?? '') . '|' . $rule['id']), 0, 24);
-            if (!preg_match('/bot|crawl|spider|headless|lighthouse/i', (string)($_SERVER['HTTP_USER_AGENT'] ?? '')) && !rate_limited($pk, 1, 86400)) {
+            if (empty($_SERVER['HTTP_X_SATIN_PRICER']) && !preg_match('/bot|crawl|spider|headless|lighthouse/i', (string)($_SERVER['HTTP_USER_AGENT'] ?? '')) && !rate_limited($pk, 1, 86400)) { // staff using the in-shop Satin Pricer app do not ping the team
                 note_attempt($pk); require_once __DIR__ . '/push.php';
                 $tot = $quote['total'] ?? $quote['price'] ?? null; $page = (string)($v['page'] ?? '');
                 push_event('quotes', '💲 Price checked: ' . (string)($rule['name'] ?? $rule['id']), (is_numeric($tot) ? '$' . number_format((float)$tot / 100, 2) . ' CAD' : 'Instant price') . ($page !== '' ? ' · ' . mb_substr($page, 0, 80) : ''), '/admin/#/dashboard', 'quote-' . $rule['id']);
