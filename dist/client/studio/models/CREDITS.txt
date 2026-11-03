@@ -1,0 +1,9 @@
+3D garment models used by the Design Studio 3D view (converted with tools/garment3d/prep.py; textures removed,
+inside layer removed, scaled to inches). Licence CC BY 4.0 unless noted — https://creativecommons.org/licenses/by/4.0/
+
+tshirt.g3dz      "Tshirt" by Tabbuso — https://sketchfab.com/3d-models/tshirt-5a21282b2e454d1696547148f617d3d0
+hoodie.g3dz      "Hoodie" by yogaminggames — https://sketchfab.com/3d-models/hoodie-2c674228f1e946b5b8f508f8f818e130
+sweatshirt.g3dz  "Blue sweatshirt with print" by hasar — https://sketchfab.com/hasar (print patch removed)
+cap.g3dz         "Bambam hat" by markdo — https://sketchfab.com/markdo
+beanie.g3dz      "Winter hat" by StubbornFunkyDonkey — https://sketchfab.com/stubbornfunkydonkey
+polo.g3dz        "T-shirt Polo" — Sketchfab Standard licence — https://sketchfab.com/3d-models/t-shirt-polo-c0c473ad6a3c4ceea6f616c3a57526ed
