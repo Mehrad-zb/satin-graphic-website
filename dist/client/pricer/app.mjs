@@ -5,7 +5,8 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const money = c => (Number(c) / 100).toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
 const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const store = { get(k, d) { try { const v = localStorage.getItem('pricer.' + k); return v ? JSON.parse(v) : d; } catch { return d; } }, set(k, v) { try { localStorage.setItem('pricer.' + k, JSON.stringify(v)); } catch {} } };
-const scrollMain = el => { const m = $('#main'); if (!el || !m) return; m.scrollTo({ top: el.getBoundingClientRect().top - m.getBoundingClientRect().top + m.scrollTop - 12, behavior: 'smooth' }); };
+const phone = () => matchMedia('(max-width:760px)').matches;
+const scrollMain = el => { const m = $('#main'); if (!el || !m) return; if (phone()) { scrollTo({ top: el.getBoundingClientRect().top + scrollY - 118, behavior: 'smooth' }); return; } m.scrollTo({ top: el.getBoundingClientRect().top - m.getBoundingClientRect().top + m.scrollTop - 12, behavior: 'smooth' }); };
 const toast = t => { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 2200); };
 
 const ICON = {
@@ -225,9 +226,11 @@ function title() {
 }
 function drawSide(busy) {
   const s = $('#side');
-  if (!cur) { s.innerHTML = `<div class="price empty"><p>Choose a ${S.tab === 'wraps' ? 'vehicle' : 'product'} to see the price.</p></div>`; return; }
+  s.classList.toggle('has', !!cur); document.body.classList.toggle('has-price', !!cur);
+  if (!cur) { s.classList.remove('open'); document.body.classList.remove('sheet-open'); s.innerHTML = `<div class="price empty"><p>Choose a ${S.tab === 'wraps' ? 'vehicle' : 'product'} to see the price.</p></div>`; return; }
   const q = cur.quote, tax = cur.rule.taxPercent ?? 13, por = onRequest();
   s.innerHTML = `<div class="price ${busy ? 'busy' : ''}">
+    <button type="button" class="sheet-h" data-sheet aria-label="Show price details"><i></i><span>${s.classList.contains('open') ? 'Hide details' : 'Details & copy'}</span></button>
     <small class="ttl">${esc(title())}</small>
     ${cur.err ? `<p class="err">${esc(cur.err)}</p>` : !q ? '<div class="big">…</div>' : por ? '<div class="big por">Price on request</div><p class="hint">This product is priced by our team (supplier price or custom size). Design fee only below.</p>' : `
       <div class="big">${money(q.subtotal)}</div><small class="sub">Before tax · CAD — same as the website</small>
@@ -247,6 +250,7 @@ function drawSide(busy) {
   $('[data-copy]', s).onclick = () => copy(fullText());
   $('[data-short]', s).onclick = () => copy(por ? 'Price on request' : `${title()}: ${money(q.subtotal)} + HST (${money(q.total)} CAD with HST)`);
   $('[data-reset]', s).onclick = () => { cur = null; drawMain(); drawSide(); };
+  $('[data-sheet]', s).onclick = () => { s.classList.toggle('open'); document.body.classList.toggle('sheet-open', s.classList.contains('open')); $('[data-sheet] span', s).textContent = s.classList.contains('open') ? 'Hide details' : 'Details & copy'; };
 }
 function fullText() {
   const q = cur.quote, tax = cur.rule.taxPercent ?? 13, L = [];
@@ -315,6 +319,16 @@ function wireSearch() {
 let deferred = null;
 addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferred = e; $('#install').hidden = false; });
 $('#install').onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $('#install').hidden = true; };
+/* iPhone / iPad: Safari has no install button — show how to add the app to the Home Screen once */
+(() => {
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  if (!ios || standalone || store.get('iosHint', 0) > 2) return;
+  const d = document.createElement('div'); d.className = 'ios-hint';
+  d.innerHTML = `<b>Install Satin Pricer</b><span>Tap <svg viewBox="0 0 24 24" aria-label="Share"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg> Share, then <b>Add to Home Screen</b>.</span><button type="button" aria-label="Close">×</button>`;
+  d.querySelector('button').onclick = () => { d.remove(); store.set('iosHint', 9); };
+  document.body.append(d); store.set('iosHint', store.get('iosHint', 0) + 1);
+})();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/pricer/sw.js', { scope: '/pricer/' }).catch(() => {});
 
 /* ---------- start ---------- */

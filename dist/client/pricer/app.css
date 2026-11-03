@@ -120,3 +120,41 @@ dt.t,dd.t{color:var(--ink);font-weight:700;font-size:15px}
 .withtax span{color:var(--mut);font-size:13px}.withtax b{font-size:18px;font-variant-numeric:tabular-nums}
 .lines.bd{margin-top:12px}
 .main h2 em.opt{color:var(--mut);font-weight:500}
+/* ---------- phones: sticky price sheet, one-line tabs, iPhone install hint ---------- */
+.sheet-h{display:none}
+@media(max-width:760px){
+  body{padding-bottom:env(safe-area-inset-bottom)}
+  .top{height:auto;min-height:60px;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;gap:10px}
+  .brand{min-width:0}.brand div{display:none}
+  .search{height:40px}
+  .search input{font-size:16px}
+  .search-pop{left:12px;width:calc(100% - 24px);top:calc(env(safe-area-inset-top) + 58px)}
+  .install{padding:8px 10px;font-size:13px}
+  .rail{gap:6px;padding:8px 12px;background:var(--bg);top:calc(env(safe-area-inset-top) + 60px);scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .rail button{flex:none;padding:8px 12px;border-radius:999px;background:#fff;white-space:nowrap;gap:8px}
+  .rail button svg{width:18px;height:18px}
+  .rail button.on{background:var(--ink)}
+  .main{padding:14px 12px 150px}
+  .main h1{font-size:21px}
+  .step{padding:14px;border-radius:16px}
+  .types{grid-template-columns:repeat(2,1fr)}
+  .body{flex:0 0 150px}
+  .fields{grid-template-columns:1fr}
+  .qty-grid{grid-template-columns:repeat(2,1fr)}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  /* price: a sheet fixed to the bottom; collapsed it shows the price, tap to open details + copy */
+  .side{display:none}
+  .side.has{display:block;position:fixed;left:0;right:0;bottom:0;z-index:30;max-height:82vh;overflow:auto;padding:0 16px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;box-shadow:0 -10px 40px #0f172a2e;transform:translateY(calc(100% - 132px - env(safe-area-inset-bottom)));transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  .side.has.open{transform:none}
+  .sheet-h{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;border:0;background:none;padding:8px 0 6px;color:var(--mut);font-size:12px;font-weight:600;cursor:pointer;position:sticky;top:0;background:#fff;z-index:1}
+  .sheet-h i{width:40px;height:5px;border-radius:9px;background:#d1d5db}
+  .side .big{font-size:32px;margin-top:2px}
+  .side .ttl{font-size:11.5px}
+  .withtax{margin-top:8px}
+}
+.ios-hint{position:fixed;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom));z-index:40;display:flex;flex-direction:column;gap:4px;background:var(--ink);color:#fff;border-radius:16px;padding:12px 40px 12px 14px;font-size:13.5px;box-shadow:0 12px 30px #0004}
+.ios-hint span{color:#d1d5db}.ios-hint svg{width:16px;height:16px;vertical-align:-3px;color:#5aa9ff}
+.ios-hint button{position:absolute;right:8px;top:8px;border:0;background:#ffffff1f;color:#fff;width:26px;height:26px;border-radius:50%;font-size:16px;cursor:pointer}
+body:not(.has-price) .ios-hint{bottom:calc(16px + env(safe-area-inset-bottom))}
+body.sheet-open .ios-hint{display:none}
