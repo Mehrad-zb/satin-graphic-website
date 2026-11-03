@@ -142,10 +142,12 @@ async function openProduct(product, extra = {}) {
     quote();
   } catch (e) { toast(e.message); }
 }
-const visibleFields = r => r.fields.filter(f => !(cur.vehicle?.body && /^vehicle_\d$/.test(f.key)) && !/^legacy/i.test(f.help || '')); // the chosen body sets vehicle size fields
+const customSize = r => { const f = r.fields.find(f => f.key === 'size' && f.type === 'select'); return !f || /custom/i.test(f.options?.[cur.idx.size]?.label || ''); };
+const visibleFields = r => r.fields.filter(f => !(cur.vehicle?.body && /^vehicle_\d$/.test(f.key)) && !/^legacy/i.test(f.help || '') // the chosen body sets vehicle size fields
+  && !(['width', 'height'].includes(f.key) && !customSize(r))); // print: width/height only matter for a custom size
 function drawForm() {
   const box = $('[data-form]'); if (!box || !cur) return;
-  const r = cur.rule, vf = visibleFields(r), hidden = r.fields.filter(f => !vf.includes(f));
+  const r = cur.rule, vf = visibleFields(r), hidden = r.fields.filter(f => !vf.includes(f) && /^vehicle_\d$/.test(f.key) && f.options); // legacy fields stay out of sight
   const groups = []; let g = null;
   for (const f of vf) { const name = f.group || ''; if (!g || g.name !== name) groups.push(g = { name, fields: [] }); g.fields.push(f); }
   const qtyGrid = fs => fs.every(f => f.type === 'number' && /quantity$/i.test(f.label)) && fs.length > 2;
@@ -170,11 +172,15 @@ function drawForm() {
 function fieldHTML(f) {
   const v = cur.values[f.key], help = f.help ? `<small>${esc(f.help)}</small>` : '';
   if (f.type === 'select') {
+    if (!Array.isArray(f.options) || !f.options.length) return '';
     const short = f.options.length <= 5 && f.options.every(o => String(o.label).length <= 30);
     if (short) return `<div class="field${f.options.length > 3 ? ' wide' : ''}"><span class="lbl">${esc(f.label)}</span><div class="seg">${f.options.map((o, i) => `<button type="button" class="${cur.idx[f.key] === i ? 'on' : ''}" data-seg="${f.key}" data-i="${i}">${esc(o.label)}</button>`).join('')}</div>${help}</div>`;
     return `<label class="field"><span class="lbl">${esc(f.label)}</span><select data-k="${f.key}">${f.options.map((o, i) => `<option value="${i}" ${cur.idx[f.key] === i ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>${help}</label>`;
   }
-  if (f.type === 'checkbox') return `<label class="field chk"><input type="checkbox" data-k="${f.key}" ${v ? 'checked' : ''}><span class="sw"></span><span class="lbl">${esc(f.label)}</span>${help}</label>`;
+  if (f.type === 'checkbox') {
+    const lbl = f.key === 'design' ? `Design services · ${cur.rule.promo?.freeDesign ? 'free (promotion)' : '+' + money(designFee(cur.rule) * 100)}` : f.label;
+    return `<label class="field chk"><input type="checkbox" data-k="${f.key}" ${v ? 'checked' : ''}><span class="sw"></span><span class="lbl">${esc(lbl)}</span>${f.key === 'design' ? '' : help}</label>`;
+  }
   const unit = /\((inches|in)\)/i.test(f.label) ? 'in' : '';
   return `<label class="field num"><span class="lbl">${esc(f.label.replace(/ · quantity$/i, ''))}</span><div class="stepper"><button type="button" data-step="-1" data-k2="${f.key}" aria-label="Less">−</button><input type="number" inputmode="decimal" data-k="${f.key}" value="${esc(v)}" min="${f.min ?? ''}" max="${f.max ?? ''}" step="${f.step ?? 'any'}"><button type="button" data-step="1" data-k2="${f.key}" aria-label="More">+</button></div>${unit ? '' : ''}${help}</label>`;
 }
@@ -197,14 +203,72 @@ function quote() {
     drawSide();
   }, 180);
 }
-const designCents = () => { const c = cur.rule.constants || {}; return cur.values.design ? (Number(c.designFee ?? c.designDeposit ?? 0) * 100) : 0; };
+/* design fee exactly like the website ("I need a designer +$X"): constants.designFee → designDeposit → 250; promo = free */
+const designFee = r => r.promo?.freeDesign ? 0 : Number((r.constants || {}).designFee ?? (r.constants || {}).designDeposit ?? 250);
+const designCents = () => cur.values.design ? Math.round(designFee(cur.rule) * 100) : 0;
 const onRequest = () => cur.quote && cur.rule.priceOnRequest && cur.quote.subtotal <= designCents();
+
+/* ---------- shop estimates for "price on request" items ----------
+   The website asks the customer to request a quote for these (no supplier price yet). In the shop the team still
+   needs a number, so the app shows a market-based estimate (Toronto/GTA prices, autumn 2026), clearly marked. */
+function calc(src, V) { // tiny, safe evaluator for the website's price formulas: numbers, names, + - * /, comparisons, && ||, if() round() max() min()
+  const t = String(src).match(/\d*\.?\d+(?:e[-+]?\d+)?|[A-Za-z_]\w*|==|!=|>=|<=|&&|\|\||[-+*/(),<>!]/g) || []; let i = 0;
+  const peek = () => t[i], eat = x => { if (t[i] !== x) throw new Error('formula'); i++; };
+  const FN = { if: a => (a[0] ? a[1] : a[2]), round: a => Math.round(a[0]), max: a => Math.max(...a), min: a => Math.min(...a), ceil: a => Math.ceil(a[0]), floor: a => Math.floor(a[0]), abs: a => Math.abs(a[0]) };
+  const prim = () => {
+    const x = t[i++];
+    if (x === '(') { const v = or(); eat(')'); return v; }
+    if (x === '-') return -prim(); if (x === '+') return prim(); if (x === '!') return prim() ? 0 : 1;
+    if (/^[\d.]/.test(x)) return Number(x);
+    if (/^[A-Za-z_]/.test(x)) {
+      if (peek() === '(') { i++; const a = []; if (peek() !== ')') { a.push(or()); while (peek() === ',') { i++; a.push(or()); } } eat(')'); if (!FN[x]) throw new Error('formula'); return FN[x](a); }
+      return Number(V[x] ?? 0);
+    }
+    throw new Error('formula');
+  };
+  const mul = () => { let v = prim(); while (peek() === '*' || peek() === '/') { const o = t[i++], r = prim(); v = o === '*' ? v * r : (r ? v / r : 0); } return v; };
+  const add = () => { let v = mul(); while (peek() === '+' || peek() === '-') { const o = t[i++], r = mul(); v = o === '+' ? v + r : v - r; } return v; };
+  const cmp = () => { let v = add(); while (['==', '!=', '>', '<', '>=', '<='].includes(peek())) { const o = t[i++], r = add(); v = Number(o === '==' ? Math.abs(v - r) < 1e-9 : o === '!=' ? Math.abs(v - r) >= 1e-9 : o === '>' ? v > r : o === '<' ? v < r : o === '>=' ? v >= r : v <= r); } return v; };
+  const and = () => { let v = cmp(); while (peek() === '&&') { i++; const r = cmp(); v = Number(!!v && !!r); } return v; };
+  const or = () => { let v = and(); while (peek() === '||') { i++; const r = and(); v = Number(!!v || !!r); } return v; };
+  const v = or(); if (i < t.length) throw new Error('formula'); return v;
+}
+const optLabel = k => { const f = cur.rule.fields.find(f => f.key === k); return f?.options?.[cur.idx[k]]?.label || ''; };
+const pick = (lbl, table) => { const n = norm(lbl); for (const [k, v] of Object.entries(table)) if (n.includes(k)) return v; return null; };
+const PPF_SIZE = l => pick(l, { suv: 1.15, pickup: 1.25, truck: 1.25, van: 1.25 }) ?? 1; // sedan / coupe = 1
+const EST = {
+  // XPEL/STEK-class gloss film, installed, GTA shops 2026: partial front ~$900–1,200 · full front ~$1,450–2,200 · full car ~$4,200–6,000+
+  ppf: () => { const c = pick(optLabel('coverage'), { 'partial': 950, 'full front': 1850, 'full vehicle': 4900, 'full body': 4900 }); return c && Math.round(c * PPF_SIZE(optLabel('vehicle')) / 10) * 10; },
+  'ppf-partial': () => pick(optLabel('plan'), { mirror: 250, 'partial': 950, 'full front': 1850, track: 2650 }),
+  'ppf-full': () => pick(optLabel('plan'), { colour: 6900, color: 6900, matte: 5400, gloss: 4900 }),
+  'window-graphics': () => Math.max(75, calc(cur.rule.formula, { ...cur.rule.constants, ...cur.values, design: 0, rate: Number(cur.rule.constants?.rate) || 12 })), // printed vinyl on glass ~$12/sq ft + install, $75 minimum
+  apparel: { rate: 12 },            // heat-press print per sq ft of artwork
+  'apparel-men-987': { unitPrice: 19, dtf: 15.9, vinyl: 15.9, embroidery: 19.5 }
+};
+const APPAREL_EST = { unitPrice: 14.5, dtf: 15.9, vinyl: 15.9, embroidery: 19.5 }; // typical blank tee + one print, same level as the priced Bella/Gildan items
+function estimate() { // dollars before tax, design fee not included — or null
+  const r = cur.rule, id = r.id, V = { ...(r.constants || {}), ...cur.values, design: 0 };
+  try {
+    let e = EST[id] ?? (/^apparel-/.test(id) && 'unitPrice' in (r.constants || {}) ? APPAREL_EST : null);
+    if (typeof e === 'function') return e();
+    if (e) { const fill = {}; for (const [k, v] of Object.entries(e)) if (!Number(V[k])) fill[k] = v; const n = calc(r.formula, { ...V, ...fill }); return n > 0 ? n : null; }
+    // print with a custom / unpriced size: price of the nearest standard size, scaled by area
+    const sf = r.fields.find(f => f.key === 'size' && f.type === 'select'); if (!sf) return null;
+    const dims = l => { const m = String(l).match(/([\d.]+)\s*[×x]\s*([\d.]+)/); return m ? m[1] * m[2] : 0; };
+    const area = dims(optLabel('size')) || (Number(cur.values.width) * Number(cur.values.height)) || 0; if (!area) return null;
+    let best = null;
+    for (const o of sf.options) { const a = dims(o.label); if (!a) continue; const p = calc(r.formula, { ...V, size: o.value }); if (p > 0 && (!best || Math.abs(Math.log(a / area)) < Math.abs(Math.log(best.a / area)))) best = { a, p }; }
+    return best ? Math.max(best.p * area / best.a, best.p * 0.6) : null;
+  } catch { return null; }
+}
+const estCents = () => { const d = onRequest() ? estimate() : null; return d ? Math.round(d * 100) + designCents() : null; };
 function choiceLines() {
   const r = cur.rule, out = [];
   for (const f of r.fields) {
     if (/^legacy/i.test(f.help || '')) continue;
+    if (['width', 'height'].includes(f.key) && !customSize(r)) continue;
     if (f.type === 'select') out.push([f.label, f.options[cur.idx[f.key]]?.label ?? '']);
-    else if (f.type === 'checkbox') { if (cur.values[f.key]) out.push([f.label.replace(/ · \$.*$/, ''), 'Yes']); }
+    else if (f.type === 'checkbox') { if (cur.values[f.key]) out.push(f.key === 'design' ? ['Design services', designFee(r) ? money(designFee(r) * 100) : 'Free (promotion)'] : [f.label.replace(/ · \$.*$/, ''), 'Yes']); }
     else { const n = Number(cur.values[f.key]); if (n || !/quantity$/i.test(f.label)) out.push([f.label.replace(/ · quantity$/i, ''), String(n)]); }
   }
   return out.filter(([, v]) => v !== '');
@@ -228,11 +292,13 @@ function drawSide(busy) {
   const s = $('#side');
   s.classList.toggle('has', !!cur); document.body.classList.toggle('has-price', !!cur);
   if (!cur) { s.classList.remove('open'); document.body.classList.remove('sheet-open'); s.innerHTML = `<div class="price empty"><p>Choose a ${S.tab === 'wraps' ? 'vehicle' : 'product'} to see the price.</p></div>`; return; }
-  const q = cur.quote, tax = cur.rule.taxPercent ?? 13, por = onRequest();
+  const q = cur.quote, tax = cur.rule.taxPercent ?? 13, por = onRequest(), est = por ? estCents() : null, estTax = est == null ? 0 : Math.round(est * tax / 100);
   s.innerHTML = `<div class="price ${busy ? 'busy' : ''}">
     <button type="button" class="sheet-h" data-sheet aria-label="Show price details"><i></i><span>${s.classList.contains('open') ? 'Hide details' : 'Details & copy'}</span></button>
     <small class="ttl">${esc(title())}</small>
-    ${cur.err ? `<p class="err">${esc(cur.err)}</p>` : !q ? '<div class="big">…</div>' : por ? '<div class="big por">Price on request</div><p class="hint">This product is priced by our team (supplier price or custom size). Design fee only below.</p>' : `
+    ${cur.err ? `<p class="err">${esc(cur.err)}</p>` : !q ? '<div class="big">…</div>' : por && est != null ? `<div class="big est">${money(est)}</div><small class="sub">Shop estimate · before tax · CAD</small>
+      <div class="withtax"><span>With ${tax}% HST</span><b>${money(est + estTax)}</b></div>
+      <p class="hint est-note">The website shows “price on request” for this item. This estimate follows current Toronto-area market prices — confirm the final price before booking.</p>` : por ? '<div class="big por">Price on request</div><p class="hint">This product is priced by our team (supplier price or custom size). Design fee only below.</p>' : `
       <div class="big">${money(q.subtotal)}</div><small class="sub">Before tax · CAD — same as the website</small>
       <div class="withtax"><span>With ${tax}% HST</span><b>${money(q.total)}</b></div>
       <dl><dt>Subtotal</dt><dd>${money(q.subtotal)}</dd>${q.discount ? `<dt>Discount</dt><dd>−${money(q.discount)}</dd>` : ''}<dt>HST ${tax}%</dt><dd>${money(q.tax)}</dd><dt class="t">Total</dt><dd class="t">${money(q.total)}</dd>
@@ -248,7 +314,7 @@ function drawSide(busy) {
   </div>`;
   $('[data-cust]', s).oninput = e => { cur.customer = e.target.value; };
   $('[data-copy]', s).onclick = () => copy(fullText());
-  $('[data-short]', s).onclick = () => copy(por ? 'Price on request' : `${title()}: ${money(q.subtotal)} + HST (${money(q.total)} CAD with HST)`);
+  $('[data-short]', s).onclick = () => copy(por ? (est != null ? `${title()}: about ${money(est)} + HST (estimate, to be confirmed)` : 'Price on request') : `${title()}: ${money(q.subtotal)} + HST (${money(q.total)} CAD with HST)`);
   $('[data-reset]', s).onclick = () => { cur = null; drawMain(); drawSide(); };
   $('[data-sheet]', s).onclick = () => { s.classList.toggle('open'); document.body.classList.toggle('sheet-open', s.classList.contains('open')); $('[data-sheet] span', s).textContent = s.classList.contains('open') ? 'Hide details' : 'Details & copy'; };
 }
@@ -258,7 +324,9 @@ function fullText() {
   L.push('', title());
   for (const [k, v] of choiceLines()) L.push(`• ${k}: ${v}`);
   L.push('');
-  if (onRequest()) L.push('Price: on request — we will confirm it shortly.');
+  const est = onRequest() ? estCents() : null;
+  if (est != null) L.push(`Estimated price: ${money(est)} + HST (about ${money(est + Math.round(est * tax / 100))} CAD with HST)`, 'We will confirm the exact price before booking.');
+  else if (onRequest()) L.push('Price: on request — we will confirm it shortly.');
   else {
     L.push(`Price: ${money(q.subtotal)} + HST`);
     if (q.discount) L.push(`Discount: −${money(q.discount)}`);
@@ -272,7 +340,7 @@ function fullText() {
 async function copy(text) {
   try { await navigator.clipboard.writeText(text); } catch { const t = document.createElement('textarea'); t.value = text; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); }
   toast('Copied — paste it in WhatsApp or a text');
-  if (cur?.quote) { const rec = store.get('recent', []); rec.unshift({ at: Date.now(), title: title(), total: onRequest() ? null : cur.quote.subtotal, text, tab: S.tab }); store.set('recent', rec.slice(0, 30)); }
+  if (cur?.quote) { const rec = store.get('recent', []); rec.unshift({ at: Date.now(), title: title(), total: onRequest() ? estCents() : cur.quote.subtotal, text, tab: S.tab }); store.set('recent', rec.slice(0, 30)); }
 }
 function drawRecent(m) {
   const rec = store.get('recent', []);
@@ -330,6 +398,14 @@ $('#install').onclick = async () => { if (!deferred) return; deferred.prompt(); 
   document.body.append(d); store.set('iosHint', store.get('iosHint', 0) + 1);
 })();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/pricer/sw.js', { scope: '/pricer/' }).catch(() => {});
+
+/* never leave a blank screen: show what went wrong and a reload button */
+function showErr(m) {
+  let b = $('#oops'); if (!b) { b = document.createElement('div'); b.id = 'oops'; b.className = 'oops'; document.body.append(b); }
+  b.innerHTML = `<span>Something went wrong: ${esc(m)}</span><button type="button">Reload</button>`; b.querySelector('button').onclick = () => location.reload();
+}
+addEventListener('error', e => showErr(e.message || 'error'));
+addEventListener('unhandledrejection', e => showErr(e.reason?.message || 'error'));
 
 /* ---------- start ---------- */
 (async () => {

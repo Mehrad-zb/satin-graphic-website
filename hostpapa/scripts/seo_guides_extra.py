@@ -38,7 +38,7 @@ _bc = 'print-business-cards'; _ru = 'print-roll-up-banner'; _xf = 'print-x-frame
 _pbm = _c(_pb, 'markup', 1.4)
 P = {
  # business cards (rule constants)
- 'bc_reg500': _m(_c(_bc, 'regularq500', 26)), 'bc_reg1000': _m(_c(_bc, 'regularq1000', 45)), 'bc_lux500': _m(_c(_bc, 'luxuryq500', 34.5)),
+ 'bc_reg500': _m(_c(_bc, 'regularq500', 26)), 'bc_reg1000': _m(_c(_bc, 'regularq1000', 45)), 'bc_lux500': _m(_c(_bc, 'luxuryq500', 44.85)),
  'bc_lux1000': _m(_c(_bc, 'luxuryq1000', 61.5)), 'bc_back': _m(_c(_bc, 'backSide', 6)), 'bc_round': _m(_c(_bc, 'rounded', 4)), 'bc_design': _m(_c(_bc, 'designFee', 100)),
  # roll-up / x-frame
  'ru_1': _m(_c(_ru, 'unit1', 148.74)), 'ru_2': _m(_c(_ru, 'unit2', 140.25)), 'ru_wide': _m(_c(_ru, 'largerSize', 40)), 'ru_prem': _m(_c(_ru, 'premiumStand', 45)),
