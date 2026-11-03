@@ -319,8 +319,9 @@ try{const st=document.createElement('style');st.textContent='.rule-summary .sum-
 
 /* artwork upload: show the file and a mockup of the product with it (art-mockup.mjs, loaded only when a file is picked) */
 try{document.addEventListener('change',e=>{const t=e.target;
- if(t?.matches?.('[data-art-upload]'))import('/art-mockup.mjs?v=1').then(m=>m.show(t)).catch(err=>console.warn('art mockup',err));
- else if(t?.name==='artwork-mode'){const b=t.closest('.rule-artwork')?.querySelector('.art-mock');if(b)b.hidden=t.value!=='upload';}
+ if(t?.matches?.('[data-art-upload]'))import('/art-mockup.mjs?v=2').then(m=>m.show(t)).catch(err=>console.warn('art mockup',err));
+ else if(t?.name==='artwork-mode'){const b=t.closest('.rule-artwork')?.querySelector('.art-mock');if(b)b.hidden=t.value!=='upload';import('/art-mockup.mjs?v=2').then(m=>setTimeout(m.sides,60)).catch(()=>{});}
+ else if(t?.matches?.('[data-rf="print_sides"]'))import('/art-mockup.mjs?v=2').then(m=>setTimeout(m.sides,60)).catch(()=>{}); // double side: front + back upload slots
 },true);
- for(const t of document.querySelectorAll('[data-art-upload]'))if(t.files?.length)import('/art-mockup.mjs?v=1').then(m=>m.show(t)).catch(()=>{}); // picked before this script loaded
+ for(const t of document.querySelectorAll('[data-art-upload]'))if(t.files?.length)import('/art-mockup.mjs?v=2').then(m=>m.show(t)).catch(()=>{}); // picked before this script loaded
 }catch(e){}

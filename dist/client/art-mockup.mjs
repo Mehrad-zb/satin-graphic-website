@@ -46,12 +46,20 @@ function css() {
 .art-mock .am-cap{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12.5px;color:#5b6472}
 .art-mock .am-cap b{color:#17191e;font-weight:600}
 .art-mock .am-warn{font-size:12.5px;line-height:1.45;background:#fff8e6;border:1px solid #f5d98b;color:#7a5200;border-radius:10px;padding:8px 10px;margin:0}
+.art-mock .am-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.art-mock .am-two{grid-template-columns:1fr}}
+.art-mock .am-side{margin:0;display:grid;gap:6px}.art-mock .am-side figcaption{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#17191e}
+.am-sides{margin:0 0 12px;display:grid;gap:8px}.am-sides p{margin:0;font-size:13.5px}
+.am-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.am-slot{display:grid;gap:2px;padding:12px 14px;border:1.5px dashed #c5ccd8;border-radius:12px;background:#fff;cursor:pointer}
+.am-slot:hover{border-color:var(--accent,#e11d48)}.am-slot.done{border-style:solid;border-color:#16a34a;background:#f0fdf4}
+.am-slot b{font-size:14px}.am-slot small{font-size:12px;color:#5b6472;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .art-mock .am-busy{padding:22px;text-align:center;font-size:13px;color:#5b6472}`;
   document.head.append(st);
 }
 
 /* file → data URL of the picture (PDF: first page) + its pixel size */
-async function picture(file) {
+async function picture(file, pageNo = 1) {
   if (/^image\/(png|jpeg|webp|gif|svg\+xml)$/.test(file.type)) {
     const url = await new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = no; r.readAsDataURL(file); });
     const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
@@ -68,7 +76,9 @@ async function picture(file) {
       if (!C.prototype.getOrInsert) C.prototype.getOrInsert = function (k, v) { if (!this.has(k)) this.set(k, v); return this.get(k); };
     }
     const lib = await import('/checkout/vendor/pdf.mjs'); lib.GlobalWorkerOptions.workerSrc = '/checkout/vendor/pdf.worker.mjs';
-    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise, page = await doc.getPage(1);
+    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    if (pageNo > doc.numPages) return null;
+    const page = await doc.getPage(pageNo);
     const v1 = page.getViewport({ scale: 1 }), k = Math.min(3, 1600 / Math.max(v1.width, v1.height)), vp = page.getViewport({ scale: k });
     const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
     const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
@@ -232,20 +242,68 @@ function svg(item) {
   return `<svg ${V} role="img" aria-label="Mockup of your ${esc(scene.name)}">${defs}${body}</svg>`;
 }
 
+/* double-sided products (Print sides = Double side): the customer gives a front and a back file */
+const isDouble = () => document.querySelector('[data-rf="print_sides"]:checked')?.value === '1'
+  || document.querySelector('select[data-rf="print_sides"]')?.value === '1';
+const realInput = () => document.querySelector('.rule-artwork [data-art-upload]');
+let picked = { front: null, back: null };
+
+function stageHTML(it, label) {
+  const pr = pieceRatio(it), off = Math.abs(Math.log(pr / (it.w / it.h)));
+  return { html: `<figure class="am-side">${label ? `<figcaption>${label}</figcaption>` : ''}<div class="am-stage">${svg(it)}</div></figure>`, off: off > .12 };
+}
 function draw(box) {
-  const it = items[cur];
-  const files = items.map((f, i) => `<button type="button" class="am-file ${i === cur ? 'on' : ''}" data-am="${i}" title="${esc(f.name)}"><span class="im">${f.url ? `<img src="${f.url}" alt="">` : '<b>FILE</b>'}</span><small>${esc(f.name)}${f.pages > 1 ? ` · ${f.pages} pages` : ''}</small></button>`).join('');
-  let stage = '', warn = '';
-  if (it?.url && scene) {
-    stage = `<div class="am-cap"><span><b>Mockup</b> · your ${esc(scene.name)}</span><span>${items.length > 1 ? 'Tap a file to see it on the product' : ''}</span></div><div class="am-stage">${svg(it)}</div>`;
-    const pr = pieceRatio(it), fr = it.w / it.h, off = Math.abs(Math.log(pr / fr));
-    if (off > .12) warn = `<p class="am-warn">Your file is a different shape than this product, so it is shown with white space around it. We will check it and send you a proof before printing — or choose “I need a designer” and we will adjust it for you.</p>`;
+  const dbl = isDouble() && items.length >= 1, it = items[cur];
+  const tag = i => dbl ? (i === 0 ? 'Front' : i === 1 ? 'Back' : '') : '';
+  const files = items.map((f, i) => `<button type="button" class="am-file ${!dbl && i === cur ? 'on' : ''}" data-am="${i}" title="${esc(f.name)}"><span class="im">${f.url ? `<img src="${f.url}" alt="">` : '<b>FILE</b>'}</span><small>${tag(i) ? `<b>${tag(i)}</b> · ` : ''}${esc(f.name)}${f.page ? ` · page ${f.page}` : f.pages > 1 ? ` · ${f.pages} pages` : ''}</small></button>`).join('');
+  let stage = '', warn = false, note = '';
+  if (dbl) {
+    const sides = [[items[0], 'Front'], [items[1], 'Back']].filter(([x]) => x?.url);
+    const parts = sides.map(([x, l]) => stageHTML(x, l)); warn = parts.some(p => p.off);
+    stage = sides.length ? `<div class="am-cap"><span><b>Mockup</b> · your ${esc(scene.name)}, both sides</span></div><div class="am-two">${parts.map(p => p.html).join('')}</div>` : '';
+    if (!items[1]) note = `<p class="am-warn">You chose <b>double side</b> — add the file for the <b>back</b> too (use “Back side” above), or upload one PDF with 2 pages.</p>`;
+  } else if (it?.url && scene) {
+    const p = stageHTML(it, ''); warn = p.off;
+    stage = `<div class="am-cap"><span><b>Mockup</b> · your ${esc(scene.name)}</span><span>${items.length > 1 ? 'Tap a file to see it on the product' : ''}</span></div>${p.html}`;
   } else if (it && !it.url) stage = `<p class="am-warn">We received “${esc(it.name)}”. This file type cannot be previewed in the browser, but our team will open it and send you a proof.</p>`;
-  box.innerHTML = `${files ? `<div class="am-files">${files}</div>` : ''}${stage}${warn}<p class="small" style="margin:0;color:#5b6472">Preview only — colours on screen can differ slightly from print. You approve a proof before production.</p>`;
+  box.innerHTML = `${files ? `<div class="am-files">${files}</div>` : ''}${note}${stage}${warn ? '<p class="am-warn">Your file is a different shape than this product, so it is shown with white space around it. We will check it and send you a proof before printing — or choose “I need a designer” and we will adjust it for you.</p>' : ''}<p class="small" style="margin:0;color:#5b6472">Preview only — colours on screen can differ slightly from print. You approve a proof before production.</p>`;
+}
+
+/* Front / Back pickers: both files go into the calculator's own upload field together, so both are uploaded with the order */
+export function sides() {
+  const inp = realInput(); if (!inp || !scene) return;
+  const sec = inp.closest('.rule-artwork'); let bar = sec.querySelector('.am-sides');
+  const mode = sec.querySelector('[name="artwork-mode"]:checked')?.value || 'upload';
+  if (!isDouble() || mode !== 'upload') { bar?.remove(); if (items.length) { const b = sec.querySelector('.art-mock'); if (b) draw(b); } return; }
+  css();
+  if (!bar) {
+    bar = document.createElement('div'); bar.className = 'am-sides';
+    bar.innerHTML = `<p><b>Double-sided:</b> upload a file for each side.</p><div class="am-pick">${['front', 'back'].map(k => `<label class="am-slot" data-slot="${k}"><input type="file" hidden accept="${esc(inp.accept || 'image/*,application/pdf')}"><b>${k === 'front' ? 'Front side' : 'Back side'}</b><small data-name>Choose file…</small></label>`).join('')}</div>`;
+    (sec.querySelector('[data-art-controls]') || inp).before(bar);
+    bar.addEventListener('change', e => {
+      const sl = e.target.closest('[data-slot]'); if (!sl || !e.target.files?.[0]) return; e.stopPropagation();
+      picked[sl.dataset.slot] = e.target.files[0]; push();
+    });
+  }
+  const pdfBack = !picked.back && items[1]?.page === 2; // one 2-page PDF covers both sides
+  for (const k of ['front', 'back']) {
+    const n = bar.querySelector(`[data-slot="${k}"] [data-name]`), auto = k === 'back' && pdfBack;
+    n.textContent = picked[k] ? (auto ? '' : '') + picked[k].name + (k === 'front' && pdfBack ? ' · page 1' : '') : auto ? `${items[1].name} · page 2` : 'Choose file…';
+    bar.querySelector(`[data-slot="${k}"]`).classList.toggle('done', !!picked[k] || auto);
+  }
+  if (items.length) { const b = sec.querySelector('.art-mock'); if (b) draw(b); }
+}
+function push() {
+  const inp = realInput(); if (!inp) return;
+  const dt = new DataTransfer(); for (const f of [picked.front, picked.back]) if (f) dt.items.add(f);
+  inp.multiple = true; inp.files = dt.files; inp._amPicked = true;
+  inp.dispatchEvent(new Event('change', { bubbles: true })); // the calculator uploads them; site-extras calls show()
+  sides();
 }
 
 export async function show(input) {
   const files = [...(input.files || [])]; const sec = input.closest('.rule-artwork') || input.parentElement;
+  if (!input._amPicked) { picked = { front: files[0] || null, back: files[1] || null }; } input._amPicked = false;
   let box = sec.querySelector('.art-mock');
   if (!files.length) { box?.remove(); return; }
   if (/wallpaper/.test(path)) return; // the wall preview already shows the design in a room
@@ -258,12 +316,18 @@ export async function show(input) {
     if (id !== run) return;
     items.push({ name: f.name, ...(p || {}) });
   }
+  // one PDF with 2 pages on a double-sided product: page 1 = front, page 2 = back
+  if (isDouble() && items.length === 1 && items[0].pages > 1) {
+    let p2 = null; try { p2 = await picture(files[0], 2); } catch { p2 = null; }
+    if (id !== run) return;
+    if (p2) { items[0].page = 1; items.push({ name: files[0].name, page: 2, ...p2 }); }
+  }
   cur = Math.max(0, items.findIndex(i => i.url));
   if (!scene) { // pages with their own preview: just the file thumbnails
     box.innerHTML = `<div class="am-files">${items.map(f => `<span class="am-file"><span class="im">${f.url ? `<img src="${f.url}" alt="">` : '<b>FILE</b>'}</span><small>${esc(f.name)}</small></span>`).join('')}</div>`; return;
   }
-  draw(box);
-  box.onclick = e => { const b = e.target.closest('[data-am]'); if (b) { cur = +b.dataset.am; draw(box); } };
+  draw(box); sides();
+  box.onclick = e => { const b = e.target.closest('[data-am]'); if (b && !isDouble()) { cur = +b.dataset.am; draw(box); } };
   // the size in the form can change the shape (banners, decals): redraw
   const form = input.closest('form, .rule-form, [data-rule-form], main') || document;
   if (!form._amWatch) { form._amWatch = 1; form.addEventListener('input', e => { if (e.target.matches?.('[data-rf="width"],[data-rf="height"]') && items.length) { const b = document.querySelector('.art-mock'); if (b) draw(b); } }); }
