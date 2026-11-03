@@ -24,8 +24,8 @@ const COLORS = ['#e6007e', '#2563eb', '#059669', '#d97706', '#7c3aed', '#0891b2'
 const scol = sid => COLORS[(parseInt(String(sid).slice(1), 10) - 1) % COLORS.length] || COLORS[0];
 const isOpen = d => ['sent', 'viewed', 'partial'].includes(d.status);
 const signedCount = d => (d.signers || []).filter(x => x.status === 'signed').length;
-const PROLE = { price: /agreed project price/i, start: /project start deposit|design fee/i, prod: /production deposit/i, tax: /applicable tax/i, total: /total project amount/i, after: /total after tax/i, balance: /final balance/i };
-const PRNAME = { price: 'Agreed project price (before tax)', start: 'Project start deposit', prod: '50% production deposit', tax: 'Applicable tax', total: 'Total project amount', after: 'Total after tax', balance: 'Final balance due' };
+const PROLE = { price: /agreed project price/i, start: /getting started deposit|project start deposit|design charge/i, prod: /production deposit/i, tax: /applicable tax/i, total: /total project amount/i, after: /total after tax/i, balance: /final balance/i };
+const PRNAME = { price: 'Agreed project price (before tax)', start: 'Getting Started Deposit', prod: '50% production deposit', tax: 'Applicable tax', total: 'Total project amount', after: 'Total after tax', balance: 'Final balance due' };
 const priceFields = fields => { const o = {}; for (const f of fields) if (f.role === 'sender' && f.type === 'text') for (const [r, re] of Object.entries(PROLE)) if (!o[r] && re.test(f.label || '')) { o[r] = f; break; } return o.price ? o : {}; };
 const num = v => { const n = parseFloat(String(v ?? '').replace(/[$,\s]/g, '')); return Number.isFinite(n) ? n : null; };
 const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
@@ -249,12 +249,20 @@ async function fillPage(id, docId, auto, form) { toTop();
   const groups = []; const gi = {};
   for (const f of ours) { const g = f.group || (f.type === 'checkbox' ? 'Options' : 'Details'); if (!(g in gi)) { gi[g] = groups.length; groups.push([g, []]); } groups[gi[g]][1].push(f); }
   const PR = priceFields(t.fields), hasPR = !!PR.price, PRIDS = new Set(Object.values(PR).map(x => x.id));
-  const plain = fl => !PRIDS.has(fl.id) && !(hasPR && fl.type === 'checkbox' && /free design promotion|standard design fee/i.test(fl.label || '')); // design is included free: the old design-fee checkboxes are not used
-  const CALC = [['prod', '(Price − start deposit) × 50%'], ['tax', '13% HST on the agreed price'], ['total', 'Same as the agreed price'], ['after', 'Total project amount + tax'], ['balance', 'After tax − start deposit − production deposit']].filter(([r]) => PR[r]);
+  // design: "Free design promotion" / "Standard design fee" checkboxes and the "Design fee" amount are set from the pricing box
+  const DZ = hasPR ? { free: t.fields.find(x => x.role === 'sender' && x.type === 'checkbox' && /free design promotion/i.test(x.label || '')), std: t.fields.find(x => x.role === 'sender' && x.type === 'checkbox' && /standard design fee/i.test(x.label || '')), fee: t.fields.find(x => x.role === 'sender' && x.type === 'text' && /^design fee$/i.test((x.label || '').trim())) } : {};
+  const plain = fl => !PRIDS.has(fl.id) && !(hasPR && [DZ.free, DZ.std, DZ.fee].includes(fl));
+  const CALC = [['prod', '(Agreed price − Getting Started Deposit) × 50%'], ['tax', '13% HST on the agreed price'], ['total', 'Same as the agreed price (before tax)'], ['after', 'Agreed price + tax'], ['balance', 'Total after tax − Getting Started Deposit − production deposit (includes the HST still owed)']].filter(([r]) => PR[r]);
   const pricingHTML = () => `<div class="es-pr">
       <div class="es-fgrid"><label class="field"><span>${PRNAME.price}</span><input data-pr="price" data-v="${PR.price.id}" inputmode="decimal" placeholder="$0.00"></label>
-      ${PR.start ? `<label class="field"><span>${PRNAME.start}</span><input data-pr="start" data-v="${PR.start.id}" inputmode="decimal" placeholder="$250.00"><small class="hint">Credited toward the total project price — not an extra charge</small></label>` : ''}</div>
-      <div class="es-prrow"><label class="es-check" style="margin:0"><input type="checkbox" data-hst> Apply HST (13%, Ontario)</label><span class="es-free">✓ Professional Design Included — FREE</span></div>
+      ${PR.start ? `<label class="field"><span>${PRNAME.start}</span><input data-pr="start" data-v="${PR.start.id}" inputmode="decimal" placeholder="$250.00"><small class="hint">Paid to start the project — part of the agreed price and taken off the balance, never added on top</small></label>` : ''}</div>
+      <div class="es-design"><span class="es-dl">Design</span>
+        <label class="es-check" style="margin:0"><input type="radio" name="es-design" value="free" data-design> Free Design Promotion Applied</label>
+        <label class="es-check" style="margin:0"><input type="radio" name="es-design" value="std" data-design> Standard Design Fee Applied</label>
+        ${DZ.free ? `<input type="checkbox" data-v="${DZ.free.id}" data-dz="free" hidden>` : ''}${DZ.std ? `<input type="checkbox" data-v="${DZ.std.id}" data-dz="std" hidden>` : ''}
+        <label class="field es-dfee"><span>Design fee</span><input data-dfee ${DZ.fee ? `data-v="${DZ.fee.id}"` : ''} inputmode="decimal" placeholder="$0.00"><small class="hint" data-dfeehint></small></label>
+        <span class="es-free" data-freepill>✓ Professional Design Included — FREE</span></div>
+      <div class="es-prrow"><label class="es-check" style="margin:0"><input type="checkbox" data-hst> Apply HST (13%, Ontario)</label><span class="es-remain" data-remain></span></div>
       <div class="es-calc">${CALC.map(([r, h]) => `<div class="es-crow" data-row="${r}"><div class="es-cl"><b>${PRNAME[r]}</b><small>${h}</small></div><input data-pr="${r}" data-v="${PR[r].id}" inputmode="decimal" aria-label="${PRNAME[r]}"><span class="es-tag" data-tag="${r}"></span><button type="button" class="linkbtn es-rst" data-reset="${r}" hidden>Reset to auto</button></div>`).join('')}</div>
       <div class="es-prwarn" data-prwarn hidden></div>
       <div class="es-prconf"><span class="es-prstate" data-prstate></span><span class="es-pract"><button type="button" class="btn ghost sm" data-recalc>Recalculate all</button><button type="button" class="btn sm" data-confirm>Confirm pricing</button></span></div>
@@ -284,7 +292,8 @@ async function fillPage(id, docId, auto, form) { toTop();
   const sameVals = (a, b) => !!a && Object.keys(PR).every(r => (a[r] || '') === (b[r] || ''));
   const recalc = () => {
     if (!hasPR) return;
-    const P = num(pin('price').value), S = PR.start ? num(pin('start').value) || 0 : 0, hst = $('[data-hst]', c).checked;
+    const P = num(pin('price').value), S = PR.start ? r2(num(pin('start').value) || 0) : 0, hst = $('[data-hst]', c).checked;
+    const rm = $('[data-remain]', c); rm.textContent = P != null ? `Remaining before production: ${cad(r2(P - S))}` : '';
     const shown = r => PS.manual[r] ? num(pin(r).value) : null, auto = {};
     if (P != null) {
       auto.prod = r2((P - S) * .5); auto.tax = hst ? r2(P * .13) : 0; auto.total = P;
@@ -295,14 +304,18 @@ async function fillPage(id, docId, auto, form) { toTop();
       const t = $(`[data-tag="${r}"]`, c); t.textContent = PS.manual[r] ? 'Manually adjusted' : 'Auto'; t.className = 'es-tag ' + (PS.manual[r] ? 'man' : 'auto'); $(`[data-reset="${r}"]`, c).hidden = !PS.manual[r]; }
     // non-blocking checks on the amounts that are shown
     const w = [], v = r => PR[r] ? num(pin(r).value) : null, diff = (a, b) => a != null && b != null && Math.abs(a - b) > .005;
-    if (P != null) {
+    PS.bad = P != null && S > P ? `The Getting Started Deposit (${cad(S)}) can't be more than the agreed project price (${cad(P)}).` : P != null && P < 0 ? 'The agreed price can’t be negative.' : '';
+    if (P != null && !PS.bad) {
       if (PS.manual.total && diff(v('total'), P)) w.push(`Total project amount (${cad(v('total'))}) is not the agreed price (${cad(P)}).`);
       if (PS.manual.prod && diff(v('prod'), r2((P - S) * .5))) w.push(`Production deposit is not 50% of (price − start deposit) = ${cad(r2((P - S) * .5))}.`);
       if (PS.manual.tax && diff(v('tax'), hst ? r2(P * .13) : 0)) w.push(`Tax is not ${hst ? '13% HST = ' + cad(r2(P * .13)) : '$0.00 (HST is off)'}.`);
       if (PR.after && diff(v('after'), r2((v('total') ?? 0) + (v('tax') ?? 0)))) w.push(`Total after tax should be ${cad(r2((v('total') ?? 0) + (v('tax') ?? 0)))} (total + tax).`);
       if (PR.balance && diff(v('balance'), r2((v('after') ?? 0) - S - (v('prod') ?? 0)))) w.push(`Final balance due should be ${cad(r2((v('after') ?? 0) - S - (v('prod') ?? 0)))} (after tax − start deposit − production deposit).`);
     }
-    const wb = $('[data-prwarn]', c); wb.hidden = !w.length; wb.innerHTML = w.length ? `<b>These amounts don't add up</b><ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul><small>You can still confirm them if that is intended.</small>` : '';
+    // only typed-over amounts can differ from the formulas: say so clearly (auto amounts always follow the formulas)
+    const wb = $('[data-prwarn]', c); wb.hidden = !w.length && !PS.bad;
+    wb.innerHTML = PS.bad ? `<b>${esc(PS.bad)}</b>` : w.length ? `<b>Manually adjusted amounts differ from the formulas</b><ul>${w.map(x => `<li>${esc(x)}</li>`).join('')}</ul><small>Press “Reset to auto” next to an amount to use the formula again, or confirm if the adjustment is intended.</small>` : '';
+    $('[data-confirm]', c).disabled = !!PS.bad;
     prState();
   };
   const prState = () => { const st = $('[data-prstate]', c); const empty = !Object.entries(prVals()).some(([r, x]) => r !== 'start' && x);
@@ -310,8 +323,20 @@ async function fillPage(id, docId, auto, form) { toTop();
     const ok = sameVals(PS.conf, prVals()); st.className = 'es-prstate ' + (ok ? 'ok' : PS.conf ? 'again' : 'no');
     st.textContent = ok ? '✓ Pricing confirmed — these amounts go on the agreement' : PS.conf ? 'Needs reconfirmation — an amount changed' : 'Not confirmed yet';
     $('[data-confirm]', c).textContent = ok ? 'Confirmed ✓' : 'Confirm pricing'; };
+  const design = () => { // Free design → design fee $0 (FREE); Standard → the fee typed in; the two checkboxes on the agreement follow
+    const mode = ($('[data-design]:checked', c) || {}).value || 'free', fee = $('[data-dfee]', c);
+    if (mode === 'free') { fee.value = '$0.00'; fee.readOnly = true; } else { fee.readOnly = false; if (num(fee.value) === 0 && !fee.dataset.std) fee.value = ''; }
+    $('[data-dfeehint]', c).textContent = mode === 'free' ? 'Free design promotion' : 'Shown on the agreement; included in the agreed price (not part of the Getting Started Deposit)';
+    $('[data-freepill]', c).hidden = mode !== 'free';
+    const fb = $('[data-dz="free"]', c), sb = $('[data-dz="std"]', c); if (fb) fb.checked = mode === 'free'; if (sb) sb.checked = mode === 'std'; };
   if (hasPR) {
     for (const r of Object.keys(PR)) pin(r).value = val(PR[r]) || '';
+    { const was = pre ? (DZ.std && pre[DZ.std.id] === '1' ? 'std' : 'free') : 'free'; $(`[data-design][value="${was}"]`, c).checked = true;
+      const fe = $('[data-dfee]', c); if (pre && DZ.fee && pre[DZ.fee.id]) { fe.value = pre[DZ.fee.id]; fe.dataset.std = 1; }
+      $$('[data-design]', c).forEach(r => r.onchange = () => { if (r.value === 'std') $('[data-dfee]', c).focus(); design(); });
+      $('[data-dfee]', c).addEventListener('input', e => { e.target.dataset.std = 1; });
+      $('[data-dfee]', c).addEventListener('blur', e => { const n = num(e.target.value); if (n != null) e.target.value = cad(n); });
+      design(); }
     if (PR.start && !pre && !num(pin('start').value)) pin('start').value = '$250.00';
     const hb = $('[data-hst]', c), tv = num(pin('tax') && pin('tax').value);
     hb.checked = doc && doc.pricing && doc.pricing.hst != null ? doc.pricing.hst : !(doc && tv === 0 && num(pin('price').value));
@@ -375,6 +400,7 @@ async function fillPage(id, docId, auto, form) { toTop();
       if (x.email && seen[x.email.toLowerCase()]) { err.textContent = `Signer ${k + 1}: ${x.email} is already signer ${seen[x.email.toLowerCase()]}. Each signer needs their own email.`; el.focus(); return; }
       if (x.email) seen[x.email.toLowerCase()] = k + 1;
     }
+    if (hasPR && PS.bad) { err.textContent = PS.bad; $('[data-pricing]', c).scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     if (hasPR && Object.entries(prVals()).some(([r, x]) => r !== 'start' && x) && !sameVals(PS.conf, prVals())) { err.textContent = 'Review the Pricing & payment amounts and press “Confirm pricing” first.'; $('[data-pricing]', c).scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     go.disabled = true; go.textContent = 'Saving…';
     const prefill = {}; $$('[data-v]', c).forEach(i => { prefill[i.dataset.v] = i.type === 'checkbox' ? (i.checked ? '1' : '') : i.value.trim(); });

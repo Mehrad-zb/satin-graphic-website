@@ -161,3 +161,8 @@
 .es-addin>b{display:block;font-size:1.35em;margin-bottom:1em}.es-addin h4{margin:1em 0 .3em;font-size:1.05em;border-top:1px solid #e5e7eb;padding-top:.6em}
 .es-addin dl{display:grid;grid-template-columns:38% 1fr;gap:.15em .8em;margin:0}.es-addin dt{color:#6b7280;font-weight:600}.es-addin dd{margin:0}
 .es-custf summary{cursor:pointer;list-style:none}.es-custf summary::-webkit-details-marker{display:none}.es-custf summary::before{content:'▸ ';color:var(--mut)}.es-custf[open] summary::before{content:'▾ '}
+/* pricing: design option + remaining-before-production line */
+.es-design{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:4px 0 12px;padding:12px 14px;border:1px solid var(--line,#e5e7eb);border-radius:10px;background:var(--soft,#f8fafc)}
+.es-design .es-dl{font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2,#475569);margin-right:4px}
+.es-design .es-dfee{margin:0;min-width:180px;flex:0 1 220px}.es-design .es-dfee input[readonly]{background:#eef6f0;color:#1e6b2c;font-weight:600}
+.es-remain{font-size:13.5px;color:var(--ink2,#475569);font-weight:600}

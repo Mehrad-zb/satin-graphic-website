@@ -402,7 +402,7 @@ function es_clean_prefill(array $fields, array $in): array {
     return $pf;
 }
 /* ---------- Pricing & payment: suggested amounts with manual overrides, confirmed by staff before sending ---------- */
-const ES_PRICE_ROLES = ['price' => '/agreed project price/i', 'start' => '/project start deposit|design fee/i', 'prod' => '/production deposit/i', 'tax' => '/applicable tax/i', 'total' => '/total project amount/i', 'after' => '/total after tax/i', 'balance' => '/final balance/i'];
+const ES_PRICE_ROLES = ['price' => '/agreed project price/i', 'start' => '/getting started deposit|project start deposit|design charge/i', 'prod' => '/production deposit/i', 'tax' => '/applicable tax/i', 'total' => '/total project amount/i', 'after' => '/total after tax/i', 'balance' => '/final balance/i'];
 /** role => field id of the pricing fields (staff-filled text fields), or [] when the document has no "Agreed project price" field. */
 function es_price_fields(array $fields): array {
     $o = [];
@@ -860,7 +860,7 @@ function esign_admin_route(string $r, string $method): void {
         $prc = array_key_exists('pricing', $v) ? es_clean_pricing($v['pricing'], $fields, $pf, $u) : $d['pricing'];
         $pdo->prepare('UPDATE esign_docs SET fields = ?, prefill = ?, message = ?, approval = ?, pricing = ?, updated_at = ? WHERE id = ?')->execute([json_encode($fields), json_encode($pf, JSON_UNESCAPED_UNICODE), $msg, $ap ? json_encode($ap) : '', $prc, now_iso(), $d['id']]);
         $pc = json_decode($prc ?: '{}', true) ?: [];
-        if (!empty($pc['confirmed'])) es_event($d['id'], 'pricing confirmed', $u['name'], implode(' · ', array_filter(array_map(fn($r, $id) => ($pf[$id] ?? '') !== '' ? ['price' => 'Price', 'start' => 'Start deposit', 'prod' => 'Production deposit', 'tax' => 'Tax', 'total' => 'Total', 'after' => 'Total after tax', 'balance' => 'Balance'][$r] . ' ' . $pf[$id] : '', array_keys(es_price_fields($fields)), es_price_fields($fields)))));
+        if (!empty($pc['confirmed'])) es_event($d['id'], 'pricing confirmed', $u['name'], implode(' · ', array_filter(array_map(fn($r, $id) => ($pf[$id] ?? '') !== '' ? ['price' => 'Price', 'start' => 'Getting Started Deposit', 'prod' => 'Production deposit', 'tax' => 'Tax', 'total' => 'Total', 'after' => 'Total after tax', 'balance' => 'Balance'][$r] . ' ' . $pf[$id] : '', array_keys(es_price_fields($fields)), es_price_fields($fields)))));
         es_put_signers($d['id'], $signers);
         es_info_changes(es_doc_by_id($d['id']));
         es_event($d['id'], 'information updated', $u['name'], count($signers) . ' signer' . (count($signers) === 1 ? '' : 's') . ': ' . implode(', ', array_map('es_who', $signers)));
