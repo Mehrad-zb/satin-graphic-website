@@ -18,7 +18,8 @@ const ICON = {
   more: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
   copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/>',
   reset: '<path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v5h5"/>',
-  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  admin: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h3M8 17h6"/>'
 };
 const icon = n => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
 
@@ -56,8 +57,13 @@ async function getRule(id) {
 /* ---------- layout ---------- */
 function drawRail() {
   $('#rail').innerHTML = TABS.map(t => `<button class="${S.tab === t.id ? 'on' : ''}" data-tab="${t.id}">${icon(t.icon)}<span>${t.label}</span></button>`).join('')
-    + `<button class="${S.tab === 'recent' ? 'on' : ''}" data-tab="recent">${icon('clock')}<span>Recent</span></button>`;
-  $('#rail').onclick = e => { const b = e.target.closest('[data-tab]'); if (!b) return; S.tab = b.dataset.tab; store.set('state', S); cur = null; drawRail(); drawMain(); drawSide(); };
+    + `<button class="${S.tab === 'recent' ? 'on' : ''}" data-tab="recent">${icon('clock')}<span>Recent</span></button>`
+    + `<button class="adm" data-admin title="Open the Satin admin panel">${icon('admin')}<span>Admin</span></button>`;
+  $('#rail').onclick = e => {
+    if (e.target.closest('[data-admin]')) { // own window, like an app (signed-in admin sessions carry over)
+      const w = window.open('/admin/', 'satin-admin', 'popup,width=1440,height=900'); if (!w) location.href = '/admin/'; return;
+    }
+    const b = e.target.closest('[data-tab]'); if (!b) return; S.tab = b.dataset.tab; store.set('state', S); cur = null; drawRail(); drawMain(); drawSide(); };
 }
 function drawMain() {
   const m = $('#main');
