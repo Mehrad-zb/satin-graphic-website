@@ -1,4 +1,4 @@
-/* Satin Admin — theme switcher (Classic / Glass / Lavender) and page motion.
+/* Satin Admin — theme switcher (Classic / Glass / Lavender / River) and page motion.
    Works beside app.js without touching it: watches #app and decorates what app.js renders. */
 (() => {
   'use strict';
@@ -7,10 +7,11 @@
     ['classic', 'Classic', 'Light grey, clean'],
     ['glass', 'Glass', 'Frosted panels on a sunny blur'],
     ['lav', 'Lavender', 'Light canvas, black icon rail'],
+    ['river', 'River', 'Calm grey canvas, teal actions, soft tiles'],
   ];
   const root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const get = () => { try { return localStorage.getItem(KEY) || 'classic'; } catch { return 'classic'; } };
+  const get = () => { try { return localStorage.getItem(KEY) || 'river'; } catch { return 'river'; } }; // River is the default look
   const apply = t => { THEMES.forEach(([k]) => root.classList.toggle('th-' + k, k === t && k !== 'classic')); };
   const set = t => {
     try { localStorage.setItem(KEY, t); } catch {}

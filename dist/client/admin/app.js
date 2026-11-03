@@ -737,6 +737,32 @@ async function viewInvoiceEdit(params) {
   const todo = params.get('do');
   if (todo && id) { history.replaceState(null, '', '#/invoices/edit?id=' + encodeURIComponent(id)); if (todo === 'dup') invAct('dup', c); if (todo === 'send' && can('invoices.edit')) sendInvoiceModal(c); }
 }
+/* Invoice overview at the top of an open invoice: who / status, progress steps, money tiles and a paid bar (River style). */
+function invHero(i) {
+  const k = calcInvoice(i, INVSET.taxes || []), paid = Math.max(0, (i.paid || 0) - (i.refunded || 0)), bal = Math.max(0, k.total - (i.paid || 0));
+  const cust = i.customer || {}, name = cust.name || cust.company || 'No customer yet', pct = k.total > 0 ? Math.min(100, Math.round((i.paid || 0) / k.total * 100)) : 0;
+  const isPaid = ['paid', 'refunded'].includes(i.status) || (k.total > 0 && bal === 0);
+  const pays = (i.payments || []).filter(p => p.kind !== 'refund').length;
+  const steps = [
+    ['Created', i.issueDate ? 'Issued ' + dlong(i.issueDate) : 'Draft', true],
+    ['Sent', i.sentAt ? dlong(i.sentAt) : 'Not sent yet', !!i.sentAt],
+    ['Viewed', i.viewedAt ? 'By customer ' + dlong(i.viewedAt) : 'Not opened yet', !!i.viewedAt],
+    ['Paid', isPaid ? money(i.paid || 0) + ' received' : (i.paid || 0) > 0 ? money(bal) + ' left' : money(k.total) + ' due', isPaid]];
+  const cur = steps.findIndex(s => !s[2]);
+  const tiles = [['Total', money(k.total), (i.items || []).length + ' line' + ((i.items || []).length === 1 ? '' : 's'), 'n'],
+    ['Paid', money(paid), pays ? pays + ' payment' + (pays === 1 ? '' : 's') : 'Nothing yet', 'g'],
+    ['Balance due', money(bal), i.dueDate ? 'Due ' + dlong(i.dueDate) : '', bal > 0 ? 'a' : 'g'],
+    i.nextDue && ['sent', 'partial', 'overdue'].includes(i.status) ? ['Next payment', money(i.nextDue.amount), (i.nextDue.label || '') + (i.nextDue.due ? ' · ' + dlong(i.nextDue.due) : ''), 'b'] : ['Payment plan', i.deposit?.items?.length ? i.deposit.items.length + ' payments' : 'Single payment', '', 'b']];
+  return `<section class="card inv-hero">
+    <div class="ih-top"><span class="avatar ih-av">${esc(initials(name))}</span><div class="ih-who"><div class="ih-name"><b>${esc(name)}</b><span class="ih-chip">#${esc(i.number)}</span>${invPill(i)}</div>
+      <small>${esc(i.title || 'Invoice')}${cust.email ? ' · ' + esc(cust.email) : ''}${i.dueDate ? ' · Due ' + esc(dlong(i.dueDate)) : ''}</small></div>
+      ${i.publicUrl ? `<a class="btn ghost sm ih-open" href="${esc(i.publicUrl)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Open invoice</a>` : ''}</div>
+    <ol class="ih-steps">${steps.map(([t, sub, done], n) => `<li class="${done ? 'done' : n === cur ? 'cur' : ''}"><span class="ih-dot">${done ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' : n + 1}</span><div><b>${t}</b><small>${esc(sub)}</small></div></li>`).join('')}</ol>
+    <div class="ih-tiles">${tiles.map(([l, v, sub, tone]) => `<div class="ih-tile t-${tone}"><small>${l}</small><b>${v}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</div>`).join('')}</div>
+    <div class="ih-bar" role="img" aria-label="${pct}% paid"><i style="--w:${pct}%"></i></div>
+    <div class="ih-legend"><span class="lg-p">Paid ${money(i.paid || 0)}</span><span class="lg-o">Owed ${money(bal)}</span>${i.refunded ? `<span>Refunded ${money(i.refunded)}</span>` : ''}</div>
+  </section>`;
+}
 function drawInvoice(c) {
   if (INV && INV.kind === 'quote') return drawQuote(c);
   if (!drawInvoice.mq) { drawInvoice.mq = matchMedia('(max-width:820px)'); drawInvoice.mq.addEventListener('change', () => { const cc = $('[data-content]'); if (INV && cc && cc.querySelector('.inv-doc,.wx')) { document.body.classList.remove('wx-inv'); drawInvoice(cc); } }); }
@@ -747,7 +773,7 @@ function drawInvoice(c) {
   $('[data-actions]').innerHTML = ro ? (i.id ? `<a class="btn ghost sm" href="${esc(i.publicUrl)}" target="_blank" rel="noopener">View / print</a>` : '') :
     `<a class="btn ghost sm" href="#/invoices">← All invoices</a> <button class="btn ghost sm" data-save>${i.id ? 'Save' : 'Save draft'}</button> ${i.id ? '<div class="more"><button class="btn ghost sm" data-more>More ▾</button><div class="menu" hidden></div></div>' : ''} <button class="btn sm" data-sendinv>${i.status === 'draft' ? 'Send invoice' : 'Resend'}</button>`;
   const cust = i.customer || {};
-  c.innerHTML = `${i.id ? `<div class="inv-status">${invPill(i)}${i.refunded ? `<span>${money(i.refunded)} refunded</span>` : ''}${i.nextDue && ['sent', 'partial', 'overdue'].includes(i.status) ? `<span>Next payment: ${esc(i.nextDue.label)} ${money(i.nextDue.amount)}${i.nextDue.due ? ' due ' + esc(dlong(i.nextDue.due)) : ''}</span>` : ''}${i.sentAt ? `<span>Sent ${esc(dlong(i.sentAt))}</span>` : ''}${i.viewedAt ? `<span>Viewed by customer ${esc(dlong(i.viewedAt))}</span>` : ''}${i.requestId ? `<span>From a website request</span>` : ''}</div>` : ''}
+  c.innerHTML = `${i.id ? invHero(i) : ''}${i.id ? `<div class="inv-status">${invPill(i)}${i.refunded ? `<span>${money(i.refunded)} refunded</span>` : ''}${i.nextDue && ['sent', 'partial', 'overdue'].includes(i.status) ? `<span>Next payment: ${esc(i.nextDue.label)} ${money(i.nextDue.amount)}${i.nextDue.due ? ' due ' + esc(dlong(i.nextDue.due)) : ''}</span>` : ''}${i.sentAt ? `<span>Sent ${esc(dlong(i.sentAt))}</span>` : ''}${i.viewedAt ? `<span>Viewed by customer ${esc(dlong(i.viewedAt))}</span>` : ''}${i.requestId ? `<span>From a website request</span>` : ''}</div>` : ''}
   <div class="card inv-doc"><fieldset ${ro ? 'disabled' : ''}>
     <div class="inv-head"><div class="inv-biz">${b.logo ? `<img src="${esc(b.logo)}" alt="">` : ''}<b>${esc(b.name)}</b><div>${esc(b.address)}</div><div>${esc(b.email)} · ${esc(b.phone)}</div>${b.taxNumber ? `<div>${esc(b.taxNumber)}</div>` : ''}${can('settings.edit') ? '<a href="#/invoices/settings" class="hint">Edit business info</a>' : ''}</div>
       <div class="inv-meta"><h2>Invoice #${esc(i.number)}</h2>
