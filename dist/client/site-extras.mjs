@@ -316,3 +316,11 @@ try{(()=>{const st=document.createElement('style');st.textContent='@media(max-wi
 
 /* price summary: a little space between the notes box and the subtotal row */
 try{const st=document.createElement('style');st.textContent='.rule-summary .sum-extras{margin-bottom:14px}#modal [data-mbody]>div:first-child{padding-right:52px}:root:has(#modal.open) .sx-fab,:root:has(#modal.open) .scw:not(.open){display:none!important}';document.head.appendChild(st);}catch(e){}
+
+/* artwork upload: show the file and a mockup of the product with it (art-mockup.mjs, loaded only when a file is picked) */
+try{document.addEventListener('change',e=>{const t=e.target;
+ if(t?.matches?.('[data-art-upload]'))import('/art-mockup.mjs?v=1').then(m=>m.show(t)).catch(err=>console.warn('art mockup',err));
+ else if(t?.name==='artwork-mode'){const b=t.closest('.rule-artwork')?.querySelector('.art-mock');if(b)b.hidden=t.value!=='upload';}
+},true);
+ for(const t of document.querySelectorAll('[data-art-upload]'))if(t.files?.length)import('/art-mockup.mjs?v=1').then(m=>m.show(t)).catch(()=>{}); // picked before this script loaded
+}catch(e){}
