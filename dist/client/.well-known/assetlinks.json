@@ -1,11 +1,25 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "ca.satingraphic.app",
       "sha256_cert_fingerprints": [
         "REPLACE_WITH_PLAY_APP_SIGNING_SHA256_FINGERPRINT__AA:BB:CC:..."
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ca.satingraphic.pricer",
+      "sha256_cert_fingerprints": [
+        "13:B2:9C:CE:57:5B:BB:1A:9A:64:55:67:12:04:92:AB:E2:F6:00:28:AE:0B:A0:77:34:48:09:C3:0B:0E:37:97"
       ]
     }
   }
